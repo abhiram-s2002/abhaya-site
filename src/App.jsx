@@ -1,0 +1,73 @@
+import React from 'react';
+import { ShopProvider, useShop } from './context/ShopContext';
+import AnnouncementBar from './components/AnnouncementBar';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import CartDrawer from './components/CartDrawer';
+import QuickViewModal from './components/QuickViewModal';
+import SearchModal from './components/SearchModal';
+import MobileBottomNav from './components/MobileBottomNav';
+import Toast from './components/Toast';
+
+// Pages
+import HomePage from './pages/HomePage';
+import ShopPage from './pages/ShopPage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import VioletEditionPage from './pages/VioletEditionPage';
+import StoryPage from './pages/StoryPage';
+
+function AppContent() {
+  const { currentView } = useShop();
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'shop':
+        return <ShopPage />;
+      case 'product-detail':
+        return <ProductDetailPage />;
+      case 'violet-edition':
+        return <VioletEditionPage />;
+      case 'story':
+        return <StoryPage />;
+      case 'home':
+      default:
+        return <HomePage />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#fff7fc] text-on-background selection:bg-royal-violet selection:text-white">
+      {/* Top Promotional Bar */}
+      <AnnouncementBar />
+
+      {/* Main Sticky Luxury Navbar */}
+      <Navbar />
+
+      {/* Dynamic Main View */}
+      <main className="flex-1">
+        {renderCurrentView()}
+      </main>
+
+      {/* Luxury Footer */}
+      <Footer />
+
+      {/* Mobile Sticky Bottom Navigation Bar (Thumb Friendly) */}
+      <MobileBottomNav />
+
+      {/* Overlays, Drawers & Modals */}
+      <CartDrawer />
+      <QuickViewModal />
+      <SearchModal />
+      <Toast />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ShopProvider>
+      <AppContent />
+    </ShopProvider>
+  );
+}
+
