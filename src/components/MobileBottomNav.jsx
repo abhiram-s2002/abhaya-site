@@ -34,17 +34,23 @@ export default function MobileBottomNav() {
           )}
         </button>
 
-        {/* Shop / Explore */}
+        {/* Collections & Shop Explore */}
         <button
-          onClick={() => navigateTo('shop')}
+          onClick={() => navigateTo('collections', null, 'fabric')}
           className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors relative ${
-            currentView === 'shop' || currentView === 'violet-edition' ? 'text-primary font-bold' : 'text-stone-500 hover:text-primary'
+            currentView === 'collections' || currentView === 'shop' || currentView === 'violet-edition'
+              ? 'text-primary font-bold'
+              : 'text-stone-500 hover:text-primary'
           }`}
-          aria-label="Shop Catalog"
+          aria-label="Explore Collections"
         >
-          <Compass className={`w-5 h-5 ${currentView === 'shop' ? 'stroke-[2.2]' : 'stroke-[1.6]'}`} />
-          <span className="text-[10px] tracking-wider uppercase font-medium">Shop</span>
-          {(currentView === 'shop' || currentView === 'violet-edition') && (
+          <Compass
+            className={`w-5 h-5 ${
+              currentView === 'collections' || currentView === 'shop' ? 'stroke-[2.2]' : 'stroke-[1.6]'
+            }`}
+          />
+          <span className="text-[10px] tracking-wider uppercase font-medium">Explore</span>
+          {(currentView === 'collections' || currentView === 'shop' || currentView === 'violet-edition') && (
             <span className="absolute top-1 right-1/2 translate-x-3 w-1.5 h-1.5 rounded-full bg-royal-violet" />
           )}
         </button>

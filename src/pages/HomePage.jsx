@@ -100,11 +100,13 @@ export default function HomePage() {
     e.stopPropagation();
     addToCart(
       product,
-      product.colors?.[0]?.name || 'Signature',
-      product.colors?.[0]?.hex || '#4A2B5E',
-      product.sizes?.[0] || 'Standard (180 × 70 cm)',
+      product.colors?.[0]?.name || 'Midnight Espresso',
+      product.colors?.[0]?.hex || '#2E1C1A',
+      product.sizes?.[0] || 'Size 56 (Length 56")',
       1,
-      product.image
+      product.image,
+      product.defaultStyle,
+      product.defaultWork
     );
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Star, ShoppingBag, Heart, Sparkles, Check, ArrowRight } from 'lucide-react';
+import { X, Star, ShoppingBag, Heart, Sparkles, Check, ArrowRight, Scissors } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
 
 export default function QuickViewModal() {
   const {
@@ -28,6 +29,8 @@ export default function QuickViewModal() {
   if (!quickViewProduct) return null;
 
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
+  const [selectedStyle, setSelectedStyle] = useState(quickViewProduct.defaultStyle || ABAYA_STYLES[0].name);
+  const [selectedWork, setSelectedWork] = useState(quickViewProduct.defaultWork || ABAYA_WORKS[0].name);
   const [selectedSize, setSelectedSize] = useState(quickViewProduct.sizes[0]);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -54,7 +57,9 @@ export default function QuickViewModal() {
       currentColor.hex,
       selectedSize,
       quantity,
-      images[activeImageIdx]
+      images[activeImageIdx],
+      selectedStyle,
+      selectedWork
     );
     setQuickViewProduct(null);
   };
@@ -73,7 +78,7 @@ export default function QuickViewModal() {
       />
 
       {/* Modal Box */}
-      <div className="relative bg-[#fff7fc] rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl z-10 border border-surface-container-highest animate-fade-in my-auto">
+      <div className="relative bg-[#fff7fc] rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl z-10 border border-surface-container-highest animate-fade-in my-auto">
         
         {/* Close Button */}
         <button
@@ -84,18 +89,18 @@ export default function QuickViewModal() {
           <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-12">
           
-          {/* Left: Gallery */}
-          <div className="p-4 sm:p-6 bg-white flex flex-col justify-between border-b md:border-b-0 md:border-r border-surface-container-high">
-            <div className="relative aspect-[3/4] max-h-[300px] sm:max-h-none bg-stone-100 rounded-xl overflow-hidden border border-surface-container-highest">
+          {/* Left: Gallery (5 cols) */}
+          <div className="md:col-span-5 p-4 sm:p-6 bg-white flex flex-col justify-between border-b md:border-b-0 md:border-r border-surface-container-high">
+            <div className="relative aspect-[3/4] max-h-[320px] md:max-h-none bg-stone-100 rounded-xl overflow-hidden border border-surface-container-highest">
               <img
                 src={images[activeImageIdx] || images[0]}
                 alt={quickViewProduct.name}
                 className="w-full h-full object-cover transition-all duration-300"
               />
               {quickViewProduct.badge && (
-                <span className="absolute top-3 left-3 bg-primary text-gold-soft text-[9px] sm:text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1 rounded">
+                <span className="absolute top-3 left-3 bg-primary text-gold-soft text-[9px] sm:text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1 rounded shadow">
                   {quickViewProduct.badge}
                 </span>
               )}
@@ -117,16 +122,22 @@ export default function QuickViewModal() {
                 ))}
               </div>
             )}
+
+            {/* Micro Badge */}
+            <div className="mt-3 p-2.5 rounded-lg bg-surface-container/60 border border-surface-container-highest flex items-center gap-2 text-[11px] text-stone-600">
+              <Scissors className="w-3.5 h-3.5 text-royal-violet shrink-0" />
+              <span>3 Bespoke Customization Options Available</span>
+            </div>
           </div>
 
-          {/* Right: Info & Actions */}
-          <div className="p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-4 sm:space-y-6">
+          {/* Right: Info & Selectors (7 cols) */}
+          <div className="md:col-span-7 p-4 sm:p-6 flex flex-col justify-between space-y-4">
             
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-3.5">
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold text-amethyst-soft">
-                    {quickViewProduct.category}
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold text-royal-violet">
+                    {quickViewProduct.category} Atelier
                   </span>
                   <div className="flex items-center gap-1 text-amber-600 text-xs">
                     <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
@@ -134,7 +145,7 @@ export default function QuickViewModal() {
                   </div>
                 </div>
 
-                <h2 className="font-serif text-xl sm:text-2xl font-medium text-primary leading-tight">
+                <h2 className="font-serif text-lg sm:text-2xl font-medium text-primary leading-tight">
                   {quickViewProduct.name}
                 </h2>
 
@@ -150,64 +161,106 @@ export default function QuickViewModal() {
                 </div>
               </div>
 
-              <p className="text-xs text-stone-600 leading-relaxed line-clamp-3">
-                {quickViewProduct.description}
-              </p>
-
-              {/* Shade Selector */}
-              <div className="space-y-2 pt-2 border-t border-surface-container-high">
+              {/* 1. Category Style Selector */}
+              <div className="space-y-1.5 pt-2 border-t border-surface-container-high">
                 <div className="flex justify-between text-xs">
-                  <span className="font-medium text-stone-700">Selected Shade:</span>
-                  <span className="font-semibold text-royal-violet">{currentColor.name}</span>
+                  <span className="font-semibold text-stone-800">1. Category Style:</span>
+                  <span className="font-medium text-royal-violet">{selectedStyle}</span>
                 </div>
-                <div className="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-                  {quickViewProduct.colors.map((c, idx) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                  {ABAYA_STYLES.map((s) => (
                     <button
-                      key={c.name}
-                      onClick={() => handleColorChange(idx)}
-                      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-transform border shrink-0 ${
-                        selectedColorIdx === idx
-                          ? 'ring-2 ring-royal-violet ring-offset-2 scale-110 border-transparent'
-                          : 'border-black/10 hover:scale-105 active:scale-95'
-                      }`}
-                      style={{ backgroundColor: c.hex }}
-                      title={c.name}
-                    >
-                      {selectedColorIdx === idx && (
-                        <Check className="w-3.5 h-3.5 text-white drop-shadow-sm" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Size Selector */}
-              <div className="space-y-1.5">
-                <span className="block text-xs font-medium text-stone-700">Dimensions:</span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                  {quickViewProduct.sizes.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setSelectedSize(s)}
-                      className={`px-2.5 py-2 text-xs font-medium rounded text-left transition-colors border ${
-                        selectedSize === s
+                      key={s.id}
+                      onClick={() => setSelectedStyle(s.name)}
+                      className={`px-2 py-1.5 text-[11px] font-medium rounded text-left transition-all border leading-tight ${
+                        selectedStyle.toLowerCase() === s.name.toLowerCase()
                           ? 'bg-primary text-white border-primary shadow-sm font-semibold'
                           : 'bg-white text-stone-700 border-surface-container-highest hover:border-royal-violet'
                       }`}
                     >
-                      {s}
+                      {s.name}
                     </button>
                   ))}
                 </div>
               </div>
+
+              {/* 2. Work / Craftsmanship Selector */}
+              <div className="space-y-1.5 pt-2 border-t border-surface-container-high">
+                <div className="flex justify-between text-xs">
+                  <span className="font-semibold text-stone-800">2. Work / Craftsmanship:</span>
+                  <span className="font-medium text-royal-violet">{selectedWork}</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                  {ABAYA_WORKS.map((w) => (
+                    <button
+                      key={w.id}
+                      onClick={() => setSelectedWork(w.name)}
+                      className={`px-2 py-1.5 text-[11px] font-medium rounded text-left transition-all border leading-tight capitalize ${
+                        selectedWork.toLowerCase() === w.name.toLowerCase()
+                          ? 'bg-royal-violet text-white border-royal-violet shadow-sm font-semibold'
+                          : 'bg-white text-stone-700 border-surface-container-highest hover:border-royal-violet'
+                      }`}
+                    >
+                      {w.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 3. Shade & Size Selectors */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-surface-container-high">
+                {/* Shade Swatches */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-stone-800">3. Shade:</span>
+                    <span className="font-semibold text-stone-600">{currentColor.name}</span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
+                    {quickViewProduct.colors.map((c, idx) => (
+                      <button
+                        key={c.name}
+                        onClick={() => handleColorChange(idx)}
+                        className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform border shrink-0 ${
+                          selectedColorIdx === idx
+                            ? 'ring-2 ring-royal-violet ring-offset-1 scale-110 border-transparent'
+                            : 'border-black/10 hover:scale-105'
+                        }`}
+                        style={{ backgroundColor: c.hex }}
+                        title={c.name}
+                      >
+                        {selectedColorIdx === idx && (
+                          <Check className="w-3.5 h-3.5 text-white drop-shadow-sm" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Abaya Sizing */}
+                <div className="space-y-1.5">
+                  <span className="block text-xs font-semibold text-stone-800">Length / Size:</span>
+                  <select
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    className="w-full text-xs py-1.5 px-2 bg-white border border-surface-container-highest rounded font-medium focus:outline-none focus:border-royal-violet"
+                  >
+                    {quickViewProduct.sizes.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
             </div>
 
             {/* Actions */}
-            <div className="space-y-2.5 pt-3 border-t border-surface-container-high">
+            <div className="space-y-2 pt-3 border-t border-surface-container-high">
               <div className="flex gap-2.5">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3 sm:py-3.5 bg-primary hover:bg-royal-violet text-white text-xs uppercase tracking-[0.2em] font-semibold rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors active:scale-[0.98]"
+                  className="flex-1 py-3 bg-primary hover:bg-royal-violet text-white text-xs uppercase tracking-[0.2em] font-semibold rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors active:scale-[0.98]"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   <span>Add to Bag • {formatPrice(quickViewProduct.price * quantity)}</span>
@@ -215,7 +268,7 @@ export default function QuickViewModal() {
 
                 <button
                   onClick={() => toggleWishlist(quickViewProduct.id)}
-                  className={`p-3 sm:p-3.5 rounded-lg border transition-colors ${
+                  className={`p-3 rounded-lg border transition-colors ${
                     wishlisted
                       ? 'bg-royal-violet text-white border-royal-violet'
                       : 'bg-white text-stone-700 border-surface-container-highest hover:bg-surface-container'
@@ -230,7 +283,7 @@ export default function QuickViewModal() {
                 onClick={handleFullDetail}
                 className="w-full text-center text-xs text-amethyst-soft hover:text-royal-violet font-semibold uppercase tracking-wider flex items-center justify-center gap-1 py-1"
               >
-                <span>View Full Product Details & Fabric Guide</span>
+                <span>View Full Bespoke Customizer & Fabric Guide</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -243,4 +296,3 @@ export default function QuickViewModal() {
     </div>
   );
 }
-

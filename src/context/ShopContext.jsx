@@ -4,26 +4,31 @@ import { PRODUCTS } from '../data/products';
 const ShopContext = createContext();
 
 const CURRENCIES = {
-  USD: { symbol: "$", rate: 1.0, name: "USD ($)" },
-  EUR: { symbol: "€", rate: 0.92, name: "EUR (€)" },
-  GBP: { symbol: "£", rate: 0.78, name: "GBP (£)" },
-  AED: { symbol: "AED ", rate: 3.67, name: "AED (د.إ)" },
-  SAR: { symbol: "SAR ", rate: 3.75, name: "SAR (﷼)" },
+  INR: { symbol: "₹", rate: 83.5, name: "INR (₹)", flag: "🇮🇳" },
+  USD: { symbol: "$", rate: 1.0, name: "USD ($)", flag: "🇺🇸" },
+  AED: { symbol: "AED ", rate: 3.67, name: "AED (د.إ)", flag: "🇦🇪" },
+  SAR: { symbol: "SAR ", rate: 3.75, name: "SAR (﷼)", flag: "🇸🇦" },
+  EUR: { symbol: "€", rate: 0.92, name: "EUR (€)", flag: "🇪🇺" },
+  GBP: { symbol: "£", rate: 0.78, name: "GBP (£)", flag: "🇬🇧" },
 };
 
 export function ShopProvider({ children }) {
   // Navigation & Page State
-  const [currentView, setCurrentView] = useState('home'); // 'home' | 'shop' | 'product-detail' | 'violet-edition' | 'story'
+  const [currentView, setCurrentView] = useState('home'); // 'home' | 'shop' | 'collections' | 'product-detail' | 'violet-edition' | 'story' | 'contact'
   const [selectedProductId, setSelectedProductId] = useState('midnight-espresso-silk');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('All');
+  const [selectedCollectionsTab, setSelectedCollectionsTab] = useState('silhouette'); // 'silhouette' | 'craftsmanship' | 'fabric' | 'collection' | 'color' | 'all'
+  const [selectedColorFilter, setSelectedColorFilter] = useState('All');
+  const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');
+  const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
   
   // Modals & Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  // Currency
-  const [currency, setCurrency] = useState('USD');
+  // Currency (Default to INR or USD)
+  const [currency, setCurrency] = useState('INR');
 
   // Cart State (stored in localStorage)
   const [cart, setCart] = useState(() => {
@@ -31,13 +36,15 @@ export function ShopProvider({ children }) {
       const saved = localStorage.getItem('hayat_cart');
       return saved ? JSON.parse(saved) : [
         {
-          id: 'midnight-espresso-silk',
+          id: 'midnight-espresso-silk-Midnight Espresso-Size 56 (Length 56")-Open abaya-Handwork Abaya',
           productId: 'midnight-espresso-silk',
-          name: 'Midnight Espresso Silk Hijab',
-          price: 85,
+          name: 'Midnight Espresso Silk Abaya',
+          price: 185,
           color: 'Midnight Espresso',
           hex: '#2E1C1A',
-          size: 'Standard (180 × 70 cm)',
+          size: 'Size 56 (Length 56")',
+          style: 'Open abaya',
+          work: 'Handwork Abaya',
           image: PRODUCTS[0].image,
           quantity: 1
         }
@@ -86,19 +93,46 @@ export function ShopProvider({ children }) {
     }, 3500);
   };
 
-  const navigateTo = (view, productId = null, category = null) => {
+  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null) => {
     if (productId) {
       setSelectedProductId(productId);
     }
     if (category) {
       setSelectedCategoryFilter(category);
     }
+    if (collectionsTab) {
+      setSelectedCollectionsTab(collectionsTab);
+    }
+    if (color) {
+      setSelectedColorFilter(color);
+    }
+    if (style) {
+      setSelectedStyleFilter(style);
+    }
+    if (work) {
+      setSelectedWorkFilter(work);
+    }
     setCurrentView(view);
     setIsSearchOpen(false);
   };
 
-  const addToCart = (product, colorName, hexCode, size, quantity = 1, imageOverride = null) => {
-    const cartItemId = `${product.id}-${colorName}-${size}`;
+  const addToCart = (
+    product,
+    colorName,
+    hexCode,
+    size,
+    quantity = 1,
+    imageOverride = null,
+    style = null,
+    work = null
+  ) => {
+    const resolvedStyle = style || product.defaultStyle || (product.styles && product.styles[0]) || 'Open abaya';
+    const resolvedWork = work || product.defaultWork || (product.works && product.works[0]) || 'plain';
+    const resolvedColor = colorName || product.colors[0].name;
+    const resolvedHex = hexCode || product.colors[0].hex;
+    const resolvedSize = size || product.sizes[0];
+
+    const cartItemId = `${product.id}-${resolvedColor}-${resolvedSize}-${resolvedStyle}-${resolvedWork}`;
     setCart(prev => {
       const existing = prev.find(item => item.id === cartItemId);
       if (existing) {
@@ -115,15 +149,17 @@ export function ShopProvider({ children }) {
           productId: product.id,
           name: product.name,
           price: product.price,
-          color: colorName || product.colors[0].name,
-          hex: hexCode || product.colors[0].hex,
-          size: size || product.sizes[0],
+          color: resolvedColor,
+          hex: resolvedHex,
+          size: resolvedSize,
+          style: resolvedStyle,
+          work: resolvedWork,
           image: imageOverride || product.image,
           quantity
         }
       ];
     });
-    showToast(`Added "${product.name}" to your luxury bag.`);
+    showToast(`Added "${product.name}" (${resolvedStyle} • ${resolvedWork}) to your luxury bag.`);
     setIsCartOpen(true);
   };
 
@@ -215,6 +251,14 @@ export function ShopProvider({ children }) {
         setSelectedProductId,
         selectedCategoryFilter,
         setSelectedCategoryFilter,
+        selectedCollectionsTab,
+        setSelectedCollectionsTab,
+        selectedColorFilter,
+        setSelectedColorFilter,
+        selectedStyleFilter,
+        setSelectedStyleFilter,
+        selectedWorkFilter,
+        setSelectedWorkFilter,
         isCartOpen,
         setIsCartOpen,
         isSearchOpen,

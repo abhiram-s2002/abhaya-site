@@ -12,9 +12,11 @@ import Toast from './components/Toast';
 // Pages
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
+import CollectionsPage from './pages/CollectionsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import VioletEditionPage from './pages/VioletEditionPage';
 import StoryPage from './pages/StoryPage';
+import ContactPage from './pages/ContactPage';
 
 function AppContent() {
   const { currentView } = useShop();
@@ -23,12 +25,16 @@ function AppContent() {
     switch (currentView) {
       case 'shop':
         return <ShopPage />;
+      case 'collections':
+        return <CollectionsPage />;
       case 'product-detail':
         return <ProductDetailPage />;
       case 'violet-edition':
         return <VioletEditionPage />;
       case 'story':
         return <StoryPage />;
+      case 'contact':
+        return <ContactPage />;
       case 'home':
       default:
         return <HomePage />;

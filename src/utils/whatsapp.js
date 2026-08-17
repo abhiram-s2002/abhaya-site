@@ -19,10 +19,10 @@ export function formatCartWhatsAppMessage({
   const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const lines = [
-    '✨ *HAYAT ATELIER — BESPOKE ORDER* ✨\n',
+    '✨ *HAYAT ATELIER — BESPOKE ABAYA ORDER* ✨\n',
     `Salam / Hello! I would like to place an order for the following ${totalItemCount} item${totalItemCount > 1 ? 's' : ''}:\n`,
     '━━━━━━━━━━━━━━━━━━━━',
-    '🛍️ *ORDERED ITEMS:*',
+    '🛍️ *ORDERED ITEMS & SPECIFICATIONS:*',
     '━━━━━━━━━━━━━━━━━━━━'
   ];
 
@@ -30,8 +30,10 @@ export function formatCartWhatsAppMessage({
     const itemTotal = formatPrice(item.price * item.quantity);
     lines.push(
       `\n*${index + 1}. ${item.name}*`,
+      `   • Style / Cut: ${item.style || 'Open abaya'}`,
+      `   • Work / Craft: ${item.work || 'plain'}`,
       `   • Color: ${item.color}`,
-      `   • Size: ${item.size}`,
+      `   • Abaya Size: ${item.size}`,
       `   • Quantity: ${item.quantity}`,
       `   • Price: ${itemTotal} (${formatPrice(item.price)} each)`
     );
@@ -68,17 +70,24 @@ export function formatSingleProductWhatsAppMessage({
   product,
   colorName,
   size,
+  style,
+  work,
   quantity = 1,
   formatPrice
 }) {
   const totalPrice = formatPrice(product.price * quantity);
+  const selectedStyle = style || product.defaultStyle || (product.styles && product.styles[0]) || 'Open abaya';
+  const selectedWork = work || product.defaultWork || (product.works && product.works[0]) || 'plain';
+
   const lines = [
-    '✨ *HAYAT ATELIER — BESPOKE ORDER* ✨\n',
-    'Salam / Hello! I would like to order this piece from HAYAT Atelier:\n',
+    '✨ *HAYAT ATELIER — BESPOKE ABAYA ORDER* ✨\n',
+    'Salam / Hello! I would like to order this custom piece from HAYAT Atelier:\n',
     '━━━━━━━━━━━━━━━━━━━━',
     `*Piece:* ${product.name}`,
+    `*Style / Silhouette:* ${selectedStyle}`,
+    `*Work / Craftsmanship:* ${selectedWork}`,
     `*Color:* ${colorName || (product.colors && product.colors[0]?.name)}`,
-    `*Size:* ${size || (product.sizes && product.sizes[0])}`,
+    `*Abaya Length / Size:* ${size || (product.sizes && product.sizes[0])}`,
     `*Quantity:* ${quantity}`,
     `*Total:* ${totalPrice} (${formatPrice(product.price)} each)`,
     '━━━━━━━━━━━━━━━━━━━━',

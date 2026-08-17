@@ -196,14 +196,26 @@ export default function CartDrawer() {
                           </button>
                         </div>
                         
-                        <div className="flex items-center gap-1.5 mt-1 text-[10px] sm:text-[11px] text-stone-600">
-                          <span
-                            className="w-2.5 h-2.5 rounded-full inline-block border border-black/10 shrink-0"
-                            style={{ backgroundColor: item.hex }}
-                          />
-                          <span>{item.color}</span>
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px] sm:text-[11px] text-stone-600">
+                          {item.style && (
+                            <span className="bg-surface-container px-1.5 py-0.5 rounded text-[10px] font-semibold text-primary">
+                              {item.style}
+                            </span>
+                          )}
+                          {item.work && (
+                            <span className="bg-royal-violet/10 text-royal-violet px-1.5 py-0.5 rounded text-[10px] font-semibold">
+                              {item.work}
+                            </span>
+                          )}
+                          <div className="flex items-center gap-1">
+                            <span
+                              className="w-2.5 h-2.5 rounded-full inline-block border border-black/10 shrink-0"
+                              style={{ backgroundColor: item.hex }}
+                            />
+                            <span>{item.color}</span>
+                          </div>
                           <span>•</span>
-                          <span className="truncate max-w-[100px] sm:max-w-[120px]">{item.size}</span>
+                          <span className="truncate max-w-[120px] font-medium">{item.size}</span>
                         </div>
                       </div>
 

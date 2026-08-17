@@ -1,16 +1,149 @@
+export const ABAYA_STYLES = [
+  {
+    id: "open-abaya",
+    name: "Open abaya",
+    description: "Classic front-open silhouette, versatile for layering with internal snap buttons",
+    tag: "Versatile Classic"
+  },
+  {
+    id: "closed-cut",
+    name: "Closed cut",
+    description: "Traditional full-length continuous modest cut with clean refined drape",
+    tag: "Modest Essential"
+  },
+  {
+    id: "kimono-kaftan",
+    name: "Kimono or kaftan",
+    description: "Relaxed wide-sleeved drape offering fluid motion and contemporary elegance",
+    tag: "Modern Flow"
+  },
+  {
+    id: "butterfly-farasha",
+    name: "Butterfly or farasha",
+    description: "Grand sweeping winged silhouette with majestic volume and regal presence",
+    tag: "Regal Statement"
+  },
+  {
+    id: "umbrella-flare",
+    name: "umbrella cut or Flare",
+    description: "Fitted bodice gracefully flaring into a full circular sweep at the hemline",
+    tag: "Graceful Flare"
+  },
+  {
+    id: "two-piece-inner",
+    name: "2 piece abaya (with inner)",
+    description: "Includes matching sleeveless slip dress under an ethereal open outer robe",
+    tag: "Complete Set"
+  },
+  {
+    id: "coat-abaya",
+    name: "Coat abaya",
+    description: "Tailored architectural lapels and structured cuffs for formal occasion wear",
+    tag: "Structured Luxury"
+  }
+];
+
+export const ABAYA_WORKS = [
+  {
+    id: "plain",
+    name: "plain",
+    description: "Pure unembellished minimalist luxury focusing on fabric drape and clean cuts",
+    tag: "Minimalist"
+  },
+  {
+    id: "embroidery-abaya",
+    name: "Embroidery Abaya",
+    description: "Intricate artisanal floral and geometric embroidery along cuffs, collar, and hem",
+    tag: "Artisanal"
+  },
+  {
+    id: "handwork-abaya",
+    name: "Handwork Abaya",
+    description: "Bespoke handcrafted needlework with delicate beads, zardozi, and micro-crystals",
+    tag: "Haute Couture"
+  },
+  {
+    id: "stonework-abaya",
+    name: "Stonework Abaya",
+    description: "Lustrous high-clarity crystal and rhinestone stone embellishments catching ambient light",
+    tag: "Luminous Glamour"
+  },
+  {
+    id: "threadwork-abaya",
+    name: "Threadwork Abaya",
+    description: "Tonal silk and metallic thread work woven seamlessly into modest borders",
+    tag: "Subtle Elegance"
+  },
+  {
+    id: "printed-abaya",
+    name: "Printed Abaya",
+    description: "Artistic botanical, marble, and abstract prints on luxury flowy fabrics",
+    tag: "Contemporary"
+  },
+  {
+    id: "lacework-abaya",
+    name: "Lace Work Abaya",
+    description: "Delicate French and Chantilly lace trims along cuffs, lapels, and hemlines",
+    tag: "Romantic Vintage"
+  }
+];
+
+export const ABAYA_SIZES = [
+  {
+    size: "52",
+    label: "Size 52 (Length 52\")",
+    height: "5'0\" – 5'2\" (152–158 cm)",
+    bust: "Bust up to 40\""
+  },
+  {
+    size: "54",
+    label: "Size 54 (Length 54\")",
+    height: "5'3\" – 5'4\" (160–164 cm)",
+    bust: "Bust up to 42\""
+  },
+  {
+    size: "56",
+    label: "Size 56 (Length 56\")",
+    height: "5'5\" – 5'6\" (165–169 cm)",
+    bust: "Bust up to 44\""
+  },
+  {
+    size: "58",
+    label: "Size 58 (Length 58\")",
+    height: "5'7\" – 5'8\" (170–174 cm)",
+    bust: "Bust up to 46\""
+  },
+  {
+    size: "60",
+    label: "Size 60 (Length 60\")",
+    height: "5'9\"+ (175 cm+)",
+    bust: "Bust up to 48\""
+  },
+  {
+    size: "Custom",
+    label: "Custom Tailored Fit",
+    height: "Bespoke Measurements",
+    bust: "Custom to Order"
+  }
+];
+
 export const PRODUCTS = [
   {
     id: "midnight-espresso-silk",
-    name: "Midnight Espresso Silk Hijab",
+    name: "Midnight Espresso Silk Abaya",
     subtitle: "100% Pure Mulberry Silk | Hand-Rolled Hems",
-    price: 85,
-    originalPrice: 110,
+    price: 185,
+    originalPrice: 240,
     category: "Silk",
     badge: "Signature Bestseller",
     rating: 4.9,
     reviewsCount: 128,
     isFeatured: true,
     isVioletEdition: true,
+    defaultStyle: "Open abaya",
+    defaultWork: "Handwork Abaya",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw",
@@ -24,25 +157,29 @@ export const PRODUCTS = [
       { name: "Amethyst Soft", hex: "#7D628A", imageIndex: 2 },
       { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 3 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)", "Square (110 × 110 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 4,
-    description: "An ode to quiet luxury. Handcrafted from luminous 19-momme pure mulberry silk with hand-rolled hems, offering an ethereal drape that stays flawlessly in place for both everyday refinement and gala evenings.",
+    description: "An ode to quiet luxury. Handcrafted from luminous 19-momme pure mulberry silk with masterfully tailored cuts, offering an ethereal drape that stays flawlessly in place for both everyday refinement and gala evenings.",
     fabricDetails: "100% Grade 6A Organic Mulberry Silk. 19 Momme density for high opacity, natural thermo-regulation, and non-slip velvet inner friction weave.",
-    stylingAdvice: "Pairs impeccably with tailored abayas, linen suits, or evening capes. Use our discreet magnetic silk pins for pin-free drape preservation.",
+    stylingAdvice: "Customizable across 7 silhouette cuts and 7 artisan craftworks. Pairs impeccably with tailored inner slips and silk wraps.",
     careInstructions: "Dry clean or gentle hand wash cold with pH-neutral silk detergent. Lay flat on dry towel. Cool iron on reverse side under protective cloth."
   },
   {
     id: "royal-violet-silk",
-    name: "Royal Violet Mulberry Silk",
+    name: "Royal Violet Mulberry Silk Abaya",
     subtitle: "Limited Ethereal Edition | Regal Luster",
-    price: 88,
-    originalPrice: 115,
+    price: 210,
+    originalPrice: 265,
     category: "Silk",
     badge: "Limited Edition",
     rating: 5.0,
     reviewsCount: 62,
     isFeatured: true,
     isVioletEdition: true,
+    defaultStyle: "Butterfly or farasha",
+    defaultWork: "Stonework Abaya",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA",
@@ -53,25 +190,29 @@ export const PRODUCTS = [
       { name: "Amethyst Soft", hex: "#7D628A", imageIndex: 1 },
       { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 7,
-    description: "Dyed in bespoke artisanal small-batches, this Royal Violet silk captures ambient light like liquid amethyst. Richly saturated and featherlight.",
+    description: "Dyed in bespoke artisanal small-batches, this Royal Violet silk abaya captures ambient light like liquid amethyst. Richly saturated, featherlight, and available in all bespoke cuts and embroidery works.",
     fabricDetails: "100% Mulberry Silk, Momme 19. Certified Oeko-Tex Standard 100 non-toxic natural pigment dye.",
-    stylingAdvice: "Drape loosely over one shoulder or layer over high-neck knitwear for an editorial Parisian silhouette.",
+    stylingAdvice: "Choose the Butterfly cut for ceremonial drama or the 2-Piece set for modern layering.",
     careInstructions: "Hand wash cold with silk elixir, lay flat to dry in shade."
   },
   {
     id: "dusty-rose-chiffon",
-    name: "Ethereal Rose Petal Chiffon",
+    name: "Ethereal Rose Petal Chiffon Abaya",
     subtitle: "Featherlight Airy Drape | Non-Slip Weave",
-    price: 48,
-    originalPrice: 60,
+    price: 135,
+    originalPrice: 170,
     category: "Chiffon",
     badge: "New Arrival",
     rating: 4.8,
     reviewsCount: 84,
     isFeatured: true,
     isVioletEdition: false,
+    defaultStyle: "umbrella cut or Flare",
+    defaultWork: "Embroidery Abaya",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAZVub0VhEbfZ42RjVHsOuVG7wBCgHLelkGY6dOel_gT0hCj9B2RVezHENmxJ_Y2puqMuVud0p4ezu2BAO-tDYec2p7u7R0BrlAnxqF8-sj5o6hzp952ZimvWdQMJ27T2bnI0izDnupYarV-4dSCuZNTV4ZI5LIGSBrB7x8UtRvKe2pzAHzOircRZsc5QdPR8BNHP9tTFY1_m7T5pjTpfYw7dLDbvqK7NRWpybaJqeALvz9q6tLOqfhTQ",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuAZVub0VhEbfZ42RjVHsOuVG7wBCgHLelkGY6dOel_gT0hCj9B2RVezHENmxJ_Y2puqMuVud0p4ezu2BAO-tDYec2p7u7R0BrlAnxqF8-sj5o6hzp952ZimvWdQMJ27T2bnI0izDnupYarV-4dSCuZNTV4ZI5LIGSBrB7x8UtRvKe2pzAHzOircRZsc5QdPR8BNHP9tTFY1_m7T5pjTpfYw7dLDbvqK7NRWpybaJqeALvz9q6tLOqfhTQ"
@@ -81,25 +222,29 @@ export const PRODUCTS = [
       { name: "Antique Blush", hex: "#E2C3C1", imageIndex: 0 },
       { name: "Champagne", hex: "#EBD5C1", imageIndex: 0 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 12,
-    description: "Delicately sheer yet opaque when layered, our premium matte chiffon provides breathable, floaty grace that stays put all day without constant adjustment.",
+    description: "Delicately sheer yet fully lined and opaque, our premium matte chiffon abaya provides breathable, floaty grace that stays put all day with seamless tailored lines.",
     fabricDetails: "100% Fine Microfiber Chiffon with soft matte pebble finish. High durability against snagging.",
-    stylingAdvice: "Ideal with undercaps or volumizers for effortless everyday volume.",
+    stylingAdvice: "Choose Lace Work for wedding occasions or Plain for graceful minimalist everyday wear.",
     careInstructions: "Machine wash cold on delicate cycle inside laundry mesh bag. Hang dry."
   },
   {
     id: "sage-haven-modal",
-    name: "Sage Haven Modal Jersey",
+    name: "Sage Haven Modal Luxe Abaya",
     subtitle: "Ultra-Soft Cloud Touch | Four-Way Elasticity",
-    price: 42,
-    originalPrice: 52,
+    price: 120,
+    originalPrice: 155,
     category: "Modal Jersey",
     badge: "Staff Pick",
     rating: 5.0,
     reviewsCount: 96,
     isFeatured: true,
     isVioletEdition: false,
+    defaultStyle: "Kimono or kaftan",
+    defaultWork: "Threadwork Abaya",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6VCCXcrsIQMHcP3Y2cwPwjMw26HSpdXZRpo1lY76HCdTo-vZ5b4M8do6PcZ7DqQvXu3-GlMe2pgswNgngMTx9SsTOZ72uI6VKzR9AO30LImVq-vABf8hOJGP7ROTu8ggWAFYVzo2IbWQV-aYchjycdwCWyhodCmGPBoTo_aAcIjMZuF8wfHjLz_fQt_sGTpPBO2Ddgqm5H07QGTDc4ZBfNS_nT9uyWZncjWeLoA1KPl20JxdlmW11w",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuD6VCCXcrsIQMHcP3Y2cwPwjMw26HSpdXZRpo1lY76HCdTo-vZ5b4M8do6PcZ7DqQvXu3-GlMe2pgswNgngMTx9SsTOZ72uI6VKzR9AO30LImVq-vABf8hOJGP7ROTu8ggWAFYVzo2IbWQV-aYchjycdwCWyhodCmGPBoTo_aAcIjMZuF8wfHjLz_fQt_sGTpPBO2Ddgqm5H07QGTDc4ZBfNS_nT9uyWZncjWeLoA1KPl20JxdlmW11w"
@@ -109,25 +254,29 @@ export const PRODUCTS = [
       { name: "Warm Sand", hex: "#C8B89F", imageIndex: 0 },
       { name: "Charcoal Slate", hex: "#3D3F43", imageIndex: 0 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 15,
-    description: "Crafted from Austrian beechwood modal yarn, this jersey offers butter-soft touch, 4-way mechanical stretch, and requires zero pins to wear.",
+    description: "Crafted from Austrian beechwood modal yarn, this jersey abaya offers butter-soft touch, four-way mechanical stretch, and unparalleled everyday comfort.",
     fabricDetails: "95% TENCEL™ Modal, 5% Spandex. Hypoallergenic, eco-certified biodegradable fibers.",
-    stylingAdvice: "Throw-and-go styling for travel, gym, active days, and minimalist workwear.",
+    stylingAdvice: "Effortless casual elegance for travel, daily routine, and modest lounge refinement.",
     careInstructions: "Machine wash cold, tumble dry low or dry flat."
   },
   {
     id: "bridal-pebble-georgette",
-    name: "Ivory Pebble Georgette",
+    name: "Ivory Pebble Georgette Atelier Abaya",
     subtitle: "Subtle Pebble Grain | Flawless Architecture",
-    price: 65,
-    originalPrice: 80,
+    price: 195,
+    originalPrice: 250,
     category: "Georgette",
     badge: "Artisan Atelier",
     rating: 4.9,
     reviewsCount: 53,
     isFeatured: true,
     isVioletEdition: false,
+    defaultStyle: "2 piece abaya (with inner)",
+    defaultWork: "Lace Work Abaya",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCnqkoPTiUDviPUgD5wOYrSVBgUqgYocEhMRfjaPR0AEGQLNSU0reQ8ubR7uxH960qrPF_FqZly7nHa6M1eLYxa5g-5swQgYvy9Z47DR5Ph3pItsJjdCgLs1rkJOUsw_YtUrEPMsYWIosdqamteTBxBFcTP3dxNNOMXvIUzzwnK72cUnoROgWljIfcYMCZlhKDCFJZAJAexcU4FPc2ghiwZ4a4GWa-zXbuRhhx6hDiAwUFdTToqcj62cg",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCnqkoPTiUDviPUgD5wOYrSVBgUqgYocEhMRfjaPR0AEGQLNSU0reQ8ubR7uxH960qrPF_FqZly7nHa6M1eLYxa5g-5swQgYvy9Z47DR5Ph3pItsJjdCgLs1rkJOUsw_YtUrEPMsYWIosdqamteTBxBFcTP3dxNNOMXvIUzzwnK72cUnoROgWljIfcYMCZlhKDCFJZAJAexcU4FPc2ghiwZ4a4GWa-zXbuRhhx6hDiAwUFdTToqcj62cg"
@@ -137,25 +286,29 @@ export const PRODUCTS = [
       { name: "Soft Amethyst", hex: "#7D628A", imageIndex: 0 },
       { name: "Oat Cream", hex: "#ECE2D4", imageIndex: 0 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)", "Square (110 × 110 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 9,
-    description: "Designed for special celebrations, weddings, and galas. Features a crisp pebbled texture that sculpts sharply around the face while cascading in soft ripples.",
+    description: "Designed for special celebrations, Nikah ceremonies, and gala banquets. Features a crisp pebbled texture that sculpts sharply while cascading in romantic, structured ripples.",
     fabricDetails: "High-twist premium Japanese georgette filament with laser-cut delicate rolled edges.",
-    stylingAdvice: "Style with crown pins or pearl brooches for structured formal opulence.",
+    stylingAdvice: "Order with Stonework or French Lace Work for unforgettable bridal presence.",
     careInstructions: "Dry clean recommended or gentle hand wash."
   },
   {
     id: "lavender-mist-satin",
-    name: "Lavender Mist Luminous Silk",
+    name: "Lavender Mist Luminous Silk Abaya",
     subtitle: "Ethereal Pastel Sheen | Ultra Lightweight",
-    price: 79,
-    originalPrice: 98,
+    price: 175,
+    originalPrice: 220,
     category: "Silk",
     badge: "Trending",
     rating: 4.9,
     reviewsCount: 41,
     isFeatured: false,
     isVioletEdition: true,
+    defaultStyle: "Coat abaya",
+    defaultWork: "Printed Abaya",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCaxkyIqLmyOOOYWe4t17RXa7iRSCynbDrN6ywtJPf_xfaZiQGiTrejAu_Y_jqoa5NK9NtZTqNASt0n7GYiMTOvuZi_xPbW_YEfybM1GEZ94_QdPMo5CXKUwTJqQtTsaGYducUj0ebdjb6CCa_VJ7nazh54quuGFSOALMq9e9LVwMVGfLN3NthKYvgJjKK8pxisrSBk20C56m3SqGRkW9HmYuXUcCRYBR5w0nTDqakaeh2oYXKWKIq1UA",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCaxkyIqLmyOOOYWe4t17RXa7iRSCynbDrN6ywtJPf_xfaZiQGiTrejAu_Y_jqoa5NK9NtZTqNASt0n7GYiMTOvuZi_xPbW_YEfybM1GEZ94_QdPMo5CXKUwTJqQtTsaGYducUj0ebdjb6CCa_VJ7nazh54quuGFSOALMq9e9LVwMVGfLN3NthKYvgJjKK8pxisrSBk20C56m3SqGRkW9HmYuXUcCRYBR5w0nTDqakaeh2oYXKWKIq1UA"
@@ -165,25 +318,29 @@ export const PRODUCTS = [
       { name: "Soft Amethyst", hex: "#7D628A", imageIndex: 0 },
       { name: "Champagne Glow", hex: "#EBD5C1", imageIndex: 0 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 6,
     description: "Soft ambient lilac undertones meet pure mulberry silk. Glides effortlessly with a subtle radiant luster under both candlelight and sunlight.",
     fabricDetails: "100% 19-Momme Grade 6A Silk with anti-snag finish.",
-    stylingAdvice: "Match with monochromatic lilac, pearl cream, or charcoal tailored suiting.",
+    stylingAdvice: "Pair with Coat abaya cut for tailored grandeur or Open abaya with a matching inner.",
     careInstructions: "Hand wash cold with silk detergent, steam gently on low heat."
   },
   {
     id: "soft-amethyst-satin",
-    name: "Soft Amethyst Draped Silk",
+    name: "Soft Amethyst Draped Silk Abaya",
     subtitle: "Lustrous Violet Nuance | Editorial Classic",
-    price: 82,
-    originalPrice: 105,
+    price: 190,
+    originalPrice: 245,
     category: "Silk",
     badge: "Violet Edition",
     rating: 5.0,
     reviewsCount: 38,
     isFeatured: false,
     isVioletEdition: true,
+    defaultStyle: "Closed cut",
+    defaultWork: "plain",
+    styles: ABAYA_STYLES.map(s => s.name),
+    works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g"
@@ -192,10 +349,10 @@ export const PRODUCTS = [
       { name: "Amethyst Soft", hex: "#7D628A", imageIndex: 0 },
       { name: "Royal Violet", hex: "#4A2B5E", imageIndex: 0 }
     ],
-    sizes: ["Standard (180 × 70 cm)", "Maxi (200 × 85 cm)"],
+    sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 5,
-    description: "An understated jewel-toned masterpiece. The Soft Amethyst silk creates a dreamy contour that frames the face with warmth and distinction.",
-    fabricDetails: "100% Grade 6A Pure Mulberry Silk with artisanal rolled edges.",
+    description: "An understated jewel-toned masterpiece. The Soft Amethyst silk creates a dreamy contour that frames the silhouette with warmth, modesty, and distinction.",
+    fabricDetails: "100% Grade 6A Pure Mulberry Silk with artisanal finished edges.",
     stylingAdvice: "Perfect for daytime diplomacy and evening cocktail gatherings.",
     careInstructions: "Specialist silk hand wash only."
   }
@@ -204,24 +361,24 @@ export const PRODUCTS = [
 export const COLLECTIONS = [
   {
     id: "everyday-essentials",
-    name: "Everyday Essentials",
-    description: "Breathable modal jersey and featherlight chiffon designed for effortless all-day wear.",
+    name: "Everyday Abaya Essentials",
+    description: "Breathable modal jersey and featherlight chiffon abayas designed for effortless all-day wear.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA",
     categoryFilter: "Modal Jersey",
     itemCount: "18 Styles"
   },
   {
     id: "violet-edition",
-    name: "The Violet Edition",
-    description: "Artisanal Mulberry silk in regal amethyst and deep espresso hues.",
+    name: "The Violet Edition Abayas",
+    description: "Artisanal Mulberry silk abayas in regal amethyst and deep espresso hues.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA",
     categoryFilter: "Silk",
     itemCount: "12 Styles"
   },
   {
     id: "bridal-atelier",
-    name: "Bridal & Occasion Atelier",
-    description: "High-twist Japanese pebble georgette and lustrous satin with delicate hand finishes.",
+    name: "Occasion & Bridal Atelier",
+    description: "High-twist Japanese pebble georgette with delicate stonework, embroidery, and handwork.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g",
     categoryFilter: "Georgette",
     itemCount: "8 Styles"
@@ -232,7 +389,7 @@ export const FABRICS = [
   {
     name: "Pure Mulberry Silk",
     subtitle: "Grade 6A • 19 Momme",
-    description: "Sourced from cruelty-free mulberry silkworms. Naturally hypoallergenic and hair-protecting with an unmistakable liquid luster.",
+    description: "Naturally hypoallergenic with an unmistakable liquid luster and breathability.",
     icon: "sparkles"
   },
   {
@@ -250,7 +407,7 @@ export const FABRICS = [
   {
     name: "TENCEL™ Modal",
     subtitle: "Austrian Beechwood",
-    description: "Cloud-soft four-way mechanical stretch that gently grips hair and frames the face with zero pins needed.",
+    description: "Cloud-soft four-way mechanical stretch that frames the silhouette with zero constriction.",
     icon: "shield"
   }
 ];
@@ -261,9 +418,9 @@ export const REVIEWS = [
     author: "Zaynab Al-Mansoor",
     location: "London, UK",
     rating: 5,
-    title: "Unrivaled quality and drape",
-    comment: "The Midnight Espresso silk is easily the finest hijab in my collection. It has a rich weight to it without being heavy, and the color is sublime under indoor and outdoor light.",
-    product: "Midnight Espresso Silk Hijab",
+    title: "Unrivaled quality and customized cut",
+    comment: "The 2-Piece Abaya with Stonework in Midnight Espresso silk is easily the finest piece in my wardrobe. The custom length 56 was tailored to perfection.",
+    product: "Midnight Espresso Silk Abaya",
     date: "2 weeks ago"
   },
   {
@@ -271,9 +428,9 @@ export const REVIEWS = [
     author: "Dr. Maryam Khan",
     location: "Dubai, UAE",
     rating: 5,
-    title: "Breathtaking Violet Edition",
-    comment: "I wore the Royal Violet silk to an international symposium in Geneva and received endless compliments. The hand-rolled hems show such meticulous craftsmanship.",
-    product: "Royal Violet Mulberry Silk",
+    title: "Breathtaking Violet Farasha",
+    comment: "I chose the Butterfly / Farasha cut with Handwork embroidery for an international gala and received endless compliments. The craftsmanship is bespoke haute couture.",
+    product: "Royal Violet Mulberry Silk Abaya",
     date: "1 month ago"
   },
   {
@@ -281,9 +438,9 @@ export const REVIEWS = [
     author: "Safiya Nour",
     location: "New York, USA",
     rating: 5,
-    title: "Modal jersey perfected",
-    comment: "I threw away my previous jerseys after wearing HAYAT's Sage modal. Zero headache, zero slipping, pure comfort through 12-hour clinic shifts.",
-    product: "Sage Haven Modal Jersey",
+    title: "Kimono style in Modal jersey",
+    comment: "I love the Kimono cut with subtle threadwork. Zero fuss, pure luxury comfort through all-day events.",
+    product: "Sage Haven Modal Luxe Abaya",
     date: "3 weeks ago"
   }
 ];

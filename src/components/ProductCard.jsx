@@ -34,7 +34,9 @@ export default function ProductCard({ product }) {
       currentColor.hex,
       product.sizes[0],
       1,
-      currentImage
+      currentImage,
+      product.defaultStyle,
+      product.defaultWork
     );
   };
 
@@ -150,9 +152,11 @@ export default function ProductCard({ product }) {
             {product.name}
           </h3>
 
-          <p className="text-[11px] sm:text-xs text-stone-500 line-clamp-1 hidden sm:block">
-            {product.subtitle}
-          </p>
+          <div className="flex items-center gap-1.5 text-[10px] text-stone-500 line-clamp-1">
+            <span className="font-medium text-royal-violet">{product.defaultStyle || 'Open abaya'}</span>
+            <span>•</span>
+            <span className="text-stone-600 capitalize">{product.defaultWork || 'plain'}</span>
+          </div>
         </div>
 
         {/* Swatches and Price Row */}

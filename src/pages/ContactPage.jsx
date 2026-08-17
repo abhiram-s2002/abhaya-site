@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, MessageSquare, Instagram, Send, CheckCircle2, ChevronDown, ChevronUp, Clock, Sparkles } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle2, ChevronDown, ChevronUp, Clock, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 
 export default function ContactPage() {

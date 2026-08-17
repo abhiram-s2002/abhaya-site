@@ -15,10 +15,15 @@ import {
   Share2,
   PackageCheck,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Scissors,
+  Layers,
+  Sparkle,
+  Info
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import ProductCard from '../components/ProductCard';
+import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../data/products';
 import { formatSingleProductWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
 
 export default function ProductDetailPage() {
@@ -36,15 +41,19 @@ export default function ProductDetailPage() {
   const product = PRODUCTS.find((p) => p.id === selectedProductId) || PRODUCTS[0];
 
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
+  const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
+  const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
   const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
   const buyBoxRef = useRef(null);
 
   // Accordion state
   const [openAccordions, setOpenAccordions] = useState({
-    fabric: true,
+    customization: true,
+    fabric: false,
     styling: false,
     care: false,
     shipping: false,
@@ -54,19 +63,19 @@ export default function ProductDetailPage() {
   const [reviewsList, setReviewsList] = useState([
     {
       id: 1,
-      author: 'Amina B.',
+      author: 'Amina B. (London)',
       rating: 5,
       date: 'Verified Buyer • 4 days ago',
-      title: 'Perfection in both weight and sheen',
-      comment: 'The 19-momme silk is unbelievable. It has just enough grip on the inner side to stay pinned without slippage, while the exterior has that radiant haute couture drape.'
+      title: 'Bespoke fit in Butterfly cut with Stonework',
+      comment: 'I ordered the Royal Violet with Farasha cut and Stonework. The drape flows like liquid silk and the crystals catch the ambient light so elegantly without being loud.'
     },
     {
       id: 2,
-      author: 'Fatima Z.',
+      author: 'Fatima Z. (Dubai)',
       rating: 5,
       date: 'Verified Buyer • 2 weeks ago',
-      title: 'Truly quiet luxury',
-      comment: 'Arrived in the most gorgeous embossed purple box. It makes even a basic linen abaya look elevated and intentional. Ordering two more colors immediately.'
+      title: '2-Piece set with inner is unmatched luxury',
+      comment: 'Arrived in the signature violet keepsake box. The 2-piece open cut with matching slip is effortlessly chic for formal events. Ordering the Espresso shade next.'
     }
   ]);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -77,6 +86,8 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     setSelectedColorIdx(0);
+    setSelectedStyle(product.defaultStyle || ABAYA_STYLES[0].name);
+    setSelectedWork(product.defaultWork || ABAYA_WORKS[0].name);
     setSelectedSize(product.sizes[0]);
     setActiveImageIdx(0);
     setQuantity(1);
@@ -88,7 +99,6 @@ export default function ProductDetailPage() {
     const handleScroll = () => {
       if (buyBoxRef.current) {
         const rect = buyBoxRef.current.getBoundingClientRect();
-        // If the bottom of buybox is scrolled past the top of viewport
         setShowStickyBar(rect.bottom < 120);
       }
     };
@@ -129,7 +139,9 @@ export default function ProductDetailPage() {
       currentColor.hex,
       selectedSize,
       quantity,
-      images[activeImageIdx]
+      images[activeImageIdx],
+      selectedStyle,
+      selectedWork
     );
   };
 
@@ -138,6 +150,8 @@ export default function ProductDetailPage() {
       product,
       colorName: currentColor.name,
       size: selectedSize,
+      style: selectedStyle,
+      work: selectedWork,
       quantity,
       formatPrice
     });
@@ -160,7 +174,7 @@ export default function ProductDetailPage() {
       author: newReviewAuthor,
       rating: newReviewRating,
       date: 'Verified Buyer • Just now',
-      title: newReviewTitle || 'Magnificent quality',
+      title: newReviewTitle || 'Magnificent bespoke quality',
       comment: newReviewComment
     };
     setReviewsList([newEntry, ...reviewsList]);
@@ -170,6 +184,9 @@ export default function ProductDetailPage() {
     setNewReviewComment('');
     showToast('Thank you! Your verified review has been published.');
   };
+
+  const currentStyleObj = ABAYA_STYLES.find(s => s.name.toLowerCase() === selectedStyle.toLowerCase()) || ABAYA_STYLES[0];
+  const currentWorkObj = ABAYA_WORKS.find(w => w.name.toLowerCase() === selectedWork.toLowerCase()) || ABAYA_WORKS[0];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-10 sm:space-y-16 animate-fade-in pb-28 lg:pb-16">
@@ -181,7 +198,7 @@ export default function ProductDetailPage() {
         </button>
         <span>/</span>
         <button onClick={() => navigateTo('shop')} className="hover:text-primary transition-colors shrink-0">
-          Shop
+          Abaya Boutique
         </button>
         <span>/</span>
         <button
@@ -197,10 +214,10 @@ export default function ProductDetailPage() {
       </nav>
 
       {/* Main Product Presentation */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
         
-        {/* Gallery Column (Desktop: 7 cols) */}
-        <div className="lg:col-span-7 space-y-3 sm:space-y-4">
+        {/* Gallery Column (Desktop: 6 cols) */}
+        <div className="lg:col-span-6 space-y-3 sm:space-y-4 lg:sticky lg:top-24">
           
           {/* Main Large Image Display */}
           <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-stone-100 rounded-2xl overflow-hidden border border-surface-container-highest shadow-luxury">
@@ -217,11 +234,10 @@ export default function ProductDetailPage() {
                   {product.badge}
                 </span>
               )}
-              {product.stockCount <= 5 && (
-                <span className="bg-amber-900/90 backdrop-blur-md text-white text-[9px] sm:text-[11px] uppercase tracking-wider font-semibold px-2 py-0.5 sm:px-3 sm:py-1 rounded shadow-md">
-                  Low Stock • Only {product.stockCount} left
-                </span>
-              )}
+              <span className="bg-royal-violet/90 backdrop-blur-md text-white text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-md flex items-center gap-1">
+                <Scissors className="w-3 h-3 text-gold-soft" />
+                <span>Bespoke Tailored</span>
+              </span>
             </div>
 
             {/* Top Right Actions */}
@@ -229,7 +245,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleShare}
                 className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 backdrop-blur-md hover:bg-white text-stone-700 flex items-center justify-center shadow-md transition-colors active:scale-95"
-                title="Share link"
+                title="Share piece"
                 aria-label="Share link"
               >
                 <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -305,20 +321,33 @@ export default function ProductDetailPage() {
             </div>
           )}
 
+          {/* Quick Value Points */}
+          <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-stone-600">
+            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container/60 border border-surface-container-highest">
+              <Truck className="w-4 h-4 text-royal-violet shrink-0" />
+              <span>Complimentary Express ($150+)</span>
+            </div>
+            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container/60 border border-surface-container-highest">
+              <Sparkles className="w-4 h-4 text-gold-accent shrink-0" />
+              <span>Embossed Keepsake Box</span>
+            </div>
+          </div>
+
         </div>
 
-        {/* Product Details & Purchase Actions Column (Desktop: 5 cols) */}
-        <div className="lg:col-span-5 space-y-6 sm:space-y-8" ref={buyBoxRef}>
+        {/* Product Details & Purchase Actions Column (Desktop: 6 cols) */}
+        <div className="lg:col-span-6 space-y-6 sm:space-y-7" ref={buyBoxRef}>
           
-          <div className="space-y-3 sm:space-y-4 pb-5 sm:pb-6 border-b border-surface-container-high">
+          {/* Header & Pricing */}
+          <div className="space-y-3 sm:space-y-4 pb-5 border-b border-surface-container-high">
             <div className="flex items-center justify-between">
               <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-semibold text-royal-violet">
-                {product.category} Atelier
+                {product.category} Abaya Atelier
               </span>
               <div className="flex items-center gap-1 text-amber-600 text-xs">
                 <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                 <span className="font-bold">{product.rating}</span>
-                <span className="text-stone-400">({product.reviewsCount})</span>
+                <span className="text-stone-400">({product.reviewsCount} reviews)</span>
               </div>
             </div>
 
@@ -339,8 +368,8 @@ export default function ProductDetailPage() {
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-800 bg-emerald-100 font-semibold px-2 py-0.5 rounded">
-                In Stock
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-800 bg-emerald-100 font-semibold px-2.5 py-0.5 rounded-full">
+                Custom Tailored • Ready to Order
               </span>
             </div>
           </div>
@@ -350,62 +379,204 @@ export default function ProductDetailPage() {
             {product.description}
           </p>
 
-          {/* Color Selection */}
-          <div className="space-y-2.5 sm:space-y-3">
-            <div className="flex justify-between text-xs">
-              <span className="text-stone-700 font-medium">
-                Shade: <strong className="text-primary font-semibold">{currentColor.name}</strong>
+          {/* ========================================================================= */}
+          {/* OPTION 1: CATEGORY STYLE / SILHOUETTE CUT (7 Options) */}
+          {/* ========================================================================= */}
+          <div className="space-y-2.5 bg-white p-4 sm:p-5 rounded-xl border border-surface-container-highest shadow-sm">
+            <div className="flex justify-between items-center text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-royal-violet text-white text-[10px] font-bold flex items-center justify-center">1</span>
+                <span className="font-semibold text-stone-900 uppercase tracking-wider">Category Style:</span>
+              </div>
+              <span className="font-serif font-medium text-royal-violet text-xs bg-surface-container px-2.5 py-0.5 rounded-full">
+                {selectedStyle}
               </span>
-              <span className="text-amethyst-soft font-semibold">{product.colors.length} Shades</span>
             </div>
-            
-            <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
-              {product.colors.map((c, idx) => (
-                <button
-                  key={c.name}
-                  onClick={() => handleColorChange(idx)}
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all border shrink-0 ${
-                    selectedColorIdx === idx
-                      ? 'ring-2 ring-royal-violet ring-offset-2 scale-110 border-transparent shadow-md'
-                      : 'border-black/10 hover:scale-105 active:scale-95'
-                  }`}
-                  style={{ backgroundColor: c.hex }}
-                  title={c.name}
-                >
-                  {selectedColorIdx === idx && (
-                    <Check className="w-4 h-4 text-white drop-shadow" />
-                  )}
-                </button>
-              ))}
+
+            <p className="text-[11px] text-stone-500 leading-snug">
+              {currentStyleObj.description}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+              {ABAYA_STYLES.map((styleObj) => {
+                const isSelected = selectedStyle.toLowerCase() === styleObj.name.toLowerCase();
+                return (
+                  <button
+                    key={styleObj.id}
+                    onClick={() => setSelectedStyle(styleObj.name)}
+                    className={`p-2.5 text-left rounded-lg transition-all border flex flex-col justify-between min-h-[64px] ${
+                      isSelected
+                        ? 'bg-primary text-white border-primary shadow-md ring-2 ring-royal-violet/30'
+                        : 'bg-[#fff7fc] text-stone-700 border-surface-container-high hover:border-royal-violet hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-1">
+                      <span className="text-xs font-semibold leading-tight">{styleObj.name}</span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-gold-soft shrink-0" />}
+                    </div>
+                    <span className={`text-[9px] uppercase tracking-wider font-medium mt-1 ${isSelected ? 'text-gold-soft' : 'text-amethyst-soft'}`}>
+                      {styleObj.tag}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Dimensions / Sizing */}
-          <div className="space-y-2.5 sm:space-y-3">
-            <div className="flex justify-between text-xs text-stone-700">
-              <span className="font-medium">Dimensions:</span>
-              <span className="text-stone-400">Hand-rolled hems</span>
+          {/* ========================================================================= */}
+          {/* OPTION 2: WORK / CRAFTSMANSHIP (7 Options) */}
+          {/* ========================================================================= */}
+          <div className="space-y-2.5 bg-white p-4 sm:p-5 rounded-xl border border-surface-container-highest shadow-sm">
+            <div className="flex justify-between items-center text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-royal-violet text-white text-[10px] font-bold flex items-center justify-center">2</span>
+                <span className="font-semibold text-stone-900 uppercase tracking-wider">Work / Craftsmanship:</span>
+              </div>
+              <span className="font-serif font-medium text-royal-violet text-xs bg-surface-container px-2.5 py-0.5 rounded-full">
+                {selectedWork}
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {product.sizes.map((s) => (
+            <p className="text-[11px] text-stone-500 leading-snug">
+              {currentWorkObj.description}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+              {ABAYA_WORKS.map((workObj) => {
+                const isSelected = selectedWork.toLowerCase() === workObj.name.toLowerCase();
+                return (
+                  <button
+                    key={workObj.id}
+                    onClick={() => setSelectedWork(workObj.name)}
+                    className={`p-2.5 text-left rounded-lg transition-all border flex flex-col justify-between min-h-[64px] ${
+                      isSelected
+                        ? 'bg-royal-violet text-white border-royal-violet shadow-md ring-2 ring-primary/30'
+                        : 'bg-[#fff7fc] text-stone-700 border-surface-container-high hover:border-royal-violet hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-1">
+                      <span className="text-xs font-semibold leading-tight capitalize">{workObj.name}</span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-gold-soft shrink-0" />}
+                    </div>
+                    <span className={`text-[9px] uppercase tracking-wider font-medium mt-1 ${isSelected ? 'text-gold-soft' : 'text-stone-500'}`}>
+                      {workObj.tag}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* OPTION 3: ABAYA SIZE & LENGTH + COLOR SWATCHES */}
+          {/* ========================================================================= */}
+          <div className="space-y-4 bg-white p-4 sm:p-5 rounded-xl border border-surface-container-highest shadow-sm">
+            
+            {/* Color Swatches */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-royal-violet text-white text-[10px] font-bold flex items-center justify-center">3</span>
+                  <span className="font-semibold text-stone-900 uppercase tracking-wider">Shade & Length:</span>
+                </div>
+                <span className="text-stone-700">
+                  Shade: <strong className="text-primary font-semibold">{currentColor.name}</strong>
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+                {product.colors.map((c, idx) => (
+                  <button
+                    key={c.name}
+                    onClick={() => handleColorChange(idx)}
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all border shrink-0 ${
+                      selectedColorIdx === idx
+                        ? 'ring-2 ring-royal-violet ring-offset-2 scale-110 border-transparent shadow-md'
+                        : 'border-black/10 hover:scale-105 active:scale-95'
+                    }`}
+                    style={{ backgroundColor: c.hex }}
+                    title={c.name}
+                  >
+                    {selectedColorIdx === idx && (
+                      <Check className="w-4 h-4 text-white drop-shadow" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sizing & Length Options */}
+            <div className="space-y-2 pt-2 border-t border-surface-container-high">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-medium text-stone-700">Abaya Length / Size:</span>
                 <button
-                  key={s}
-                  onClick={() => setSelectedSize(s)}
-                  className={`px-3 py-2.5 text-xs font-medium rounded-lg text-center transition-all border ${
-                    selectedSize === s
-                      ? 'bg-primary text-white border-primary shadow-sm font-semibold'
-                      : 'bg-white text-stone-700 border-surface-container-highest hover:border-royal-violet'
-                  }`}
+                  onClick={() => setShowSizeGuide(!showSizeGuide)}
+                  className="text-royal-violet hover:underline text-[11px] font-medium flex items-center gap-1"
                 >
-                  {s}
+                  <Info className="w-3 h-3" />
+                  <span>Size & Height Guide</span>
                 </button>
-              ))}
+              </div>
+
+              {showSizeGuide && (
+                <div className="p-3 bg-surface-container-low rounded-lg border border-surface-container-high text-[11px] text-stone-600 space-y-1 animate-fade-in">
+                  <div className="font-semibold text-primary">Standard Abaya Sizing Reference:</div>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1 text-[10px]">
+                    <div>• Size 52: Height 5'0" – 5'2" (152–158 cm)</div>
+                    <div>• Size 54: Height 5'3" – 5'4" (160–164 cm)</div>
+                    <div>• Size 56: Height 5'5" – 5'6" (165–169 cm)</div>
+                    <div>• Size 58: Height 5'7" – 5'8" (170–174 cm)</div>
+                    <div>• Size 60: Height 5'9"+ (175 cm+)</div>
+                    <div>• Custom: Tailored to your measurements</div>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {product.sizes.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSelectedSize(s)}
+                    className={`px-3 py-2 text-xs font-medium rounded-lg text-center transition-all border ${
+                      selectedSize === s
+                        ? 'bg-primary text-white border-primary shadow-sm font-semibold'
+                        : 'bg-[#fff7fc] text-stone-700 border-surface-container-high hover:border-royal-violet hover:bg-white'
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          {/* ========================================================================= */}
+          {/* BESPOKE CUSTOMIZATION SUMMARY CARD */}
+          {/* ========================================================================= */}
+          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-royal-violet/10 via-surface-container to-gold-accent/10 border border-royal-violet/20 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-royal-violet uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-gold-accent" />
+              <span>Your Bespoke Selection Preview:</span>
+            </div>
+            <div className="text-xs text-stone-800 flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
+                <strong>Cut:</strong> {selectedStyle}
+              </span>
+              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
+                <strong>Work:</strong> {selectedWork}
+              </span>
+              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
+                <strong>Shade:</strong> {currentColor.name}
+              </span>
+              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
+                <strong>Size:</strong> {selectedSize}
+              </span>
             </div>
           </div>
 
           {/* Quantity & Add to Cart Controls */}
-          <div className="space-y-4 pt-3 sm:pt-4 border-t border-surface-container-high">
+          <div className="space-y-3 pt-2">
             <div className="flex gap-3 sm:gap-4">
               
               {/* Quantity counter */}
@@ -439,25 +610,13 @@ export default function ProductDetailPage() {
             {/* Direct WhatsApp Order Button */}
             <button
               onClick={handleWhatsAppInstantOrder}
-              className="w-full py-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/40 text-[#0f764a] text-xs uppercase tracking-[0.14em] font-semibold rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+              className="w-full py-3.5 bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/50 text-[#0d6840] text-xs uppercase tracking-[0.14em] font-bold rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm"
             >
               <svg className="w-4 h-4 fill-current shrink-0 text-[#25D366]" viewBox="0 0 24 24">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
               </svg>
-              <span>Instant WhatsApp Order</span>
+              <span>Instant WhatsApp Bespoke Order</span>
             </button>
-
-            {/* Guarantees Callout */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-1 text-[10px] sm:text-[11px] text-stone-600">
-              <div className="flex items-center gap-2 p-2 sm:p-2.5 rounded bg-surface-container border border-surface-container-highest">
-                <Truck className="w-3.5 h-3.5 text-royal-violet shrink-0" />
-                <span>Free Worldwide $150+</span>
-              </div>
-              <div className="flex items-center gap-2 p-2 sm:p-2.5 rounded bg-surface-container border border-surface-container-highest">
-                <Sparkles className="w-3.5 h-3.5 text-gold-accent shrink-0" />
-                <span>Keepsake Gift Box</span>
-              </div>
-            </div>
           </div>
 
           {/* Collapsible Accordions */}
@@ -471,7 +630,7 @@ export default function ProductDetailPage() {
               >
                 <span className="flex items-center gap-2">
                   <Sparkles className="w-3.5 h-3.5 text-royal-violet" />
-                  Fabric & Craftsmanship
+                  Fabric & Master Tailoring
                 </span>
                 {openAccordions.fabric ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -480,7 +639,7 @@ export default function ProductDetailPage() {
                   <p>{product.fabricDetails}</p>
                   <p className="text-[11px] text-stone-500">
                     • Certified Oeko-Tex Standard 100 non-toxic dyes.<br />
-                    • Hand-rolled, artisanal edge stitching for lifetime structural integrity.
+                    • Artisanal French seam finishes and reinforced modest cuts.
                   </p>
                 </div>
               )}
@@ -494,7 +653,7 @@ export default function ProductDetailPage() {
               >
                 <span className="flex items-center gap-2">
                   <Heart className="w-3.5 h-3.5 text-royal-violet" />
-                  Drape & Styling Advice
+                  Silhouette & Styling Advice
                 </span>
                 {openAccordions.styling ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -513,7 +672,7 @@ export default function ProductDetailPage() {
               >
                 <span className="flex items-center gap-2">
                   <RotateCcw className="w-3.5 h-3.5 text-royal-violet" />
-                  Longevity & Fabric Care
+                  Longevity & Garment Care
                 </span>
                 {openAccordions.care ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
@@ -532,18 +691,18 @@ export default function ProductDetailPage() {
               >
                 <span className="flex items-center gap-2">
                   <PackageCheck className="w-3.5 h-3.5 text-royal-violet" />
-                  Packaging & Global Returns
+                  Packaging & Global Delivery
                 </span>
                 {openAccordions.shipping ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
               {openAccordions.shipping && (
                 <div className="px-4 sm:px-5 pb-4 text-xs text-stone-600 leading-relaxed border-t border-surface-container/60 pt-3 space-y-1.5">
                   <p>
-                    Every HAYAT creation arrives carefully hand-folded in acid-free tissue paper and enclosed inside our signature embossed violet keepsake box with satin ribbon.
+                    Every HAYAT Abaya arrives carefully hand-folded in acid-free tissue paper and enclosed inside our signature embossed violet keepsake box with bespoke satin ribbon.
                   </p>
                   <p className="text-[11px] text-stone-500">
                     • Dispatch: 24–48 hours via DHL Express Worldwide.<br />
-                    • Returns: 30 days complimentary hassle-free exchanges.
+                    • Returns: 30 days complimentary exchange privilege.
                   </p>
                 </div>
               )}
@@ -614,7 +773,7 @@ export default function ProductDetailPage() {
                 type="text"
                 value={newReviewTitle}
                 onChange={(e) => setNewReviewTitle(e.target.value)}
-                placeholder="e.g. Incredible liquid drape and color"
+                placeholder="e.g. Incredible liquid drape and custom cut"
                 className="w-full px-3 py-2 text-xs bg-white border border-outline-variant/60 rounded focus:outline-none focus:border-royal-violet"
               />
             </div>
@@ -626,7 +785,7 @@ export default function ProductDetailPage() {
                 rows={3}
                 value={newReviewComment}
                 onChange={(e) => setNewReviewComment(e.target.value)}
-                placeholder="Share your thoughts on the silk weight, non-slip texture, color richness..."
+                placeholder="Share your thoughts on the cut silhouette, craftsmanship, silk weight, fit..."
                 className="w-full px-3 py-2 text-xs bg-white border border-outline-variant/60 rounded focus:outline-none focus:border-royal-violet"
               />
             </div>
@@ -703,13 +862,14 @@ export default function ProductDetailPage() {
               />
               <div className="min-w-0">
                 <h4 className="font-serif text-xs font-semibold text-primary truncate">{product.name}</h4>
+                <p className="text-[10px] text-amethyst-soft truncate">{selectedStyle} • {selectedWork}</p>
                 <p className="text-xs font-bold text-primary">{formatPrice(product.price * quantity)}</p>
               </div>
             </div>
 
             <button
               onClick={handleAddToCart}
-              className="px-5 py-2.5 bg-primary hover:bg-royal-violet active:scale-95 text-white text-xs uppercase tracking-wider font-semibold rounded-lg shadow-md flex items-center gap-1.5 shrink-0"
+              className="px-4 py-2.5 bg-primary hover:bg-royal-violet active:scale-95 text-white text-xs uppercase tracking-wider font-semibold rounded-lg shadow-md flex items-center gap-1.5 shrink-0"
             >
               <ShoppingBag className="w-3.5 h-3.5" />
               <span>Add to Bag</span>
@@ -721,4 +881,3 @@ export default function ProductDetailPage() {
     </div>
   );
 }
-
