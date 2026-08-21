@@ -22,7 +22,7 @@ export default function OffersPage() {
     },
     {
       id: 'vip20',
-      code: 'HAYATVIP',
+      code: 'NOORVIP',
       badge: 'VIP PATRON TIER',
       title: '20% Off Luxury Silk Bundles & Ensembles',
       description: 'Enjoy elevated savings on any order of 3 or more handcrafted creations. Includes complimentary bespoke gift packaging.',

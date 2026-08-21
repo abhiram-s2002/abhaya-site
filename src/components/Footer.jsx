@@ -12,19 +12,19 @@ export default function Footer() {
         <div className="space-y-3">
           <button
             onClick={() => navigateTo('home')}
-            className="font-serif text-2xl sm:text-3xl tracking-[0.2em] font-medium text-[#2E1C1A] text-left hover:opacity-80 transition-opacity"
+            className="font-serif text-2xl sm:text-3xl tracking-[0.18em] font-medium text-[#2E1C1A] text-left hover:opacity-80 transition-opacity"
           >
-            HAYAT
+            NOOR AL DHUHA
           </button>
           <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-stone-500 font-medium">
-            © 2024 HAYAT. ALL RIGHTS RESERVED.
+            © 2024 NOOR AL DHUHA. ALL RIGHTS RESERVED.
           </p>
         </div>
 
         {/* Navigation Links (Right) */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 lg:gap-10 text-xs sm:text-sm text-stone-700">
           <button
-            onClick={() => showToast('HAYAT Atelier Privacy & Data Governance')}
+            onClick={() => showToast('NOOR AL DHUHA Atelier Privacy & Data Governance')}
             className="hover:text-stone-950 text-left transition-colors font-medium hover:underline"
           >
             Privacy Policy

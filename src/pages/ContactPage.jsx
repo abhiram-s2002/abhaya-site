@@ -42,7 +42,7 @@ export default function ContactPage() {
       return;
     }
     setSubmitted(true);
-    showToast('Inquiry sent to HAYAT Atelier Concierge.');
+    showToast('Inquiry sent to NOOR AL DHUHA Atelier Concierge.');
     setTimeout(() => {
       setSubmitted(false);
       setFormData({
@@ -104,8 +104,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="font-semibold block text-primary">Editorial & Client Services</span>
-                  <a href="mailto:concierge@abhaya.com" className="text-royal-violet hover:underline block mt-0.5 font-medium">
-                    concierge@abhaya.com
+                  <a href="mailto:concierge@nooraldhuha.com" className="text-royal-violet hover:underline block mt-0.5 font-medium">
+                    concierge@nooraldhuha.com
                   </a>
                   <span className="text-[11px] text-primary/60">Guaranteed response within 4 business hours</span>
                 </div>

@@ -65,7 +65,7 @@ export default function RefundPolicyPage() {
             4. Damaged or Incorrect Creations
           </h2>
           <p>
-            In the rare event that a creation arrives with a manufacturing defect or transit damage, please notify us within 48 hours via WhatsApp (+91 95442 36858) or email (concierge@abhaya.com). We will provide immediate express replacement or a full refund at zero extra cost.
+            In the rare event that a creation arrives with a manufacturing defect or transit damage, please notify us within 48 hours via WhatsApp (+91 95442 36858) or email (concierge@nooraldhuha.com). We will provide immediate express replacement or a full refund at zero extra cost.
           </p>
         </section>
 

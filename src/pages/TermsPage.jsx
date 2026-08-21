@@ -24,7 +24,7 @@ export default function TermsPage() {
           Terms & Conditions
         </h1>
         <p className="text-xs sm:text-sm text-primary/70 leading-relaxed">
-          Please review the terms governing your purchase and use of the HAYAT Atelier digital boutique.
+          Please review the terms governing your purchase and use of the NOOR AL DHUHA Atelier digital boutique.
         </p>
       </div>
 
@@ -35,7 +35,7 @@ export default function TermsPage() {
             1. Intellectual Property & Brand Rights
           </h2>
           <p>
-            All content, brand identity, signature color palettes, garment designs, photographic assets, and editorial copy displayed on this platform remain the exclusive intellectual property of HAYAT Haute Modestie.
+            All content, brand identity, signature color palettes, garment designs, photographic assets, and editorial copy displayed on this platform remain the exclusive intellectual property of NOOR AL DHUHA Haute Modestie.
           </p>
         </section>
 

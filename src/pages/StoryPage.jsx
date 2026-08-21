@@ -15,7 +15,7 @@ export default function StoryPage() {
             Heritage & Manifesto
           </span>
           <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-medium leading-tight">
-            The House of HAYAT
+            The House of NOOR AL DHUHA
           </h1>
           <p className="text-stone-300 text-xs sm:text-base font-light max-w-xl mx-auto leading-relaxed px-2">
             Founded on the belief that modesty should never ask for compromise in luxury, quality, or architectural beauty.
@@ -56,7 +56,7 @@ export default function StoryPage() {
           <div className="lg:col-span-6 relative aspect-[4/3] rounded-2xl overflow-hidden shadow-luxury border border-surface-container-highest">
             <img
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g"
-              alt="HAYAT Atelier"
+              alt="NOOR AL DHUHA Atelier"
               className="w-full h-full object-cover"
             />
           </div>
@@ -73,7 +73,7 @@ export default function StoryPage() {
               Guiding Principles
             </span>
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-primary font-medium">
-              The Four Pillars of HAYAT
+              The Four Pillars of NOOR AL DHUHA
             </h2>
           </div>
 

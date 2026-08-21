@@ -33,7 +33,7 @@ export function ShopProvider({ children }) {
   // Cart State (stored in localStorage)
   const [cart, setCart] = useState(() => {
     try {
-      const saved = localStorage.getItem('hayat_cart');
+      const saved = localStorage.getItem('noor_cart') || localStorage.getItem('hayat_cart');
       return saved ? JSON.parse(saved) : [
         {
           id: 'midnight-espresso-silk-Midnight Espresso-Size 56 (Length 56")-Open abaya-Handwork Abaya',
@@ -57,7 +57,7 @@ export function ShopProvider({ children }) {
   // Wishlist State
   const [wishlist, setWishlist] = useState(() => {
     try {
-      const saved = localStorage.getItem('hayat_wishlist');
+      const saved = localStorage.getItem('noor_wishlist') || localStorage.getItem('hayat_wishlist');
       return saved ? JSON.parse(saved) : ['midnight-espresso-silk', 'royal-violet-silk'];
     } catch {
       return [];
@@ -73,11 +73,11 @@ export function ShopProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('hayat_cart', JSON.stringify(cart));
+    localStorage.setItem('noor_cart', JSON.stringify(cart));
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem('hayat_wishlist', JSON.stringify(wishlist));
+    localStorage.setItem('noor_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
   // Window scroll to top on view change
@@ -208,14 +208,14 @@ export function ShopProvider({ children }) {
       setDiscountCodeName('ELEGANCE10 (10% OFF)');
       showToast('10% VIP Elegance discount applied!');
       return { success: true, message: '10% discount applied!' };
-    } else if (clean === 'HAYATVIP') {
+    } else if (clean === 'NOORVIP' || clean === 'HAYATVIP') {
       setAppliedDiscount(0.20);
-      setDiscountCodeName('HAYATVIP (20% OFF)');
-      showToast('20% HAYAT Atelier VIP discount applied!');
+      setDiscountCodeName('NOORVIP (20% OFF)');
+      showToast('20% NOOR AL DHUHA Atelier VIP discount applied!');
       return { success: true, message: '20% VIP discount applied!' };
     } else {
-      showToast('Invalid promo code. Try ELEGANCE10 or HAYATVIP', 'error');
-      return { success: false, message: 'Invalid promo code. Try ELEGANCE10 or HAYATVIP' };
+      showToast('Invalid promo code. Try ELEGANCE10 or NOORVIP', 'error');
+      return { success: false, message: 'Invalid promo code. Try ELEGANCE10 or NOORVIP' };
     }
   };
 

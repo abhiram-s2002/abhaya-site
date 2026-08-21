@@ -158,11 +158,11 @@ export default function Navbar() {
           <button
             onClick={() => handleNav('home')}
             className="flex items-center justify-center absolute left-1/2 -translate-x-1/2 cursor-pointer focus:outline-none"
-            aria-label="HAYAT Luxury Abayas Home"
+            aria-label="NOOR AL DHUHA Luxury Abayas Home"
           >
             <div className="flex flex-col items-center">
-              <span className="font-serif text-xl sm:text-2xl tracking-[0.2em] font-medium text-[#2E1C1A]">
-                HAYAT
+              <span className="font-serif text-lg sm:text-xl md:text-2xl tracking-[0.18em] font-medium text-[#2E1C1A] whitespace-nowrap">
+                NOOR AL DHUHA
               </span>
               <span className="text-[8px] sm:text-[9px] tracking-[0.35em] text-stone-500 uppercase -mt-0.5 font-light">
                 DUBAI • ATELIER
@@ -262,8 +262,8 @@ export default function Navbar() {
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-stone-200/80 bg-white">
               <div className="flex flex-col">
-                <span className="font-serif text-lg tracking-[0.2em] font-medium text-[#2E1C1A]">
-                  HAYAT
+                <span className="font-serif text-base sm:text-lg tracking-[0.18em] font-medium text-[#2E1C1A]">
+                  NOOR AL DHUHA
                 </span>
                 <span className="text-[7.5px] tracking-[0.3em] text-stone-500 uppercase font-light">
                   DUBAI HAUTE COUTURE

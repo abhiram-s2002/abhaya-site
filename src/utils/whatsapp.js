@@ -19,7 +19,7 @@ export function formatCartWhatsAppMessage({
   const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const lines = [
-    '✨ *HAYAT ATELIER — BESPOKE ABAYA ORDER* ✨\n',
+    '✨ *NOOR AL DHUHA ATELIER — BESPOKE ABAYA ORDER* ✨\n',
     `Salam / Hello! I would like to place an order for the following ${totalItemCount} item${totalItemCount > 1 ? 's' : ''}:\n`,
     '━━━━━━━━━━━━━━━━━━━━',
     '🛍️ *ORDERED ITEMS & SPECIFICATIONS:*',
@@ -80,8 +80,8 @@ export function formatSingleProductWhatsAppMessage({
   const selectedWork = work || product.defaultWork || (product.works && product.works[0]) || 'plain';
 
   const lines = [
-    '✨ *HAYAT ATELIER — BESPOKE ABAYA ORDER* ✨\n',
-    'Salam / Hello! I would like to order this custom piece from HAYAT Atelier:\n',
+    '✨ *NOOR AL DHUHA ATELIER — BESPOKE ABAYA ORDER* ✨\n',
+    'Salam / Hello! I would like to order this custom piece from NOOR AL DHUHA Atelier:\n',
     '━━━━━━━━━━━━━━━━━━━━',
     `*Piece:* ${product.name}`,
     `*Style / Silhouette:* ${selectedStyle}`,

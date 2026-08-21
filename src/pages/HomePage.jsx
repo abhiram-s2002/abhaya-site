@@ -81,7 +81,7 @@ export default function HomePage() {
       location: "London"
     },
     {
-      review: "HAYAT Atelier brings true Parisian and Milanese couture standards to modest fashion. From the magnetic keepsake box to the pure mulberry sheen, it is unmatched.",
+      review: "NOOR AL DHUHA Atelier brings true Parisian and Milanese couture standards to modest fashion. From the magnetic keepsake box to the pure mulberry sheen, it is unmatched.",
       author: "Tania Rahman",
       location: "Toronto"
     }
@@ -120,7 +120,7 @@ export default function HomePage() {
       return;
     }
     setNewsletterSubmitted(true);
-    showToast('Welcome to the HAYAT VIP Inner Circle.');
+    showToast('Welcome to the NOOR AL DHUHA VIP Inner Circle.');
   };
 
   return (

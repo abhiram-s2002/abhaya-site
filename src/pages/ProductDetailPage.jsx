@@ -698,7 +698,7 @@ export default function ProductDetailPage() {
               {openAccordions.shipping && (
                 <div className="px-4 sm:px-5 pb-4 text-xs text-stone-600 leading-relaxed border-t border-surface-container/60 pt-3 space-y-1.5">
                   <p>
-                    Every HAYAT Abaya arrives carefully hand-folded in acid-free tissue paper and enclosed inside our signature embossed violet keepsake box with bespoke satin ribbon.
+                    Every NOOR AL DHUHA Abaya arrives carefully hand-folded in acid-free tissue paper and enclosed inside our signature embossed violet keepsake box with bespoke satin ribbon.
                   </p>
                   <p className="text-[11px] text-stone-500">
                     • Dispatch: 24–48 hours via DHL Express Worldwide.<br />
