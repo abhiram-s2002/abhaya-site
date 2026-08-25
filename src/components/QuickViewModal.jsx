@@ -3,10 +3,8 @@ import { X, Star, ShoppingBag, Heart, Sparkles, Check, ArrowRight, Scissors } fr
 import { useShop } from '../context/ShopContext';
 import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
 
-export default function QuickViewModal() {
+function QuickViewModalContent({ product, onClose }) {
   const {
-    quickViewProduct,
-    setQuickViewProduct,
     formatPrice,
     addToCart,
     toggleWishlist,
@@ -14,37 +12,23 @@ export default function QuickViewModal() {
     navigateTo
   } = useShop();
 
-  // Prevent background scroll when quick view modal is open
-  useEffect(() => {
-    if (quickViewProduct) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [quickViewProduct]);
-
-  if (!quickViewProduct) return null;
-
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
-  const [selectedStyle, setSelectedStyle] = useState(quickViewProduct.defaultStyle || ABAYA_STYLES[0].name);
-  const [selectedWork, setSelectedWork] = useState(quickViewProduct.defaultWork || ABAYA_WORKS[0].name);
-  const [selectedSize, setSelectedSize] = useState(quickViewProduct.sizes[0]);
+  const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
+  const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const currentColor = quickViewProduct.colors[selectedColorIdx] || quickViewProduct.colors[0];
-  const images = quickViewProduct.gallery && quickViewProduct.gallery.length > 0
-    ? quickViewProduct.gallery
-    : [quickViewProduct.image];
+  const currentColor = product.colors[selectedColorIdx] || product.colors[0];
+  const images = product.gallery && product.gallery.length > 0
+    ? product.gallery
+    : [product.image];
 
-  const wishlisted = isWishlisted(quickViewProduct.id);
+  const wishlisted = isWishlisted(product.id);
 
   const handleColorChange = (idx) => {
     setSelectedColorIdx(idx);
-    const colorObj = quickViewProduct.colors[idx];
+    const colorObj = product.colors[idx];
     if (colorObj && colorObj.imageIndex !== undefined && images[colorObj.imageIndex]) {
       setActiveImageIdx(colorObj.imageIndex);
     }
@@ -52,7 +36,7 @@ export default function QuickViewModal() {
 
   const handleAddToCart = () => {
     addToCart(
-      quickViewProduct,
+      product,
       currentColor.name,
       currentColor.hex,
       selectedSize,
@@ -61,12 +45,12 @@ export default function QuickViewModal() {
       selectedStyle,
       selectedWork
     );
-    setQuickViewProduct(null);
+    onClose();
   };
 
   const handleFullDetail = () => {
-    navigateTo('product-detail', quickViewProduct.id);
-    setQuickViewProduct(null);
+    navigateTo('product-detail', product.id);
+    onClose();
   };
 
   return (
@@ -74,7 +58,7 @@ export default function QuickViewModal() {
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/65 backdrop-blur-sm transition-opacity"
-        onClick={() => setQuickViewProduct(null)}
+        onClick={onClose}
       />
 
       {/* Modal Box */}
@@ -82,7 +66,7 @@ export default function QuickViewModal() {
         
         {/* Close Button */}
         <button
-          onClick={() => setQuickViewProduct(null)}
+          onClick={onClose}
           className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 rounded-full bg-white/90 text-stone-600 hover:text-primary flex items-center justify-center shadow-md transition-colors active:scale-95"
           aria-label="Close modal"
         >
@@ -96,12 +80,12 @@ export default function QuickViewModal() {
             <div className="relative aspect-[3/4] max-h-[320px] md:max-h-none bg-stone-100 rounded-xl overflow-hidden border border-surface-container-highest">
               <img
                 src={images[activeImageIdx] || images[0]}
-                alt={quickViewProduct.name}
+                alt={product.name}
                 className="w-full h-full object-cover transition-all duration-300"
               />
-              {quickViewProduct.badge && (
+              {product.badge && (
                 <span className="absolute top-3 left-3 bg-primary text-gold-soft text-[9px] sm:text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1 rounded shadow">
-                  {quickViewProduct.badge}
+                  {product.badge}
                 </span>
               )}
             </div>
@@ -137,25 +121,25 @@ export default function QuickViewModal() {
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold text-royal-violet">
-                    {quickViewProduct.category} Atelier
+                    {product.category} Atelier
                   </span>
                   <div className="flex items-center gap-1 text-amber-600 text-xs">
                     <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                    <span className="font-semibold">{quickViewProduct.rating}</span>
+                    <span className="font-semibold">{product.rating}</span>
                   </div>
                 </div>
 
                 <h2 className="font-serif text-lg sm:text-2xl font-medium text-primary leading-tight">
-                  {quickViewProduct.name}
+                  {product.name}
                 </h2>
 
                 <div className="flex items-baseline gap-2.5 pt-0.5">
                   <span className="font-serif text-lg sm:text-xl font-bold text-primary">
-                    {formatPrice(quickViewProduct.price)}
+                    {formatPrice(product.price)}
                   </span>
-                  {quickViewProduct.originalPrice && (
+                  {product.originalPrice && (
                     <span className="text-xs sm:text-sm text-stone-400 line-through">
-                      {formatPrice(quickViewProduct.originalPrice)}
+                      {formatPrice(product.originalPrice)}
                     </span>
                   )}
                 </div>
@@ -216,7 +200,7 @@ export default function QuickViewModal() {
                     <span className="font-semibold text-stone-600">{currentColor.name}</span>
                   </div>
                   <div className="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-                    {quickViewProduct.colors.map((c, idx) => (
+                    {product.colors.map((c, idx) => (
                       <button
                         key={c.name}
                         onClick={() => handleColorChange(idx)}
@@ -244,7 +228,7 @@ export default function QuickViewModal() {
                     onChange={(e) => setSelectedSize(e.target.value)}
                     className="w-full text-xs py-1.5 px-2 bg-white border border-surface-container-highest rounded font-medium focus:outline-none focus:border-royal-violet"
                   >
-                    {quickViewProduct.sizes.map((s) => (
+                    {product.sizes.map((s) => (
                       <option key={s} value={s}>
                         {s}
                       </option>
@@ -263,11 +247,11 @@ export default function QuickViewModal() {
                   className="flex-1 py-3 bg-primary hover:bg-royal-violet text-white text-xs uppercase tracking-[0.2em] font-semibold rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors active:scale-[0.98]"
                 >
                   <ShoppingBag className="w-4 h-4" />
-                  <span>Add to Bag • {formatPrice(quickViewProduct.price * quantity)}</span>
+                  <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
                 </button>
 
                 <button
-                  onClick={() => toggleWishlist(quickViewProduct.id)}
+                  onClick={() => toggleWishlist(product.id)}
                   className={`p-3 rounded-lg border transition-colors ${
                     wishlisted
                       ? 'bg-royal-violet text-white border-royal-violet'
@@ -296,3 +280,29 @@ export default function QuickViewModal() {
     </div>
   );
 }
+
+export default function QuickViewModal() {
+  const { quickViewProduct, setQuickViewProduct } = useShop();
+
+  // Prevent background scroll when quick view modal is open
+  useEffect(() => {
+    if (quickViewProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [quickViewProduct]);
+
+  if (!quickViewProduct) return null;
+
+  return (
+    <QuickViewModalContent
+      product={quickViewProduct}
+      onClose={() => setQuickViewProduct(null)}
+    />
+  );
+}
+
