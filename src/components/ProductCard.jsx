@@ -186,11 +186,11 @@ export default function ProductCard({ product }) {
           {/* Price */}
           <div className="flex items-baseline space-x-1 sm:space-x-1.5 shrink-0">
             {product.originalPrice && (
-              <span className="text-[10px] sm:text-xs text-stone-400 line-through hidden xs:inline">
+              <span className="text-[10px] sm:text-xs text-stone-400 line-through font-sans tabular-nums hidden xs:inline">
                 {formatPrice(product.originalPrice)}
               </span>
             )}
-            <span className="font-serif text-xs sm:text-sm font-semibold text-primary">
+            <span className="font-sans text-xs sm:text-sm font-bold text-primary tabular-nums tracking-tight">
               {formatPrice(product.price)}
             </span>
           </div>

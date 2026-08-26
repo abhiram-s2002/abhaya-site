@@ -140,7 +140,7 @@ export default function SearchModal() {
                       <span className="text-[11px] text-stone-500 line-clamp-1">{p.subtitle}</span>
                     </div>
                     <div className="text-right flex items-center gap-2 sm:gap-3 shrink-0">
-                      <span className="font-serif text-xs sm:text-sm font-semibold text-primary">
+                      <span className="font-sans text-xs sm:text-sm font-bold text-primary tabular-nums">
                         {formatPrice(p.price)}
                       </span>
                       <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-400 group-hover:text-royal-violet group-hover:translate-x-0.5 transition-all" />

@@ -240,11 +240,11 @@ export default function CartDrawer() {
                         </div>
 
                         <div className="text-right">
-                          <span className="font-serif text-xs sm:text-sm font-medium text-primary">
+                          <span className="font-sans text-xs sm:text-sm font-bold text-primary tabular-nums">
                             {formatPrice(item.price * item.quantity)}
                           </span>
                           {item.quantity > 1 && (
-                            <span className="block text-[9px] sm:text-[10px] text-stone-400">
+                            <span className="block text-[9px] sm:text-[10px] text-stone-400 font-sans tabular-nums">
                               {formatPrice(item.price)} each
                             </span>
                           )}
@@ -314,7 +314,7 @@ export default function CartDrawer() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between text-sm font-serif font-bold text-primary pt-2 border-t border-surface-container-high">
+                  <div className="flex justify-between text-sm font-sans font-bold text-primary pt-2 border-t border-surface-container-high tabular-nums">
                     <span>Estimated Total</span>
                     <span>
                       {formatPrice(

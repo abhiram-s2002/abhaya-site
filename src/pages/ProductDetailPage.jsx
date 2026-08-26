@@ -365,12 +365,12 @@ export default function ProductDetailPage() {
               {product.subtitle}
             </p>
 
-            <div className="flex items-baseline gap-3 pt-1">
-              <span className="font-serif text-2xl sm:text-3xl font-bold text-primary">
+            <div className="flex items-baseline gap-3">
+              <span className="font-sans text-2xl sm:text-3xl text-primary font-bold tabular-nums tracking-tight">
                 {formatPrice(product.price)}
               </span>
               {product.originalPrice && (
-                <span className="text-sm sm:text-base text-stone-400 line-through">
+                <span className="text-sm sm:text-base text-stone-400 line-through font-sans tabular-nums">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}

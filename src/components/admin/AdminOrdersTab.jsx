@@ -251,7 +251,7 @@ export default function AdminOrdersTab({ formatPrice, showToast }) {
                       <div className="font-mono text-stone-600 text-[11px]">
                         AWB: {order.tracking_number || 'Pending'}
                       </div>
-                      <div className="font-serif font-bold text-sm text-primary pt-1">
+                      <div className="font-sans font-bold text-sm text-primary pt-1 tabular-nums">
                         Total: {formatPrice(order.total_amount || 0)}
                       </div>
                     </div>

@@ -137,11 +137,11 @@ function QuickViewModalContent({ product, onClose }) {
                 </h2>
 
                 <div className="flex items-baseline gap-2.5 pt-0.5">
-                  <span className="font-serif text-lg sm:text-xl font-bold text-primary">
+                  <span className="font-sans text-xl sm:text-2xl font-bold text-primary tabular-nums tracking-tight">
                     {formatPrice(product.price)}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-xs sm:text-sm text-stone-400 line-through">
+                    <span className="text-xs sm:text-sm text-stone-400 line-through font-sans tabular-nums">
                       {formatPrice(product.originalPrice)}
                     </span>
                   )}

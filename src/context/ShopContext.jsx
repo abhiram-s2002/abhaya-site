@@ -391,11 +391,14 @@ export function ShopProvider({ children }) {
     showToast('Promo code removed.', 'info');
   };
 
-  // Price formatting helper with currency conversion
+  // Price formatting helper with currency conversion & clean locale formatting
   const formatPrice = (usdPrice) => {
     const info = CURRENCIES[currency] || CURRENCIES.USD;
-    const converted = (usdPrice * info.rate).toFixed(0);
-    return `${info.symbol}${converted}`;
+    const num = Math.round(Number(usdPrice || 0) * info.rate);
+    const formatted = currency === 'INR' 
+      ? num.toLocaleString('en-IN') 
+      : num.toLocaleString('en-US');
+    return `${info.symbol}${formatted}`;
   };
 
   const rawCartSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);

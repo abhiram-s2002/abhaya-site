@@ -569,9 +569,9 @@ export default function AdminPage() {
 
                         {/* Price */}
                         <td className="py-3.5 px-4 font-medium">
-                          <div className="font-serif text-sm text-primary">{formatPrice(p.price)}</div>
+                          <div className="font-sans text-sm font-bold text-primary tabular-nums">{formatPrice(p.price)}</div>
                           {p.originalPrice && (
-                            <div className="text-[10px] text-stone-400 line-through">
+                            <div className="text-[10px] text-stone-400 line-through font-sans tabular-nums">
                               {formatPrice(p.originalPrice)}
                             </div>
                           )}

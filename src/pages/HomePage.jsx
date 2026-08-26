@@ -293,7 +293,7 @@ export default function HomePage() {
                       <p className="font-sans text-[11px] line-clamp-1 text-white/60">
                         {product.description}
                       </p>
-                      <span className="font-sans text-sm font-semibold tracking-wide mt-0.5 text-white">
+                      <span className="font-sans font-bold tabular-nums text-sm tracking-wide mt-0.5 text-white">
                         {formatPrice(product.price)}
                       </span>
                     </div>
