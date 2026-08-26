@@ -21,6 +21,7 @@ export default function ShopPage() {
     PRODUCTS,
     selectedCategoryFilter,
     setSelectedCategoryFilter,
+    wishlistOnlyFilter,
     wishlist,
     formatPrice
   } = useShop();
@@ -42,7 +43,7 @@ export default function ShopPage() {
   const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
   const [selectedShade, setSelectedShade] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
-  const [onlyWishlist, setOnlyWishlist] = useState(false);
+  const [onlyWishlist, setOnlyWishlist] = useState(Boolean(wishlistOnlyFilter));
 
   // UI state
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -51,6 +52,13 @@ export default function ShopPage() {
   const [activeDrawerTab, setActiveDrawerTab] = useState('style'); // 'style' | 'work' | 'shade' | 'all'
 
   const sortDropdownRef = useRef(null);
+
+  // Sync wishlistOnlyFilter from context
+  useEffect(() => {
+    if (wishlistOnlyFilter) {
+      setOnlyWishlist(true);
+    }
+  }, [wishlistOnlyFilter]);
 
   // Sync selectedCategoryFilter from context if set from external links
   useEffect(() => {

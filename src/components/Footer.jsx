@@ -22,30 +22,42 @@ export default function Footer() {
         </div>
 
         {/* Navigation Links (Right) */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 lg:gap-10 text-xs sm:text-sm text-stone-700">
+        <div className="flex flex-wrap sm:items-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm text-stone-700">
           <button
-            onClick={() => showToast('NOOR AL DHUHA Atelier Privacy & Data Governance')}
-            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline"
+            onClick={() => navigateTo('terms')}
+            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer"
           >
-            Privacy Policy
+            Terms & Privacy
           </button>
           <button
-            onClick={() => showToast('Complimentary DHL Express Tracked Shipping & 14-Day Exchanges')}
-            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline"
+            onClick={() => navigateTo('refund-policy')}
+            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer"
           >
             Shipping & Returns
           </button>
           <button
-            onClick={() => navigateTo('story')}
-            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline"
+            onClick={() => navigateTo('order-lookup')}
+            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer"
           >
-            Sustainability
+            Track Order
+          </button>
+          <button
+            onClick={() => navigateTo('offers')}
+            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer"
+          >
+            Privileges & Offers
+          </button>
+          <button
+            onClick={() => navigateTo('story')}
+            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer"
+          >
+            Our Story
           </button>
           <button
             onClick={() => navigateTo('contact')}
-            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline"
+            className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer"
           >
-            Wholesale
+            Concierge & Contact
           </button>
         </div>
 

@@ -128,11 +128,14 @@ export default function ProductDetailPage() {
     setActiveImageIdx((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  const [customMeasurements, setCustomMeasurements] = useState({ height: '', bust: '', length: '' });
+
   const toggleAccordion = (key) => {
     setOpenAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handleAddToCart = () => {
+    const isCustom = selectedSize.toLowerCase().includes('custom');
     addToCart(
       product,
       currentColor.name,
@@ -141,11 +144,13 @@ export default function ProductDetailPage() {
       quantity,
       images[activeImageIdx],
       selectedStyle,
-      selectedWork
+      selectedWork,
+      isCustom ? customMeasurements : null
     );
   };
 
   const handleWhatsAppInstantOrder = () => {
+    const isCustom = selectedSize.toLowerCase().includes('custom');
     const msg = formatSingleProductWhatsAppMessage({
       product,
       colorName: currentColor.name,
@@ -153,6 +158,7 @@ export default function ProductDetailPage() {
       style: selectedStyle,
       work: selectedWork,
       quantity,
+      customMeasurements: isCustom ? customMeasurements : null,
       formatPrice
     });
     showToast(`Opening WhatsApp order for "${product.name}"...`);
@@ -547,6 +553,47 @@ export default function ProductDetailPage() {
                   </button>
                 ))}
               </div>
+
+              {selectedSize.toLowerCase().includes('custom') && (
+                <div className="p-3.5 bg-royal-violet/5 rounded-xl border border-royal-violet/20 space-y-2.5 animate-fade-in">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-royal-violet">
+                    <Scissors className="w-3.5 h-3.5" />
+                    <span>Enter Your Bespoke Atelier Measurements:</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-stone-600 mb-1">Height (e.g. 5'4" / 164cm)</label>
+                      <input
+                        type="text"
+                        value={customMeasurements.height}
+                        onChange={(e) => setCustomMeasurements(prev => ({ ...prev, height: e.target.value }))}
+                        placeholder="e.g. 164 cm"
+                        className="w-full bg-white border border-stone-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-royal-violet"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-stone-600 mb-1">Bust / Width (e.g. 38")</label>
+                      <input
+                        type="text"
+                        value={customMeasurements.bust}
+                        onChange={(e) => setCustomMeasurements(prev => ({ ...prev, bust: e.target.value }))}
+                        placeholder="e.g. 38 inches"
+                        className="w-full bg-white border border-stone-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-royal-violet"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase font-bold text-stone-600 mb-1">Desired Length (e.g. 56")</label>
+                      <input
+                        type="text"
+                        value={customMeasurements.length}
+                        onChange={(e) => setCustomMeasurements(prev => ({ ...prev, length: e.target.value }))}
+                        placeholder="e.g. 56 inches"
+                        className="w-full bg-white border border-stone-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-royal-violet"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>

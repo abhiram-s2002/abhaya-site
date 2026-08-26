@@ -17,6 +17,10 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import VioletEditionPage from './pages/VioletEditionPage';
 import StoryPage from './pages/StoryPage';
 import ContactPage from './pages/ContactPage';
+import OffersPage from './pages/OffersPage';
+import OrderLookupPage from './pages/OrderLookupPage';
+import RefundPolicyPage from './pages/RefundPolicyPage';
+import TermsPage from './pages/TermsPage';
 
 function AppContent() {
   const { currentView } = useShop();
@@ -35,6 +39,14 @@ function AppContent() {
         return <StoryPage />;
       case 'contact':
         return <ContactPage />;
+      case 'offers':
+        return <OffersPage />;
+      case 'order-lookup':
+        return <OrderLookupPage />;
+      case 'refund-policy':
+        return <RefundPolicyPage />;
+      case 'terms':
+        return <TermsPage />;
       case 'home':
       default:
         return <HomePage />;

@@ -22,18 +22,18 @@ export default function OrderLookupPage() {
     deliveryAddress: '742 Evergreen Terrace, Dubai & Worldwide Delivery',
     items: [
       {
-        name: 'Midnight Espresso Silk Hijab',
-        spec: 'Standard (180 × 70 cm) • 100% Grade 6A Mulberry Silk',
-        price: 85,
+        name: 'Midnight Espresso Silk Abaya',
+        spec: 'Size 56 • Open Abaya Cut • Handwork Embroidery • 100% Mulberry Silk',
+        price: 185,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80'
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw'
       },
       {
-        name: 'Royal Amethyst Silk Chiffon Hijab',
-        spec: 'Signature (200 × 70 cm) • Japanese Pebble Chiffon',
-        price: 95,
+        name: 'Royal Violet Mulberry Silk Abaya',
+        spec: 'Size 56 • Butterfly / Farasha Cut • Stonework Craft',
+        price: 210,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80'
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA'
       }
     ],
     timeline: [

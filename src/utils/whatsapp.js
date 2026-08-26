@@ -28,15 +28,23 @@ export function formatCartWhatsAppMessage({
 
   cart.forEach((item, index) => {
     const itemTotal = formatPrice(item.price * item.quantity);
-    lines.push(
+    let itemSpecLines = [
       `\n*${index + 1}. ${item.name}*`,
       `   • Style / Cut: ${item.style || 'Open abaya'}`,
       `   • Work / Craft: ${item.work || 'plain'}`,
       `   • Color: ${item.color}`,
-      `   • Abaya Size: ${item.size}`,
+      `   • Abaya Size: ${item.size}`
+    ];
+    if (item.customMeasurements) {
+      if (item.customMeasurements.height) itemSpecLines.push(`     - Height: ${item.customMeasurements.height}`);
+      if (item.customMeasurements.bust) itemSpecLines.push(`     - Bust: ${item.customMeasurements.bust}`);
+      if (item.customMeasurements.length) itemSpecLines.push(`     - Custom Length: ${item.customMeasurements.length}`);
+    }
+    itemSpecLines.push(
       `   • Quantity: ${item.quantity}`,
       `   • Price: ${itemTotal} (${formatPrice(item.price)} each)`
     );
+    lines.push(...itemSpecLines);
   });
 
   lines.push(
@@ -73,6 +81,7 @@ export function formatSingleProductWhatsAppMessage({
   style,
   work,
   quantity = 1,
+  customMeasurements = null,
   formatPrice
 }) {
   const totalPrice = formatPrice(product.price * quantity);
@@ -87,12 +96,21 @@ export function formatSingleProductWhatsAppMessage({
     `*Style / Silhouette:* ${selectedStyle}`,
     `*Work / Craftsmanship:* ${selectedWork}`,
     `*Color:* ${colorName || (product.colors && product.colors[0]?.name)}`,
-    `*Abaya Length / Size:* ${size || (product.sizes && product.sizes[0])}`,
+    `*Abaya Length / Size:* ${size || (product.sizes && product.sizes[0])}`
+  ];
+
+  if (customMeasurements) {
+    if (customMeasurements.height) lines.push(`*Height / Stature:* ${customMeasurements.height}`);
+    if (customMeasurements.bust) lines.push(`*Bust Measurement:* ${customMeasurements.bust}`);
+    if (customMeasurements.length) lines.push(`*Desired Garment Length:* ${customMeasurements.length}`);
+  }
+
+  lines.push(
     `*Quantity:* ${quantity}`,
     `*Total:* ${totalPrice} (${formatPrice(product.price)} each)`,
     '━━━━━━━━━━━━━━━━━━━━',
     '\nPlease confirm piece availability, dispatch timeline, and share payment details. Thank you! 🌿'
-  ];
+  );
 
   return lines.join('\n');
 }

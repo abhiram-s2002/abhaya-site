@@ -21,6 +21,7 @@ export function ShopProvider({ children }) {
   const [selectedColorFilter, setSelectedColorFilter] = useState('All');
   const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');
   const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
+  const [wishlistOnlyFilter, setWishlistOnlyFilter] = useState(false);
   
   // Modals & Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -93,7 +94,7 @@ export function ShopProvider({ children }) {
     }, 3500);
   };
 
-  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null) => {
+  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false) => {
     if (productId) {
       setSelectedProductId(productId);
     }
@@ -112,6 +113,7 @@ export function ShopProvider({ children }) {
     if (work) {
       setSelectedWorkFilter(work);
     }
+    setWishlistOnlyFilter(wishlistOnly);
     setCurrentView(view);
     setIsSearchOpen(false);
   };
@@ -124,15 +126,17 @@ export function ShopProvider({ children }) {
     quantity = 1,
     imageOverride = null,
     style = null,
-    work = null
+    work = null,
+    customMeasurements = null
   ) => {
     const resolvedStyle = style || product.defaultStyle || (product.styles && product.styles[0]) || 'Open abaya';
     const resolvedWork = work || product.defaultWork || (product.works && product.works[0]) || 'plain';
     const resolvedColor = colorName || product.colors[0].name;
     const resolvedHex = hexCode || product.colors[0].hex;
     const resolvedSize = size || product.sizes[0];
+    const customTag = customMeasurements ? `-${customMeasurements.height || ''}-${customMeasurements.bust || ''}-${customMeasurements.length || ''}` : '';
 
-    const cartItemId = `${product.id}-${resolvedColor}-${resolvedSize}-${resolvedStyle}-${resolvedWork}`;
+    const cartItemId = `${product.id}-${resolvedColor}-${resolvedSize}-${resolvedStyle}-${resolvedWork}${customTag}`;
     setCart(prev => {
       const existing = prev.find(item => item.id === cartItemId);
       if (existing) {
@@ -154,6 +158,7 @@ export function ShopProvider({ children }) {
           size: resolvedSize,
           style: resolvedStyle,
           work: resolvedWork,
+          customMeasurements,
           image: imageOverride || product.image,
           quantity
         }
@@ -208,14 +213,19 @@ export function ShopProvider({ children }) {
       setDiscountCodeName('ELEGANCE10 (10% OFF)');
       showToast('10% VIP Elegance discount applied!');
       return { success: true, message: '10% discount applied!' };
+    } else if (clean === 'VIOLET15') {
+      setAppliedDiscount(0.15);
+      setDiscountCodeName('VIOLET15 (15% OFF)');
+      showToast('15% Royal Violet Edition discount applied!');
+      return { success: true, message: '15% discount applied!' };
     } else if (clean === 'NOORVIP' || clean === 'HAYATVIP') {
       setAppliedDiscount(0.20);
       setDiscountCodeName('NOORVIP (20% OFF)');
       showToast('20% NOOR AL DHUHA Atelier VIP discount applied!');
       return { success: true, message: '20% VIP discount applied!' };
     } else {
-      showToast('Invalid promo code. Try ELEGANCE10 or NOORVIP', 'error');
-      return { success: false, message: 'Invalid promo code. Try ELEGANCE10 or NOORVIP' };
+      showToast('Invalid promo code. Try ELEGANCE10, VIOLET15 or NOORVIP', 'error');
+      return { success: false, message: 'Invalid promo code. Try ELEGANCE10, VIOLET15 or NOORVIP' };
     }
   };
 
@@ -259,6 +269,8 @@ export function ShopProvider({ children }) {
         setSelectedStyleFilter,
         selectedWorkFilter,
         setSelectedWorkFilter,
+        wishlistOnlyFilter,
+        setWishlistOnlyFilter,
         isCartOpen,
         setIsCartOpen,
         isSearchOpen,

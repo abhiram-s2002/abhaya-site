@@ -22,6 +22,7 @@ import {
   Truck
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { openWhatsApp, WHATSAPP_PHONE_DISPLAY } from '../utils/whatsapp';
 
 export default function Navbar() {
   const {
@@ -533,29 +534,36 @@ export default function Navbar() {
                   <div className="mt-2.5 pl-3 space-y-2 border-l-2 border-stone-200 animate-fade-in text-xs text-stone-600">
                     <button
                       onClick={() => {
-                        window.open('https://wa.me/971500000000', '_blank');
+                        setMobileMenuOpen(false);
+                        openWhatsApp('Salam / Hello! I would like to speak with the NOOR AL DHUHA Atelier concierge.');
                       }}
                       className="block w-full text-left py-1 text-emerald-700 font-medium hover:text-emerald-800 transition-colors"
                     >
-                      💬 WhatsApp Concierge (Live 24/7)
+                      💬 WhatsApp Concierge ({WHATSAPP_PHONE_DISPLAY})
                     </button>
                     <button
-                      onClick={() => showToast('Free Tracked DHL Express Shipping on all global orders.')}
-                      className="block w-full text-left py-1 hover:text-royal-violet transition-colors"
+                      onClick={() => handleNav('offers')}
+                      className="block w-full text-left py-1 text-royal-violet font-medium hover:underline transition-colors"
                     >
-                      • Worldwide Shipping & Tracking
+                      ✦ Offers & Exclusive Privileges
                     </button>
                     <button
-                      onClick={() => showToast('Bespoke Height Sizing: Sizes 52, 54, 56, 58, 60 and Custom.')}
+                      onClick={() => handleNav('order-lookup')}
                       className="block w-full text-left py-1 hover:text-royal-violet transition-colors"
                     >
-                      • Abaya Size & Length Guide
+                      • Track Order & Dispatch Live
                     </button>
                     <button
-                      onClick={() => showToast('14-Day Complimentary Luxury Exchanges.')}
+                      onClick={() => handleNav('refund-policy')}
                       className="block w-full text-left py-1 hover:text-royal-violet transition-colors"
                     >
-                      • Returns & Exchanges
+                      • Returns & Exchanges Policy
+                    </button>
+                    <button
+                      onClick={() => handleNav('terms')}
+                      className="block w-full text-left py-1 hover:text-royal-violet transition-colors"
+                    >
+                      • Terms of Service & Privacy
                     </button>
                   </div>
                 )}

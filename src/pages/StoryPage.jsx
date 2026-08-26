@@ -35,7 +35,7 @@ export default function StoryPage() {
               Crafted in Reverence of Detail
             </h2>
             <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-light">
-              For decades, modest fashion was forced to choose between synthetic polyester blends that slipped and snagged, or heavy fabrics that suffocated. We sought to re-imagine the hijab as a piece of haute couture sculpture.
+              For decades, modest fashion was forced to choose between synthetic polyester blends that slipped and snagged, or heavy fabrics that suffocated. We sought to re-imagine the bespoke abaya and modest silhouette as a piece of haute couture sculpture.
             </p>
             <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-light">
               We spent three years testing over 40 distinct silk weights before settling on our proprietary <strong>19-Momme Grade 6A Mulberry Silk</strong>—which features a luminous, fluid face and a micro-textured matte reverse weave that eliminates slippage without pins.

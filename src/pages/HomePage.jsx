@@ -71,17 +71,17 @@ export default function HomePage() {
   // Testimonials Carousel
   const testimonials = [
     {
-      review: "I am continually amazed by how luxurious these hijabs feel once worn. The silk drape is pure perfection, the hand-rolled hems are exquisite, and I receive non-stop compliments at every gathering.",
+      review: "I am continually amazed by how majestic these bespoke abayas drape once worn. The pure silk Farasha with delicate stonework is pure perfection, and I received non-stop compliments at every event.",
       author: "Sarah Al-Mansoor",
       location: "Dubai"
     },
     {
-      review: "The Austrian Modal Jersey has completely elevated my everyday routine. Incredibly breathable, stays in place all day without pins, and the packaging feels like opening high jewellery.",
+      review: "The Austrian Modal Jersey Abaya in Kimono cut has completely elevated my wardrobe. Incredibly breathable, fluid movement, and the packaging feels like opening high jewellery.",
       author: "Priya Nair",
       location: "London"
     },
     {
-      review: "NOOR AL DHUHA Atelier brings true Parisian and Milanese couture standards to modest fashion. From the magnetic keepsake box to the pure mulberry sheen, it is unmatched.",
+      review: "NOOR AL DHUHA Atelier brings true Parisian and Milanese haute couture standards to modest fashion. From the magnetic keepsake box to the pure mulberry silk sheen, it is unmatched.",
       author: "Tania Rahman",
       location: "Toronto"
     }
@@ -220,10 +220,10 @@ export default function HomePage() {
                   COMPLIMENTARY ACCESSORY
                 </span>
                 <h3 className="font-serif text-base font-medium text-primary">
-                  Free Silk Scrunchie with Bundles
+                  Matching Shayla & Silk Keepsake Box
                 </h3>
                 <p className="text-xs text-primary/70 font-sans">
-                  On orders of 2 or more hijabs
+                  Included complimentary with every abaya creation
                 </p>
               </div>
               <ArrowRight className="w-4 h-4 text-emerald-700 transition-transform group-hover:translate-x-1" />

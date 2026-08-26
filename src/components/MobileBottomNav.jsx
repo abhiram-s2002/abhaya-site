@@ -67,8 +67,8 @@ export default function MobileBottomNav() {
 
         {/* Wishlist */}
         <button
-          onClick={() => navigateTo('shop')}
-          className="flex flex-col items-center justify-center gap-1 py-1 text-stone-500 hover:text-primary transition-colors relative"
+          onClick={() => navigateTo('shop', null, null, null, null, null, null, true)}
+          className="flex flex-col items-center justify-center gap-1 py-1 text-stone-500 hover:text-primary transition-colors relative cursor-pointer"
           aria-label="Saved Favorites"
         >
           <div className="relative">

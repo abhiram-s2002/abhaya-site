@@ -16,6 +16,7 @@ function QuickViewModalContent({ product, onClose }) {
   const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
   const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
   const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+  const [customMeasurements, setCustomMeasurements] = useState({ height: '', bust: '', length: '' });
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
@@ -35,6 +36,7 @@ function QuickViewModalContent({ product, onClose }) {
   };
 
   const handleAddToCart = () => {
+    const isCustom = selectedSize.toLowerCase().includes('custom');
     addToCart(
       product,
       currentColor.name,
@@ -43,7 +45,8 @@ function QuickViewModalContent({ product, onClose }) {
       quantity,
       images[activeImageIdx],
       selectedStyle,
-      selectedWork
+      selectedWork,
+      isCustom ? customMeasurements : null
     );
     onClose();
   };
@@ -236,6 +239,38 @@ function QuickViewModalContent({ product, onClose }) {
                   </select>
                 </div>
               </div>
+
+              {selectedSize.toLowerCase().includes('custom') && (
+                <div className="p-2.5 bg-royal-violet/5 rounded-lg border border-royal-violet/20 space-y-1.5 animate-fade-in text-[11px]">
+                  <div className="flex items-center gap-1 font-semibold text-royal-violet">
+                    <Scissors className="w-3 h-3" />
+                    <span>Custom Measurements:</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <input
+                      type="text"
+                      placeholder="Height (e.g. 164cm)"
+                      value={customMeasurements.height}
+                      onChange={(e) => setCustomMeasurements(prev => ({ ...prev, height: e.target.value }))}
+                      className="bg-white border border-stone-300 rounded px-2 py-1 text-[11px] focus:outline-none focus:border-royal-violet"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Bust (e.g. 38in)"
+                      value={customMeasurements.bust}
+                      onChange={(e) => setCustomMeasurements(prev => ({ ...prev, bust: e.target.value }))}
+                      className="bg-white border border-stone-300 rounded px-2 py-1 text-[11px] focus:outline-none focus:border-royal-violet"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Length (e.g. 56in)"
+                      value={customMeasurements.length}
+                      onChange={(e) => setCustomMeasurements(prev => ({ ...prev, length: e.target.value }))}
+                      className="bg-white border border-stone-300 rounded px-2 py-1 text-[11px] focus:outline-none focus:border-royal-violet"
+                    />
+                  </div>
+                </div>
+              )}
 
             </div>
 
