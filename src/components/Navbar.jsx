@@ -227,6 +227,17 @@ export default function Navbar() {
             >
               <User className="w-4.5 h-4.5" />
             </button>
+
+            {/* Admin Portal Button */}
+            <button
+              onClick={() => handleNav('admin')}
+              aria-label="Admin Portal"
+              title="Admin Portal"
+              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-royal-violet/10 hover:bg-royal-violet/20 border border-royal-violet/20 text-royal-violet text-[11px] font-semibold transition-colors"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Admin</span>
+            </button>
             
             {/* Shopping Bag */}
             <button
@@ -599,6 +610,14 @@ export default function Navbar() {
                 >
                   <Search className="w-3.5 h-3.5" />
                   <span>Search</span>
+                </button>
+                <span className="text-stone-300">|</span>
+                <button
+                  onClick={() => handleNav('admin')}
+                  className="text-royal-violet font-semibold hover:text-primary transition-colors flex items-center gap-1"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Admin</span>
                 </button>
               </div>
 

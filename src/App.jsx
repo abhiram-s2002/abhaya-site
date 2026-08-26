@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ShopProvider, useShop } from './context/ShopContext';
 import AnnouncementBar from './components/AnnouncementBar';
 import Navbar from './components/Navbar';
@@ -21,12 +21,26 @@ import OffersPage from './pages/OffersPage';
 import OrderLookupPage from './pages/OrderLookupPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
+import AdminPage from './pages/AdminPage';
 
 function AppContent() {
-  const { currentView } = useShop();
+  const { currentView, setCurrentView } = useShop();
+
+  // Listen for hash or query parameters on initial load (e.g. /#admin or ?view=admin)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const viewParam = params.get('view');
+    const hash = window.location.hash.replace('#', '');
+    
+    if (viewParam === 'admin' || hash === 'admin') {
+      setCurrentView('admin');
+    }
+  }, [setCurrentView]);
 
   const renderCurrentView = () => {
     switch (currentView) {
+      case 'admin':
+        return <AdminPage />;
       case 'shop':
         return <ShopPage />;
       case 'collections':
@@ -88,4 +102,3 @@ export default function App() {
     </ShopProvider>
   );
 }
-

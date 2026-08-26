@@ -1,8 +1,9 @@
 import React from 'react';
+import { ShieldCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 
 export default function Footer() {
-  const { navigateTo, showToast } = useShop();
+  const { navigateTo } = useShop();
 
   return (
     <footer className="w-full bg-[#fff4f9]/80 border-t border-[#ebdcd0]/60 py-12 sm:py-16 mt-auto">
@@ -59,10 +60,16 @@ export default function Footer() {
           >
             Concierge & Contact
           </button>
+          <button
+            onClick={() => navigateTo('admin')}
+            className="inline-flex items-center gap-1 text-royal-violet hover:text-primary transition-colors font-semibold cursor-pointer px-2 py-1 rounded bg-royal-violet/10 hover:bg-royal-violet/20 border border-royal-violet/20 text-xs"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Admin Portal</span>
+          </button>
         </div>
 
       </div>
     </footer>
   );
 }
-
