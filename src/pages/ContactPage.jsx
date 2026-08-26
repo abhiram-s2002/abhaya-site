@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle2, ChevronDown, ChevronUp, Clock, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import EditableSection from '../components/cms/EditableSection';
 
 export default function ContactPage() {
-  const { showToast } = useShop();
+  const { showToast, siteContent } = useShop();
+  const c = siteContent?.contact_info || {};
+
+  const phone = c.phone || '+91 95442 36858';
+  const whatsappUrl = c.whatsapp_url || 'https://wa.me/919544236858';
+  const email = c.email || 'atelier@nooraldhuha.com';
+  const address = c.address || 'NOOR AL DHUHA Atelier, Dubai, UAE';
+  const hours = c.hours || 'Mon – Sat, 9:00 AM – 8:00 PM GST';
+  const faqs = Array.isArray(c.faqs) && c.faqs.length > 0 ? c.faqs : [
+    { q: 'What is Grade 6A Mulberry Silk and why is it superior?', a: 'Grade 6A represents the pinnacle of raw silk quality...' },
+  ];
 
   const [formData, setFormData] = useState({
     name: '',
@@ -16,26 +27,9 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
 
-  const faqs = [
-    {
-      q: 'What is Grade 6A Mulberry Silk and why is it superior?',
-      a: 'Grade 6A represents the pinnacle of raw silk quality, woven from long, unbroken natural mulberry fibers. It provides unmatched featherlight drape, natural temperature regulation, hypoallergenic touch, and hair protection without slipping.'
-    },
-    {
-      q: 'How do I care for and wash my silk & chiffon hijabs?',
-      a: 'We recommend gentle hand washing in cool water with pH-neutral silk wash or delicate detergent. Lay flat on a clean towel to air dry out of direct sunlight. Use a low-temperature silk iron or garment steamer.'
-    },
-    {
-      q: 'What are your international delivery times & shipping rates?',
-      a: 'We provide complimentary worldwide express shipping on orders over $150. Domestic UAE & GCC delivery takes 1-2 business days. UK, EU, US, and international express deliveries take 3-5 business days via DHL/FedEx.'
-    },
-    {
-      q: 'What is your exchange and return policy?',
-      a: 'We offer hassle-free 14-day returns and exchanges for all unworn garments in their original keepsake packaging with security ribbon intact.'
-    }
-  ];
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       showToast('Please fill in your name, email, and message.', 'error');
@@ -57,6 +51,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-neutral-white pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 animate-fade-in">
+      <EditableSection cmsKey="contact_info" label="Contact & FAQs">
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -91,10 +86,10 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="font-semibold block text-primary">Concierge Hotline & WhatsApp</span>
-                  <a href="https://wa.me/919544236858" target="_blank" rel="noopener noreferrer" className="text-royal-violet hover:underline block mt-0.5 font-medium">
-                    +91 95442 36858
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-royal-violet hover:underline block mt-0.5 font-medium">
+                    {phone}
                   </a>
-                  <span className="text-[11px] text-primary/60">Available Mon - Sat, 9:00 AM - 8:00 PM GST</span>
+                  <span className="text-[11px] text-primary/60">{hours}</span>
                 </div>
               </div>
 
@@ -104,8 +99,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="font-semibold block text-primary">Editorial & Client Services</span>
-                  <a href="mailto:concierge@nooraldhuha.com" className="text-royal-violet hover:underline block mt-0.5 font-medium">
-                    concierge@nooraldhuha.com
+                  <a href={`mailto:${email}`} className="text-royal-violet hover:underline block mt-0.5 font-medium">
+                    {email}
                   </a>
                   <span className="text-[11px] text-primary/60">Guaranteed response within 4 business hours</span>
                 </div>
@@ -118,7 +113,7 @@ export default function ContactPage() {
                 <div>
                   <span className="font-semibold block text-primary">Flagship Atelier & Design Studio</span>
                   <p className="text-primary/70 mt-0.5 leading-relaxed">
-                    Building 4, Dubai Design District (d3), UAE & Global Distribution Center
+                    {address}
                   </p>
                 </div>
               </div>
@@ -128,7 +123,7 @@ export default function ContactPage() {
             {/* Quick Action Channels */}
             <div className="pt-4 border-t border-primary/10 flex flex-col sm:flex-row gap-3">
               <a
-                href="https://wa.me/919544236858"
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-3 px-4 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-sans font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
@@ -314,6 +309,7 @@ export default function ContactPage() {
           ))}
         </div>
       </div>
+      </EditableSection>
 
     </div>
   );

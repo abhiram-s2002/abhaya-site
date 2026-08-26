@@ -8,6 +8,8 @@ import QuickViewModal from './components/QuickViewModal';
 import SearchModal from './components/SearchModal';
 import MobileBottomNav from './components/MobileBottomNav';
 import Toast from './components/Toast';
+import AdminFloatingDock from './components/AdminFloatingDock';
+import CMSEditDrawer from './components/cms/CMSEditDrawer';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -91,6 +93,10 @@ function AppContent() {
       <QuickViewModal />
       <SearchModal />
       <Toast />
+
+      {/* Admin On-Page Visual Editor */}
+      <AdminFloatingDock />
+      <CMSEditDrawer />
     </div>
   );
 }

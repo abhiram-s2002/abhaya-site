@@ -97,11 +97,46 @@ create policy "Orders can be updated by all"
   on public.orders for update
   using (true);
 
--- 7. ENABLE REALTIME BROADCAST
-alter publication supabase_realtime add table public.products;
-alter publication supabase_realtime add table public.orders;
+-- 7. CREATE SITE CONTENT (CMS) TABLE
+-- Stores all editable page content as JSON key-value pairs
+create table if not exists public.site_content (
+  key text primary key,
+  section text not null,
+  label text,
+  content jsonb not null default '{}',
+  updated_at timestamptz default now()
+);
+
+-- Enable RLS on site_content
+alter table public.site_content enable row level security;
+
+-- Allow anyone to read site content (public)
+drop policy if exists "Site content is viewable by everyone" on public.site_content;
+create policy "Site content is viewable by everyone"
+  on public.site_content for select
+  using (true);
+
+-- Allow inserts (admin PIN authenticated in-app, not via Supabase auth)
+drop policy if exists "Enable insert for site_content" on public.site_content;
+create policy "Enable insert for site_content"
+  on public.site_content for insert
+  with check (true);
+
+-- Allow updates
+drop policy if exists "Enable update for site_content" on public.site_content;
+create policy "Enable update for site_content"
+  on public.site_content for update
+  using (true);
+
+-- Allow deletes
+drop policy if exists "Enable delete for site_content" on public.site_content;
+create policy "Enable delete for site_content"
+  on public.site_content for delete
+  using (true);
+
 
 -- 8. STORAGE BUCKET CONFIGURATION (product-images)
+
 -- Run this to create the public storage bucket for product photos
 insert into storage.buckets (id, name, public)
 values ('product-images', 'product-images', true)

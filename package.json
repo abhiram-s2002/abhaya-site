@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:web": "vite",
     "build": "vite build",
+    "build:web": "vite build",
     "preview": "vite preview",
+    "start": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

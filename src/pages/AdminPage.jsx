@@ -23,10 +23,13 @@ import {
   List,
   ShieldCheck,
   Check,
-  RefreshCw
+  RefreshCw,
+  Palette,
+  ExternalLink
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { isSupabaseConfigured } from '../lib/supabase';
+import { CMS_SECTIONS } from '../lib/cms';
 import AdminProductModal from '../components/admin/AdminProductModal';
 import AdminOrdersTab from '../components/admin/AdminOrdersTab';
 
@@ -43,7 +46,11 @@ export default function AdminPage() {
     showToast,
     isAdminLoggedIn,
     loginAdmin,
-    logoutAdmin
+    logoutAdmin,
+    siteContent,
+    setCmsDrawerOpen,
+    isAdminEditMode,
+    setIsAdminEditMode,
   } = useShop();
 
   // Admin Login State
@@ -269,7 +276,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 animate-fade-in">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-28 sm:py-12 space-y-8 animate-fade-in">
       
       {/* Top Banner & Supabase Status */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-secondary/20 shadow-luxury">
@@ -362,10 +369,10 @@ export default function AdminPage() {
       </div>
 
       {/* Main Navigation Tabs */}
-      <div className="flex border-b border-surface-container-highest gap-4 sm:gap-8">
+      <div className="flex border-b border-surface-container-highest gap-4 sm:gap-8 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveTab('products')}
-          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 ${
+          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 shrink-0 ${
             activeTab === 'products'
               ? 'border-royal-violet text-royal-violet font-semibold'
               : 'border-transparent text-stone-500 hover:text-stone-800'
@@ -377,7 +384,7 @@ export default function AdminPage() {
 
         <button
           onClick={() => setActiveTab('orders')}
-          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 ${
+          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 shrink-0 ${
             activeTab === 'orders'
               ? 'border-royal-violet text-royal-violet font-semibold'
               : 'border-transparent text-stone-500 hover:text-stone-800'
@@ -385,6 +392,18 @@ export default function AdminPage() {
         >
           <TrendingUp className="w-4 h-4" />
           <span>Client Inquiries & Order Tracking</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('cms')}
+          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 shrink-0 ${
+            activeTab === 'cms'
+              ? 'border-yellow-500 text-yellow-700 font-semibold'
+              : 'border-transparent text-stone-500 hover:text-stone-800'
+          }`}
+        >
+          <Palette className="w-4 h-4" />
+          <span>🎨 Content Management ({CMS_SECTIONS.length})</span>
         </button>
       </div>
 
@@ -739,6 +758,87 @@ export default function AdminPage() {
       {/* TAB CONTENT: ORDERS & TRACKING */}
       {activeTab === 'orders' && (
         <AdminOrdersTab formatPrice={formatPrice} showToast={showToast} />
+      )}
+
+      {/* TAB CONTENT: CMS CONTENT MANAGEMENT */}
+      {activeTab === 'cms' && (
+        <div className="space-y-6 animate-fade-in">
+
+          {/* CMS Header */}
+          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-yellow-600" />
+                <h2 className="font-serif text-xl font-medium text-stone-800">Visual Content Management</h2>
+              </div>
+              <p className="text-xs text-stone-500 max-w-lg">
+                Edit any section of your website here. All changes are saved to Supabase instantly and reflected live for all visitors.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsAdminEditMode(!isAdminEditMode)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+                  isAdminEditMode
+                    ? 'bg-yellow-400 text-yellow-900 shadow-md'
+                    : 'bg-stone-100 text-stone-600 hover:bg-yellow-100'
+                }`}
+              >
+                <span>{isAdminEditMode ? '✏️ Edit Mode: ON' : 'Edit Mode: OFF'}</span>
+              </button>
+              <button
+                onClick={() => navigateTo('home')}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs font-semibold text-stone-600 hover:bg-stone-50 transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>View Site</span>
+              </button>
+            </div>
+          </div>
+
+          {/* CMS Sections Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {CMS_SECTIONS.map((section) => (
+              <div
+                key={section.key}
+                className="bg-white rounded-2xl border border-secondary/20 shadow-subtle p-5 flex flex-col justify-between gap-4 hover:shadow-md transition-shadow"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-2xl">{section.icon}</span>
+                      <div>
+                        <h3 className="font-serif text-base font-medium text-stone-800">{section.label}</h3>
+                        <span className="text-[10px] uppercase tracking-widest text-stone-400 font-semibold">{section.section}</span>
+                      </div>
+                    </div>
+                    {isSupabaseConfigured && (
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 mt-1 shrink-0" title="Synced to Supabase" />
+                    )}
+                  </div>
+                  <p className="text-[11px] text-stone-500 leading-relaxed">{section.description}</p>
+                </div>
+
+                <button
+                  onClick={() => setCmsDrawerOpen({ key: section.key, label: section.label })}
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#2E1C1A] to-[#4A2B5E] text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <Edit2 className="w-3.5 h-3.5 text-yellow-400" />
+                  <span>Edit {section.label}</span>
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Info Banner */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3 text-xs text-blue-800">
+            <span className="text-lg shrink-0">ℹ️</span>
+            <div>
+              <strong className="font-semibold">How it works:</strong> Click "Edit" on any section to open the visual editor. Changes are saved to Supabase and go live immediately — no deployment needed. Enable <strong>Edit Mode</strong> to see edit buttons directly on the live website as you browse.
+            </div>
+          </div>
+
+        </div>
       )}
 
       {/* Modal for Creating / Editing Product */}

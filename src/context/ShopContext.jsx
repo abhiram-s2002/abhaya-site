@@ -6,8 +6,9 @@ import {
   deleteProductFromSupabase,
   seedInitialProductsToSupabase,
   isSupabaseConfigured,
-  supabase
 } from '../lib/supabase';
+
+import { fetchAllSiteContent, upsertSiteContent, DEFAULT_CONTENT } from '../lib/cms';
 
 const ShopContext = createContext();
 
@@ -44,6 +45,20 @@ export function ShopProvider({ children }) {
     } catch (_) {}
     return STATIC_PRODUCTS;
   });
+
+  // CMS Site Content State
+  const [siteContent, setSiteContent] = useState(() => {
+    try {
+      const saved = localStorage.getItem('noor_cms_content');
+      if (saved) return { ...DEFAULT_CONTENT, ...JSON.parse(saved) };
+    } catch (_) {}
+    return { ...DEFAULT_CONTENT };
+  });
+
+  // Admin Edit Mode (on-page visual editing toggle)
+  const [isAdminEditMode, setIsAdminEditMode] = useState(false);
+  // Which CMS section drawer is open: null | { key, label }
+  const [cmsDrawerOpen, setCmsDrawerOpen] = useState(null);
   const [isProductsLoading, setIsProductsLoading] = useState(false);
 
   // Admin Auth State
@@ -133,29 +148,28 @@ export function ShopProvider({ children }) {
     refreshProducts();
   }, [refreshProducts]);
 
-  // Realtime Supabase changes listener
-  useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return;
-
+  // Fetch CMS site content from Supabase on mount
+  const refreshSiteContent = useCallback(async () => {
     try {
-      const channel = supabase
-        .channel('public:products')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'products' },
-          () => {
-            refreshProducts();
-          }
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
+      const content = await fetchAllSiteContent();
+      setSiteContent(content);
     } catch (err) {
-      console.warn('Realtime channel error:', err);
+      console.warn('Failed to load site content:', err);
     }
-  }, [refreshProducts]);
+  }, []);
+
+  useEffect(() => {
+    refreshSiteContent();
+  }, [refreshSiteContent]);
+
+  // Update a single CMS section key (optimistic + Supabase save)
+  const updateSiteContent = useCallback(async (key, newContent) => {
+    setSiteContent(prev => ({ ...prev, [key]: newContent }));
+    await upsertSiteContent(key, newContent);
+  }, []);
+
+
+
 
   // Product CRUD Handlers
   const createProduct = async (newProduct) => {
@@ -403,6 +417,17 @@ export function ShopProvider({ children }) {
         deleteProduct,
         refreshProducts,
         seedCatalog,
+
+        // CMS Site Content
+        siteContent,
+        updateSiteContent,
+        refreshSiteContent,
+
+        // Admin Edit Mode (on-page visual editing)
+        isAdminEditMode,
+        setIsAdminEditMode,
+        cmsDrawerOpen,
+        setCmsDrawerOpen,
 
         // Admin Auth
         isAdminLoggedIn,

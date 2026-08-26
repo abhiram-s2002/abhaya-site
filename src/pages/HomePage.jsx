@@ -1,46 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Sparkles, ArrowRight, ShieldCheck, Truck, Gift, Check, Tag } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import EditableSection from '../components/cms/EditableSection';
 
 export default function HomePage() {
-  const { PRODUCTS, navigateTo, addToCart, formatPrice, showToast, applyPromo } = useShop();
+  const { PRODUCTS, navigateTo, addToCart, formatPrice, showToast, applyPromo, siteContent } = useShop();
 
-  // Hero Carousel Slides
-  const heroSlides = [
-    {
-      id: 1,
-      badge: 'NEW ARRIVAL',
-      title: 'Midnight Espresso Silk',
-      description: 'Iridescent 100% Grade 6A mulberry silk, a whisper of pure haute couture on your skin.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g',
-      cta: 'SHOP NOW',
-      productId: 'midnight-espresso-silk'
-    },
-    {
-      id: 2,
-      badge: 'AUTUMN / WINTER EDITION',
-      title: 'Royal Amethyst Chiffon',
-      description: 'Bold, regal tones woven from Japanese pebble georgette for effortless everyday luxury.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA',
-      cta: 'EXPLORE COLLECTION',
-      productId: 'royal-violet-silk'
-    },
-    {
-      id: 3,
-      badge: 'SIGNATURE BESPOKE',
-      title: 'Austrian Modal Jersey',
-      description: 'Cloud-soft micro-modal weave that stays flawlessly in place without undercaps or pins.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA',
-      cta: 'DISCOVER MODAL',
-      productId: 'sage-haven-modal'
-    }
-  ];
+  // ── Hero Carousel — loaded from CMS (falls back to defaults in siteContent) ──
+  const heroSlides = siteContent?.hero_slides || [];
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const slideTimer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % Math.max(heroSlides.length, 1));
     }, 6500);
     return () => clearInterval(slideTimer);
   }, [heroSlides.length]);
@@ -68,33 +41,20 @@ export default function HomePage() {
     scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
-  // Testimonials Carousel
-  const testimonials = [
-    {
-      review: "I am continually amazed by how majestic these bespoke abayas drape once worn. The pure silk Farasha with delicate stonework is pure perfection, and I received non-stop compliments at every event.",
-      author: "Sarah Al-Mansoor",
-      location: "Dubai"
-    },
-    {
-      review: "The Austrian Modal Jersey Abaya in Kimono cut has completely elevated my wardrobe. Incredibly breathable, fluid movement, and the packaging feels like opening high jewellery.",
-      author: "Priya Nair",
-      location: "London"
-    },
-    {
-      review: "NOOR AL DHUHA Atelier brings true Parisian and Milanese haute couture standards to modest fashion. From the magnetic keepsake box to the pure mulberry silk sheen, it is unmatched.",
-      author: "Tania Rahman",
-      location: "Toronto"
-    }
-  ];
-
+  // ── Testimonials — from CMS ──
+  const testimonials = siteContent?.testimonials || [];
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   useEffect(() => {
+    if (testimonials.length === 0) return;
     const timer = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 7000);
     return () => clearInterval(timer);
   }, [testimonials.length]);
+
+  // ── Newsletter — from CMS ──
+  const newsletter = siteContent?.newsletter || {};
 
   const handleQuickAdd = (e, product) => {
     e.stopPropagation();
@@ -125,74 +85,76 @@ export default function HomePage() {
 
   return (
     <div className="bg-neutral-white text-primary font-sans antialiased overflow-x-hidden selection:bg-royal-violet selection:text-white">
-      
+
       {/* 1. Hero Editorial Carousel */}
-      <section className="relative w-full bg-surface-container-low overflow-hidden">
-        <div
-          className="flex transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-        >
-          {heroSlides.map((slide, index) => (
-            <div key={slide.id} className="relative w-full shrink-0">
-              <div className="flex flex-col md:flex-row w-full h-[85vh] min-h-[580px]">
-                
-                {/* Visual Half */}
-                <div className="absolute inset-0 z-0 md:relative md:w-1/2 md:h-full pointer-events-none overflow-hidden">
-                  <img
-                    src={slide.image}
-                    alt={slide.title}
-                    className="w-full h-full object-cover object-top"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent md:hidden" />
-                </div>
+      <EditableSection cmsKey="hero_slides" label="Hero Carousel">
+        <section className="relative w-full bg-surface-container-low overflow-hidden">
+          <div
+            className="flex transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {heroSlides.map((slide, index) => (
+              <div key={slide.id} className="relative w-full shrink-0">
+                <div className="flex flex-col md:flex-row w-full h-[85vh] min-h-[580px]">
 
-                {/* Content Half */}
-                <div className="relative z-10 flex flex-col justify-end md:justify-center w-full md:w-1/2 min-w-0 p-6 pb-12 md:px-12 lg:px-16 xl:px-24 h-full bg-gradient-to-t from-black/50 via-transparent to-transparent md:bg-none">
-                  <span className="text-xs md:text-sm font-sans tracking-[0.25em] font-bold text-secondary uppercase mb-3 drop-shadow-sm">
-                    {slide.badge}
-                  </span>
-                  <h1 className="text-white md:text-primary font-serif text-4xl sm:text-5xl md:text-[clamp(2.5rem,4.5vw,4.8rem)] font-medium leading-[1.08] mb-4">
-                    {slide.title}
-                  </h1>
-                  <p className="text-white/90 md:text-primary/75 font-sans text-sm md:text-base mb-8 max-w-md leading-relaxed">
-                    {slide.description}
-                  </p>
-                  <button
-                    onClick={() => navigateTo('shop', slide.productId)}
-                    className="bg-white text-primary md:bg-primary md:text-white px-8 py-3.5 font-sans font-bold uppercase tracking-widest text-xs sm:text-sm w-fit transition-all hover:bg-white/90 md:hover:bg-royal-violet active:scale-95 shadow-md cursor-pointer"
-                  >
-                    {slide.cta}
-                  </button>
-                </div>
+                  {/* Visual Half */}
+                  <div className="absolute inset-0 z-0 md:relative md:w-1/2 md:h-full pointer-events-none overflow-hidden">
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover object-top"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent md:hidden" />
+                  </div>
 
+                  {/* Content Half */}
+                  <div className="relative z-10 flex flex-col justify-end md:justify-center w-full md:w-1/2 min-w-0 p-6 pb-12 md:px-12 lg:px-16 xl:px-24 h-full bg-gradient-to-t from-black/50 via-transparent to-transparent md:bg-none">
+                    <span className="text-xs md:text-sm font-sans tracking-[0.25em] font-bold text-secondary uppercase mb-3 drop-shadow-sm">
+                      {slide.badge}
+                    </span>
+                    <h1 className="text-white md:text-primary font-serif text-4xl sm:text-5xl md:text-[clamp(2.5rem,4.5vw,4.8rem)] font-medium leading-[1.08] mb-4">
+                      {slide.title}
+                    </h1>
+                    <p className="text-white/90 md:text-primary/75 font-sans text-sm md:text-base mb-8 max-w-md leading-relaxed">
+                      {slide.description}
+                    </p>
+                    <button
+                      onClick={() => navigateTo('shop', slide.productId)}
+                      className="bg-white text-primary md:bg-primary md:text-white px-8 py-3.5 font-sans font-bold uppercase tracking-widest text-xs sm:text-sm w-fit transition-all hover:bg-white/90 md:hover:bg-royal-violet active:scale-95 shadow-md cursor-pointer"
+                    >
+                      {slide.cta}
+                    </button>
+                  </div>
+
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Carousel Indicators / Dots */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20 md:justify-end md:right-16 md:left-auto md:translate-x-0">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentSlide(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={`cursor-pointer h-1.5 transition-all duration-300 rounded-full ${
-                currentSlide === i
-                  ? 'w-8 bg-white md:bg-primary'
-                  : 'w-2 bg-white/50 md:bg-primary/30 hover:bg-primary/60'
-              }`}
-            />
-          ))}
-        </div>
-      </section>
+          {/* Carousel Indicators / Dots */}
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20 md:justify-end md:right-16 md:left-auto md:translate-x-0">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`cursor-pointer h-1.5 transition-all duration-300 rounded-full ${
+                  currentSlide === i
+                    ? 'w-8 bg-white md:bg-primary'
+                    : 'w-2 bg-white/50 md:bg-primary/30 hover:bg-primary/60'
+                }`}
+              />
+            ))}
+          </div>
+        </section>
+      </EditableSection>
 
       {/* 2. Interactive Special Offers & Privilege Banner */}
       <section className="bg-[#f4ede3] py-8 sm:py-10 border-y border-primary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-            
+
             <div
               onClick={() => navigateTo('offers')}
               className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-xs p-5 hover:bg-white transition-all cursor-pointer flex items-center justify-between group shadow-2xs"
@@ -255,7 +217,7 @@ export default function HomePage() {
       <section className="py-16 md:py-28 bg-primary text-white overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="flex flex-col md:flex-row gap-10 lg:gap-16 xl:gap-24 items-center">
-            
+
             {/* Left Headline Column */}
             <div className="order-1 md:order-2 w-full md:w-1/3 lg:w-1/4 flex flex-col justify-center text-center md:text-left">
               <span className="text-xs font-sans tracking-[0.2em] uppercase text-secondary font-bold mb-3">
@@ -298,7 +260,7 @@ export default function HomePage() {
                         className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         loading="lazy"
                       />
-                      
+
                       {product.tag && (
                         <div className="absolute top-3 left-3">
                           <span className="bg-secondary text-primary text-[9px] font-sans font-bold uppercase tracking-widest px-2 py-1 rounded-xs shadow-xs">
@@ -377,7 +339,7 @@ export default function HomePage() {
       {/* 4. "Find Your Finish" Asymmetrical Collections Grid */}
       <section className="py-16 md:py-28 bg-neutral-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary font-medium tracking-tight mb-4">
               Find Your Finish
@@ -392,7 +354,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-            
+
             {/* Big Asymmetric Featured Tile: 2x2 */}
             <div
               onClick={() => navigateTo('shop', null, 'Silk')}
@@ -429,9 +391,7 @@ export default function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/30 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
               <div className="absolute bottom-0 left-0 p-4 sm:p-6 w-full text-white">
-                <h3 className="font-serif text-lg sm:text-2xl font-medium">
-                  Everyday Chiffon
-                </h3>
+                <h3 className="font-serif text-lg sm:text-2xl font-medium">Everyday Chiffon</h3>
               </div>
             </div>
 
@@ -447,9 +407,7 @@ export default function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/30 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
               <div className="absolute bottom-0 left-0 p-4 sm:p-6 w-full text-white">
-                <h3 className="font-serif text-lg sm:text-2xl font-medium">
-                  Cloud Modal Jersey
-                </h3>
+                <h3 className="font-serif text-lg sm:text-2xl font-medium">Cloud Modal Jersey</h3>
               </div>
             </div>
 
@@ -487,91 +445,96 @@ export default function HomePage() {
       </section>
 
       {/* 5. "Voices of Adornment" Testimonials Carousel */}
-      <section className="py-20 md:py-32 bg-neutral-white relative overflow-hidden flex flex-col items-center">
-        {/* Giant quotation background mark */}
-        <div
-          className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[22rem] md:text-[35rem] text-secondary/10 font-serif leading-none select-none pointer-events-none"
-          aria-hidden="true"
-        >
-          “
-        </div>
-
-        <div className="max-w-4xl w-full mx-auto relative z-10 flex flex-col items-center px-4 sm:px-8 text-center">
-          <p className="font-sans text-xs sm:text-sm text-secondary uppercase tracking-[0.25em] mb-3 font-bold">
-            What our patrons say
-          </p>
-          <h2 className="font-serif text-3xl sm:text-5xl text-primary font-medium mb-10 md:mb-14">
-            Voices of Adornment
-          </h2>
-
-          <div className="min-h-[140px] flex flex-col justify-center items-center">
-            <p className="font-serif text-xl sm:text-2xl md:text-3xl text-primary leading-relaxed sm:leading-relaxed text-center mb-6">
-              "{testimonials[activeTestimonial].review}"
-            </p>
-            <p className="font-sans text-secondary text-sm tracking-[0.2em] uppercase font-semibold">
-              — {testimonials[activeTestimonial].author} ({testimonials[activeTestimonial].location})
-            </p>
+      <EditableSection cmsKey="testimonials" label="Testimonials">
+        <section className="py-20 md:py-32 bg-neutral-white relative overflow-hidden flex flex-col items-center">
+          {/* Giant quotation background mark */}
+          <div
+            className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[22rem] md:text-[35rem] text-secondary/10 font-serif leading-none select-none pointer-events-none"
+            aria-hidden="true"
+          >
+            "
           </div>
 
-          {/* Testimonial Indicator Dots */}
-          <div className="flex items-center justify-center gap-2.5 mt-10">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveTestimonial(i)}
-                aria-label={`Testimonial slide ${i + 1}`}
-                className={`rounded-full transition-all duration-300 ${
-                  activeTestimonial === i
-                    ? 'w-3.5 h-3.5 bg-primary'
-                    : 'w-2 h-2 bg-primary/30 hover:bg-primary/60'
-                }`}
-              />
-            ))}
-          </div>
+          {testimonials.length > 0 && (
+            <div className="max-w-4xl w-full mx-auto relative z-10 flex flex-col items-center px-4 sm:px-8 text-center">
+              <p className="font-sans text-xs sm:text-sm text-secondary uppercase tracking-[0.25em] mb-3 font-bold">
+                What our patrons say
+              </p>
+              <h2 className="font-serif text-3xl sm:text-5xl text-primary font-medium mb-10 md:mb-14">
+                Voices of Adornment
+              </h2>
 
-        </div>
-      </section>
+              <div className="min-h-[140px] flex flex-col justify-center items-center">
+                <p className="font-serif text-xl sm:text-2xl md:text-3xl text-primary leading-relaxed sm:leading-relaxed text-center mb-6">
+                  "{testimonials[activeTestimonial]?.review}"
+                </p>
+                <p className="font-sans text-secondary text-sm tracking-[0.2em] uppercase font-semibold">
+                  — {testimonials[activeTestimonial]?.author} ({testimonials[activeTestimonial]?.location})
+                </p>
+              </div>
+
+              {/* Testimonial Indicator Dots */}
+              <div className="flex items-center justify-center gap-2.5 mt-10">
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveTestimonial(i)}
+                    aria-label={`Testimonial slide ${i + 1}`}
+                    className={`rounded-full transition-all duration-300 ${
+                      activeTestimonial === i
+                        ? 'w-3.5 h-3.5 bg-primary'
+                        : 'w-2 h-2 bg-primary/30 hover:bg-primary/60'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      </EditableSection>
 
       {/* 6. VIP Inner Circle Newsletter Bar */}
-      <section className="bg-primary text-white py-14 sm:py-16 border-t border-primary/20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
-          <div className="space-y-2">
-            <span className="text-xs font-sans tracking-[0.25em] uppercase text-secondary font-bold">
-              JOIN THE ATELIER CIRCLE
-            </span>
-            <h3 className="font-serif text-2xl sm:text-4xl font-medium">
-              Receive Editorial Privileges & First Access
-            </h3>
-            <p className="text-xs sm:text-sm text-white/75 font-sans max-w-lg mx-auto leading-relaxed">
-              Sign up for private capsule lookbooks, secret archive sales, and a 10% privilege on your upcoming order.
-            </p>
-          </div>
-
-          {newsletterSubmitted ? (
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-sans font-bold uppercase tracking-wider">
-              <Check className="w-4 h-4" />
-              <span>You are now subscribed to the VIP Patron Circle</span>
+      <EditableSection cmsKey="newsletter" label="Newsletter Section">
+        <section className="bg-primary text-white py-14 sm:py-16 border-t border-primary/20">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
+            <div className="space-y-2">
+              <span className="text-xs font-sans tracking-[0.25em] uppercase text-secondary font-bold">
+                {newsletter.badge || 'JOIN THE ATELIER CIRCLE'}
+              </span>
+              <h3 className="font-serif text-2xl sm:text-4xl font-medium">
+                {newsletter.title || 'Receive Editorial Privileges & First Access'}
+              </h3>
+              <p className="text-xs sm:text-sm text-white/75 font-sans max-w-lg mx-auto leading-relaxed">
+                {newsletter.subtitle || 'Sign up for private capsule lookbooks, secret archive sales, and a 10% privilege on your upcoming order.'}
+              </p>
             </div>
-          ) : (
-            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                required
-                placeholder="Enter your email address..."
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-secondary transition-all"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-neutral-white hover:bg-white text-primary font-sans text-xs font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 shrink-0 cursor-pointer shadow-md"
-              >
-                Subscribe
-              </button>
-            </form>
-          )}
-        </div>
-      </section>
+
+            {newsletterSubmitted ? (
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-sans font-bold uppercase tracking-wider">
+                <Check className="w-4 h-4" />
+                <span>You are now subscribed to the VIP Patron Circle</span>
+              </div>
+            ) : (
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email address..."
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-secondary transition-all"
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-neutral-white hover:bg-white text-primary font-sans text-xs font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 shrink-0 cursor-pointer shadow-md"
+                >
+                  {newsletter.ctaText || 'Subscribe'}
+                </button>
+              </form>
+            )}
+          </div>
+        </section>
+      </EditableSection>
 
     </div>
   );

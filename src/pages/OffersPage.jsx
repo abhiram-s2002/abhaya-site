@@ -1,52 +1,16 @@
 import React from 'react';
 import { Sparkles, Copy, Check, Tag, Gift, Zap, ArrowRight, ShieldCheck, Clock } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import EditableSection from '../components/cms/EditableSection';
 
 export default function OffersPage() {
-  const { navigateTo, applyPromo, showToast, formatPrice } = useShop();
+  const { navigateTo, applyPromo, showToast, formatPrice, siteContent } = useShop();
   const [copiedCode, setCopiedCode] = React.useState(null);
 
-  const offers = [
-    {
-      id: 'welcome10',
-      code: 'ELEGANCE10',
-      badge: 'WELCOME OFFER',
-      title: '10% Off Your First Atelier Order',
-      description: 'Experience pure Grade 6A mulberry silk and bespoke modest silhouettes with an exclusive introductory privilege.',
-      discount: '10% OFF',
-      minSpend: 'No Minimum',
-      expires: 'Ongoing',
-      category: 'All',
-      color: 'from-[#4A2B5E] to-[#2E1C1A]',
-      accentBg: 'bg-royal-violet/10 text-royal-violet border-royal-violet/20'
-    },
-    {
-      id: 'vip20',
-      code: 'NOORVIP',
-      badge: 'VIP PATRON TIER',
-      title: '20% Off Luxury Silk Bundles & Ensembles',
-      description: 'Enjoy elevated savings on any order of 3 or more handcrafted creations. Includes complimentary bespoke gift packaging.',
-      discount: '20% OFF',
-      minSpend: 'Orders above $150',
-      expires: 'Valid this week',
-      category: 'Silk',
-      color: 'from-[#670A1E] to-[#40121C]',
-      accentBg: 'bg-primary/10 text-primary border-primary/20'
-    },
-    {
-      id: 'violet15',
-      code: 'VIOLET15',
-      badge: 'LIMITED EDITION',
-      title: '15% Off The Royal Violet Edition Lookbook',
-      description: 'Exclusive seasonal access to our signature Royal Amethyst and Deep Plum silk chiffon collections.',
-      discount: '15% OFF',
-      minSpend: 'Select Violet items',
-      expires: 'Limited Stock',
-      category: 'Violet Edition',
-      color: 'from-[#502C63] to-[#24132B]',
-      accentBg: 'bg-amethyst-soft/10 text-royal-violet border-amethyst-soft/30'
-    }
-  ];
+  // Offers from CMS (falls back to siteContent defaults)
+  const offers = Array.isArray(siteContent?.offers_page) && siteContent.offers_page.length > 0
+    ? siteContent.offers_page
+    : [];
 
   const bundleDeals = [
     {
@@ -83,6 +47,7 @@ export default function OffersPage() {
   };
 
   return (
+    <EditableSection cmsKey="offers_page" label="Offers & Promo Codes">
     <div className="min-h-screen bg-neutral-white pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 animate-fade-in">
       
       {/* Header */}
@@ -237,5 +202,6 @@ export default function OffersPage() {
       </div>
 
     </div>
+    </EditableSection>
   );
 }
