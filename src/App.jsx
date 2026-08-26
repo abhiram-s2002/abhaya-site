@@ -20,7 +20,6 @@ import VioletEditionPage from './pages/VioletEditionPage';
 import StoryPage from './pages/StoryPage';
 import ContactPage from './pages/ContactPage';
 import OffersPage from './pages/OffersPage';
-import OrderLookupPage from './pages/OrderLookupPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
 import AdminPage from './pages/AdminPage';
@@ -57,8 +56,6 @@ function AppContent() {
         return <ContactPage />;
       case 'offers':
         return <OffersPage />;
-      case 'order-lookup':
-        return <OrderLookupPage />;
       case 'refund-policy':
         return <RefundPolicyPage />;
       case 'terms':

@@ -9,6 +9,7 @@ import {
 } from '../lib/supabase';
 
 import { fetchAllSiteContent, upsertSiteContent, DEFAULT_CONTENT } from '../lib/cms';
+import { detectUserLocation } from '../utils/geo';
 
 const ShopContext = createContext();
 
@@ -75,8 +76,59 @@ export function ShopProvider({ children }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  // Currency
-  const [currency, setCurrency] = useState('INR');
+  // User Location (IP Geolocation via GeoJS)
+  const [userLocation, setUserLocation] = useState({
+    country: 'India',
+    countryCode: 'IN',
+    city: '',
+    region: '',
+    ip: '',
+    flag: '🇮🇳',
+    suggestedCurrency: 'INR',
+    isDetected: false
+  });
+  const [isLocationLoading, setIsLocationLoading] = useState(true);
+
+  // Currency (checks saved preference or defaults to detected country)
+  const [currency, setCurrencyState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('noor_currency_pref');
+      if (saved && CURRENCIES[saved]) return saved;
+    } catch (_) {}
+    return 'INR';
+  });
+
+  const setCurrency = (newCurr) => {
+    if (CURRENCIES[newCurr]) {
+      setCurrencyState(newCurr);
+      try {
+        localStorage.setItem('noor_currency_pref', newCurr);
+      } catch (_) {}
+    }
+  };
+
+  // Detect Country & Auto-select Currency on startup
+  useEffect(() => {
+    let isMounted = true;
+    async function initGeo() {
+      try {
+        const geo = await detectUserLocation();
+        if (isMounted) {
+          setUserLocation(geo);
+          setIsLocationLoading(false);
+          // If the user hasn't explicitly set a custom currency override in localStorage, set to suggested currency
+          const hasCustomPref = localStorage.getItem('noor_currency_pref');
+          if (!hasCustomPref && geo.suggestedCurrency && CURRENCIES[geo.suggestedCurrency]) {
+            setCurrencyState(geo.suggestedCurrency);
+          }
+        }
+      } catch (err) {
+        if (isMounted) setIsLocationLoading(false);
+      }
+    }
+    initGeo();
+    return () => { isMounted = false; };
+  }, []);
 
   // Cart State (stored in localStorage)
   const [cart, setCart] = useState(() => {
@@ -111,11 +163,6 @@ export function ShopProvider({ children }) {
       return [];
     }
   });
-
-  // Promo Code State
-  const [promoCode, setPromoCode] = useState('');
-  const [appliedDiscount, setAppliedDiscount] = useState(0);
-  const [discountCodeName, setDiscountCodeName] = useState('');
 
   // Toast Notifications
   const [toasts, setToasts] = useState([]);
@@ -361,36 +408,6 @@ export function ShopProvider({ children }) {
 
   const isWishlisted = (productId) => wishlist.includes(productId);
 
-  const applyPromo = (code) => {
-    const clean = code.trim().toUpperCase();
-    if (clean === 'ELEGANCE10') {
-      setAppliedDiscount(0.10);
-      setDiscountCodeName('ELEGANCE10 (10% OFF)');
-      showToast('10% VIP Elegance discount applied!');
-      return { success: true, message: '10% discount applied!' };
-    } else if (clean === 'VIOLET15') {
-      setAppliedDiscount(0.15);
-      setDiscountCodeName('VIOLET15 (15% OFF)');
-      showToast('15% Royal Violet Edition discount applied!');
-      return { success: true, message: '15% discount applied!' };
-    } else if (clean === 'NOORVIP' || clean === 'HAYATVIP') {
-      setAppliedDiscount(0.20);
-      setDiscountCodeName('NOORVIP (20% OFF)');
-      showToast('20% NOOR AL DHUHA Atelier VIP discount applied!');
-      return { success: true, message: '20% VIP discount applied!' };
-    } else {
-      showToast('Invalid promo code. Try ELEGANCE10, VIOLET15 or NOORVIP', 'error');
-      return { success: false, message: 'Invalid promo code. Try ELEGANCE10, VIOLET15 or NOORVIP' };
-    }
-  };
-
-  const removePromo = () => {
-    setAppliedDiscount(0);
-    setDiscountCodeName('');
-    setPromoCode('');
-    showToast('Promo code removed.', 'info');
-  };
-
   // Price formatting helper with currency conversion & clean locale formatting
   const formatPrice = (usdPrice) => {
     const info = CURRENCIES[currency] || CURRENCIES.USD;
@@ -402,8 +419,7 @@ export function ShopProvider({ children }) {
   };
 
   const rawCartSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const discountAmount = rawCartSubtotal * appliedDiscount;
-  const cartSubtotal = rawCartSubtotal - discountAmount;
+  const cartSubtotal = rawCartSubtotal;
   const freeShippingThreshold = 150;
   const freeShippingProgress = Math.min(100, Math.round((rawCartSubtotal / freeShippingThreshold) * 100));
   const freeShippingDifference = Math.max(0, freeShippingThreshold - rawCartSubtotal);
@@ -464,6 +480,10 @@ export function ShopProvider({ children }) {
         quickViewProduct,
         setQuickViewProduct,
 
+        // User Location (IP Geolocation)
+        userLocation,
+        isLocationLoading,
+
         // Currencies
         currency,
         setCurrency,
@@ -477,7 +497,6 @@ export function ShopProvider({ children }) {
         removeFromCart,
         clearCart,
         rawCartSubtotal,
-        discountAmount,
         cartSubtotal,
         freeShippingThreshold,
         freeShippingProgress,
@@ -487,14 +506,6 @@ export function ShopProvider({ children }) {
         wishlist,
         toggleWishlist,
         isWishlisted,
-
-        // Promos
-        promoCode,
-        setPromoCode,
-        appliedDiscount,
-        discountCodeName,
-        applyPromo,
-        removePromo,
 
         // Toasts
         toasts,

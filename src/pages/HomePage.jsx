@@ -4,7 +4,7 @@ import { useShop } from '../context/ShopContext';
 import EditableSection from '../components/cms/EditableSection';
 
 export default function HomePage() {
-  const { PRODUCTS, navigateTo, addToCart, formatPrice, showToast, applyPromo, siteContent } = useShop();
+  const { PRODUCTS, navigateTo, addToCart, formatPrice, showToast, siteContent } = useShop();
 
   // ── Hero Carousel — loaded from CMS (falls back to defaults in siteContent) ──
   const heroSlides = siteContent?.hero_slides || [];
@@ -150,68 +150,7 @@ export default function HomePage() {
         </section>
       </EditableSection>
 
-      {/* 2. Interactive Special Offers & Privilege Banner */}
-      <section className="bg-[#f4ede3] py-8 sm:py-10 border-y border-primary/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
 
-            <div
-              onClick={() => navigateTo('offers')}
-              className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-xs p-5 hover:bg-white transition-all cursor-pointer flex items-center justify-between group shadow-2xs"
-            >
-              <div className="space-y-1">
-                <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-royal-violet block">
-                  PROMO CODE: ELEGANCE10
-                </span>
-                <h3 className="font-serif text-base font-medium text-primary">
-                  10% Off First Atelier Order
-                </h3>
-                <p className="text-xs text-primary/70 font-sans">
-                  Tap to view code & save instantly
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-royal-violet transition-transform group-hover:translate-x-1" />
-            </div>
-
-            <div
-              onClick={() => navigateTo('shop', null, 'Silk')}
-              className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-xs p-5 hover:bg-white transition-all cursor-pointer flex items-center justify-between group shadow-2xs"
-            >
-              <div className="space-y-1">
-                <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-emerald-700 block">
-                  COMPLIMENTARY ACCESSORY
-                </span>
-                <h3 className="font-serif text-base font-medium text-primary">
-                  Matching Shayla & Silk Keepsake Box
-                </h3>
-                <p className="text-xs text-primary/70 font-sans">
-                  Included complimentary with every abaya creation
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-emerald-700 transition-transform group-hover:translate-x-1" />
-            </div>
-
-            <div
-              onClick={() => navigateTo('order-lookup')}
-              className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-xs p-5 hover:bg-white transition-all cursor-pointer flex items-center justify-between group shadow-2xs"
-            >
-              <div className="space-y-1">
-                <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-secondary block">
-                  GLOBAL LOGISTICS
-                </span>
-                <h3 className="font-serif text-base font-medium text-primary">
-                  Track Your Dispatch Live
-                </h3>
-                <p className="text-xs text-primary/70 font-sans">
-                  Real-time status via DHL & FedEx
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-secondary transition-transform group-hover:translate-x-1" />
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* 3. "The Crowd's Favourites" Horizontal Scroll Carousel */}
       <section className="py-16 md:py-28 bg-primary text-white overflow-hidden">

@@ -78,7 +78,7 @@ export default function AdminFloatingDock() {
                 {[
                   { key: 'announcement', label: '📢 Announcement Bar' },
                   { key: 'hero_slides', label: '🖼️ Hero Carousel' },
-                  { key: 'offers_page', label: '🎟️ Promo Codes' },
+                  { key: 'offers_page', label: '🎁 Atelier Privileges' },
                   { key: 'contact_info', label: '📞 Contact & FAQs' },
                 ].map(({ key, label }) => (
                   <button

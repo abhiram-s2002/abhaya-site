@@ -13,21 +13,15 @@ export default function CartDrawer() {
     clearCart,
     formatPrice,
     rawCartSubtotal,
-    appliedDiscount,
-    discountCodeName,
     cartSubtotal,
     freeShippingThreshold,
     freeShippingProgress,
     freeShippingDifference,
-    promoCode,
-    setPromoCode,
-    applyPromo,
-    removePromo,
     navigateTo,
-    showToast
+    showToast,
+    userLocation
   } = useShop();
 
-  const [promoInput, setPromoInput] = useState('');
   const [copied, setCopied] = useState(false);
 
   // Prevent background scroll when cart drawer is open
@@ -44,24 +38,16 @@ export default function CartDrawer() {
 
   if (!isCartOpen) return null;
 
-  const handleApplyPromo = (e) => {
-    e.preventDefault();
-    if (!promoInput.trim()) return;
-    applyPromo(promoInput);
-    setPromoInput('');
-  };
-
   const handleProceedToWhatsApp = () => {
     if (cart.length === 0) return;
 
     const message = formatCartWhatsAppMessage({
       cart,
       rawCartSubtotal,
-      appliedDiscount,
-      discountCodeName,
       cartSubtotal,
       freeShippingThreshold,
-      formatPrice
+      formatPrice,
+      userLocation
     });
 
     showToast('Opening WhatsApp with your bespoke order details...');
@@ -78,7 +64,8 @@ export default function CartDrawer() {
       discountCodeName,
       cartSubtotal,
       freeShippingThreshold,
-      formatPrice
+      formatPrice,
+      userLocation
     });
 
     navigator.clipboard.writeText(message).then(() => {
@@ -260,35 +247,6 @@ export default function CartDrawer() {
             {cart.length > 0 && (
               <div className="p-4 sm:p-6 border-t border-surface-container-high bg-white space-y-3 sm:space-y-4">
                 
-                {/* Promo code input */}
-                {appliedDiscount > 0 ? (
-                  <div className="flex items-center justify-between p-2 sm:p-2.5 bg-emerald-50 border border-emerald-200 rounded text-xs">
-                    <span className="text-emerald-800 font-medium text-[11px] sm:text-xs">✨ Promo: {discountCodeName}</span>
-                    <button
-                      onClick={removePromo}
-                      className="text-stone-500 hover:text-red-600 text-[11px] underline"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleApplyPromo} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={promoInput}
-                      onChange={(e) => setPromoInput(e.target.value)}
-                      placeholder="Promo code (e.g. ELEGANCE10)"
-                      className="flex-1 px-3 py-1.5 text-xs border border-outline-variant/60 rounded uppercase placeholder:normal-case focus:outline-none focus:border-royal-violet"
-                    />
-                    <button
-                      type="submit"
-                      className="px-3 py-1.5 bg-stone-800 hover:bg-black text-white text-xs font-medium rounded transition-colors"
-                    >
-                      Apply
-                    </button>
-                  </form>
-                )}
-
                 {/* Pricing Breakdown */}
                 <div className="space-y-1 sm:space-y-1.5 text-xs text-stone-600">
                   <div className="flex justify-between">
@@ -296,15 +254,16 @@ export default function CartDrawer() {
                     <span className="font-medium text-stone-900">{formatPrice(rawCartSubtotal)}</span>
                   </div>
 
-                  {appliedDiscount > 0 && (
-                    <div className="flex justify-between text-emerald-700">
-                      <span>Discount ({discountCodeName})</span>
-                      <span>-{formatPrice(rawCartSubtotal * appliedDiscount)}</span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between">
-                    <span>Estimated Shipping</span>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-1.5">
+                      <span>Estimated Shipping</span>
+                      {userLocation?.country && (
+                        <span className="text-[10px] text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200 inline-flex items-center gap-1 font-medium">
+                          <span>{userLocation.flag}</span>
+                          <span className="truncate max-w-[80px]">{userLocation.countryCode === 'IN' ? 'India' : userLocation.country}</span>
+                        </span>
+                      )}
+                    </span>
                     <span>
                       {rawCartSubtotal >= freeShippingThreshold ? (
                         <span className="text-emerald-700 font-medium uppercase tracking-wider text-[10px] sm:text-[11px]">Free</span>

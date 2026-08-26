@@ -556,13 +556,7 @@ export default function Navbar() {
                       onClick={() => handleNav('offers')}
                       className="block w-full text-left py-1 text-royal-violet font-medium hover:underline transition-colors"
                     >
-                      ✦ Offers & Exclusive Privileges
-                    </button>
-                    <button
-                      onClick={() => handleNav('order-lookup')}
-                      className="block w-full text-left py-1 hover:text-royal-violet transition-colors"
-                    >
-                      • Track Order & Dispatch Live
+                      ✦ Atelier Privileges & Gifting
                     </button>
                     <button
                       onClick={() => handleNav('refund-policy')}

@@ -66,19 +66,19 @@ export const DEFAULT_CONTENT = {
   ],
 
   newsletter: {
-    badge: 'JOIN THE ATELIER CIRCLE',
+    badge: 'EXCLUSIVE ATELIER ACCESS',
     title: 'Receive Editorial Privileges & First Access',
-    subtitle: 'Sign up for private capsule lookbooks, secret archive sales, and a 10% privilege on your upcoming order.',
+    subtitle: 'Sign up for private capsule lookbooks, secret archive previews, and bespoke styling advice.',
     ctaText: 'Subscribe',
   },
 
   features_section: [
     {
       id: 1,
-      badge: 'PROMO CODE: ELEGANCE10',
+      badge: 'EXCLUSIVE PRIVILEGE',
       badgeColor: 'text-royal-violet',
-      title: '10% Off First Atelier Order',
-      description: 'Tap to view code & save instantly',
+      title: 'Complimentary Silk Keepsake Box',
+      description: 'Signature presentation box with every creation',
       link: 'offers',
     },
     {
@@ -91,11 +91,11 @@ export const DEFAULT_CONTENT = {
     },
     {
       id: 3,
-      badge: 'GLOBAL LOGISTICS',
+      badge: 'BESPOKE CONCIERGE',
       badgeColor: 'text-secondary',
-      title: 'Track Your Dispatch Live',
-      description: 'Real-time status via DHL & FedEx',
-      link: 'order-lookup',
+      title: 'Personal Styling & Sizing',
+      description: 'Consult with our master atelier stylist',
+      link: 'contact',
     },
   ],
 
@@ -208,7 +208,7 @@ export const CMS_SECTIONS = [
   { key: 'newsletter', label: 'Newsletter Section', section: 'home', icon: '📧', description: 'VIP newsletter section title and subtitle' },
   { key: 'story_page', label: 'Our Story Page', section: 'story', icon: '📖', description: 'Heritage manifesto, paragraphs, pillars of excellence' },
   { key: 'contact_info', label: 'Contact & FAQs', section: 'contact', icon: '📞', description: 'Phone, WhatsApp, email, address, hours, FAQ Q&As' },
-  { key: 'offers_page', label: 'Offers & Promo Codes', section: 'offers', icon: '🎟️', description: 'Discount cards with codes, titles, and expiry' },
+  { key: 'offers_page', label: 'Atelier Privileges', section: 'offers', icon: '🎁', description: 'Curated privileges, packaging, and services' },
   { key: 'footer_content', label: 'Footer', section: 'global', icon: '🔗', description: 'Copyright text and brand name' },
 ];
 

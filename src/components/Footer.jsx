@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <EditableSection cmsKey="footer_content" label="Footer">
-      <footer className="w-full bg-[#fff4f9]/80 border-t border-[#ebdcd0]/60 py-12 sm:py-16 mt-auto">
+      <footer className="w-full bg-[#fff4f9]/80 border-t border-[#ebdcd0]/60 pt-12 pb-28 lg:py-16 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
 
           {/* Brand & Copyright (Left) */}
@@ -35,11 +35,8 @@ export default function Footer() {
             <button onClick={() => navigateTo('refund-policy')} className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer">
               Shipping & Returns
             </button>
-            <button onClick={() => navigateTo('order-lookup')} className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer">
-              Track Order
-            </button>
             <button onClick={() => navigateTo('offers')} className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer">
-              Privileges & Offers
+              Atelier Privileges
             </button>
             <button onClick={() => navigateTo('story')} className="hover:text-stone-950 text-left transition-colors font-medium hover:underline cursor-pointer">
               Our Story

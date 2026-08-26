@@ -4,7 +4,7 @@ import { useShop } from '../context/ShopContext';
 import EditableSection from './cms/EditableSection';
 
 export default function AnnouncementBar() {
-  const { currency, setCurrency, CURRENCIES, siteContent } = useShop();
+  const { currency, setCurrency, CURRENCIES, siteContent, userLocation } = useShop();
   const a = siteContent?.announcement || {};
 
   // If admin disabled the bar entirely, hide it
@@ -29,8 +29,21 @@ export default function AnnouncementBar() {
             <span className="truncate">{a.centerText || 'Limited Mulberry Silk & Amethyst Drapes'}</span>
           </div>
 
-          {/* Right tools: Currency Selector */}
-          <div className="hidden sm:flex items-center gap-4 text-[11px] shrink-0">
+          {/* Right tools: Country Location & Currency Selector */}
+          <div className="hidden sm:flex items-center gap-3.5 text-[11px] shrink-0">
+            {/* Country indicator */}
+            {userLocation?.country && (
+              <div 
+                className="flex items-center gap-1.5 text-stone-300 border-r border-royal-violet/40 pr-3.5"
+                title={`Detected Location: ${userLocation.city ? userLocation.city + ', ' : ''}${userLocation.country}`}
+              >
+                <span className="text-sm leading-none">{userLocation.flag || '🌐'}</span>
+                <span className="text-stone-200 font-medium text-[11px] max-w-[100px] truncate">
+                  {userLocation.countryCode === 'IN' ? 'India' : userLocation.country}
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center gap-1.5 text-stone-300">
               <Globe className="w-3.5 h-3.5 text-amethyst-soft" />
               <select

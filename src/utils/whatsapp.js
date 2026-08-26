@@ -7,11 +7,10 @@ export const WHATSAPP_PHONE_DISPLAY = '+91 95442 36858';
 export function formatCartWhatsAppMessage({
   cart,
   rawCartSubtotal,
-  appliedDiscount = 0,
-  discountCodeName = '',
   cartSubtotal,
   freeShippingThreshold = 150,
-  formatPrice
+  formatPrice,
+  userLocation = null
 }) {
   const isFreeShipping = rawCartSubtotal >= freeShippingThreshold;
   const shippingCostText = isFreeShipping ? 'Complimentary (Free Worldwide Express)' : formatPrice(15);
@@ -54,13 +53,12 @@ export function formatCartWhatsAppMessage({
     `• Subtotal: ${formatPrice(rawCartSubtotal)}`
   );
 
-  if (appliedDiscount > 0) {
-    const discountVal = formatPrice(rawCartSubtotal * appliedDiscount);
-    lines.push(`• Privilege Code (${discountCodeName}): -${discountVal}`);
+  lines.push(`• Shipping: ${shippingCostText}`);
+  if (userLocation?.country) {
+    const locText = [userLocation.city, userLocation.country].filter(Boolean).join(', ');
+    lines.push(`• Destination Country: ${userLocation.flag || '📍'} ${locText}`);
   }
-
   lines.push(
-    `• Shipping: ${shippingCostText}`,
     `• *Estimated Total: ${totalPayable}*`,
     '\n━━━━━━━━━━━━━━━━━━━━',
     '📦 *NEXT STEPS:*',
