@@ -36,7 +36,8 @@ export default function Navbar() {
     currency,
     setCurrency,
     CURRENCIES,
-    showToast
+    showToast,
+    adminEnabled
   } = useShop();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -88,7 +89,7 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   };
 
-  const currentCurrencyData = CURRENCIES[currency] || CURRENCIES.USD;
+  const currentCurrencyData = CURRENCIES[currency] || CURRENCIES.INR;
 
   return (
     <>
@@ -96,95 +97,94 @@ export default function Navbar() {
         <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3.5 md:py-4.5 max-w-7xl mx-auto relative">
           
           {/* Left: Desktop Navigation Links (SHOP, COLLECTIONS, OUR STORY, CONTACT) + Mobile Menu Trigger */}
-          <div className="flex items-center gap-4 lg:gap-8">
+          <div className="flex items-center gap-4 lg:gap-8 z-10 shrink-0">
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open Navigation Menu"
               className="lg:hidden text-primary focus:outline-none p-1.5 -ml-1 rounded-lg hover:bg-stone-100/80 transition-colors flex items-center gap-2 group cursor-pointer"
             >
-              <Menu className="w-5.5 h-5.5 text-[#2E1C1A] group-hover:text-royal-violet transition-colors" />
+              <Menu className="w-5 h-5 text-primary group-hover:scale-105 transition-transform" />
+              <span className="text-xs tracking-wider uppercase font-semibold text-primary">Menu</span>
             </button>
 
-            <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-medium tracking-[0.2em] uppercase text-stone-700">
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-6 text-[11px] font-bold tracking-widest uppercase">
               <button
                 onClick={() => handleNav('shop')}
-                className={`relative py-1 transition-colors hover:text-stone-950 cursor-pointer ${
-                  currentView === 'shop' ? 'text-stone-950 font-bold' : 'text-stone-600'
+                className={`transition-colors py-1 relative cursor-pointer ${
+                  currentView === 'shop' ? 'text-royal-violet font-black' : 'text-primary/90 hover:text-royal-violet'
                 }`}
               >
-                <span>Shop</span>
+                Shop
                 {currentView === 'shop' && (
-                  <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-stone-900 animate-scale-in" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-royal-violet rounded-full" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNav('collections')}
-                className={`relative py-1 transition-colors hover:text-stone-950 cursor-pointer ${
-                  currentView === 'collections' ? 'text-stone-950 font-bold' : 'text-stone-600'
+                className={`transition-colors py-1 relative cursor-pointer ${
+                  currentView === 'collections' ? 'text-royal-violet font-black' : 'text-primary/90 hover:text-royal-violet'
                 }`}
               >
-                <span>Collections</span>
+                Collections
                 {currentView === 'collections' && (
-                  <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-stone-900 animate-scale-in" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-royal-violet rounded-full" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNav('story')}
-                className={`relative py-1 transition-colors hover:text-stone-950 cursor-pointer ${
-                  currentView === 'story' ? 'text-stone-950 font-bold' : 'text-stone-600'
+                className={`transition-colors py-1 relative cursor-pointer ${
+                  currentView === 'story' ? 'text-royal-violet font-black' : 'text-primary/90 hover:text-royal-violet'
                 }`}
               >
-                <span>Our Story</span>
+                Our Story
                 {currentView === 'story' && (
-                  <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-stone-900 animate-scale-in" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-royal-violet rounded-full" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNav('contact')}
-                className={`relative py-1 transition-colors hover:text-stone-950 cursor-pointer ${
-                  currentView === 'contact' ? 'text-stone-950 font-bold' : 'text-stone-600'
+                className={`transition-colors py-1 relative cursor-pointer ${
+                  currentView === 'contact' ? 'text-royal-violet font-black' : 'text-primary/90 hover:text-royal-violet'
                 }`}
               >
-                <span>Contact</span>
+                Contact
                 {currentView === 'contact' && (
-                  <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-stone-900 animate-scale-in" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-royal-violet rounded-full" />
                 )}
               </button>
             </nav>
           </div>
 
-          {/* Center: Brand Logo */}
-          <button
-            onClick={() => handleNav('home')}
-            className="flex items-center gap-2 sm:gap-2.5 absolute left-1/2 -translate-x-1/2 cursor-pointer focus:outline-none group py-1"
-            aria-label="NOOR AL DHUHA Luxury Abayas Home"
-          >
-            <img
-              src={brandLogo}
-              alt="NOOR AL DHUHA Logo"
-              className="h-9 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="flex flex-col items-start text-left">
-              <span className="font-serif text-base sm:text-lg md:text-xl tracking-[0.16em] font-semibold text-[#2E1C1A] whitespace-nowrap leading-tight">
+          {/* Center: Brand Logo & Name */}
+          <div className="absolute left-1/2 -translate-x-1/2 text-center flex items-center group cursor-pointer z-20">
+            <button
+              onClick={() => handleNav('home')}
+              className="flex items-center gap-2 sm:gap-2.5 focus:outline-none"
+              aria-label="NOOR AL DHUHA - Home"
+            >
+              <img
+                src={brandLogo}
+                alt="NOOR AL DHUHA Logo"
+                className="h-8 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <span className="font-serif text-sm sm:text-base md:text-lg font-bold tracking-[0.14em] text-primary uppercase whitespace-nowrap">
                 NOOR AL DHUHA
               </span>
-              <span className="text-[7.5px] sm:text-[8.5px] tracking-[0.3em] text-stone-500 uppercase -mt-0.5 font-light">
-                DUBAI • ATELIER
-              </span>
-            </div>
-          </button>
+            </button>
+          </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-2.5 sm:gap-4 text-primary">
+          <div className="flex items-center gap-2 sm:gap-4 text-primary z-10 shrink-0">
             {/* Currency Selector (Desktop) */}
             <div className="relative hidden sm:block" ref={currencyMenuRef}>
               <button
                 onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-100/80 hover:bg-stone-200/80 text-xs font-medium text-stone-700 transition-colors"
-                aria-label="Select Currency"
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100/80 hover:bg-stone-200/80 text-xs font-medium text-stone-700 transition-colors cursor-pointer"
+                aria-label="Select Currency & Market"
               >
                 <span>{currentCurrencyData.flag}</span>
                 <span className="font-semibold">{currency}</span>
@@ -192,24 +192,29 @@ export default function Navbar() {
               </button>
 
               {currencyDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-xl shadow-xl border border-stone-200 py-1.5 z-50 animate-fade-in">
+                <div className="absolute right-0 mt-1.5 w-44 bg-white rounded-xl shadow-xl border border-stone-200 py-1.5 z-50 animate-fade-in">
+                  <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-stone-400 border-b border-stone-100 mb-1">
+                    Select Region & Currency
+                  </div>
                   {Object.entries(CURRENCIES).map(([code, item]) => (
                     <button
                       key={code}
                       onClick={() => {
                         setCurrency(code);
                         setCurrencyDropdownOpen(false);
-                        showToast(`Currency updated to ${item.name}`);
+                        showToast(`Region updated to ${item.name}`);
                       }}
-                      className={`w-full text-left px-3 py-1.5 text-xs flex items-center justify-between transition-colors ${
+                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors cursor-pointer ${
                         currency === code ? 'bg-stone-100 font-bold text-primary' : 'text-stone-700 hover:bg-stone-50'
                       }`}
                     >
                       <span className="flex items-center gap-2">
-                        <span>{item.flag}</span>
-                        <span>{code}</span>
+                        <span className="text-base leading-none">{item.flag}</span>
+                        <div className="flex flex-col">
+                          <span className="font-medium text-stone-900 leading-tight">{item.name}</span>
+                        </div>
                       </span>
-                      {currency === code && <Check className="w-3.5 h-3.5 text-royal-violet" />}
+                      {currency === code && <Check className="w-3.5 h-3.5 text-royal-violet shrink-0" />}
                     </button>
                   ))}
                 </div>
@@ -235,15 +240,17 @@ export default function Navbar() {
             </button>
 
             {/* Admin Portal Button */}
-            <button
-              onClick={() => handleNav('admin')}
-              aria-label="Admin Portal"
-              title="Admin Portal"
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-royal-violet/10 hover:bg-royal-violet/20 border border-royal-violet/20 text-royal-violet text-[11px] font-semibold transition-colors"
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Admin</span>
-            </button>
+            {adminEnabled && (
+              <button
+                onClick={() => handleNav('admin')}
+                aria-label="Admin Portal"
+                title="Admin Portal"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-royal-violet/10 hover:bg-royal-violet/20 border border-royal-violet/20 text-royal-violet text-[11px] font-semibold transition-colors"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Admin</span>
+              </button>
+            )}
             
             {/* Shopping Bag */}
             <button
@@ -623,13 +630,15 @@ export default function Navbar() {
                   <span>Search</span>
                 </button>
                 <span className="text-stone-300">|</span>
-                <button
-                  onClick={() => handleNav('admin')}
-                  className="text-royal-violet font-semibold hover:text-primary transition-colors flex items-center gap-1"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Admin</span>
-                </button>
+                {adminEnabled && (
+                  <button
+                    onClick={() => handleNav('admin')}
+                    className="text-royal-violet font-semibold hover:text-primary transition-colors flex items-center gap-1"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>Admin</span>
+                  </button>
+                )}
               </div>
 
               {/* Currency Selector (Matches screenshot: [Flag] INR v) */}
@@ -639,13 +648,13 @@ export default function Navbar() {
                     value={currency}
                     onChange={(e) => {
                       setCurrency(e.target.value);
-                      showToast(`Currency updated to ${CURRENCIES[e.target.value]?.name}`);
+                      showToast(`Region updated to ${CURRENCIES[e.target.value]?.name}`);
                     }}
                     className="w-full appearance-none bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-stone-500 shadow-xs cursor-pointer"
                   >
                     {Object.entries(CURRENCIES).map(([code, item]) => (
                       <option key={code} value={code}>
-                        {item.flag} {code} ({item.symbol.trim()})
+                        {item.flag} {item.name}
                       </option>
                     ))}
                   </select>

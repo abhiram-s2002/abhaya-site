@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
-import { PRODUCTS as DEFAULT_PRODUCTS } from '../data/products';
+import { PRODUCTS as DEFAULT_PRODUCTS } from '../data/products.js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || '';
+const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || '';
 
 // Check if valid credentials are provided
 export const isSupabaseConfigured = Boolean(
@@ -39,6 +39,7 @@ export function formatProductFromDB(row) {
     originalPrice: row.original_price ? Number(row.original_price) : null,
     category: row.category || 'Silk',
     badge: row.badge || '',
+    targetRegion: row.target_region || 'all',
     rating: Number(row.rating) || 5.0,
     reviewsCount: Number(row.reviews_count) || 0,
     isFeatured: Boolean(row.is_featured),
@@ -71,6 +72,7 @@ export function formatProductForDB(product) {
     original_price: product.originalPrice ? Number(product.originalPrice) : null,
     category: product.category || 'Silk',
     badge: product.badge || null,
+    target_region: product.targetRegion || 'all',
     rating: Number(product.rating) || 5.0,
     reviews_count: Number(product.reviewsCount) || 0,
     is_featured: Boolean(product.isFeatured),

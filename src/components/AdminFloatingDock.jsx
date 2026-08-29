@@ -20,11 +20,12 @@ export default function AdminFloatingDock() {
     setIsAdminEditMode,
     navigateTo,
     setCmsDrawerOpen,
+    adminEnabled,
   } = useShop();
 
   const [collapsed, setCollapsed] = useState(false);
 
-  if (!isAdminLoggedIn) return null;
+  if (!isAdminLoggedIn || !adminEnabled) return null;
 
   return (
     <div

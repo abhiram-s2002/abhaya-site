@@ -50,6 +50,7 @@ export default function AdminProductModal({
   const [category, setCategory] = useState('Silk');
   const [customCategory, setCustomCategory] = useState('');
   const [badge, setBadge] = useState('');
+  const [targetRegion, setTargetRegion] = useState('all'); // 'all' | 'india' | 'arab'
   const [isFeatured, setIsFeatured] = useState(false);
   const [isVioletEdition, setIsVioletEdition] = useState(false);
   const [stockCount, setStockCount] = useState(10);
@@ -102,6 +103,7 @@ export default function AdminProductModal({
         setCustomCategory(product.category || '');
       }
       setBadge(product.badge || '');
+      setTargetRegion(product.targetRegion || 'all');
       setIsFeatured(Boolean(product.isFeatured));
       setIsVioletEdition(Boolean(product.isVioletEdition));
       setStockCount(product.stockCount ?? 10);
@@ -126,6 +128,7 @@ export default function AdminProductModal({
       setCategory('Silk');
       setCustomCategory('');
       setBadge('New Arrival');
+      setTargetRegion('all');
       setIsFeatured(false);
       setIsVioletEdition(false);
       setStockCount(12);
@@ -303,6 +306,7 @@ export default function AdminProductModal({
       originalPrice: originalPrice ? Number(originalPrice) : null,
       category: finalCategory,
       badge: badge.trim(),
+      targetRegion: targetRegion || 'all',
       rating: product?.rating || 5.0,
       reviewsCount: product?.reviewsCount || 0,
       isFeatured,
@@ -436,7 +440,72 @@ export default function AdminProductModal({
                       className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm font-medium"
                     />
                   </div>
-                  <span className="text-[10px] text-stone-500">Auto-converts to INR (₹), AED, SAR, EUR, GBP in customer view.</span>
+                  <span className="text-[10px] text-stone-500">Auto-converts to INR (₹) and AED (د.إ) based on visitor's selected market.</span>
+                </div>
+
+                {/* Target Audience / Market Selection */}
+                <div className="space-y-2 col-span-full">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-stone-700 block">
+                    Target Market / Audience *
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setTargetRegion('india')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                        targetRegion === 'india'
+                          ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-500/20 shadow-xs'
+                          : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl">🇮🇳</span>
+                        {targetRegion === 'india' && <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Active</span>}
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xs font-bold text-stone-900">India Users Only</div>
+                        <div className="text-[11px] text-stone-500">Priced & shown in INR (₹)</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTargetRegion('arab')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                        targetRegion === 'arab'
+                          ? 'border-amber-600 bg-amber-50/70 ring-2 ring-amber-500/20 shadow-xs'
+                          : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl">🇦🇪</span>
+                        {targetRegion === 'arab' && <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">Active</span>}
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xs font-bold text-stone-900">Arab & UAE Users</div>
+                        <div className="text-[11px] text-stone-500">Priced & shown in AED (د.إ)</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTargetRegion('all')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                        targetRegion === 'all'
+                          ? 'border-royal-violet bg-royal-violet/5 ring-2 ring-royal-violet/20 shadow-xs'
+                          : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl">🌐</span>
+                        {targetRegion === 'all' && <span className="text-[10px] font-bold uppercase tracking-wider text-royal-violet bg-royal-violet/15 px-2 py-0.5 rounded-full">Active</span>}
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xs font-bold text-stone-900">Both / Global Market</div>
+                        <div className="text-[11px] text-stone-500">Shown in both INR & AED</div>
+                      </div>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">

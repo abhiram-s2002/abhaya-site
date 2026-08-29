@@ -13,22 +13,22 @@ export function getCountryFlag(countryCode) {
   return String.fromCodePoint(...codePoints);
 }
 
-// Map Country Code to store's supported currency
+// Map Country Code to store's supported currency (INR for India, AED for Arab/UAE region)
 export function getSuggestedCurrency(countryCode) {
   const code = (countryCode || '').toUpperCase();
 
-  if (code === 'IN') return 'INR';
-  if (code === 'AE') return 'AED';
-  if (['SA', 'QA', 'KW', 'BH', 'OM'].includes(code)) return 'SAR';
-  if (code === 'GB') return 'GBP';
-  if ([
-    'AT', 'BE', 'CY', 'EE', 'FI', 'FR', 'DE', 'GR', 'IE', 'IT', 
-    'LV', 'LT', 'LU', 'MT', 'NL', 'PT', 'SK', 'SI', 'ES', 'SE', 'DK', 'PL', 'NO', 'CH'
-  ].includes(code)) {
-    return 'EUR';
+  // GCC & Arab World Countries -> AED
+  const arabCountries = [
+    'AE', 'SA', 'QA', 'KW', 'BH', 'OM', // GCC
+    'EG', 'JO', 'LB', 'IQ', 'YE', 'SY', 'PS', 'SD', 'DZ', 'MA', 'TN', 'LY' // Wider Arab Region
+  ];
+
+  if (arabCountries.includes(code)) {
+    return 'AED';
   }
-  
-  return 'USD'; // Default global currency
+
+  // Default to INR for India and general international visitors
+  return 'INR';
 }
 
 /**

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { PRODUCTS as STATIC_PRODUCTS } from '../data/products';
 import {
   fetchProductsFromSupabase,
@@ -9,17 +9,14 @@ import {
 } from '../lib/supabase';
 
 import { fetchAllSiteContent, upsertSiteContent, DEFAULT_CONTENT } from '../lib/cms';
+import { fetchAdminEnabled, setAdminEnabledRemote as _setAdminEnabledRemote } from '../lib/adminSettings';
 import { detectUserLocation } from '../utils/geo';
 
 const ShopContext = createContext();
 
 const CURRENCIES = {
-  INR: { symbol: "₹", rate: 83.5, name: "INR (₹)", flag: "🇮🇳" },
-  USD: { symbol: "$", rate: 1.0, name: "USD ($)", flag: "🇺🇸" },
-  AED: { symbol: "AED ", rate: 3.67, name: "AED (د.إ)", flag: "🇦🇪" },
-  SAR: { symbol: "SAR ", rate: 3.75, name: "SAR (﷼)", flag: "🇸🇦" },
-  EUR: { symbol: "€", rate: 0.92, name: "EUR (€)", flag: "🇪🇺" },
-  GBP: { symbol: "£", rate: 0.78, name: "GBP (£)", flag: "🇬🇧" },
+  INR: { symbol: "₹", rate: 83.5, name: "India (₹ INR)", flag: "🇮🇳", region: "india" },
+  AED: { symbol: "AED ", rate: 3.67, name: "UAE / Arab (AED د.إ)", flag: "🇦🇪", region: "arab" },
 };
 
 const DEFAULT_ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
@@ -61,6 +58,15 @@ export function ShopProvider({ children }) {
   // Which CMS section drawer is open: null | { key, label }
   const [cmsDrawerOpen, setCmsDrawerOpen] = useState(null);
   const [isProductsLoading, setIsProductsLoading] = useState(false);
+
+  // Admin Visibility Toggle (controlled via Supabase app_settings table)
+  const [adminEnabled, setAdminEnabled] = useState(() => {
+    try {
+      const saved = localStorage.getItem('noor_admin_enabled');
+      if (saved !== null) return JSON.parse(saved);
+    } catch (_) {}
+    return true; // default ON
+  });
 
   // Admin Auth State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
@@ -213,6 +219,25 @@ export function ShopProvider({ children }) {
   const updateSiteContent = useCallback(async (key, newContent) => {
     setSiteContent(prev => ({ ...prev, [key]: newContent }));
     await upsertSiteContent(key, newContent);
+  }, []);
+
+  // Fetch admin_enabled flag from Supabase on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadAdminEnabled() {
+      try {
+        const val = await fetchAdminEnabled();
+        if (isMounted) setAdminEnabled(val);
+      } catch (_) {}
+    }
+    loadAdminEnabled();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Toggle admin visibility and persist to Supabase
+  const setAdminEnabledRemote = useCallback(async (val) => {
+    setAdminEnabled(val);
+    await _setAdminEnabledRemote(val);
   }, []);
 
 
@@ -408,9 +433,20 @@ export function ShopProvider({ children }) {
 
   const isWishlisted = (productId) => wishlist.includes(productId);
 
+  // Active Region mapping ('india' vs 'arab')
+  const activeRegion = currency === 'AED' ? 'arab' : 'india';
+
+  // Visible products filtered by active region for store views
+  const visibleProducts = useMemo(() => {
+    return products.filter((p) => {
+      if (!p.targetRegion || p.targetRegion === 'all') return true;
+      return p.targetRegion === activeRegion;
+    });
+  }, [products, activeRegion]);
+
   // Price formatting helper with currency conversion & clean locale formatting
   const formatPrice = (usdPrice) => {
-    const info = CURRENCIES[currency] || CURRENCIES.USD;
+    const info = CURRENCIES[currency] || CURRENCIES.INR;
     const num = Math.round(Number(usdPrice || 0) * info.rate);
     const formatted = currency === 'INR' 
       ? num.toLocaleString('en-IN') 
@@ -428,8 +464,11 @@ export function ShopProvider({ children }) {
     <ShopContext.Provider
       value={{
         // Products dynamic state and alias
-        products,
-        PRODUCTS: products,
+        products: visibleProducts,
+        PRODUCTS: visibleProducts,
+        allProducts: products,
+        activeRegion,
+        setActiveRegion: (region) => setCurrency(region === 'arab' ? 'AED' : 'INR'),
         isProductsLoading,
         createProduct,
         updateProduct,
@@ -447,6 +486,10 @@ export function ShopProvider({ children }) {
         setIsAdminEditMode,
         cmsDrawerOpen,
         setCmsDrawerOpen,
+
+        // Admin Visibility Toggle
+        adminEnabled,
+        setAdminEnabledRemote,
 
         // Admin Auth
         isAdminLoggedIn,

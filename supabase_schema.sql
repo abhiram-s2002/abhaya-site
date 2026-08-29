@@ -16,6 +16,7 @@ create table if not exists public.products (
   original_price numeric,
   category text not null,
   badge text,
+  target_region text default 'all' check (target_region in ('all', 'india', 'arab')),
   rating numeric default 5.0,
   reviews_count integer default 0,
   is_featured boolean default false,
@@ -36,6 +37,9 @@ create table if not exists public.products (
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+-- Note: For existing Supabase instances, run:
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS target_region text DEFAULT 'all';
 
 -- 3. CREATE ORDERS & TRACKING TABLE
 create table if not exists public.orders (
@@ -162,3 +166,40 @@ drop policy if exists "Allow deletes to product-images" on storage.objects;
 create policy "Allow deletes to product-images"
   on storage.objects for delete
   using ( bucket_id = 'product-images' );
+
+-- ==============================================================================
+-- 9. APP SETTINGS TABLE
+-- Stores global site feature flags (e.g. admin_enabled on/off).
+-- ==============================================================================
+
+create table if not exists public.app_settings (
+  key text primary key,
+  value jsonb not null default '{}'::jsonb,
+  updated_at timestamptz default now()
+);
+
+-- Enable RLS
+alter table public.app_settings enable row level security;
+
+-- Allow public read (flag is non-sensitive — it only shows/hides the UI button)
+drop policy if exists "App settings viewable by everyone" on public.app_settings;
+create policy "App settings viewable by everyone"
+  on public.app_settings for select
+  using (true);
+
+-- Allow inserts (admin PIN authenticated in-app)
+drop policy if exists "Enable insert for app_settings" on public.app_settings;
+create policy "Enable insert for app_settings"
+  on public.app_settings for insert
+  with check (true);
+
+-- Allow updates
+drop policy if exists "Enable update for app_settings" on public.app_settings;
+create policy "Enable update for app_settings"
+  on public.app_settings for update
+  using (true);
+
+-- Insert default: admin_enabled = true
+insert into public.app_settings (key, value)
+values ('admin_enabled', '{"enabled": true}')
+on conflict (key) do nothing;

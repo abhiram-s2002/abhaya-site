@@ -52,9 +52,9 @@ export default function AnnouncementBar() {
                 className="bg-transparent border-none text-stone-200 uppercase font-semibold cursor-pointer focus:outline-none focus:ring-0 text-[11px] p-0"
                 aria-label="Currency Selector"
               >
-                {Object.keys(CURRENCIES).map((curr) => (
-                  <option key={curr} value={curr} className="bg-primary text-white">
-                    {curr} ({CURRENCIES[curr].symbol.trim()})
+                {Object.entries(CURRENCIES).map(([code, item]) => (
+                  <option key={code} value={code} className="bg-primary text-white font-medium">
+                    {item.flag} {code} ({item.symbol.trim()})
                   </option>
                 ))}
               </select>

@@ -25,18 +25,22 @@ import {
   Check,
   RefreshCw,
   Palette,
-  ExternalLink
+  ExternalLink,
+  ToggleLeft,
+  ToggleRight,
+  Settings2
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import { CMS_SECTIONS } from '../lib/cms';
-import AdminProductModal from '../components/admin/AdminProductModal';
+import AdminProductEditor from '../components/admin/AdminProductEditor';
 import AdminOrdersTab from '../components/admin/AdminOrdersTab';
 import brandLogo from '../assets/logo.png';
 
 export default function AdminPage() {
   const {
     products,
+    allProducts,
     createProduct,
     updateProduct,
     deleteProduct,
@@ -52,25 +56,31 @@ export default function AdminPage() {
     setCmsDrawerOpen,
     isAdminEditMode,
     setIsAdminEditMode,
+    adminEnabled,
+    setAdminEnabledRemote,
   } = useShop();
+
+  const baseProducts = allProducts && allProducts.length > 0 ? allProducts : products;
 
   // Admin Login State
   const [pinInput, setPinInput] = useState('');
   const [loginError, setLoginError] = useState('');
 
   // Active Admin Section
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'orders'
+  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'orders' | 'cms' | 'settings'
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'cards'
+  const [isTogglingAdmin, setIsTogglingAdmin] = useState(false);
 
   // Product Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedMarketFilter, setSelectedMarketFilter] = useState('all'); // 'all' | 'india' | 'arab' | 'both'
   const [stockFilter, setStockFilter] = useState('all'); // 'all' | 'low' | 'out'
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [violetOnly, setVioletOnly] = useState(false);
 
-  // Modal State
-  const [modalOpen, setModalOpen] = useState(false);
+  // Full-page Editor State
+  const [isProductEditorOpen, setIsProductEditorOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [isSeeding, setIsSeeding] = useState(false);
@@ -89,15 +99,15 @@ export default function AdminPage() {
 
   // Metrics Calculations
   const stats = useMemo(() => {
-    const total = products.length;
-    const silkCount = products.filter(p => p.category === 'Silk').length;
-    const chiffonCount = products.filter(p => p.category === 'Chiffon').length;
-    const modalCount = products.filter(p => p.category === 'Modal Jersey').length;
-    const georgetteCount = products.filter(p => p.category === 'Georgette').length;
-    const featuredCount = products.filter(p => p.isFeatured).length;
-    const violetCount = products.filter(p => p.isVioletEdition).length;
-    const lowStockCount = products.filter(p => (p.stockCount ?? 10) <= 5 && (p.stockCount ?? 10) > 0).length;
-    const outOfStockCount = products.filter(p => (p.stockCount ?? 10) === 0).length;
+    const total = baseProducts.length;
+    const silkCount = baseProducts.filter(p => p.category === 'Silk').length;
+    const chiffonCount = baseProducts.filter(p => p.category === 'Chiffon').length;
+    const modalCount = baseProducts.filter(p => p.category === 'Modal Jersey').length;
+    const georgetteCount = baseProducts.filter(p => p.category === 'Georgette').length;
+    const featuredCount = baseProducts.filter(p => p.isFeatured).length;
+    const violetCount = baseProducts.filter(p => p.isVioletEdition).length;
+    const lowStockCount = baseProducts.filter(p => (p.stockCount ?? 10) <= 5 && (p.stockCount ?? 10) > 0).length;
+    const outOfStockCount = baseProducts.filter(p => (p.stockCount ?? 10) === 0).length;
 
     return {
       total,
@@ -110,11 +120,11 @@ export default function AdminPage() {
       lowStockCount,
       outOfStockCount
     };
-  }, [products]);
+  }, [baseProducts]);
 
   // Filtered Products List
   const filteredProducts = useMemo(() => {
-    return products.filter(p => {
+    return baseProducts.filter(p => {
       // Search
       const q = searchQuery.toLowerCase();
       const matchesSearch =
@@ -127,35 +137,47 @@ export default function AdminPage() {
       // Category
       const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
 
+      // Market / Region Filter
+      let matchesMarket = true;
+      if (selectedMarketFilter === 'india') {
+        matchesMarket = p.targetRegion === 'india';
+      } else if (selectedMarketFilter === 'arab') {
+        matchesMarket = p.targetRegion === 'arab';
+      } else if (selectedMarketFilter === 'both') {
+        matchesMarket = p.targetRegion === 'all' || !p.targetRegion;
+      }
+
       // Stock
       const stock = p.stockCount ?? 10;
       let matchesStock = true;
       if (stockFilter === 'low') matchesStock = stock <= 5 && stock > 0;
       if (stockFilter === 'out') matchesStock = stock === 0;
 
-      // Flags
+      // Featured / Violet
       const matchesFeatured = !featuredOnly || p.isFeatured;
       const matchesViolet = !violetOnly || p.isVioletEdition;
 
-      return matchesSearch && matchesCategory && matchesStock && matchesFeatured && matchesViolet;
+      return matchesSearch && matchesCategory && matchesMarket && matchesStock && matchesFeatured && matchesViolet;
     });
-  }, [products, searchQuery, selectedCategory, stockFilter, featuredOnly, violetOnly]);
+  }, [baseProducts, searchQuery, selectedCategory, selectedMarketFilter, stockFilter, featuredOnly, violetOnly]);
 
   // Categories list for filter pills
   const categories = useMemo(() => {
-    const set = new Set(products.map(p => p.category).filter(Boolean));
+    const set = new Set(baseProducts.map(p => p.category).filter(Boolean));
     return ['All', ...Array.from(set)];
-  }, [products]);
+  }, [baseProducts]);
 
   // Handlers
   const handleOpenAddModal = () => {
     setEditingProduct(null);
-    setModalOpen(true);
+    setIsProductEditorOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleOpenEditModal = (product) => {
     setEditingProduct(product);
-    setModalOpen(true);
+    setIsProductEditorOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDuplicateProduct = async (product) => {
@@ -212,6 +234,9 @@ export default function AdminPage() {
       await createProduct(productData);
       showToast(`Published "${productData.name}" to catalog.`);
     }
+    setIsProductEditorOpen(false);
+    setEditingProduct(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // If Admin is not logged in, render the luxury login gate
@@ -277,6 +302,21 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
+    );
+  }
+
+  // If currently in full-page Abaya Editor Studio (creating or editing)
+  if (isProductEditorOpen) {
+    return (
+      <AdminProductEditor
+        product={editingProduct}
+        onSave={handleSaveProductModal}
+        onCancel={() => {
+          setIsProductEditorOpen(false);
+          setEditingProduct(null);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
     );
   }
 
@@ -417,6 +457,18 @@ export default function AdminPage() {
           <Palette className="w-4 h-4" />
           <span>🎨 Content Management ({CMS_SECTIONS.length})</span>
         </button>
+
+        <button
+          onClick={() => setActiveTab('settings')}
+          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 shrink-0 ${
+            activeTab === 'settings'
+              ? 'border-stone-700 text-stone-900 font-semibold'
+              : 'border-transparent text-stone-500 hover:text-stone-800'
+          }`}
+        >
+          <Settings2 className="w-4 h-4" />
+          <span>Site Settings</span>
+        </button>
       </div>
 
       {/* TAB CONTENT: PRODUCTS */}
@@ -486,21 +538,48 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* Category Filter Pills */}
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-surface-container-highest">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                    selectedCategory === cat
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'bg-surface-container text-stone-600 hover:bg-surface-container-high'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Market & Category Filter Pills */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-surface-container-highest">
+              {/* Market pills */}
+              <div className="flex items-center gap-1.5 bg-surface-container/60 p-1 rounded-xl">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 px-2">Market:</span>
+                {[
+                  { id: 'all', label: 'All', icon: '🌐' },
+                  { id: 'india', label: 'India', icon: '🇮🇳' },
+                  { id: 'arab', label: 'Arab / UAE', icon: '🇦🇪' },
+                  { id: 'both', label: 'Both', icon: '✨' }
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setSelectedMarketFilter(m.id)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                      selectedMarketFilter === m.id
+                        ? 'bg-white text-primary shadow-xs ring-1 ring-black/5 font-bold'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    <span>{m.icon}</span>
+                    <span>{m.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Category pills */}
+              <div className="flex flex-wrap gap-1.5">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                      selectedCategory === cat
+                        ? 'bg-primary text-white shadow-xs'
+                        : 'bg-surface-container text-stone-600 hover:bg-surface-container-high'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -528,6 +607,7 @@ export default function AdminPage() {
                     <tr>
                       <th className="py-3.5 px-4">Abaya Creation</th>
                       <th className="py-3.5 px-4">Category & Badge</th>
+                      <th className="py-3.5 px-4">Target Market</th>
                       <th className="py-3.5 px-4">Price</th>
                       <th className="py-3.5 px-4">Stock</th>
                       <th className="py-3.5 px-4 text-center">Featured</th>
@@ -575,6 +655,26 @@ export default function AdminPage() {
                           {p.badge && (
                             <span className="block mt-1 text-[10px] text-royal-violet font-semibold">
                               {p.badge}
+                            </span>
+                          )}
+                        </td>
+
+                        {/* Target Market */}
+                        <td className="py-3.5 px-4">
+                          {p.targetRegion === 'india' ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 text-[11px] font-semibold border border-emerald-200/50">
+                              <span>🇮🇳</span>
+                              <span>India</span>
+                            </span>
+                          ) : p.targetRegion === 'arab' ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[11px] font-semibold border border-amber-200/50">
+                              <span>🇦🇪</span>
+                              <span>Arab / UAE</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 text-purple-800 text-[11px] font-semibold border border-purple-200/50">
+                              <span>🌐</span>
+                              <span>Both</span>
                             </span>
                           )}
                         </td>
@@ -722,9 +822,24 @@ export default function AdminPage() {
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div>
                       <div className="flex justify-between items-start">
-                        <span className="text-[10px] uppercase font-semibold text-royal-violet tracking-wider">
-                          {p.category}
-                        </span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[10px] uppercase font-semibold text-royal-violet tracking-wider">
+                            {p.category}
+                          </span>
+                          {p.targetRegion === 'india' ? (
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[9px] font-bold border border-emerald-200">
+                              🇮🇳 India
+                            </span>
+                          ) : p.targetRegion === 'arab' ? (
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 text-[9px] font-bold border border-amber-200">
+                              🇦🇪 Arab / UAE
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-purple-50 text-purple-800 text-[9px] font-bold border border-purple-200">
+                              🌐 Both
+                            </span>
+                          )}
+                        </div>
                         <span className="font-serif font-bold text-sm text-primary">
                           {formatPrice(p.price)}
                         </span>
@@ -853,16 +968,83 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Modal for Creating / Editing Product */}
-      <AdminProductModal
-        isOpen={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          setEditingProduct(null);
-        }}
-        product={editingProduct}
-        onSave={handleSaveProductModal}
-      />
+      {/* TAB CONTENT: SITE SETTINGS */}
+      {activeTab === 'settings' && (
+        <div className="space-y-6 animate-fade-in">
+
+          {/* Settings Header */}
+          <div className="bg-white border border-secondary/20 rounded-2xl p-6 shadow-subtle">
+            <div className="flex items-center gap-3 mb-1">
+              <Settings2 className="w-5 h-5 text-stone-600" />
+              <h2 className="font-serif text-xl font-medium text-stone-800">Site Settings</h2>
+            </div>
+            <p className="text-xs text-stone-500">
+              Control global site behaviours. Changes are persisted to the Supabase <code className="font-mono bg-stone-100 px-1 rounded">app_settings</code> table and take effect immediately.
+            </p>
+          </div>
+
+          {/* Admin Panel Visibility Toggle Card */}
+          <div className="bg-white border border-secondary/20 rounded-2xl p-6 shadow-subtle space-y-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-royal-violet" />
+                  <h3 className="font-serif text-base font-semibold text-stone-800">Admin Panel Visibility</h3>
+                </div>
+                <p className="text-xs text-stone-500 max-w-md">
+                  When <strong>ON</strong>, the Admin button appears in the navbar and the Admin portal is accessible to authorised staff.
+                  Turn <strong>OFF</strong> to hide all admin entry points from the public-facing site.
+                </p>
+                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mt-1 ${
+                  adminEnabled
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-red-50 text-red-700 border border-red-200'
+                }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${adminEnabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                  {adminEnabled ? 'Admin Access: Enabled' : 'Admin Access: Hidden'}
+                </div>
+              </div>
+
+              {/* Big Toggle Switch */}
+              <button
+                onClick={async () => {
+                  setIsTogglingAdmin(true);
+                  const next = !adminEnabled;
+                  await setAdminEnabledRemote(next);
+                  showToast(
+                    next
+                      ? 'Admin panel enabled — navbar button is now visible.'
+                      : 'Admin panel hidden — admin button removed from navbar.',
+                    next ? 'success' : 'info'
+                  );
+                  setIsTogglingAdmin(false);
+                }}
+                disabled={isTogglingAdmin}
+                className={`relative flex items-center gap-3 px-5 py-3 rounded-2xl border-2 font-semibold text-sm transition-all ${
+                  adminEnabled
+                    ? 'border-emerald-400 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                    : 'border-red-300 bg-red-50 text-red-800 hover:bg-red-100'
+                } ${isTogglingAdmin ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                title={adminEnabled ? 'Click to hide Admin from navbar' : 'Click to show Admin in navbar'}
+              >
+                {adminEnabled ? (
+                  <ToggleRight className="w-8 h-8 text-emerald-600" />
+                ) : (
+                  <ToggleLeft className="w-8 h-8 text-red-400" />
+                )}
+                <span>{isTogglingAdmin ? 'Saving…' : adminEnabled ? 'ON' : 'OFF'}</span>
+              </button>
+            </div>
+
+            {/* Info box */}
+            <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 text-xs text-stone-600 space-y-1">
+              <p>📌 <strong>Note:</strong> Turning admin OFF only hides the navbar button — this settings page remains accessible to already-logged-in admins.</p>
+              <p>🔒 The Supabase <code className="font-mono bg-stone-100 px-1 rounded">app_settings</code> table stores this flag. Run the SQL snippet in your Supabase dashboard if the table does not yet exist.</p>
+            </div>
+          </div>
+
+        </div>
+      )}
 
     </div>
   );
