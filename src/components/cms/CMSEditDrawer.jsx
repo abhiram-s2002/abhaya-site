@@ -117,7 +117,7 @@ export default function CMSEditDrawer() {
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100 bg-gradient-to-r from-[#2E1C1A] to-[#4A2B5E] text-white shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100 bg-gradient-to-r from-[#180516] to-[#982476] text-white shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={handleClose}
@@ -171,7 +171,7 @@ export default function CMSEditDrawer() {
           <button
             onClick={handleSave}
             disabled={saving || localDraft === null}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#2E1C1A] via-[#4A2B5E] to-[#2E1C1A] text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#180516] via-[#982476] to-[#180516] text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />

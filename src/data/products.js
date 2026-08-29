@@ -153,8 +153,8 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 },
-      { name: "Plum Noir", hex: "#211126", imageIndex: 1 },
-      { name: "Amethyst Soft", hex: "#7D628A", imageIndex: 2 },
+      { name: "Plum Noir", hex: "#260A22", imageIndex: 1 },
+      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 2 },
       { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 3 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
@@ -186,8 +186,8 @@ export const PRODUCTS = [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g"
     ],
     colors: [
-      { name: "Royal Violet", hex: "#4A2B5E", imageIndex: 0 },
-      { name: "Amethyst Soft", hex: "#7D628A", imageIndex: 1 },
+      { name: "Royal Violet", hex: "#982476", imageIndex: 0 },
+      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 1 },
       { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
@@ -283,7 +283,7 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
-      { name: "Soft Amethyst", hex: "#7D628A", imageIndex: 0 },
+      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 },
       { name: "Oat Cream", hex: "#ECE2D4", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
@@ -315,7 +315,7 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 0 },
-      { name: "Soft Amethyst", hex: "#7D628A", imageIndex: 0 },
+      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 },
       { name: "Champagne Glow", hex: "#EBD5C1", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
@@ -346,8 +346,8 @@ export const PRODUCTS = [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g"
     ],
     colors: [
-      { name: "Amethyst Soft", hex: "#7D628A", imageIndex: 0 },
-      { name: "Royal Violet", hex: "#4A2B5E", imageIndex: 0 }
+      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 0 },
+      { name: "Royal Violet", hex: "#982476", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 5,

@@ -195,7 +195,7 @@ export const DEFAULT_CONTENT = {
       minSpend: 'No Minimum',
       expires: 'Ongoing',
       category: 'All',
-      color: 'from-[#4A2B5E] to-[#2E1C1A]',
+      color: 'from-[#982476] to-[#180516]',
       accentBg: 'bg-royal-violet/10 text-royal-violet border-royal-violet/20',
     },
     {
@@ -221,7 +221,7 @@ export const DEFAULT_CONTENT = {
       minSpend: 'Select Violet items',
       expires: 'Limited Stock',
       category: 'Violet Edition',
-      color: 'from-[#502C63] to-[#24132B]',
+      color: 'from-[#982476] to-[#260A22]',
       accentBg: 'bg-amethyst-soft/10 text-royal-violet border-amethyst-soft/30',
     },
   ],

@@ -456,7 +456,7 @@ export default function AdminPage() {
                   onClick={() => setVioletOnly(!violetOnly)}
                   className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors ${
                     violetOnly
-                      ? 'bg-[#4A2B5E] text-white border-[#4A2B5E]'
+                      ? 'bg-[#982476] text-white border-[#982476]'
                       : 'border-secondary/30 text-stone-600 hover:bg-surface-container'
                   }`}
                 >
@@ -620,7 +620,7 @@ export default function AdminPage() {
                           <button
                             onClick={(e) => handleToggleViolet(p, e)}
                             className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors ${
-                              p.isVioletEdition ? 'bg-[#4A2B5E] text-white' : 'bg-surface-container text-stone-400 hover:text-stone-600'
+                              p.isVioletEdition ? 'bg-[#982476] text-white' : 'bg-surface-container text-stone-400 hover:text-stone-600'
                             }`}
                             title="Toggle Violet Edition"
                           >
@@ -712,7 +712,7 @@ export default function AdminPage() {
                         </span>
                       )}
                       {p.isVioletEdition && (
-                        <span className="px-2 py-0.5 rounded bg-[#4A2B5E] text-white text-[9px] font-semibold">
+                        <span className="px-2 py-0.5 rounded bg-[#982476] text-white text-[9px] font-semibold">
                           Violet Capsule
                         </span>
                       )}
@@ -833,7 +833,7 @@ export default function AdminPage() {
 
                 <button
                   onClick={() => setCmsDrawerOpen({ key: section.key, label: section.label })}
-                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#2E1C1A] to-[#4A2B5E] text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#180516] to-[#982476] text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-sm"
                 >
                   <Edit2 className="w-3.5 h-3.5 text-yellow-400" />
                   <span>Edit {section.label}</span>

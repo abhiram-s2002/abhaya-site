@@ -21,9 +21,9 @@ const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'New Arriv
 
 const LUXURY_PALETTE_PRESETS = [
   { name: 'Midnight Espresso', hex: '#2E1C1A' },
-  { name: 'Royal Violet', hex: '#4A2B5E' },
-  { name: 'Plum Noir', hex: '#211126' },
-  { name: 'Amethyst Soft', hex: '#7D628A' },
+  { name: 'Royal Violet', hex: '#982476' },
+  { name: 'Plum Noir', hex: '#260A22' },
+  { name: 'Amethyst Soft', hex: '#C76AA9' },
   { name: 'Lavender Mist', hex: '#D4C5DD' },
   { name: 'Dusty Rose', hex: '#C49A99' },
   { name: 'Antique Blush', hex: '#E2C3C1' },
@@ -135,7 +135,7 @@ export default function AdminProductModal({
       ]);
       setColors([
         { name: 'Midnight Espresso', hex: '#2E1C1A', imageIndex: 0 },
-        { name: 'Royal Violet', hex: '#4A2B5E', imageIndex: 0 }
+        { name: 'Royal Violet', hex: '#982476', imageIndex: 0 }
       ]);
       setStyles(ABAYA_STYLES.map(s => s.name));
       setDefaultStyle('Open abaya');
@@ -208,7 +208,7 @@ export default function AdminProductModal({
   const addColorSwatch = () => {
     setColors(prev => [
       ...prev,
-      { name: 'New Shade', hex: '#4A2B5E', imageIndex: 0 }
+      { name: 'New Shade', hex: '#982476', imageIndex: 0 }
     ]);
   };
 

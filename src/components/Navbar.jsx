@@ -437,8 +437,8 @@ export default function Navbar() {
                   <div className="mt-3 pl-2 grid grid-cols-2 gap-2 animate-fade-in">
                     {[
                       { name: 'Espresso', hex: '#2E1C1A', label: 'Midnight Espresso' },
-                      { name: 'Violet', hex: '#4A2B5E', label: 'Royal Violet' },
-                      { name: 'Amethyst', hex: '#7D628A', label: 'Amethyst Mist' },
+                      { name: 'Violet', hex: '#982476', label: 'Royal Violet' },
+                      { name: 'Amethyst', hex: '#C76AA9', label: 'Amethyst Mist' },
                       { name: 'Lavender', hex: '#D4C5DD', label: 'Lavender Pastel' },
                       { name: 'Rose', hex: '#C49A99', label: 'Dusty Rose' },
                       { name: 'Sage', hex: '#7D8B79', label: 'Serene Sage' },

@@ -23,7 +23,7 @@ export default function OffersEditor({ value, onChange }) {
       minSpend: 'No Minimum',
       expires: 'Ongoing',
       category: 'All',
-      color: 'from-[#4A2B5E] to-[#2E1C1A]',
+      color: 'from-[#982476] to-[#180516]',
       accentBg: 'bg-royal-violet/10 text-royal-violet border-royal-violet/20',
     },
   ]);
