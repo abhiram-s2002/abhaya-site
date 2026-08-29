@@ -32,6 +32,7 @@ import { isSupabaseConfigured } from '../lib/supabase';
 import { CMS_SECTIONS } from '../lib/cms';
 import AdminProductModal from '../components/admin/AdminProductModal';
 import AdminOrdersTab from '../components/admin/AdminOrdersTab';
+import brandLogo from '../assets/logo.png';
 
 export default function AdminPage() {
   const {
@@ -219,8 +220,12 @@ export default function AdminPage() {
       <div className="min-h-[80vh] flex items-center justify-center px-4 py-16 animate-fade-in">
         <div className="max-w-md w-full bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-secondary/20 space-y-6 text-center">
           
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary via-royal-violet to-primary mx-auto flex items-center justify-center shadow-luxury">
-            <Lock className="w-8 h-8 text-gold-soft" />
+          <div className="flex justify-center">
+            <img
+              src={brandLogo}
+              alt="NOOR AL DHUHA Logo"
+              className="h-20 sm:h-24 w-auto object-contain mx-auto drop-shadow-md"
+            />
           </div>
 
           <div className="space-y-2">
@@ -280,33 +285,40 @@ export default function AdminPage() {
       
       {/* Top Banner & Supabase Status */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-secondary/20 shadow-luxury">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-royal-violet/10 border border-royal-violet/20 text-royal-violet text-[10px] uppercase tracking-[0.2em] font-semibold">
-              <Sparkles className="w-3 h-3 text-gold-accent" />
-              <span>Atelier Control Center</span>
+        <div className="flex items-center gap-4">
+          <img
+            src={brandLogo}
+            alt="NOOR AL DHUHA"
+            className="h-14 sm:h-16 w-auto object-contain shrink-0 drop-shadow-sm"
+          />
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-royal-violet/10 border border-royal-violet/20 text-royal-violet text-[10px] uppercase tracking-[0.2em] font-semibold">
+                <Sparkles className="w-3 h-3 text-gold-accent" />
+                <span>Atelier Control Center</span>
+              </div>
+              
+              {/* Supabase Connection Badge */}
+              {isSupabaseConfigured ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Supabase Live Cloud</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-semibold" title="Add VITE_SUPABASE_URL in .env to connect to live Supabase">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span>Local Active Storage (Cloud Ready)</span>
+                </span>
+              )}
             </div>
-            
-            {/* Supabase Connection Badge */}
-            {isSupabaseConfigured ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Supabase Live Cloud</span>
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-semibold" title="Add VITE_SUPABASE_URL in .env to connect to live Supabase">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>Local Active Storage (Cloud Ready)</span>
-              </span>
-            )}
-          </div>
 
-          <h1 className="font-serif text-2xl sm:text-3xl text-primary font-medium">
-            Luxury Abaya & Catalog Management
-          </h1>
-          <p className="text-xs sm:text-sm text-stone-500">
-            Publish haute couture creations, upload high-resolution photography, and manage customer orders.
-          </p>
+            <h1 className="font-serif text-2xl sm:text-3xl text-primary font-medium">
+              Luxury Abaya & Catalog Management
+            </h1>
+            <p className="text-xs sm:text-sm text-stone-500">
+              Publish haute couture creations, upload high-resolution photography, and manage customer orders.
+            </p>
+          </div>
         </div>
 
         {/* Action Buttons */}
@@ -355,7 +367,7 @@ export default function AdminPage() {
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
           <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Violet Edition</div>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2B5E]">{stats.violetCount}</div>
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#982476]">{stats.violetCount}</div>
           <div className="text-[11px] text-stone-400">Signature capsule items</div>
         </div>
 

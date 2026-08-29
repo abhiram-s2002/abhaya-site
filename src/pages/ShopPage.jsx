@@ -105,8 +105,8 @@ export default function ShopPage() {
   const shades = [
     { name: 'All', hex: null },
     { name: 'Espresso', hex: '#2E1C1A' },
-    { name: 'Violet', hex: '#4A2B5E' },
-    { name: 'Amethyst', hex: '#7D628A' },
+    { name: 'Violet', hex: '#982476' },
+    { name: 'Amethyst', hex: '#C76AA9' },
     { name: 'Rose', hex: '#C49A99' },
     { name: 'Sage', hex: '#7D8B79' },
     { name: 'Ivory', hex: '#FBF6EE' },

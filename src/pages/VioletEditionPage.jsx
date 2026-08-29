@@ -55,7 +55,7 @@ export default function VioletEditionPage() {
 
             <div className="space-y-2.5 sm:space-y-3 pt-1">
               <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-surface-container-highest shadow-sm flex items-center gap-3.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#4A2B5E] shrink-0 border border-black/10 shadow-inner" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#982476] shrink-0 border border-black/10 shadow-inner" />
                 <div>
                   <h4 className="font-serif text-xs sm:text-sm font-medium text-primary">Royal Violet</h4>
                   <p className="text-[10px] sm:text-[11px] text-stone-500">Deep, saturated velvet tone for high-contrast evening presence.</p>
@@ -63,7 +63,7 @@ export default function VioletEditionPage() {
               </div>
 
               <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-surface-container-highest shadow-sm flex items-center gap-3.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#7D628A] shrink-0 border border-black/10 shadow-inner" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#C76AA9] shrink-0 border border-black/10 shadow-inner" />
                 <div>
                   <h4 className="font-serif text-xs sm:text-sm font-medium text-primary">Amethyst Soft</h4>
                   <p className="text-[10px] sm:text-[11px] text-stone-500">Muted heather undertones that flatter both warm and cool complexions.</p>

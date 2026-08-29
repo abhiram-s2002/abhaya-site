@@ -2,6 +2,7 @@ import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import EditableSection from './cms/EditableSection';
+import brandLogo from '../assets/logo.png';
 
 export default function Footer() {
   const { navigateTo, siteContent } = useShop();
@@ -15,16 +16,29 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
 
           {/* Brand & Copyright (Left) */}
-          <div className="space-y-3">
+          <div className="flex items-center gap-3.5">
             <button
               onClick={() => navigateTo('home')}
-              className="font-serif text-2xl sm:text-3xl tracking-[0.18em] font-medium text-[#2E1C1A] text-left hover:opacity-80 transition-opacity"
+              className="focus:outline-none shrink-0 group"
+              aria-label="NOOR AL DHUHA Home"
             >
-              {brandName}
+              <img
+                src={brandLogo}
+                alt="NOOR AL DHUHA Logo"
+                className="h-14 sm:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
             </button>
-            <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-stone-500 font-medium">
-              {copyright}
-            </p>
+            <div className="space-y-1">
+              <button
+                onClick={() => navigateTo('home')}
+                className="font-serif text-xl sm:text-2xl tracking-[0.16em] font-semibold text-[#2E1C1A] text-left hover:opacity-80 transition-opacity block leading-tight"
+              >
+                {brandName}
+              </button>
+              <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.22em] text-stone-500 font-medium">
+                {copyright}
+              </p>
+            </div>
           </div>
 
           {/* Navigation Links (Right) */}

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { openWhatsApp, WHATSAPP_PHONE_DISPLAY } from '../utils/whatsapp';
+import brandLogo from '../assets/logo.png';
 
 export default function Navbar() {
   const {
@@ -158,14 +159,19 @@ export default function Navbar() {
           {/* Center: Brand Logo */}
           <button
             onClick={() => handleNav('home')}
-            className="flex items-center justify-center absolute left-1/2 -translate-x-1/2 cursor-pointer focus:outline-none"
+            className="flex items-center gap-2 sm:gap-2.5 absolute left-1/2 -translate-x-1/2 cursor-pointer focus:outline-none group py-1"
             aria-label="NOOR AL DHUHA Luxury Abayas Home"
           >
-            <div className="flex flex-col items-center">
-              <span className="font-serif text-lg sm:text-xl md:text-2xl tracking-[0.18em] font-medium text-[#2E1C1A] whitespace-nowrap">
+            <img
+              src={brandLogo}
+              alt="NOOR AL DHUHA Logo"
+              className="h-9 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="flex flex-col items-start text-left">
+              <span className="font-serif text-base sm:text-lg md:text-xl tracking-[0.16em] font-semibold text-[#2E1C1A] whitespace-nowrap leading-tight">
                 NOOR AL DHUHA
               </span>
-              <span className="text-[8px] sm:text-[9px] tracking-[0.35em] text-stone-500 uppercase -mt-0.5 font-light">
+              <span className="text-[7.5px] sm:text-[8.5px] tracking-[0.3em] text-stone-500 uppercase -mt-0.5 font-light">
                 DUBAI • ATELIER
               </span>
             </div>
@@ -272,15 +278,26 @@ export default function Navbar() {
           <div className="relative flex flex-col w-[85%] max-w-sm bg-[#fcfaf7] h-full shadow-2xl z-10 overflow-hidden animate-slide-in-left">
             
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-stone-200/80 bg-white">
-              <div className="flex flex-col">
-                <span className="font-serif text-base sm:text-lg tracking-[0.18em] font-medium text-[#2E1C1A]">
-                  NOOR AL DHUHA
-                </span>
-                <span className="text-[7.5px] tracking-[0.3em] text-stone-500 uppercase font-light">
-                  DUBAI HAUTE COUTURE
-                </span>
-              </div>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-stone-200/80 bg-white">
+              <button
+                onClick={() => { handleNav('home'); setMobileMenuOpen(false); }}
+                className="flex items-center gap-2.5 text-left focus:outline-none"
+                aria-label="Go to Home"
+              >
+                <img
+                  src={brandLogo}
+                  alt="NOOR AL DHUHA Logo"
+                  className="h-9 w-auto object-contain"
+                />
+                <div className="flex flex-col">
+                  <span className="font-serif text-sm sm:text-base tracking-[0.16em] font-semibold text-[#2E1C1A] leading-tight">
+                    NOOR AL DHUHA
+                  </span>
+                  <span className="text-[7px] tracking-[0.28em] text-stone-500 uppercase font-light">
+                    DUBAI HAUTE COUTURE
+                  </span>
+                </div>
+              </button>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 rounded-full text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors"
