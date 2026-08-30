@@ -353,19 +353,19 @@ export default function CollectionsPage() {
   ]);
 
   return (
-    <div className="bg-white min-h-screen pb-20">
+    <div className="bg-[#D975BD] min-h-screen text-white pb-20">
       
       {/* 1. Header Banner */}
       <div className="pt-6 pb-4 sm:pt-8 sm:pb-5 px-4 max-w-7xl mx-auto text-center">
         {/* Collection Title / Dynamic search or filter term */}
         <div className="inline-flex items-center justify-center gap-2.5">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-[#1C1C1C]">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-white drop-shadow-xs">
             {pageTitle}
           </h1>
           {activeFiltersCount > 0 && (
             <button
               onClick={clearAllFilters}
-              className="p-1 rounded-full text-[#707070] hover:text-black hover:bg-[#F0F0F0] transition-colors cursor-pointer"
+              className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
               title="Clear all filters"
               aria-label="Clear all filters"
             >
@@ -376,7 +376,7 @@ export default function CollectionsPage() {
       </div>
 
       {/* 2. Collection Sticky Toolbar (Filter, Sort, Count, Layout Switchers) */}
-      <div className="sticky top-[60px] sm:top-[70px] z-30 bg-white border-y border-[#E5E5E5] px-4 sm:px-8">
+      <div className="sticky top-[60px] sm:top-[70px] z-30 bg-[#D975BD]/95 backdrop-blur-md border-y border-white/20 px-4 sm:px-8 text-white">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-12 sm:h-14">
           
           {/* Left Buttons: Filter & Sort */}
@@ -385,24 +385,24 @@ export default function CollectionsPage() {
             {/* Filter Drawer Trigger */}
             <button
               onClick={() => setFilterDrawerOpen(true)}
-              className="flex items-center gap-2 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-medium text-[#1C1C1C] hover:opacity-75 transition-opacity cursor-pointer"
+              className="flex items-center gap-2 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-medium text-white hover:opacity-75 transition-opacity cursor-pointer"
               aria-label="Open filter drawer"
             >
               <span>Filter</span>
               {activeFiltersCount > 0 && (
-                <span className="w-5 h-5 rounded-full bg-[#1C1C1C] text-white text-[10px] flex items-center justify-center font-bold">
+                <span className="w-5 h-5 rounded-full bg-white text-[#2D143D] text-[10px] flex items-center justify-center font-bold">
                   {activeFiltersCount}
                 </span>
               )}
             </button>
 
-            <span className="text-[#E5E5E5] hidden sm:inline">|</span>
+            <span className="text-white/30 hidden sm:inline">|</span>
 
             {/* Sort Popover Dropdown */}
             <div className="relative" ref={sortMenuRef}>
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center gap-1.5 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-medium text-[#1C1C1C] hover:opacity-75 transition-opacity cursor-pointer"
+                className="flex items-center gap-1.5 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-medium text-white hover:opacity-75 transition-opacity cursor-pointer"
                 aria-label="Sort options"
               >
                 <span>Sort by</span>
@@ -410,8 +410,8 @@ export default function CollectionsPage() {
               </button>
 
               {isSortOpen && (
-                <div className="absolute left-0 mt-2 w-56 bg-white border border-[#E5E5E5] shadow-xl py-2 z-50 animate-fade-in rounded-none">
-                  <div className="px-4 py-1.5 text-[10px] uppercase font-bold tracking-wider text-[#707070] border-b border-[#F0F0F0]">
+                <div className="absolute left-0 mt-2 w-56 bg-[#C85DA9] border border-white/25 shadow-xl py-2 z-50 animate-fade-in rounded-none text-white">
+                  <div className="px-4 py-1.5 text-[10px] uppercase font-bold tracking-wider text-white/80 border-b border-white/15">
                     Sort by
                   </div>
                   {sortOptions.map((opt) => (
@@ -421,14 +421,12 @@ export default function CollectionsPage() {
                         setSortBy(opt.id);
                         setIsSortOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between transition-colors ${
-                        sortBy === opt.id
-                          ? 'bg-[#F9F9F9] font-semibold text-[#1C1C1C]'
-                          : 'text-[#505050] hover:bg-[#F5F5F5] hover:text-[#1C1C1C]'
+                      className={`w-full text-left px-4 py-2 text-xs uppercase tracking-wide flex items-center justify-between transition-colors cursor-pointer ${
+                        sortBy === opt.id ? 'bg-white/20 font-semibold text-white' : 'text-white/90 hover:bg-white/10'
                       }`}
                     >
                       <span>{opt.label}</span>
-                      {sortBy === opt.id && <Check className="w-3.5 h-3.5 text-[#1C1C1C]" strokeWidth={2} />}
+                      {sortBy === opt.id && <Check className="w-3.5 h-3.5 text-white" />}
                     </button>
                   ))}
                 </div>
@@ -561,18 +559,18 @@ export default function CollectionsPage() {
 
         {/* Drawer Panel */}
         <div
-          className={`fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-in-out ${
+          className={`fixed inset-y-0 right-0 max-w-md w-full bg-[#C85DA9] shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-in-out text-white ${
             filterDrawerOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
           {/* Drawer Header */}
-          <div className="px-6 py-4 border-b border-[#E5E5E5] flex items-center justify-between bg-white">
-            <h2 className="text-sm font-semibold tracking-[0.14em] uppercase text-[#1C1C1C]">
+          <div className="px-6 py-4 border-b border-white/20 flex items-center justify-between bg-[#C85DA9]">
+            <h2 className="text-sm font-semibold tracking-[0.14em] uppercase text-white">
               Filters
             </h2>
             <button
               onClick={() => setFilterDrawerOpen(false)}
-              className="p-1.5 text-[#1C1C1C] hover:opacity-75 transition-opacity"
+              className="p-1.5 text-white hover:opacity-75 transition-opacity"
               aria-label="Close filters drawer"
             >
               <X className="w-5 h-5" strokeWidth={1.5} />
@@ -580,13 +578,13 @@ export default function CollectionsPage() {
           </div>
 
           {/* Drawer Scrollable Content */}
-          <div className="flex-1 overflow-y-auto divide-y divide-[#E5E5E5]">
+          <div className="flex-1 overflow-y-auto divide-y divide-white/15">
             
             {/* Color Accordion */}
             <div className="p-6">
               <button
                 onClick={() => toggleAccordion('color')}
-                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white cursor-pointer"
               >
                 <span>Color {selectedColors.length > 0 && `(${selectedColors.length})`}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.color ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -798,16 +796,16 @@ export default function CollectionsPage() {
           </div>
 
           {/* Drawer Footer Actions */}
-          <div className="p-6 border-t border-[#E5E5E5] bg-white flex items-center gap-4">
+          <div className="p-6 border-t border-white/20 bg-[#C85DA9] flex items-center gap-4">
             <button
               onClick={clearAllFilters}
-              className="text-xs uppercase tracking-wider font-semibold text-[#707070] hover:text-[#1C1C1C] underline cursor-pointer"
+              className="text-xs uppercase tracking-wider font-semibold text-white/80 hover:text-white underline cursor-pointer"
             >
               Clear all
             </button>
             <button
               onClick={() => setFilterDrawerOpen(false)}
-              className="flex-1 py-3.5 bg-[#1C1C1C] text-white hover:bg-black text-xs uppercase tracking-[0.14em] font-medium transition-colors cursor-pointer text-center"
+              className="flex-1 py-3.5 bg-white text-[#2D143D] hover:bg-white/90 text-xs uppercase tracking-[0.14em] font-bold transition-colors cursor-pointer text-center shadow-md"
             >
               View results ({filteredProducts.length})
             </button>

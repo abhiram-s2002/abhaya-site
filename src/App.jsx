@@ -65,7 +65,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fff7fc] text-on-background selection:bg-royal-violet selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#D975BD] text-white selection:bg-[#2D143D] selection:text-white">
       {/* Main Sticky Luxury Navbar */}
       <Navbar />
 

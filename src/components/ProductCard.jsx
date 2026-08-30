@@ -29,13 +29,13 @@ export default function ProductCard({ product }) {
 
   return (
     <div
-      className="group flex flex-col bg-white text-center transition-all duration-300 relative select-none"
+      className="group flex flex-col bg-transparent text-center transition-all duration-300 relative select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image Box (Aspect Tall / 3:4) */}
       <div
-        className="relative aspect-[3/4] bg-[#F5F5F5] overflow-hidden cursor-pointer"
+        className="relative aspect-[3/4] bg-[#C85DA9] overflow-hidden cursor-pointer shadow-sm border border-white/20 group-hover:border-white transition-colors"
         onClick={handleCardClick}
       >
         {/* Primary Image */}
@@ -70,38 +70,38 @@ export default function ProductCard({ product }) {
         )}
       </div>
 
-      {/* Product Card Details (Centered, BasicAbaya style) */}
-      <div className="pt-3 pb-2 px-1 flex flex-col items-center justify-center space-y-1.5 bg-white">
+      {/* Product Card Details (Centered) */}
+      <div className="pt-3 pb-2 px-1 flex flex-col items-center justify-center space-y-1 bg-transparent">
         
         {/* Title */}
         <h3
-          className="text-[12px] sm:text-[13px] md:text-[14px] font-medium text-[#1C1C1C] uppercase tracking-[0.04em] hover:opacity-75 transition-opacity cursor-pointer line-clamp-1 leading-snug px-1 text-center"
+          className="text-[12px] sm:text-[13px] md:text-[14px] font-medium text-white uppercase tracking-[0.04em] hover:text-white/80 transition-opacity cursor-pointer line-clamp-1 leading-snug px-1 text-center"
           onClick={handleCardClick}
         >
           {product.name}
         </h3>
 
         {/* Price display: From AED 300.00 */}
-        <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px] text-[#1C1C1C]">
-          <span className="text-[#707070] text-[11px] font-normal">From</span>
+        <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px] text-white">
+          <span className="text-white/80 text-[11px] font-normal">From</span>
           {product.originalPrice && product.originalPrice > product.price && (
-            <span className="text-[#8E8E8E] line-through tabular-nums text-[11px]">
+            <span className="text-white/60 line-through tabular-nums text-[11px]">
               {formatPrice(product.originalPrice)}
             </span>
           )}
-          <span className="font-semibold tabular-nums tracking-tight">
+          <span className="font-semibold tabular-nums tracking-tight text-white">
             {formatPrice(product.price)}
           </span>
         </div>
 
         {/* Star Rating Badge */}
         <div className="flex items-center justify-center gap-1 pt-0.5">
-          <div className="flex items-center text-[#1C1C1C]">
+          <div className="flex items-center text-[#FFD700]">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-2.5 h-2.5 fill-[#1C1C1C] text-[#1C1C1C]" strokeWidth={0} />
+              <Star key={i} className="w-2.5 h-2.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={0} />
             ))}
           </div>
-          <span className="text-[10px] text-[#707070] tracking-wider">
+          <span className="text-[10px] text-white/80 tracking-wider">
             ({Number(product.rating || 5.0).toFixed(1)})
           </span>
         </div>

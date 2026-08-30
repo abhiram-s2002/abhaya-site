@@ -6,7 +6,7 @@ export default function RefundPolicyPage() {
   const { navigateTo } = useShop();
 
   return (
-    <div className="min-h-screen bg-neutral-white pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10 animate-fade-in text-primary font-sans">
+    <div className="min-h-screen bg-[#D975BD] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10 animate-fade-in text-white font-sans">
       
       <button
         onClick={() => navigateTo('home')}

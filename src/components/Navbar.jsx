@@ -128,7 +128,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-[#E5E5E5] transition-all duration-300">
+      <header className="sticky top-0 w-full z-50 bg-[#D975BD]/95 backdrop-blur-md border-b border-white/20 transition-all duration-300 text-white">
         <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3.5 md:py-4 max-w-7xl mx-auto relative">
           
           {/* Left: Desktop Navigation Links (SHOP, COLLECTIONS, OUR STORY, CONTACT) + Mobile Menu Trigger */}
@@ -136,9 +136,9 @@ export default function Navbar() {
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open Navigation Menu"
-              className="lg:hidden text-[#1C1C1C] focus:outline-none p-1.5 -ml-1 hover:bg-[#F5F5F5] transition-colors flex items-center group cursor-pointer"
+              className="lg:hidden text-white focus:outline-none p-1.5 -ml-1 hover:bg-white/10 transition-colors flex items-center group cursor-pointer"
             >
-              <Menu className="w-5 h-5 text-[#1C1C1C]" strokeWidth={1.5} />
+              <Menu className="w-5 h-5 text-white" strokeWidth={1.5} />
             </button>
 
             {/* Desktop Navigation Links */}
@@ -146,48 +146,48 @@ export default function Navbar() {
               <button
                 onClick={() => handleNav('shop')}
                 className={`transition-colors py-1 relative cursor-pointer ${
-                  currentView === 'shop' ? 'text-[#1C1C1C] font-semibold' : 'text-[#1C1C1C]/80 hover:text-[#000000]'
+                  currentView === 'shop' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
                 }`}
               >
                 Shop
                 {currentView === 'shop' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1C1C1C]" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-white" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNav('collections')}
                 className={`transition-colors py-1 relative cursor-pointer ${
-                  currentView === 'collections' ? 'text-[#1C1C1C] font-semibold' : 'text-[#1C1C1C]/80 hover:text-[#000000]'
+                  currentView === 'collections' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
                 }`}
               >
                 Collections
                 {currentView === 'collections' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1C1C1C]" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-white" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNav('story')}
                 className={`transition-colors py-1 relative cursor-pointer ${
-                  currentView === 'story' ? 'text-[#1C1C1C] font-semibold' : 'text-[#1C1C1C]/80 hover:text-[#000000]'
+                  currentView === 'story' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
                 }`}
               >
                 Our Story
                 {currentView === 'story' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1C1C1C]" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-white" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNav('contact')}
                 className={`transition-colors py-1 relative cursor-pointer ${
-                  currentView === 'contact' ? 'text-[#1C1C1C] font-semibold' : 'text-[#1C1C1C]/80 hover:text-[#000000]'
+                  currentView === 'contact' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
                 }`}
               >
                 Contact
                 {currentView === 'contact' && (
-                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#1C1C1C]" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-white" />
                 )}
               </button>
             </nav>
@@ -200,19 +200,19 @@ export default function Navbar() {
               className="flex items-center focus:outline-none"
               aria-label="NOOR AL DHUHA - Home"
             >
-              <span className="text-sm sm:text-base md:text-lg font-semibold tracking-[0.18em] text-[#1C1C1C] uppercase whitespace-nowrap transition-transform duration-300 group-hover:scale-105">
+              <span className="text-sm sm:text-base md:text-lg font-semibold tracking-[0.18em] text-white uppercase whitespace-nowrap transition-transform duration-300 group-hover:scale-105 drop-shadow-xs">
                 NOOR AL DHUHA
               </span>
             </button>
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-2 sm:gap-3.5 text-[#1C1C1C] z-10 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3.5 text-white z-10 shrink-0">
             {/* Currency Selector (Desktop) */}
             <div className="relative hidden sm:block" ref={currencyMenuRef}>
               <button
                 onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-none border border-[#E5E5E5] hover:border-[#1C1C1C] text-[11px] font-medium text-[#1C1C1C] transition-colors cursor-pointer uppercase"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-none border border-white/40 hover:border-white text-[11px] font-medium text-white transition-colors cursor-pointer uppercase"
                 aria-label="Select Currency & Market"
               >
                 <span>{currentCurrencyData.flag}</span>
@@ -300,7 +300,7 @@ export default function Navbar() {
 
         {/* Top Search Bar Directly Under the Top Section */}
         {isSearchOpen && (
-          <div className="w-full border-t border-[#E5E5E5] bg-white animate-fade-in shadow-md">
+          <div className="w-full border-t border-white/20 bg-[#D975BD] animate-fade-in shadow-md">
             <form
               onSubmit={handleSearchSubmit}
               className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex items-center gap-3 sm:gap-4"
@@ -309,9 +309,9 @@ export default function Navbar() {
               <button
                 type="submit"
                 aria-label="Search"
-                className="text-[#1C1C1C] hover:opacity-70 transition-opacity p-0.5 cursor-pointer shrink-0"
+                className="text-white hover:opacity-70 transition-opacity p-0.5 cursor-pointer shrink-0"
               >
-                <Search className="w-5 h-5 text-[#1C1C1C]" strokeWidth={1.5} />
+                <Search className="w-5 h-5 text-white" strokeWidth={1.5} />
               </button>
 
               {/* Search Input */}
@@ -321,7 +321,7 @@ export default function Navbar() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="SEARCH FOR..."
-                className="w-full bg-transparent text-sm sm:text-base text-[#1C1C1C] placeholder-[#8E8E8E] font-medium tracking-[0.08em] uppercase focus:outline-none"
+                className="w-full bg-transparent text-sm sm:text-base text-white placeholder-white/70 font-medium tracking-[0.08em] uppercase focus:outline-none"
                 aria-label="Search abayas and collections"
               />
 
@@ -333,7 +333,7 @@ export default function Navbar() {
                     setSearchTerm('');
                     searchInputRef.current?.focus();
                   }}
-                  className="p-1 text-[#8E8E8E] hover:text-[#1C1C1C] transition-colors cursor-pointer"
+                  className="p-1 text-white/80 hover:text-white transition-colors cursor-pointer"
                   title="Clear input"
                   aria-label="Clear search input"
                 >
@@ -345,7 +345,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(false)}
-                className="p-1 text-[#1C1C1C] hover:opacity-60 transition-opacity cursor-pointer shrink-0 ml-1"
+                className="p-1 text-white hover:opacity-60 transition-opacity cursor-pointer shrink-0 ml-1"
                 title="Close search"
                 aria-label="Close search"
               >

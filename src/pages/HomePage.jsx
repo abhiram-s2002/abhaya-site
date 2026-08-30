@@ -72,7 +72,7 @@ export default function HomePage() {
   const newArrivals = PRODUCTS.slice(0, 8);
 
   return (
-    <div className="bg-white text-[#1C1C1C] font-sans antialiased overflow-x-hidden">
+    <div className="bg-[#D975BD] text-white font-sans antialiased overflow-x-hidden">
 
       {/* ═══════════════════════════════════════════════
           SECTION 1 — HERO / SHOP NOW
@@ -113,7 +113,7 @@ export default function HomePage() {
                     </p>
                     <button
                       onClick={() => navigateTo('shop', slide.productId)}
-                      className="btn-primary w-fit !bg-white !text-[#1C1C1C] hover:!bg-[#1C1C1C] hover:!text-white border border-white"
+                      className="btn-primary w-fit !bg-white !text-[#2D143D] hover:!bg-[#2D143D] hover:!text-white border border-white"
                     >
                       Shop Now
                     </button>
@@ -167,12 +167,12 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 2 — SHOP BY CATEGORY
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-category" className="py-14 sm:py-20 bg-white border-b border-[#E5E5E5]">
+      <section id="shop-by-category" className="py-14 sm:py-20 bg-[#D975BD] border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
               Shop by Category
             </h2>
           </div>
@@ -185,7 +185,7 @@ export default function HomePage() {
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] border border-white/20 group-hover:border-white transition-colors mb-2.5 shadow-sm">
                   <img
                     src={STYLE_IMAGES[styleName]}
                     alt={styleName}
@@ -195,7 +195,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
                 {/* Card Label */}
-                <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200">
+                <h4 className="text-xs sm:text-[13px] font-medium text-white uppercase tracking-wider text-center group-hover:text-white/80 transition-colors duration-200">
                   {styleName}
                 </h4>
               </div>
@@ -209,12 +209,12 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 3 — SHOP BY WORK
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-work" className="py-14 sm:py-20 bg-white border-b border-[#E5E5E5]">
+      <section id="shop-by-work" className="py-14 sm:py-20 bg-[#D975BD] border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
               Shop by Work
             </h2>
           </div>
@@ -227,7 +227,7 @@ export default function HomePage() {
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] border border-white/20 group-hover:border-white transition-colors mb-2.5 shadow-sm">
                   <img
                     src={WORK_IMAGES[workName]}
                     alt={workName}
@@ -237,7 +237,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
                 {/* Card Label */}
-                <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200 capitalize">
+                <h4 className="text-xs sm:text-[13px] font-medium text-white uppercase tracking-wider text-center group-hover:text-white/80 transition-colors duration-200 capitalize">
                   {workName}
                 </h4>
               </div>
@@ -249,24 +249,24 @@ export default function HomePage() {
 
 
       {/* ═══════════════════════════════════════════════
-          SECTION 3 — NEW ARRIVALS
+          SECTION 4 — NEW ARRIVALS
           ═══════════════════════════════════════════════ */}
-      <section id="new-arrivals" className="py-14 sm:py-20 bg-[#FAFAFA]">
+      <section id="new-arrivals" className="py-14 sm:py-20 bg-[#C85DA9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <div className="flex items-center justify-between mb-8 sm:mb-10">
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em] mb-0.5">
+              <h2 className="text-xl sm:text-2xl md:text-3xl text-white font-medium uppercase tracking-[0.06em] mb-0.5">
                 New Arrivals
               </h2>
-              <p className="text-xs text-[#707070] tracking-wide uppercase">
+              <p className="text-xs text-white/80 tracking-wide uppercase">
                 Explore our latest boutique releases
               </p>
             </div>
             <button
               onClick={() => navigateTo('shop')}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] hover:text-[#707070] transition-colors"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:text-white/80 transition-colors"
             >
               <span className="hidden sm:inline">View All</span>
               <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
