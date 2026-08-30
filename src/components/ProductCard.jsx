@@ -35,7 +35,7 @@ export default function ProductCard({ product }) {
     >
       {/* Product Image Box (Aspect Tall / 3:4) */}
       <div
-        className="relative aspect-[3/4] bg-[#C85DA9] overflow-hidden cursor-pointer shadow-sm border border-white/20 group-hover:border-white transition-colors"
+        className="relative aspect-[3/4] bg-[#C85DA9] overflow-hidden cursor-pointer shadow-sm"
         onClick={handleCardClick}
       >
         {/* Primary Image */}

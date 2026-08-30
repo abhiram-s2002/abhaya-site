@@ -80,7 +80,7 @@ function QuickViewModalContent({ product, onClose }) {
           
           {/* Left: Gallery (5 cols) */}
           <div className="md:col-span-5 p-4 sm:p-6 bg-[#B84E99] flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/20">
-            <div className="relative aspect-[3/4] max-h-[320px] md:max-h-none bg-black/10 rounded-none overflow-hidden border border-white/20 shadow-sm">
+            <div className="relative aspect-[3/4] max-h-[320px] md:max-h-none bg-black/10 rounded-none overflow-hidden shadow-sm">
               <img
                 src={images[activeImageIdx] || images[0]}
                 alt={product.name}

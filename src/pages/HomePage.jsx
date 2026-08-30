@@ -113,7 +113,7 @@ export default function HomePage() {
                     </p>
                     <button
                       onClick={() => navigateTo('shop', slide.productId)}
-                      className="btn-primary w-fit !bg-[#D975BD] !text-white hover:!bg-[#C85DA9] border border-white/60 shadow-xl uppercase tracking-[0.14em] font-bold cursor-pointer"
+                      className="btn-primary w-fit !bg-[#D975BD]/90 hover:!bg-[#D975BD] !text-white border-0 shadow-2xl backdrop-blur-md uppercase tracking-[0.16em] font-semibold transition-all duration-300 hover:scale-[1.03] cursor-pointer"
                     >
                       Shop Now
                     </button>
@@ -122,26 +122,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          {/* Navigation Arrows */}
-          {heroSlides.length > 1 && (
-            <>
-              <button
-                onClick={prevSlide}
-                className="cursor-pointer absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#D975BD]/80 backdrop-blur-md hover:bg-[#D975BD] text-white border border-white/40 rounded-none flex items-center justify-center transition-all shadow-lg"
-                aria-label="Previous slide"
-              >
-                <ChevronLeft className="w-5 h-5 text-white" strokeWidth={2} />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="cursor-pointer absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#D975BD]/80 backdrop-blur-md hover:bg-[#D975BD] text-white border border-white/40 rounded-none flex items-center justify-center transition-all shadow-lg"
-                aria-label="Next slide"
-              >
-                <ChevronRight className="w-5 h-5 text-white" strokeWidth={2} />
-              </button>
-            </>
-          )}
 
           {/* Slide indicators */}
           {heroSlides.length > 1 && (
@@ -153,7 +133,7 @@ export default function HomePage() {
                   aria-label={`Go to slide ${i + 1}`}
                   className={`cursor-pointer h-[3px] transition-all duration-300 ${
                     currentSlide === i
-                      ? 'w-8 bg-[#D975BD] ring-1 ring-white/60'
+                      ? 'w-8 bg-[#D975BD]'
                       : 'w-3 bg-white/50 hover:bg-white/90'
                   }`}
                 />
@@ -167,7 +147,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 2 — SHOP BY CATEGORY
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-category" className="py-14 sm:py-20 bg-[#D975BD] border-b border-white/20">
+      <section id="shop-by-category" className="py-14 sm:py-20 bg-[#D975BD]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
@@ -185,7 +165,7 @@ export default function HomePage() {
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] border border-white/20 group-hover:border-white transition-colors mb-2.5 shadow-sm">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] mb-2.5 shadow-sm">
                   <img
                     src={STYLE_IMAGES[styleName]}
                     alt={styleName}
@@ -209,7 +189,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 3 — SHOP BY WORK
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-work" className="py-14 sm:py-20 bg-[#D975BD] border-b border-white/20">
+      <section id="shop-by-work" className="py-14 sm:py-20 bg-[#D975BD]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
@@ -227,7 +207,7 @@ export default function HomePage() {
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] border border-white/20 group-hover:border-white transition-colors mb-2.5 shadow-sm">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] mb-2.5 shadow-sm">
                   <img
                     src={WORK_IMAGES[workName]}
                     alt={workName}

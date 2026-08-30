@@ -226,7 +226,7 @@ export default function ProductDetailPage() {
         <div className="lg:col-span-6 space-y-3 sm:space-y-4 lg:sticky lg:top-24">
           
           {/* Main Large Image Display */}
-          <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-black/10 rounded-none overflow-hidden border border-white/20 shadow-md">
+          <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-black/10 rounded-none overflow-hidden shadow-md">
             <img
               src={images[activeImageIdx] || images[0]}
               alt={`${product.name} - ${currentColor.name}`}
