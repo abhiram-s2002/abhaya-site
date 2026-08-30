@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { Heart, Plus, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 
 export default function ProductCard({ product }) {
   const {
     formatPrice,
-    navigateTo,
-    toggleWishlist,
-    isWishlisted,
-    setQuickViewProduct
+    navigateTo
   } = useShop();
 
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -26,20 +23,8 @@ export default function ProductCard({ product }) {
     ? (currentColor.imageIndex !== undefined && gallery[(currentColor.imageIndex + 1) % gallery.length] ? gallery[(currentColor.imageIndex + 1) % gallery.length] : gallery[1])
     : primaryImage;
 
-  const wishlisted = isWishlisted(product.id);
-
   const handleCardClick = () => {
     navigateTo('product-detail', product.id);
-  };
-
-  const handleQuickAdd = (e) => {
-    e.stopPropagation();
-    setQuickViewProduct(product);
-  };
-
-  const handleWishlistClick = (e) => {
-    e.stopPropagation();
-    toggleWishlist(product.id);
   };
 
   return (
@@ -75,42 +60,14 @@ export default function ProductCard({ product }) {
           />
         )}
 
-        {/* Badges (Top Left) */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col items-start gap-1 z-10 pointer-events-none">
-          {product.badge && (
-            <span className="bg-[#1C1C1C] text-white text-[9px] sm:text-[10px] tracking-[0.14em] uppercase font-medium px-2 py-0.5 shadow-sm">
-              {product.badge}
-            </span>
-          )}
-          {product.originalPrice && product.originalPrice > product.price && (
+        {/* Badges (Top Left) - Only Sale if on discount */}
+        {product.originalPrice && product.originalPrice > product.price && (
+          <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
             <span className="bg-[#E32C2B] text-white text-[9px] sm:text-[10px] tracking-[0.14em] uppercase font-medium px-2 py-0.5 shadow-sm">
               Sale
             </span>
-          )}
-        </div>
-
-        {/* Wishlist Button (Top Right) */}
-        <button
-          onClick={handleWishlistClick}
-          className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-            wishlisted
-              ? 'bg-[#1C1C1C] text-white'
-              : 'bg-white/80 backdrop-blur-xs text-[#1C1C1C] hover:bg-white hover:scale-105 shadow-xs'
-          }`}
-          aria-label="Add to wishlist"
-        >
-          <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-white' : ''}`} strokeWidth={1.5} />
-        </button>
-
-        {/* Quick Add / Choose options Button (+) Floating bottom-right */}
-        <button
-          onClick={handleQuickAdd}
-          className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 text-[#1C1C1C] hover:bg-[#1C1C1C] hover:text-white border border-[#E5E5E5] flex items-center justify-center shadow-md transition-all duration-200 active:scale-95 group/btn"
-          title="Choose options"
-          aria-label="Choose options"
-        >
-          <Plus className="w-4 h-4 transition-transform group-hover/btn:rotate-90" strokeWidth={1.75} />
-        </button>
+          </div>
+        )}
       </div>
 
       {/* Product Card Details (Centered, BasicAbaya style) */}

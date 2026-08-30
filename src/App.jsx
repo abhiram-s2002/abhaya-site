@@ -43,7 +43,6 @@ function AppContent() {
       case 'admin':
         return <AdminPage />;
       case 'shop':
-        return <ShopPage />;
       case 'collections':
         return <CollectionsPage />;
       case 'product-detail':

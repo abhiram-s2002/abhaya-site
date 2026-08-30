@@ -314,38 +314,11 @@ export default function CollectionsPage() {
   return (
     <div className="bg-white min-h-screen pb-20">
       
-      {/* 1. Header Banner & Breadcrumbs (Exact BasicAbaya Style) */}
-      <div className="pt-6 pb-4 sm:pt-10 sm:pb-6 px-4 max-w-7xl mx-auto text-center">
-        {/* Breadcrumb navigation */}
-        <nav aria-label="Breadcrumb" className="mb-3 sm:mb-4">
-          <ol className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.14em] text-[#707070]">
-            <li>
-              <button
-                onClick={() => navigateTo('home')}
-                className="hover:text-[#1C1C1C] transition-colors"
-              >
-                Home
-              </button>
-            </li>
-            <li className="text-[#C0C0C0]">/</li>
-            <li>
-              <button
-                onClick={() => navigateTo('shop')}
-                className="hover:text-[#1C1C1C] transition-colors"
-              >
-                Shop
-              </button>
-            </li>
-            <li className="text-[#C0C0C0]">/</li>
-            <li className="text-[#1C1C1C] font-semibold" aria-current="page">
-              SHOP ALL
-            </li>
-          </ol>
-        </nav>
-
+      {/* 1. Header Banner */}
+      <div className="pt-6 pb-4 sm:pt-8 sm:pb-5 px-4 max-w-7xl mx-auto text-center">
         {/* Collection Title */}
         <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-[#1C1C1C]">
-          SHOP ALL
+          SHOP
         </h1>
       </div>
 
