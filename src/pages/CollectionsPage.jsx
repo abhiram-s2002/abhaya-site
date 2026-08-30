@@ -73,16 +73,13 @@ export default function CollectionsPage() {
   const [selectedFabrics, setSelectedFabrics] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [onlyInStock, setOnlyInStock] = useState(false);
 
   // Price calculations
   const maxPriceLimit = useMemo(() => {
     return Math.max(...PRODUCTS.map(p => p.price), 300);
   }, [PRODUCTS]);
 
-  const minPriceLimit = useMemo(() => {
-    return Math.min(...PRODUCTS.map(p => p.price), 50);
-  }, [PRODUCTS]);
+  const minPriceLimit = 0;
 
   const [priceRange, setPriceRange] = useState(maxPriceLimit);
 
@@ -99,8 +96,7 @@ export default function CollectionsPage() {
     work: true,
     fabric: true,
     size: false,
-    price: false,
-    availability: false
+    price: false
   });
 
   const toggleAccordion = (key) => {
@@ -222,7 +218,6 @@ export default function CollectionsPage() {
     setSelectedColors([]);
     setSelectedSizes([]);
     setPriceRange(maxPriceLimit);
-    setOnlyInStock(false);
     if (typeof setSearchQuery === 'function') setSearchQuery('');
     if (typeof setSelectedCategoryFilter === 'function') setSelectedCategoryFilter('All');
     if (typeof setSelectedColorFilter === 'function') setSelectedColorFilter('All');
@@ -238,7 +233,6 @@ export default function CollectionsPage() {
     selectedFabrics.length +
     selectedColors.length +
     selectedSizes.length +
-    (onlyInStock ? 1 : 0) +
     (priceRange < maxPriceLimit ? 1 : 0) +
     (searchQuery && searchQuery.trim() !== '' ? 1 : 0);
 
@@ -308,12 +302,7 @@ export default function CollectionsPage() {
         if (!hasMatch) return false;
       }
 
-      // 7. In stock
-      if (onlyInStock && product.stockCount <= 0) {
-        return false;
-      }
-
-      // 8. Price Range
+      // 7. Price Range
       if (product.price > priceRange) {
         return false;
       }
@@ -345,7 +334,6 @@ export default function CollectionsPage() {
     selectedFabrics,
     selectedColors,
     selectedSizes,
-    onlyInStock,
     priceRange,
     sortBy
   ]);
@@ -774,19 +762,6 @@ export default function CollectionsPage() {
                   />
                 </div>
               )}
-            </div>
-
-            {/* Availability Accordion */}
-            <div className="p-6">
-              <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white cursor-pointer">
-                <span>In Stock Only</span>
-                <input
-                  type="checkbox"
-                  checked={onlyInStock}
-                  onChange={(e) => setOnlyInStock(e.target.checked)}
-                  className="w-4 h-4 accent-[#C85DA9] cursor-pointer"
-                />
-              </label>
             </div>
 
           </div>

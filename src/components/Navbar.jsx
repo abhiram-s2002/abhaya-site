@@ -50,7 +50,6 @@ export default function Navbar() {
   const [openAccordions, setOpenAccordions] = useState({
     category: true,
     work: false,
-    about: false,
     help: false
   });
   const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
@@ -530,42 +529,14 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Accordion: OUR STORY & ATELIER */}
+              {/* OUR STORY */}
               <div className="pt-4">
                 <button
-                  onClick={() => toggleAccordion('about')}
-                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors"
+                  onClick={() => handleNav('story')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
                 >
-                  <span>Our Story & Atelier</span>
-                  {openAccordions.about ? (
-                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
-                  ) : (
-                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
-                  )}
+                  <span>Our Story</span>
                 </button>
-
-                {openAccordions.about && (
-                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in text-xs text-white/85">
-                    <button
-                      onClick={() => handleNav('story')}
-                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
-                    >
-                      Our Story & Dubai Atelier
-                    </button>
-                    <button
-                      onClick={() => handleNav('story')}
-                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
-                    >
-                      Mulberry Silk Certification & Ethics
-                    </button>
-                    <button
-                      onClick={() => handleNav('story')}
-                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
-                    >
-                      Master Artisans & Handwork Heritage
-                    </button>
-                  </div>
-                )}
               </div>
 
               {/* Accordion 7: HELP CENTER */}

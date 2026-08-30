@@ -139,7 +139,7 @@ export default function StoryEditor({ value, onChange }) {
         <Input value={value.founders_label} onChange={v => set('founders_label', v)} placeholder="Meet Our Co-Founders" />
       </Field>
       <Field label="Founders Names">
-        <Input value={value.founders_names} onChange={v => set('founders_names', v)} placeholder="Kamarunnisa & Rafique" />
+        <Input value={value.founders_names} onChange={v => set('founders_names', v)} placeholder="Rafique & Kamarunnisa" />
       </Field>
       <Field label="Founders Role / Subtitle">
         <Input value={value.founders_role} onChange={v => set('founders_role', v)} placeholder="Founders & Visionaries" />
@@ -148,7 +148,7 @@ export default function StoryEditor({ value, onChange }) {
         <Input value={value.founders_image} onChange={v => set('founders_image', v)} placeholder="https://... or /src/assets/founders.png" />
       </Field>
       <Field label="Founders Story / Bio">
-        <Textarea value={value.founders_bio} onChange={v => set('founders_bio', v)} rows={4} placeholder="For Kamarunnisa K A and Rafique M U, abayas are..." />
+        <Textarea value={value.founders_bio} onChange={v => set('founders_bio', v)} rows={4} placeholder="For Rafique M U and Kamarunnisa K A, abayas are..." />
       </Field>
       <Field label="Featured Quote">
         <Input value={value.founders_quote} onChange={v => set('founders_quote', v)} placeholder="Abayas are more than just garments..." />

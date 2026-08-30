@@ -33,9 +33,7 @@ export default function ShopPage() {
     return Math.max(...PRODUCTS.map(p => p.price), 250);
   }, [PRODUCTS]);
 
-  const minPriceLimit = useMemo(() => {
-    return Math.min(...PRODUCTS.map(p => p.price), 100);
-  }, [PRODUCTS]);
+  const minPriceLimit = 0;
 
   // Filter States
   const [maxPrice, setMaxPrice] = useState(maxPriceLimit);
