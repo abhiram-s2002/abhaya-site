@@ -34,8 +34,8 @@ export default function OffersPage() {
       badge: 'EXPRESS LOGISTICS',
       badgeColor: 'text-secondary border-secondary/20 bg-secondary/10',
       title: 'Worldwide Express Delivery',
-      description: 'Complimentary priority DHL & FedEx express shipping on all curated orders exceeding $150 worldwide.',
-      highlight: 'Free On Orders Over $150',
+      description: 'Priority courier dispatch via DHL & FedEx express to over 120 countries worldwide with real-time tracking.',
+      highlight: 'Direct Courier Dispatch',
       actionText: 'Shop All Creations',
       category: 'All',
       icon: Truck

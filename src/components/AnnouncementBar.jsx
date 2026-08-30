@@ -18,7 +18,7 @@ export default function AnnouncementBar() {
           {/* Left perk */}
           <div className="hidden md:flex items-center gap-2 text-white/90 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-[#FFD700]" strokeWidth={1.5} />
-            <span>{a.leftText || 'Free Worldwide Express Shipping On Orders Over $150'}</span>
+            <span>{a.leftText || 'Worldwide Express Delivery to Your Doorstep'}</span>
           </div>
 
           {/* Center message */}

@@ -175,7 +175,7 @@ export const DEFAULT_CONTENT = {
       },
       {
         q: 'What are your international delivery times & shipping rates?',
-        a: 'We provide complimentary worldwide express shipping on orders over $150. Domestic UAE & GCC delivery takes 1-2 business days. UK, EU, US, and international express deliveries take 3-5 business days via DHL/FedEx.',
+        a: 'We provide express worldwide courier delivery. Domestic GCC delivery takes 1-2 business days. UK, EU, US, and international express deliveries take 3-5 business days via DHL/FedEx.',
       },
       {
         q: 'What is your exchange and return policy?',

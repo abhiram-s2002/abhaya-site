@@ -108,28 +108,6 @@ export default function CartDrawer() {
 
           {/* Drawer Content Area */}
           <div className="flex-1 flex flex-col justify-between overflow-hidden">
-            {/* Free Shipping Progress Meter */}
-            <div className="bg-[#B84E99] px-4 sm:px-5 py-2.5 border-b border-white/20 text-xs text-white">
-              {freeShippingDifference === 0 ? (
-                <div className="flex items-center gap-1.5 text-white font-medium text-[11px] sm:text-xs uppercase tracking-wide">
-                  <Sparkles className="w-4 h-4 text-white shrink-0" strokeWidth={1.5} />
-                  <span>Unlocked: <strong>Free Express Shipping & Keepsake Box!</strong></span>
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-[11px] uppercase tracking-wide text-white/90">
-                    <span>Add <strong>{formatPrice(freeShippingDifference)}</strong> for Free Shipping</span>
-                    <span className="font-bold text-white">{freeShippingProgress}%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-black/20 rounded-none overflow-hidden">
-                    <div
-                      className="h-full bg-white rounded-none transition-all duration-500"
-                      style={{ width: `${freeShippingProgress}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* Items List */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 divide-y divide-white/20">
@@ -259,21 +237,15 @@ export default function CartDrawer() {
                         </span>
                       )}
                     </span>
-                    <span>
-                      {rawCartSubtotal >= freeShippingThreshold ? (
-                        <span className="text-white font-bold uppercase text-[10px] sm:text-[11px]">Free</span>
-                      ) : (
-                        formatPrice(15)
-                      )}
+                    <span className="font-semibold text-white">
+                      {formatPrice(15)}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/20 tabular-nums">
                     <span>Estimated Total</span>
                     <span>
-                      {formatPrice(
-                        cartSubtotal + (rawCartSubtotal >= freeShippingThreshold ? 0 : 15)
-                      )}
+                      {formatPrice(cartSubtotal + 15)}
                     </span>
                   </div>
                 </div>

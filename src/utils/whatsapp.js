@@ -8,13 +8,11 @@ export function formatCartWhatsAppMessage({
   cart,
   rawCartSubtotal,
   cartSubtotal,
-  freeShippingThreshold = 150,
   formatPrice,
   userLocation = null
 }) {
-  const isFreeShipping = rawCartSubtotal >= freeShippingThreshold;
-  const shippingCostText = isFreeShipping ? 'Complimentary (Free Worldwide Express)' : formatPrice(15);
-  const totalPayable = formatPrice(cartSubtotal + (isFreeShipping ? 0 : 15));
+  const shippingCostText = formatPrice(15);
+  const totalPayable = formatPrice(cartSubtotal + 15);
   const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const lines = [
