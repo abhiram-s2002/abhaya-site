@@ -423,43 +423,49 @@ export default function Navbar() {
                   <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Open abaya')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
                       Open Abaya
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Closed cut')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
                       Closed Cut
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, 'Butterfly cut')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, 'Kimono or kaftan')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Butterfly / Farasha Cut
+                      Kimono or Kaftan
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, 'Kimono & Kaftan')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, 'Butterfly or farasha')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Kimono & Kaftan
+                      Butterfly or Farasha
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, '2-Piece set')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, 'umbrella cut or Flare')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      2-Piece Abaya Set
+                      Umbrella Cut or Flare
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, 'Batwing')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, '2 piece abaya (with inner)')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Batwing Silhouette
+                      2 Piece Abaya (with inner)
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, 'Coat abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                    >
+                      Coat Abaya
                     </button>
                     <button
                       onClick={() => handleNav('collections')}
-                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
                       View All Categories
                     </button>
@@ -484,44 +490,50 @@ export default function Navbar() {
                 {openAccordions.work && (
                   <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
                     <button
-                      onClick={() => handleNav('shop', null, null, null, null, 'Handwork')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, null, 'Embroidery Abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Handwork Embroidery
+                      Embroidery Abaya
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, null, 'Stonework')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, null, 'Handwork Abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Stonework & Crystal Detailing
+                      Handwork Abaya
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, null, 'Embroidery')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, null, 'Stonework Abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Artisanal Thread Embroidery
+                      Stonework Abaya
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, null, 'Cutwork')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, null, 'Threadwork Abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Cutwork & French Seam
+                      Threadwork Abaya
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, null, 'Pearl detailing')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, null, 'Printed Abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Pearl Detailing
+                      Printed Abaya
                     </button>
                     <button
-                      onClick={() => handleNav('shop', null, null, null, null, 'Plain / Minimal')}
-                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, null, 'Lace Work Abaya')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      Minimalist Plain Atelier
+                      Lace Work Abaya
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, null, 'plain')}
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                    >
+                      Plain Atelier
                     </button>
                     <button
                       onClick={() => handleNav('collections')}
-                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
                       View All Work Styles
                     </button>

@@ -96,10 +96,17 @@ export default function AdminPage() {
   // Metrics Calculations
   const stats = useMemo(() => {
     const total = baseProducts.length;
-    const silkCount = baseProducts.filter(p => p.category === 'Silk').length;
-    const chiffonCount = baseProducts.filter(p => p.category === 'Chiffon').length;
-    const modalCount = baseProducts.filter(p => p.category === 'Modal Jersey').length;
-    const georgetteCount = baseProducts.filter(p => p.category === 'Georgette').length;
+    const styleCounts = {};
+    const workCounts = {};
+    baseProducts.forEach(p => {
+      const s = p.defaultStyle || 'Open abaya';
+      const w = p.defaultWork || 'plain';
+      styleCounts[s] = (styleCounts[s] || 0) + 1;
+      workCounts[w] = (workCounts[w] || 0) + 1;
+    });
+
+    const uniqueStyles = Object.keys(styleCounts).length;
+    const uniqueWorks = Object.keys(workCounts).length;
     const featuredCount = baseProducts.filter(p => p.isFeatured).length;
     const violetCount = baseProducts.filter(p => p.isVioletEdition).length;
     const lowStockCount = baseProducts.filter(p => (p.stockCount ?? 10) <= 5 && (p.stockCount ?? 10) > 0).length;
@@ -107,10 +114,10 @@ export default function AdminPage() {
 
     return {
       total,
-      silkCount,
-      chiffonCount,
-      modalCount,
-      georgetteCount,
+      uniqueStyles,
+      uniqueWorks,
+      styleCounts,
+      workCounts,
       featuredCount,
       violetCount,
       lowStockCount,
@@ -138,9 +145,6 @@ export default function AdminPage() {
           (p.description && p.description.toLowerCase().includes(q));
       }
 
-      // Category
-      const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
-
       // Style / Silhouette
       const matchesStyle = selectedStyle === 'All' ||
         p.defaultStyle === selectedStyle ||
@@ -163,9 +167,11 @@ export default function AdminPage() {
       const stock = p.stockCount ?? 10;
       let matchesStock = true;
       if (stockFilter === 'low') matchesStock = stock <= 5 && stock > 0;
-      return matchesSearch && matchesCategory && matchesStyle && matchesWork && matchesMarket && matchesStock;
+      if (stockFilter === 'out') matchesStock = stock === 0;
+
+      return matchesSearch && matchesStyle && matchesWork && matchesMarket && matchesStock;
     });
-  }, [baseProducts, searchQuery, selectedCategory, selectedStyle, selectedWork, selectedMarketFilter, stockFilter]);
+  }, [baseProducts, searchQuery, selectedStyle, selectedWork, selectedMarketFilter, stockFilter]);
 
   // Handlers
   const handleOpenAddModal = () => {
@@ -345,11 +351,23 @@ export default function AdminPage() {
       </div>
 
       {/* KPI Stats Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
           <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Total Abayas</div>
           <div className="font-serif text-2xl sm:text-3xl font-bold text-primary">{stats.total}</div>
-          <div className="text-[11px] text-stone-400">Active catalog items</div>
+          <div className="text-[11px] text-stone-400">Active catalog creations</div>
+        </div>
+
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
+          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-royal-violet">Category Styles</div>
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-royal-violet">{stats.uniqueStyles}</div>
+          <div className="text-[11px] text-stone-400">Distinct silhouettes</div>
+        </div>
+
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
+          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-700">Artisan Works</div>
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-amber-800">{stats.uniqueWorks}</div>
+          <div className="text-[11px] text-stone-400">Craftsmanship techniques</div>
         </div>
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
@@ -413,7 +431,7 @@ export default function AdminPage() {
                 <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
                 <input
                   type="text"
-                  placeholder="Search abayas by name, fabric, silhouette, work, color..."
+                  placeholder="Search abayas by name, category style, work, color..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 rounded-xl border border-secondary/30 bg-[#fff9fd] text-xs focus:outline-none focus:ring-2 focus:ring-royal-violet/30"
@@ -425,7 +443,7 @@ export default function AdminPage() {
                 <div className="flex items-center border border-secondary/30 rounded-xl p-0.5 bg-[#fff9fd]">
                   <button
                     onClick={() => setViewMode('table')}
-                    className={`p-1.5 rounded-lg transition-colors ${
+                    className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                       viewMode === 'table' ? 'bg-royal-violet text-white' : 'text-stone-500 hover:text-stone-800'
                     }`}
                     title="Table View"
@@ -434,7 +452,7 @@ export default function AdminPage() {
                   </button>
                   <button
                     onClick={() => setViewMode('cards')}
-                    className={`p-1.5 rounded-lg transition-colors ${
+                    className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                       viewMode === 'cards' ? 'bg-royal-violet text-white' : 'text-stone-500 hover:text-stone-800'
                     }`}
                     title="Cards View"
@@ -447,15 +465,15 @@ export default function AdminPage() {
 
             {/* Filter Dropdowns Row: Silhouette, Craftsmanship, Stock Status */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-surface-container-highest">
-              {/* Silhouette / Style Filter */}
+              {/* Silhouette / Category Style Filter */}
               <div className="flex items-center gap-2 bg-[#fff9fd] px-3 py-1.5 rounded-xl border border-secondary/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 shrink-0">Style:</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-royal-violet shrink-0">Style:</span>
                 <select
                   value={selectedStyle}
                   onChange={(e) => setSelectedStyle(e.target.value)}
-                  className="w-full bg-transparent text-xs text-stone-700 font-medium focus:outline-none cursor-pointer"
+                  className="w-full bg-transparent text-xs text-stone-700 font-semibold focus:outline-none cursor-pointer"
                 >
-                  <option value="All">All Silhouettes</option>
+                  <option value="All">All Category Styles ({ABAYA_STYLES.length})</option>
                   {ABAYA_STYLES.map(s => (
                     <option key={s.id} value={s.name}>{s.name}</option>
                   ))}
@@ -464,13 +482,13 @@ export default function AdminPage() {
 
               {/* Craftsmanship / Work Filter */}
               <div className="flex items-center gap-2 bg-[#fff9fd] px-3 py-1.5 rounded-xl border border-secondary/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 shrink-0">Work:</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 shrink-0">Work:</span>
                 <select
                   value={selectedWork}
                   onChange={(e) => setSelectedWork(e.target.value)}
-                  className="w-full bg-transparent text-xs text-stone-700 font-medium focus:outline-none cursor-pointer"
+                  className="w-full bg-transparent text-xs text-stone-700 font-semibold focus:outline-none cursor-pointer"
                 >
-                  <option value="All">All Craftsmanship</option>
+                  <option value="All">All Craftsmanship Works ({ABAYA_WORKS.length})</option>
                   {ABAYA_WORKS.map(w => (
                     <option key={w.id} value={w.name}>{w.name}</option>
                   ))}
@@ -517,11 +535,10 @@ export default function AdminPage() {
               </div>
 
               {/* Reset Filters button if active */}
-              {(searchQuery || selectedCategory !== 'All' || selectedStyle !== 'All' || selectedWork !== 'All' || selectedMarketFilter !== 'all' || stockFilter !== 'all') && (
+              {(searchQuery || selectedStyle !== 'All' || selectedWork !== 'All' || selectedMarketFilter !== 'all' || stockFilter !== 'all') && (
                 <button
                   onClick={() => {
                     setSearchQuery('');
-                    setSelectedCategory('All');
                     setSelectedStyle('All');
                     setSelectedWork('All');
                     setSelectedMarketFilter('all');
@@ -545,7 +562,7 @@ export default function AdminPage() {
               </p>
               <button
                 onClick={handleOpenAddModal}
-                className="px-4 py-2 rounded-xl bg-royal-violet text-white text-xs font-semibold shadow hover:bg-royal-violet/90"
+                className="px-4 py-2 rounded-xl bg-royal-violet text-white text-xs font-semibold shadow hover:bg-royal-violet/90 cursor-pointer"
               >
                 + Add Abaya Now
               </button>
@@ -558,7 +575,7 @@ export default function AdminPage() {
                   <thead className="bg-[#fff9fd] border-b border-surface-container-highest text-stone-500 font-semibold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="py-3.5 px-4">Abaya Creation</th>
-                      <th className="py-3.5 px-4">Fabric, Silhouette & Craft</th>
+                      <th className="py-3.5 px-4">Category Style & Craftsmanship</th>
                       <th className="py-3.5 px-4">Market & Rating</th>
                       <th className="py-3.5 px-4">Price</th>
                       <th className="py-3.5 px-4">Stock Status</th>
@@ -599,22 +616,22 @@ export default function AdminPage() {
                           </div>
                         </td>
 
-                        {/* Fabric, Silhouette & Craft */}
+                        {/* Category Style & Craftsmanship */}
                         <td className="py-3.5 px-4">
-                          <div className="space-y-1">
+                          <div className="space-y-1.5">
                             <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="inline-block px-2 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-semibold text-[10px]">
-                                {p.category}
+                              <span className="inline-block px-2.5 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-bold text-[10px]">
+                                {p.defaultStyle || 'Open abaya'}
                               </span>
-                              {p.badge && (
-                                <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-semibold">
-                                  {p.badge}
-                                </span>
-                              )}
+                              <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 font-semibold text-[9px]">
+                                {p.defaultWork || 'plain'}
+                              </span>
                             </div>
-                            <div className="text-[11px] text-stone-600 font-medium">
-                              {p.defaultStyle || 'Open abaya'} • <span className="text-stone-500 font-normal">{p.defaultWork || 'plain'}</span>
-                            </div>
+                            {p.badge && (
+                              <div className="text-[10px] text-stone-400 font-medium">
+                                ★ <span className="text-stone-600">{p.badge}</span>
+                              </div>
+                            )}
                           </div>
                         </td>
 
@@ -787,29 +804,19 @@ export default function AdminPage() {
                     <div>
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] uppercase font-semibold text-royal-violet tracking-wider">
-                            {p.category}
+                          <span className="inline-block px-2 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-bold text-[10px]">
+                            {p.defaultStyle || 'Open abaya'}
                           </span>
-                          {p.targetRegion === 'india' ? (
-                            <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[9px] font-bold border border-emerald-200">
-                              India
-                            </span>
-                          ) : p.targetRegion === 'arab' ? (
-                            <span className="inline-block px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 text-[9px] font-bold border border-amber-200">
-                              Arab / UAE
-                            </span>
-                          ) : (
-                            <span className="inline-block px-1.5 py-0.5 rounded bg-purple-50 text-purple-800 text-[9px] font-bold border border-purple-200">
-                              Global
-                            </span>
-                          )}
+                          <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 font-semibold text-[9px]">
+                            {p.defaultWork || 'plain'}
+                          </span>
                         </div>
                         <span className="font-serif font-bold text-sm text-primary">
                           {formatPrice(p.price)}
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between mt-1">
+                      <div className="flex items-center justify-between mt-2">
                         <h3 className="font-serif text-base text-primary font-medium">
                           {p.name}
                         </h3>
@@ -817,10 +824,6 @@ export default function AdminPage() {
                           <span>★ {Number(p.rating || 5.0).toFixed(1)}</span>
                           <span className="text-stone-400 font-normal">({p.reviewsCount || 0})</span>
                         </div>
-                      </div>
-
-                      <div className="text-[11px] text-stone-600 font-medium mt-1">
-                        {p.defaultStyle || 'Open abaya'} • <span className="text-stone-500 font-normal">{p.defaultWork || 'plain'}</span>
                       </div>
 
                       <p className="text-xs text-stone-500 line-clamp-2 mt-1">
@@ -845,7 +848,7 @@ export default function AdminPage() {
 
                     <div className="pt-3 border-t border-surface-container-highest flex items-center justify-between">
                       <span className="text-[11px] text-stone-500">
-                        {p.stockCount ?? 10} pieces available
+                        {p.stockCount ?? 10} pieces in stock
                       </span>
                       
                       <div className="flex items-center gap-1">

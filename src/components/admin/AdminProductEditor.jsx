@@ -114,13 +114,8 @@ export default function AdminProductEditor({
       setSubtitle(product.subtitle || '');
       setPrice(product.price !== undefined ? String(product.price) : '');
       setOriginalPrice(product.originalPrice ? String(product.originalPrice) : '');
-      if (PRESET_CATEGORIES.includes(product.category)) {
-        setCategory(product.category);
-        setCustomCategory('');
-      } else {
-        setCategory('Other');
-        setCustomCategory(product.category || '');
-      }
+      setCategory(product.category || product.defaultStyle || 'Open abaya');
+      setCustomCategory('');
       setBadge(product.badge || '');
       setTargetRegion(product.targetRegion || 'all');
       setRating(product.rating !== undefined ? String(product.rating) : '5.0');
@@ -146,7 +141,7 @@ export default function AdminProductEditor({
       setSubtitle('');
       setPrice('180');
       setOriginalPrice('');
-      setCategory('Silk');
+      setCategory('Open abaya');
       setCustomCategory('');
       setBadge('New Arrival');
       setTargetRegion('all');
@@ -329,11 +324,20 @@ export default function AdminProductEditor({
       scrollToSection('media');
       return;
     }
+    if (!defaultStyle) {
+      setErrorMessage('Please select a Category Style for the abaya.');
+      scrollToSection('identity');
+      return;
+    }
+    if (!defaultWork) {
+      setErrorMessage('Please select a Craftsmanship Work for the abaya.');
+      scrollToSection('identity');
+      return;
+    }
 
     setIsSaving(true);
     setErrorMessage('');
 
-    const finalCategory = category === 'Other' ? (customCategory.trim() || 'Silk') : category;
     const slugId = isEditing
       ? product.id
       : name
@@ -347,7 +351,7 @@ export default function AdminProductEditor({
       subtitle: subtitle.trim(),
       price: Number(price),
       originalPrice: originalPrice ? Number(originalPrice) : null,
-      category: finalCategory,
+      category: defaultStyle,
       badge: badge.trim(),
       targetRegion: targetRegion || 'all',
       rating: Number(rating) || 5.0,
@@ -356,8 +360,8 @@ export default function AdminProductEditor({
       isVioletEdition,
       defaultStyle,
       defaultWork,
-      styles,
-      works,
+      styles: styles.length > 0 ? styles : [defaultStyle],
+      works: works.length > 0 ? works : [defaultWork],
       image,
       gallery: gallery.length > 0 ? gallery : [image],
       colors,
@@ -450,52 +454,52 @@ export default function AdminProductEditor({
               type="button"
               onClick={handleSubmit}
               disabled={isSaving}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary via-royal-violet to-primary text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all shadow-luxury flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-primary via-royal-violet to-primary text-white text-xs font-semibold uppercase tracking-wider hover:opacity-95 transition-all shadow-luxury flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSaving ? (
                 <>
                   <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Publishing...</span>
+                  <span>Saving...</span>
                 </>
               ) : (
                 <>
-                  <Check className="w-4 h-4 text-gold-soft" />
-                  <span>{isEditing ? 'Save Changes' : 'Publish Abaya to Catalog'}</span>
+                  <Save className="w-3.5 h-3.5 text-gold-soft" />
+                  <span>{isEditing ? 'Save Changes' : 'Publish Abaya'}</span>
                 </>
               )}
             </button>
           </div>
 
         </div>
+      </div>
 
-        {/* Section Quick Jump Bar */}
-        <div className="bg-[#fff9fd] border-t border-surface-container-highest px-4 sm:px-8">
-          <div className="max-w-7xl mx-auto flex items-center gap-2 sm:gap-6 overflow-x-auto no-scrollbar py-2 text-xs">
-            {[
-              { id: 'identity', label: '1. Basic Identity' },
-              { id: 'pricing', label: '2. Pricing & Market' },
-              { id: 'media', label: '3. Photography & Angles' },
-              { id: 'variants', label: '4. Shades, Cuts & Work' },
-              { id: 'editorial', label: '5. Editorial & Care' }
-            ].map(sec => (
-              <button
-                key={sec.id}
-                type="button"
-                onClick={() => scrollToSection(sec.id)}
-                className={`py-1 px-2.5 rounded-lg font-medium whitespace-nowrap transition-all ${
-                  activeSection === sec.id
-                    ? 'bg-royal-violet text-white font-semibold shadow-xs'
-                    : 'text-stone-600 hover:bg-surface-container'
-                }`}
-              >
-                {sec.label}
-              </button>
-            ))}
-          </div>
+      {/* ── Sub Navigation Section Tabs ── */}
+      <div className="bg-white border-b border-surface-container-highest shadow-2xs sticky top-[57px] z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 sm:gap-6 overflow-x-auto no-scrollbar py-2.5 text-xs font-semibold">
+          {[
+            { id: 'identity', label: '1. Style & Work' },
+            { id: 'pricing', label: '2. Pricing & Market' },
+            { id: 'media', label: '3. Photography Studio' },
+            { id: 'variants', label: '4. Colors & Custom Cuts' },
+            { id: 'details', label: '5. Fabric & Care' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => scrollToSection(tab.id)}
+              className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer ${
+                activeSection === tab.id
+                  ? 'bg-royal-violet text-white shadow-2xs'
+                  : 'text-stone-600 hover:text-stone-900 hover:bg-surface-container'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* ── Main Studio Body (2-Column Layout on Desktop) ── */}
+      {/* ── Main Studio Layout: 2 Columns ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         
         {errorMessage && (
@@ -510,7 +514,7 @@ export default function AdminProductEditor({
           {/* ── LEFT COLUMN: Comprehensive Studio Form (7 cols) ── */}
           <div className="lg:col-span-7 space-y-8">
             
-            {/* 1. Basic Identity */}
+            {/* 1. Basic Identity, Category Style & Work */}
             <div id="identity" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
               <div className="flex items-center justify-between border-b border-surface-container-highest pb-4">
                 <div className="flex items-center gap-2.5">
@@ -518,8 +522,8 @@ export default function AdminProductEditor({
                     1
                   </div>
                   <div>
-                    <h2 className="font-serif text-lg font-bold text-stone-900">Abaya Identity & Categorization</h2>
-                    <p className="text-xs text-stone-500">Essential title, fabric class, and capsule collections</p>
+                    <h2 className="font-serif text-lg font-bold text-stone-900">Abaya Identity, Category Style & Work</h2>
+                    <p className="text-xs text-stone-500">Primary silhouette, craftsmanship work, and boutique metadata</p>
                   </div>
                 </div>
               </div>
@@ -553,58 +557,86 @@ export default function AdminProductEditor({
                   />
                 </div>
 
+                {/* 2 Main Classifications: Category Style & Work */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  
+                  {/* Category Style (Silhouette) */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                      Fabric Category *
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-800 flex items-center gap-1.5">
+                      <Scissors className="w-3.5 h-3.5 text-royal-violet" />
+                      <span>Category Style *</span>
                     </label>
                     <select
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-semibold text-stone-800"
+                      value={defaultStyle}
+                      onChange={(e) => {
+                        const newStyle = e.target.value;
+                        setDefaultStyle(newStyle);
+                        if (!styles.includes(newStyle)) {
+                          setStyles(prev => [...prev, newStyle]);
+                        }
+                      }}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
                     >
-                      {PRESET_CATEGORIES.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
+                      {ABAYA_STYLES.map(style => (
+                        <option key={style.id} value={style.name}>
+                          {style.name} ({style.tag})
+                        </option>
                       ))}
-                      <option value="Other">Custom Category...</option>
                     </select>
+                    <p className="text-[10px] text-stone-500">
+                      {ABAYA_STYLES.find(s => s.name === defaultStyle)?.description || 'Select silhouette category cut.'}
+                    </p>
                   </div>
 
-                  {category === 'Other' ? (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                        Custom Fabric Name
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Velvet Jacquard"
-                        value={customCategory}
-                        onChange={(e) => setCustomCategory(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm"
-                      />
-                    </div>
-                  ) : (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                        Editorial Badge
-                      </label>
-                      <select
-                        value={badge}
-                        onChange={(e) => setBadge(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800"
-                      >
-                        {PRESET_BADGES.map(b => (
-                          <option key={b} value={b}>{b ? b : 'None (No badge)'}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
+                  {/* Craftsmanship / Work */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-800 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-gold-accent" />
+                      <span>Craftsmanship / Work *</span>
+                    </label>
+                    <select
+                      value={defaultWork}
+                      onChange={(e) => {
+                        const newWork = e.target.value;
+                        setDefaultWork(newWork);
+                        if (!works.includes(newWork)) {
+                          setWorks(prev => [...prev, newWork]);
+                        }
+                      }}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                    >
+                      {ABAYA_WORKS.map(work => (
+                        <option key={work.id} value={work.name}>
+                          {work.name} ({work.tag})
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-[10px] text-stone-500">
+                      {ABAYA_WORKS.find(w => w.name === defaultWork)?.description || 'Select artisan craftwork.'}
+                    </p>
+                  </div>
+
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                      Stock Inventory
+                      Editorial Badge
+                    </label>
+                    <select
+                      value={badge}
+                      onChange={(e) => setBadge(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800"
+                    >
+                      {PRESET_BADGES.map(b => (
+                        <option key={b} value={b}>{b ? b : 'None (No badge)'}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                      Stock Inventory (Pieces)
                     </label>
                     <input
                       type="number"
@@ -614,23 +646,6 @@ export default function AdminProductEditor({
                       className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-semibold"
                     />
                   </div>
-
-                  {category === 'Other' && (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                        Editorial Badge
-                      </label>
-                      <select
-                        value={badge}
-                        onChange={(e) => setBadge(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800"
-                      >
-                        {PRESET_BADGES.map(b => (
-                          <option key={b} value={b}>{b ? b : 'None (No badge)'}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                 </div>
 
                 {/* Rating & Reviews Count */}
@@ -1621,8 +1636,15 @@ export default function AdminProductEditor({
               {/* Card Meta Content */}
               <div className="p-5 sm:p-6 space-y-3 bg-white">
                 <div className="flex items-center justify-between text-xs text-stone-500">
-                  <span className="font-semibold uppercase tracking-wider text-royal-violet">{category === 'Other' ? customCategory || 'Bespoke' : category}</span>
-                  <span className="text-[11px]">{stockCount > 0 ? `${stockCount} pieces left` : 'Out of stock'}</span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-bold text-[10px] uppercase tracking-wider">
+                      {defaultStyle}
+                    </span>
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-semibold text-[10px]">
+                      {defaultWork}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-medium">{stockCount > 0 ? `${stockCount} in stock` : 'Out of stock'}</span>
                 </div>
 
                 <div>
