@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <EditableSection cmsKey="footer_content" label="Footer">
-      <footer className="w-full bg-[#2D143D] text-white border-t border-white/20 pt-14 pb-28 lg:py-16 mt-auto shadow-2xl">
+      <footer className="w-full bg-[#C85DA9] text-white border-t border-white/20 pt-14 pb-28 lg:py-16 mt-auto shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
 
           {/* Brand & Copyright (Left) */}
@@ -60,7 +60,7 @@ export default function Footer() {
             </button>
             <button
               onClick={() => navigateTo('admin')}
-              className="inline-flex items-center gap-1.5 text-white hover:bg-white hover:text-[#2D143D] transition-colors font-semibold cursor-pointer px-3 py-1.5 border border-white/40 text-[11px]"
+              className="inline-flex items-center gap-1.5 text-white hover:bg-white hover:text-[#C85DA9] transition-colors font-semibold cursor-pointer px-3 py-1.5 border border-white/40 text-[11px]"
             >
               <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.5} />
               <span>Admin Portal</span>

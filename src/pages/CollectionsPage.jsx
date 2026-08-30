@@ -457,14 +457,14 @@ export default function CollectionsPage() {
             <div className="flex items-center sm:hidden border border-white/30">
               <button
                 onClick={() => setMobileCols(1)}
-                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 1 ? 'bg-[#2D143D] text-white' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 1 ? 'bg-white text-[#C85DA9]' : 'text-white/70 hover:text-white'}`}
                 aria-label="1 column mobile view"
               >
                 <Square className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => setMobileCols(2)}
-                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 2 ? 'bg-[#2D143D] text-white' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 2 ? 'bg-white text-[#C85DA9]' : 'text-white/70 hover:text-white'}`}
                 aria-label="2 columns mobile view"
               >
                 <Grid2X2 className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -475,7 +475,7 @@ export default function CollectionsPage() {
             <div className="hidden sm:flex items-center border border-white/30">
               <button
                 onClick={() => setDesktopCols(2)}
-                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 2 ? 'bg-[#2D143D] text-white' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 2 ? 'bg-white text-[#C85DA9]' : 'text-white/70 hover:text-white'}`}
                 title="2 columns view"
                 aria-label="2 columns desktop view"
               >
@@ -483,7 +483,7 @@ export default function CollectionsPage() {
               </button>
               <button
                 onClick={() => setDesktopCols(3)}
-                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 3 ? 'bg-[#2D143D] text-white' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 3 ? 'bg-white text-[#C85DA9]' : 'text-white/70 hover:text-white'}`}
                 title="3 columns view"
                 aria-label="3 columns desktop view"
               >
@@ -491,7 +491,7 @@ export default function CollectionsPage() {
               </button>
               <button
                 onClick={() => setDesktopCols(4)}
-                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 4 ? 'bg-[#2D143D] text-white' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 4 ? 'bg-white text-[#C85DA9]' : 'text-white/70 hover:text-white'}`}
                 title="4 columns view"
                 aria-label="4 columns desktop view"
               >
@@ -535,7 +535,7 @@ export default function CollectionsPage() {
             </p>
             <button
               onClick={clearAllFilters}
-              className="mt-4 px-6 py-2.5 bg-[#2D143D] hover:bg-[#1A0924] text-white text-xs uppercase tracking-widest font-medium transition-colors cursor-pointer border border-white/20"
+              className="mt-4 px-6 py-2.5 bg-white hover:bg-white/90 text-[#C85DA9] text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer border border-white"
             >
               Clear all filters
             </button>
@@ -642,7 +642,7 @@ export default function CollectionsPage() {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleItem(selectedStyles, setSelectedStyles, style.name)}
-                          className="w-4 h-4 accent-[#2D143D] cursor-pointer"
+                          className="w-4 h-4 accent-[#C85DA9] cursor-pointer"
                         />
                       </label>
                     );
@@ -675,7 +675,7 @@ export default function CollectionsPage() {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleItem(selectedWorks, setSelectedWorks, work.name)}
-                          className="w-4 h-4 accent-[#2D143D] cursor-pointer"
+                          className="w-4 h-4 accent-[#C85DA9] cursor-pointer"
                         />
                       </label>
                     );
@@ -708,7 +708,7 @@ export default function CollectionsPage() {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleItem(selectedFabrics, setSelectedFabrics, fabric)}
-                          className="w-4 h-4 accent-[#2D143D] cursor-pointer"
+                          className="w-4 h-4 accent-[#C85DA9] cursor-pointer"
                         />
                       </label>
                     );
@@ -737,7 +737,7 @@ export default function CollectionsPage() {
                         onClick={() => toggleItem(selectedSizes, setSelectedSizes, size)}
                         className={`py-2 text-xs font-medium uppercase tracking-wider border transition-colors cursor-pointer ${
                           isSelected
-                            ? 'bg-[#2D143D] text-white border-white'
+                            ? 'bg-white text-[#C85DA9] border-white font-semibold'
                             : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
                         }`}
                       >
@@ -772,7 +772,7 @@ export default function CollectionsPage() {
                     step="5"
                     value={priceRange}
                     onChange={(e) => setPriceRange(Number(e.target.value))}
-                    className="w-full accent-[#2D143D] cursor-pointer"
+                    className="w-full accent-[#C85DA9] cursor-pointer"
                   />
                 </div>
               )}
@@ -786,7 +786,7 @@ export default function CollectionsPage() {
                   type="checkbox"
                   checked={onlyInStock}
                   onChange={(e) => setOnlyInStock(e.target.checked)}
-                  className="w-4 h-4 accent-[#2D143D] cursor-pointer"
+                  className="w-4 h-4 accent-[#C85DA9] cursor-pointer"
                 />
               </label>
             </div>
@@ -803,7 +803,7 @@ export default function CollectionsPage() {
             </button>
             <button
               onClick={() => setFilterDrawerOpen(false)}
-              className="flex-1 py-3.5 bg-white text-[#2D143D] hover:bg-white/90 text-xs uppercase tracking-[0.14em] font-bold transition-colors cursor-pointer text-center shadow-md"
+              className="flex-1 py-3.5 bg-white text-[#C85DA9] hover:bg-white/90 text-xs uppercase tracking-[0.14em] font-bold transition-colors cursor-pointer text-center shadow-md border border-white"
             >
               View results ({filteredProducts.length})
             </button>

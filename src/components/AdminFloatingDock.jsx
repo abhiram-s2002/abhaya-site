@@ -35,9 +35,9 @@ export default function AdminFloatingDock() {
     >
       {/* Main Dock Panel */}
       {!collapsed && (
-        <div className="bg-[#2D143D] border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-fade-in min-w-[220px]">
+        <div className="bg-[#C85DA9] border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-fade-in min-w-[220px]">
           {/* Header */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-[#1A0924] border-b border-white/10">
+          <div className="flex items-center gap-2 px-4 py-3 bg-[#B84E99] border-b border-white/10">
             <Crown className="w-3.5 h-3.5 text-[#FFD700]" />
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFF0A0]">
               Admin Controls

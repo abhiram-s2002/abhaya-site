@@ -12,11 +12,11 @@ export default function AnnouncementBar() {
 
   return (
     <EditableSection cmsKey="announcement" label="Announcement Bar">
-      <div className="bg-[#2D143D] text-white text-[10px] sm:text-[11px] py-2 px-3 sm:px-4 border-b border-white/15 tracking-[0.06em] uppercase transition-colors">
+      <div className="bg-[#C85DA9] text-white text-[10px] sm:text-[11px] py-2 px-3 sm:px-4 border-b border-white/20 tracking-[0.06em] uppercase transition-colors">
         <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
 
           {/* Left perk */}
-          <div className="hidden md:flex items-center gap-2 text-white/90 font-medium">
+          <div className="hidden md:flex items-center gap-2 text-white font-medium">
             <Sparkles className="w-3.5 h-3.5 text-[#FFD700]" strokeWidth={1.5} />
             <span>{a.leftText || 'Worldwide Express Delivery to Your Doorstep'}</span>
           </div>
@@ -26,7 +26,7 @@ export default function AnnouncementBar() {
             <span className="font-semibold tracking-wider text-[#FFF0A0] shrink-0">
               {a.centerBadge || 'NEW ARRIVALS:'}
             </span>
-            <span className="truncate font-normal text-white/90">{a.centerText || 'Discover The Minimalist Abaya Collection'}</span>
+            <span className="truncate font-normal text-white">{a.centerText || 'Discover The Minimalist Abaya Collection'}</span>
           </div>
 
           {/* Right tools: Country Location & Currency Selector */}
@@ -34,18 +34,18 @@ export default function AnnouncementBar() {
             {/* Country indicator */}
             {userLocation?.country && (
               <div 
-                className="flex items-center gap-1.5 text-white/90 border-r border-white/20 pr-3.5 font-medium"
+                className="flex items-center gap-1.5 text-white border-r border-white/20 pr-3.5 font-medium"
                 title={`Detected Location: ${userLocation.city ? userLocation.city + ', ' : ''}${userLocation.country}`}
               >
                 <span className="text-sm leading-none">{userLocation.flag || '🌐'}</span>
-                <span className="text-white/90 font-medium text-[11px] max-w-[100px] truncate">
+                <span className="text-white font-medium text-[11px] max-w-[100px] truncate">
                   {userLocation.countryCode === 'IN' ? 'India' : userLocation.country}
                 </span>
               </div>
             )}
 
             <div className="flex items-center gap-1.5 text-white">
-              <Globe className="w-3.5 h-3.5 text-white/80" strokeWidth={1.5} />
+              <Globe className="w-3.5 h-3.5 text-white" strokeWidth={1.5} />
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
@@ -53,7 +53,7 @@ export default function AnnouncementBar() {
                 aria-label="Currency Selector"
               >
                 {Object.entries(CURRENCIES).map(([code, item]) => (
-                  <option key={code} value={code} className="bg-[#2D143D] text-white font-medium">
+                  <option key={code} value={code} className="bg-[#C85DA9] text-white font-medium">
                     {item.flag} {code} ({item.symbol.trim()})
                   </option>
                 ))}

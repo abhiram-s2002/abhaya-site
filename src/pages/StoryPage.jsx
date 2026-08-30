@@ -233,10 +233,10 @@ export default function StoryPage() {
 
       {/* 5. Meet Our Co-Founders Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary via-[#240e30] to-primary text-white border border-surface-container-highest/20 shadow-2xl p-6 sm:p-10 lg:p-12">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#C85DA9] via-[#D975BD] to-[#C85DA9] text-white border border-white/20 shadow-2xl p-6 sm:p-10 lg:p-12">
           
           {/* Subtle Ambient Glows */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-royal-violet/35 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-gold-accent/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -244,21 +244,21 @@ export default function StoryPage() {
             {/* Left Col: Founders Portrait Photo */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-none group">
-                <div className="absolute -inset-1.5 bg-gradient-to-tr from-gold-accent/40 via-royal-violet/50 to-gold-soft/30 rounded-2xl blur-xs opacity-75 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute -inset-1.5 bg-gradient-to-tr from-gold-accent/40 via-white/30 to-gold-soft/30 rounded-2xl blur-xs opacity-75 group-hover:opacity-100 transition-opacity duration-500" />
                 
-                <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-primary/40">
+                <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-white/10">
                   <img
                     src={foundersImageSrc}
                     alt="Kamarunnisa & Rafique - Founders & Visionaries"
                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                   />
                   
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent flex flex-col justify-end p-4 sm:p-6">
-                    <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl p-3 text-center">
-                      <p className="font-serif text-sm sm:text-base font-semibold text-gold-soft tracking-wide">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#C85DA9]/90 via-transparent to-transparent flex flex-col justify-end p-4 sm:p-6">
+                    <div className="backdrop-blur-md bg-white/15 border border-white/20 rounded-xl p-3 text-center">
+                      <p className="font-serif text-sm sm:text-base font-semibold text-white tracking-wide">
                         Kamarunnisa & Rafique
                       </p>
-                      <p className="text-[10px] sm:text-xs text-stone-300 uppercase tracking-widest font-sans font-medium">
+                      <p className="text-[10px] sm:text-xs text-white/80 uppercase tracking-widest font-sans font-medium">
                         Founders & Visionaries
                       </p>
                     </div>

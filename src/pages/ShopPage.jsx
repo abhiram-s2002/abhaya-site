@@ -272,7 +272,7 @@ export default function ShopPage() {
             onClick={() => setMobileFilterOpen(true)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs uppercase tracking-wider font-medium border transition-colors cursor-pointer ${
               secondaryFiltersActiveCount > 0
-                ? 'bg-[#2D143D] text-white border-white shadow-sm'
+                ? 'bg-white text-[#C85DA9] border-white shadow-sm'
                 : 'bg-white/15 hover:bg-white/25 text-white border-white/30'
             }`}
             aria-label="Filter Silhouettes and Craft"
@@ -280,7 +280,7 @@ export default function ShopPage() {
             <Filter className="w-3.5 h-3.5" strokeWidth={1.5} />
             <span>Filters</span>
             {secondaryFiltersActiveCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-white text-[#2D143D] text-[10px] flex items-center justify-center font-bold">
+              <span className="w-4 h-4 rounded-full bg-[#C85DA9] text-white text-[10px] flex items-center justify-center font-bold">
                 {secondaryFiltersActiveCount}
               </span>
             )}
@@ -301,7 +301,7 @@ export default function ShopPage() {
 
             {/* Sort Popover Menu */}
             {isSortOpen && (
-              <div className="absolute right-0 mt-1 w-48 bg-[#2D143D] text-white rounded-none shadow-2xl border border-white/20 py-1 z-30 animate-fade-in">
+              <div className="absolute right-0 mt-1 w-48 bg-[#C85DA9] text-white rounded-none shadow-2xl border border-white/20 py-1 z-30 animate-fade-in">
                 {sortOptions.map((option) => (
                   <button
                     key={option.id}
@@ -316,7 +316,7 @@ export default function ShopPage() {
                     }`}
                   >
                     <span>{option.label}</span>
-                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-[#FFD700]" strokeWidth={1.5} />}
+                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-[#FFD700] shrink-0" strokeWidth={1.5} />}
                   </button>
                 ))}
               </div>
@@ -431,25 +431,25 @@ export default function ShopPage() {
           )}
 
           {selectedStyleFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-[#2D143D] text-white border border-white/30 text-[11px] font-medium shadow-xs">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#C85DA9] border border-white text-[11px] font-medium shadow-xs">
               Cut: {selectedStyleFilter}
-              <button onClick={() => setSelectedStyleFilter('All')} className="hover:text-red-300 p-0.5 cursor-pointer" aria-label="Remove style filter">
+              <button onClick={() => setSelectedStyleFilter('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove style filter">
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
 
           {selectedWorkFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-[#2D143D] text-white border border-white/30 text-[11px] font-medium shadow-xs capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#C85DA9] border border-white text-[11px] font-medium shadow-xs capitalize">
               Craft: {selectedWorkFilter}
-              <button onClick={() => setSelectedWorkFilter('All')} className="hover:text-red-300 p-0.5 cursor-pointer" aria-label="Remove craftsmanship filter">
+              <button onClick={() => setSelectedWorkFilter('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove craftsmanship filter">
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
 
           {selectedShade !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-white text-[11px] text-[#2D143D] font-medium shadow-xs">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-white text-[11px] text-[#C85DA9] font-medium shadow-xs">
               Shade: {selectedShade}
               <button onClick={() => setSelectedShade('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove shade filter">
                 <X className="w-3 h-3" />
@@ -458,10 +458,10 @@ export default function ShopPage() {
           )}
 
           {onlyWishlist && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-[#2D143D] text-white border border-white/30 text-[11px] font-medium shadow-xs">
-              <Heart className="w-3 h-3 fill-white" />
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#C85DA9] border border-white text-[11px] font-medium shadow-xs">
+              <Heart className="w-3 h-3 fill-[#C85DA9]" />
               Wishlist
-              <button onClick={() => setOnlyWishlist(false)} className="hover:text-red-300 p-0.5 cursor-pointer" aria-label="Remove wishlist filter">
+              <button onClick={() => setOnlyWishlist(false)} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove wishlist filter">
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -487,7 +487,7 @@ export default function ShopPage() {
           <button
             onClick={() => setMobileGridCols(1)}
             className={`p-1.5 transition-all cursor-pointer ${
-              mobileGridCols === 1 ? 'bg-[#2D143D] text-white shadow-xs' : 'text-white/70 hover:text-white'
+              mobileGridCols === 1 ? 'bg-white text-[#C85DA9] shadow-xs' : 'text-white/70 hover:text-white'
             }`}
             title="Single card view"
             aria-label="1 column view"
@@ -497,7 +497,7 @@ export default function ShopPage() {
           <button
             onClick={() => setMobileGridCols(2)}
             className={`p-1.5 transition-all cursor-pointer ${
-              mobileGridCols === 2 ? 'bg-[#2D143D] text-white shadow-xs' : 'text-white/70 hover:text-white'
+              mobileGridCols === 2 ? 'bg-white text-[#C85DA9] shadow-xs' : 'text-white/70 hover:text-white'
             }`}
             title="2-column grid view"
             aria-label="2 column view"
@@ -524,7 +524,7 @@ export default function ShopPage() {
           <div className="pt-2">
             <button
               onClick={resetFilters}
-              className="px-6 py-2.5 bg-[#2D143D] hover:bg-[#1A0924] text-white text-xs uppercase tracking-widest font-semibold rounded-none shadow-md active:scale-95 transition-all cursor-pointer border border-white/20"
+              className="px-6 py-2.5 bg-white hover:bg-white/90 text-[#C85DA9] text-xs uppercase tracking-widest font-semibold rounded-none shadow-md active:scale-95 transition-all cursor-pointer border border-white"
             >
               Reset All Filters
             </button>
@@ -563,7 +563,7 @@ export default function ShopPage() {
                 <SlidersHorizontal className="w-4 h-4 text-white" />
                 <h3 className="font-serif text-lg font-medium text-white uppercase tracking-wider">Atelier Filters</h3>
                 {secondaryFiltersActiveCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-[#2D143D] text-white text-[10px] flex items-center justify-center font-bold">
+                  <span className="w-5 h-5 rounded-full bg-white text-[#C85DA9] text-[10px] flex items-center justify-center font-bold">
                     {secondaryFiltersActiveCount}
                   </span>
                 )}
@@ -590,7 +590,7 @@ export default function ShopPage() {
                   onClick={() => setActiveDrawerTab(tab.id)}
                   className={`px-3.5 py-1.5 rounded-none text-xs font-semibold shrink-0 transition-all uppercase tracking-wider cursor-pointer ${
                     activeDrawerTab === tab.id
-                      ? 'bg-[#2D143D] text-white shadow-xs border border-white/30'
+                      ? 'bg-white text-[#C85DA9] shadow-xs border border-white'
                       : 'text-white/80 hover:bg-white/15'
                   }`}
                 >
@@ -616,17 +616,17 @@ export default function ShopPage() {
                       onClick={() => setSelectedStyleFilter('All')}
                       className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
                         selectedStyleFilter === 'All'
-                          ? 'bg-[#2D143D] text-white border-white shadow-sm'
+                          ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
                           : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                       }`}
                     >
                       <div>
                         <div className="font-semibold text-sm">All Silhouettes</div>
-                        <div className={`text-[10px] ${selectedStyleFilter === 'All' ? 'text-white/80' : 'text-white/70'}`}>
+                        <div className={`text-[10px] ${selectedStyleFilter === 'All' ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
                           View all 7 cuts and silhouettes
                         </div>
                       </div>
-                      {selectedStyleFilter === 'All' && <Check className="w-4 h-4 text-[#FFD700]" />}
+                      {selectedStyleFilter === 'All' && <Check className="w-4 h-4 text-[#C85DA9]" />}
                     </button>
 
                     {ABAYA_STYLES.map((style) => {
@@ -637,17 +637,17 @@ export default function ShopPage() {
                           onClick={() => setSelectedStyleFilter(style.name)}
                           className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-[#2D143D] text-white border-white shadow-sm'
+                              ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
                               : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                           }`}
                         >
                           <div>
                             <div className="font-semibold text-sm">{style.name}</div>
-                            <div className={`text-[10px] ${isSelected ? 'text-white/80' : 'text-white/70'}`}>
+                            <div className={`text-[10px] ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
                               {style.description}
                             </div>
                           </div>
-                          {isSelected && <Check className="w-4 h-4 text-[#FFD700]" />}
+                          {isSelected && <Check className="w-4 h-4 text-[#C85DA9]" />}
                         </button>
                       );
                     })}
@@ -669,17 +669,17 @@ export default function ShopPage() {
                       onClick={() => setSelectedWorkFilter('All')}
                       className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
                         selectedWorkFilter === 'All'
-                          ? 'bg-[#2D143D] text-white border-white shadow-sm'
+                          ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
                           : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                       }`}
                     >
                       <div>
                         <div className="font-semibold text-sm">All Craftsmanship</div>
-                        <div className={`text-[10px] ${selectedWorkFilter === 'All' ? 'text-white/80' : 'text-white/70'}`}>
+                        <div className={`text-[10px] ${selectedWorkFilter === 'All' ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
                           All artisan needlework & embellishments
                         </div>
                       </div>
-                      {selectedWorkFilter === 'All' && <Check className="w-4 h-4 text-[#FFD700]" />}
+                      {selectedWorkFilter === 'All' && <Check className="w-4 h-4 text-[#C85DA9]" />}
                     </button>
 
                     {ABAYA_WORKS.map((work) => {
@@ -690,17 +690,17 @@ export default function ShopPage() {
                           onClick={() => setSelectedWorkFilter(work.name)}
                           className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all capitalize cursor-pointer ${
                             isSelected
-                              ? 'bg-[#2D143D] text-white border-white shadow-sm'
+                              ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
                               : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                           }`}
                         >
                           <div>
                             <div className="font-semibold text-sm capitalize">{work.name}</div>
-                            <div className={`text-[10px] ${isSelected ? 'text-white/80' : 'text-white/70'}`}>
+                            <div className={`text-[10px] ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
                               {work.description}
                             </div>
                           </div>
-                          {isSelected && <Check className="w-4 h-4 text-[#FFD700]" />}
+                          {isSelected && <Check className="w-4 h-4 text-[#C85DA9]" />}
                         </button>
                       );
                     })}
@@ -723,7 +723,7 @@ export default function ShopPage() {
                           onClick={() => setSelectedShade(shade.name)}
                           className={`p-3 rounded-none border flex items-center gap-2.5 transition-all text-xs font-medium cursor-pointer ${
                             isSelected
-                              ? 'bg-[#2D143D] text-white border-white shadow-sm'
+                              ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
                               : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                           }`}
                         >
@@ -759,11 +759,11 @@ export default function ShopPage() {
                     <button
                       onClick={() => setOnlyWishlist(!onlyWishlist)}
                       className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
-                        onlyWishlist ? 'bg-[#2D143D] border border-white/40' : 'bg-white/30'
+                        onlyWishlist ? 'bg-white border border-white/40' : 'bg-white/30'
                       }`}
                     >
                       <span
-                        className={`block w-5 h-5 rounded-full bg-white shadow-md transform transition-transform ${
+                        className={`block w-5 h-5 rounded-full ${onlyWishlist ? 'bg-[#C85DA9]' : 'bg-white'} shadow-md transform transition-transform ${
                           onlyWishlist ? 'translate-x-6' : 'translate-x-0.5'
                         }`}
                       />
@@ -784,7 +784,7 @@ export default function ShopPage() {
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="flex-[2] py-3 bg-[#2D143D] text-white text-xs uppercase tracking-wider font-semibold rounded-none shadow-md hover:bg-[#1A0924] active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/20"
+                className="flex-[2] py-3 bg-white text-[#C85DA9] text-xs uppercase tracking-wider font-bold rounded-none shadow-md hover:bg-white/90 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white"
               >
                 <span>View {filteredProducts.length} Abayas</span>
               </button>

@@ -221,7 +221,7 @@ export default function Navbar() {
               </button>
 
               {currencyDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-44 bg-[#2D143D] text-white rounded-none shadow-2xl border border-white/20 py-1 z-50 animate-fade-in">
+                <div className="absolute right-0 mt-1.5 w-44 bg-[#C85DA9] text-white rounded-none shadow-2xl border border-white/20 py-1 z-50 animate-fade-in">
                   <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-white/70 border-b border-white/15 mb-1">
                     Select Region & Currency
                   </div>
@@ -274,7 +274,7 @@ export default function Navbar() {
                 onClick={() => handleNav('admin')}
                 aria-label="Admin Portal"
                 title="Admin Portal"
-                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-none border border-white/40 text-white hover:bg-white hover:text-[#2D143D] text-[11px] font-semibold tracking-wider uppercase transition-colors cursor-pointer"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-none border border-white/40 text-white hover:bg-white hover:text-[#C85DA9] text-[11px] font-semibold tracking-wider uppercase transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.5} />
                 <span>Admin</span>
@@ -289,7 +289,7 @@ export default function Navbar() {
             >
               <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
               {totalCartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#2D143D] text-white border border-white/30 text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold shadow-xs">
+                <span className="absolute -top-0.5 -right-0.5 bg-white text-[#C85DA9] text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold shadow-xs">
                   {totalCartCount}
                 </span>
               )}
@@ -676,7 +676,7 @@ export default function Navbar() {
                     className="w-full appearance-none bg-[#C85DA9] border border-white/30 rounded-none px-3.5 py-2 text-xs font-semibold text-white focus:outline-none focus:border-white shadow-xs cursor-pointer"
                   >
                     {Object.entries(CURRENCIES).map(([code, item]) => (
-                      <option key={code} value={code} className="bg-[#2D143D] text-white">
+                      <option key={code} value={code} className="bg-[#C85DA9] text-white">
                         {item.flag} {item.name}
                       </option>
                     ))}
@@ -686,7 +686,7 @@ export default function Navbar() {
               </div>
 
               <div className="text-[10px] text-white/80 text-center font-light leading-snug">
-                Complimentary luxury keepsake box & free worldwide tracked delivery.
+                Complimentary luxury keepsake box & bespoke atelier craftsmanship.
               </div>
 
             </div>

@@ -251,7 +251,7 @@ export default function ProductDetailPage() {
             <div className="absolute top-3 right-3 sm:top-3.5 sm:right-3.5 flex items-center gap-1.5 z-10">
               <button
                 onClick={handleShare}
-                className="w-8 h-8 rounded-full bg-white text-[#2D143D] flex items-center justify-center transition-colors hover:bg-white/90 shadow-sm cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white text-[#C85DA9] flex items-center justify-center transition-colors hover:bg-white/90 shadow-sm cursor-pointer"
                 title="Share piece"
                 aria-label="Share link"
               >
@@ -261,13 +261,13 @@ export default function ProductDetailPage() {
                 onClick={() => toggleWishlist(product.id)}
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm ${
                   wishlisted
-                    ? 'bg-[#2D143D] text-white'
-                    : 'bg-white text-[#2D143D] hover:bg-white/90'
+                    ? 'bg-white text-[#C85DA9]'
+                    : 'bg-white text-[#C85DA9] hover:bg-white/90'
                 }`}
                 title="Save to Wishlist"
                 aria-label="Save to Wishlist"
               >
-                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-white' : ''}`} strokeWidth={1.5} />
+                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-[#C85DA9]' : ''}`} strokeWidth={1.5} />
               </button>
             </div>
 
@@ -403,15 +403,15 @@ export default function ProductDetailPage() {
                     onClick={() => setSelectedStyle(styleObj.name)}
                     className={`p-2.5 text-left rounded-none transition-all border flex flex-col justify-between min-h-[58px] cursor-pointer ${
                       isSelected
-                        ? 'bg-[#2D143D] text-white border-[#2D143D] shadow-sm font-bold'
+                        ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
                         : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1">
                       <span className="text-xs uppercase tracking-wide font-medium leading-tight">{styleObj.name}</span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" strokeWidth={2} />}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#C85DA9] shrink-0" strokeWidth={2} />}
                     </div>
-                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-white/80' : 'text-white/60'}`}>
+                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/60'}`}>
                       {styleObj.tag}
                     </span>
                   </button>
@@ -440,15 +440,15 @@ export default function ProductDetailPage() {
                     onClick={() => setSelectedWork(workObj.name)}
                     className={`p-2.5 text-left rounded-none transition-all border flex flex-col justify-between min-h-[58px] cursor-pointer ${
                       isSelected
-                        ? 'bg-[#2D143D] text-white border-[#2D143D] shadow-sm font-bold'
+                        ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
                         : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1">
                       <span className="text-xs uppercase tracking-wide font-medium leading-tight capitalize">{workObj.name}</span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" strokeWidth={2} />}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#C85DA9] shrink-0" strokeWidth={2} />}
                     </div>
-                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-white/80' : 'text-white/60'}`}>
+                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/60'}`}>
                       {workObj.tag}
                     </span>
                   </button>
@@ -526,7 +526,7 @@ export default function ProductDetailPage() {
                     onClick={() => setSelectedSize(s)}
                     className={`px-3 py-2 text-xs font-medium rounded-none text-center transition-all border uppercase tracking-wider cursor-pointer ${
                       selectedSize === s
-                        ? 'bg-[#2D143D] text-white border-[#2D143D] shadow-sm font-bold'
+                        ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
                         : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
                     }`}
                   >
@@ -603,9 +603,9 @@ export default function ProductDetailPage() {
               {/* Add to Bag Button */}
               <button
                 onClick={handleAddToCart}
-                className="btn-primary flex-1 flex items-center justify-center gap-2 !bg-[#2D143D] hover:!bg-[#1A0924] !text-white border border-white/20 shadow-xl cursor-pointer"
+                className="btn-primary flex-1 flex items-center justify-center gap-2 !bg-white hover:!bg-white/90 !text-[#C85DA9] border border-white shadow-xl cursor-pointer font-bold"
               >
-                <ShoppingBag className="w-4 h-4 text-white" strokeWidth={1.5} />
+                <ShoppingBag className="w-4 h-4 text-[#C85DA9]" strokeWidth={1.5} />
                 <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
               </button>
 
@@ -614,9 +614,9 @@ export default function ProductDetailPage() {
             {/* Direct WhatsApp Order Button */}
             <button
               onClick={handleWhatsAppInstantOrder}
-              className="btn-secondary w-full flex items-center justify-center gap-2 !bg-white !text-[#2D143D] hover:!bg-white/90 border border-white shadow-md cursor-pointer font-bold"
+              className="btn-secondary w-full flex items-center justify-center gap-2 !bg-white/20 !text-white hover:!bg-white hover:!text-[#C85DA9] border border-white/40 shadow-md cursor-pointer font-bold"
             >
-              <svg className="w-4 h-4 fill-current shrink-0 text-[#2D143D]" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
               </svg>
               <span>Instant WhatsApp Inquiry & Order</span>
@@ -797,7 +797,7 @@ export default function ProductDetailPage() {
 
             <button
               type="submit"
-              className="px-6 py-2.5 bg-[#2D143D] hover:bg-[#1A0924] text-white text-xs uppercase tracking-widest font-bold rounded-none transition-colors active:scale-95 cursor-pointer shadow-md"
+              className="px-6 py-2.5 bg-white hover:bg-white/90 text-[#C85DA9] text-xs uppercase tracking-widest font-bold rounded-none transition-colors active:scale-95 cursor-pointer shadow-md border border-white"
             >
               Submit Verified Review
             </button>
@@ -874,9 +874,9 @@ export default function ProductDetailPage() {
 
             <button
               onClick={handleAddToCart}
-              className="px-4 py-2.5 bg-[#2D143D] hover:bg-[#1A0924] active:scale-95 text-white text-xs uppercase tracking-wider font-bold rounded-none shadow-md flex items-center gap-1.5 shrink-0 border border-white/20 cursor-pointer"
+              className="px-4 py-2.5 bg-white text-[#C85DA9] hover:bg-white/90 active:scale-95 text-xs uppercase tracking-wider font-bold rounded-none shadow-md flex items-center gap-1.5 shrink-0 border border-white cursor-pointer"
             >
-              <ShoppingBag className="w-3.5 h-3.5" />
+              <ShoppingBag className="w-3.5 h-3.5 text-[#C85DA9]" />
               <span>Add to Bag</span>
             </button>
           </div>

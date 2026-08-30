@@ -70,7 +70,7 @@ function QuickViewModalContent({ product, onClose }) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 rounded-none bg-white text-[#2D143D] border border-white hover:bg-white/90 flex items-center justify-center transition-colors cursor-pointer shadow-md"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 rounded-none bg-white text-[#C85DA9] border border-white hover:bg-white/90 flex items-center justify-center transition-colors cursor-pointer shadow-md"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" strokeWidth={1.5} />
@@ -161,7 +161,7 @@ function QuickViewModalContent({ product, onClose }) {
                       onClick={() => setSelectedStyle(s.name)}
                       className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-medium rounded-none text-left transition-all border leading-tight cursor-pointer ${
                         selectedStyle.toLowerCase() === s.name.toLowerCase()
-                          ? 'bg-[#2D143D] text-white border-[#2D143D] shadow-sm font-bold'
+                          ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
                           : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
                       }`}
                     >
@@ -184,7 +184,7 @@ function QuickViewModalContent({ product, onClose }) {
                       onClick={() => setSelectedWork(w.name)}
                       className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-medium rounded-none text-left transition-all border leading-tight capitalize cursor-pointer ${
                         selectedWork.toLowerCase() === w.name.toLowerCase()
-                          ? 'bg-[#2D143D] text-white border-[#2D143D] shadow-sm font-bold'
+                          ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
                           : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
                       }`}
                     >
@@ -232,7 +232,7 @@ function QuickViewModalContent({ product, onClose }) {
                     className="w-full text-xs py-2 px-2.5 bg-[#B84E99] border border-white/30 rounded-none font-medium focus:outline-none focus:border-white uppercase text-white cursor-pointer"
                   >
                     {product.sizes.map((s) => (
-                      <option key={s} value={s} className="bg-[#2D143D] text-white">
+                      <option key={s} value={s} className="bg-[#C85DA9] text-white">
                         {s}
                       </option>
                     ))}
@@ -279,9 +279,9 @@ function QuickViewModalContent({ product, onClose }) {
               <div className="flex gap-2.5">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 bg-[#2D143D] hover:bg-[#1A0924] text-white text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-white/20 shadow-lg cursor-pointer"
+                  className="flex-1 py-3.5 bg-white hover:bg-white/90 text-[#C85DA9] text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-white shadow-xl cursor-pointer"
                 >
-                  <ShoppingBag className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  <ShoppingBag className="w-4 h-4 text-[#C85DA9]" strokeWidth={1.5} />
                   <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
                 </button>
 
@@ -289,12 +289,12 @@ function QuickViewModalContent({ product, onClose }) {
                   onClick={() => toggleWishlist(product.id)}
                   className={`p-3 border rounded-none transition-colors cursor-pointer ${
                     wishlisted
-                      ? 'bg-white text-[#2D143D] border-white shadow-sm'
+                      ? 'bg-white text-[#C85DA9] border-white shadow-sm'
                       : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
                   }`}
                   aria-label="Wishlist"
                 >
-                  <Heart className={`w-4 h-4 ${wishlisted ? 'fill-[#2D143D]' : ''}`} strokeWidth={1.5} />
+                  <Heart className={`w-4 h-4 ${wishlisted ? 'fill-[#C85DA9] text-[#C85DA9]' : ''}`} strokeWidth={1.5} />
                 </button>
               </div>
 

@@ -13,8 +13,8 @@
     --text-font-weight: 400;
     --text-letter-spacing: 0.02em;
 
-    --color-primary: #2D143D;
-    --color-primary-dark: #1A0924;
+    --color-primary: #C85DA9;
+    --color-primary-dark: #BF509F;
     --color-violet-logo: #D975BD;
     --color-background: #D975BD;
     --color-sand: #C85DA9;
@@ -43,15 +43,15 @@
 
   /* BasicAbaya Global Button Styles */
   .btn-primary {
-    @apply inline-flex items-center justify-center bg-[#2D143D] text-white uppercase text-xs sm:text-sm font-medium tracking-[0.06em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-[#1A0924] hover:opacity-95 active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none shadow-md;
+    @apply inline-flex items-center justify-center bg-white text-[#C85DA9] hover:bg-white/90 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] py-3.5 px-6 rounded-none transition-all duration-200 active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none shadow-md;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center bg-white text-[#2D143D] border border-white uppercase text-xs sm:text-sm font-medium tracking-[0.06em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-[#2D143D] hover:text-white active:scale-[0.99] disabled:opacity-50 shadow-sm;
+    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/50 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#C85DA9] active:scale-[0.99] disabled:opacity-50 shadow-sm;
   }
 
   .btn-sand {
-    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/40 uppercase text-xs sm:text-sm font-medium tracking-[0.06em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#2D143D] active:scale-[0.99];
+    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/40 uppercase text-xs sm:text-sm font-medium tracking-[0.06em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#C85DA9] active:scale-[0.99];
   }
 
   .badge-sale {
@@ -59,7 +59,7 @@
   }
 
   .badge-custom {
-    @apply inline-flex items-center bg-[#2D143D] text-white text-[11px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-none;
+    @apply inline-flex items-center bg-white text-[#C85DA9] text-[11px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-none;
   }
 
   .badge-sand {
@@ -98,12 +98,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #2D143D;
+    background: #C85DA9;
     border-radius: 0px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #1A0924;
+    background: #B84E99;
   }
 }
 
@@ -180,8 +180,8 @@ input[type="range"].luxury-slider::-webkit-slider-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #2D143D;
-  border: 2px solid #FFFFFF;
+  background: #FFFFFF;
+  border: 2px solid #C85DA9;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0,0,0,0.35);
   transition: transform 0.15s ease;
@@ -195,8 +195,8 @@ input[type="range"].luxury-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #2D143D;
-  border: 2px solid #FFFFFF;
+  background: #FFFFFF;
+  border: 2px solid #C85DA9;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0,0,0,0.35);
 }

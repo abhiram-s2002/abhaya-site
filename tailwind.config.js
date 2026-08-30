@@ -24,13 +24,13 @@ export default {
         "brand-surface-subtle": "#FAF4FB",
 
         // App Palette Mappings
-        "primary": "#2D143D",
-        "primary-container": "#1A0924",
+        "primary": "#C85DA9",
+        "primary-container": "#BF509F",
         "on-primary": "#FFFFFF",
         "on-primary-container": "#FFFFFF",
         "secondary": "#FAF4FB",
         "secondary-container": "#C85DA9",
-        "on-secondary": "#2D143D",
+        "on-secondary": "#C85DA9",
         "on-secondary-container": "#FFFFFF",
         "background": "#D975BD",
         "on-background": "#FFFFFF",
@@ -45,7 +45,7 @@ export default {
         "outline": "rgba(255, 255, 255, 0.25)",
         "outline-variant": "rgba(255, 255, 255, 0.15)",
         "royal-violet": "#D975BD", // Exact Logo Violet signature color
-        "plum-deep": "#2D143D",
+        "plum-deep": "#C85DA9",
         "lavender-mist": "#F5EAF7",
         "amethyst-soft": "#E5A8D2",
         "error": "#E32C2B",
