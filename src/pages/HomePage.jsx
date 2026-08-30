@@ -99,21 +99,21 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
 
                   {/* Content over image — bottom-left */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 md:p-16 lg:p-20 max-w-2xl">
+                  <div className="absolute inset-0 flex flex-col justify-end p-6 pb-24 sm:p-10 md:p-16 lg:p-20 max-w-2xl">
                     {slide.badge && (
-                      <span className="inline-block w-fit text-[10px] sm:text-xs tracking-[0.2em] font-medium text-white/90 uppercase mb-2">
+                      <span className="inline-block w-fit text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase mb-2 drop-shadow-sm">
                         {slide.badge}
                       </span>
                     )}
-                    <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-medium uppercase tracking-[0.06em] leading-[1.15] mb-3 drop-shadow-md">
+                    <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-medium uppercase tracking-[0.06em] leading-[1.15] mb-2 sm:mb-3 drop-shadow-lg">
                       {slide.title}
                     </h1>
-                    <p className="text-white/90 text-xs sm:text-sm max-w-md leading-relaxed mb-6 drop-shadow-sm font-normal">
+                    <p className="text-white/90 text-xs sm:text-sm max-w-md leading-relaxed mb-4 sm:mb-6 drop-shadow-md font-normal">
                       {slide.description}
                     </p>
                     <button
                       onClick={() => navigateTo('shop', slide.productId)}
-                      className="btn-primary w-fit !bg-[#D975BD]/90 hover:!bg-[#D975BD] !text-white border-0 shadow-2xl backdrop-blur-md uppercase tracking-[0.16em] font-semibold transition-all duration-300 hover:scale-[1.03] cursor-pointer"
+                      className="inline-flex items-center justify-center w-fit bg-white text-[#2D143D] hover:bg-white/90 uppercase tracking-[0.18em] font-semibold text-xs py-3.5 px-8 shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer rounded-none border border-white"
                     >
                       Shop Now
                     </button>

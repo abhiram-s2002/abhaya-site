@@ -221,8 +221,8 @@ export default function Navbar() {
               </button>
 
               {currencyDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-44 bg-white rounded-none shadow-lg border border-[#E5E5E5] py-1 z-50 animate-fade-in">
-                  <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-[#707070] border-b border-[#E5E5E5] mb-1">
+                <div className="absolute right-0 mt-1.5 w-44 bg-[#2D143D] text-white rounded-none shadow-2xl border border-white/20 py-1 z-50 animate-fade-in">
+                  <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-white/70 border-b border-white/15 mb-1">
                     Select Region & Currency
                   </div>
                   {Object.entries(CURRENCIES).map(([code, item]) => (
@@ -234,14 +234,14 @@ export default function Navbar() {
                         showToast(`Region updated to ${item.name}`);
                       }}
                       className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors cursor-pointer ${
-                        currency === code ? 'bg-[#F5EFE9] font-semibold text-[#1C1C1C]' : 'text-[#1C1C1C] hover:bg-[#F9F9F9]'
+                        currency === code ? 'bg-white/20 font-semibold text-white' : 'text-white/90 hover:bg-white/10'
                       }`}
                     >
                       <span className="flex items-center gap-2">
                         <span className="text-base leading-none">{item.flag}</span>
                         <span className="font-medium leading-tight">{item.name}</span>
                       </span>
-                      {currency === code && <Check className="w-3.5 h-3.5 text-[#1C1C1C] shrink-0" strokeWidth={1.5} />}
+                      {currency === code && <Check className="w-3.5 h-3.5 text-[#FFD700] shrink-0" strokeWidth={1.5} />}
                     </button>
                   ))}
                 </div>
@@ -252,8 +252,8 @@ export default function Navbar() {
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               aria-label="Search"
-              className={`p-1.5 transition-colors cursor-pointer ${
-                isSearchOpen ? 'text-[#1C1C1C]' : 'hover:text-[#707070]'
+              className={`p-1.5 transition-colors cursor-pointer text-white ${
+                isSearchOpen ? 'text-[#FFF0A0]' : 'hover:text-white/80'
               }`}
             >
               <Search className="w-4.5 h-4.5" strokeWidth={1.5} />
@@ -263,7 +263,7 @@ export default function Navbar() {
             <button
               onClick={() => showToast('VIP Patron Portal: Logged in as VIP Member')}
               aria-label="Account"
-              className="hidden sm:block hover:text-[#707070] transition-colors p-1.5"
+              className="hidden sm:block text-white hover:text-white/80 transition-colors p-1.5 cursor-pointer"
             >
               <User className="w-4.5 h-4.5" strokeWidth={1.5} />
             </button>
@@ -274,7 +274,7 @@ export default function Navbar() {
                 onClick={() => handleNav('admin')}
                 aria-label="Admin Portal"
                 title="Admin Portal"
-                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-none border border-[#1C1C1C] text-[#1C1C1C] hover:bg-[#1C1C1C] hover:text-white text-[11px] font-semibold tracking-wider uppercase transition-colors"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-none border border-white/40 text-white hover:bg-white hover:text-[#2D143D] text-[11px] font-semibold tracking-wider uppercase transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.5} />
                 <span>Admin</span>
@@ -285,11 +285,11 @@ export default function Navbar() {
             <button
               onClick={() => setIsCartOpen(true)}
               aria-label="Shopping Bag"
-              className="hover:text-[#707070] transition-colors p-1.5 relative"
+              className="text-white hover:text-white/80 transition-colors p-1.5 relative cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
               {totalCartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#1C1C1C] text-white text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">
+                <span className="absolute -top-0.5 -right-0.5 bg-[#2D143D] text-white border border-white/30 text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold shadow-xs">
                   {totalCartCount}
                 </span>
               )}

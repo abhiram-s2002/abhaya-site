@@ -14,7 +14,7 @@ export default function MobileBottomNav() {
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#D975BD]/95 backdrop-blur-xl border-t border-white/20 shadow-lg pb-safe text-white">
+    <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#D975BD] border-t border-white/20 shadow-lg pb-safe text-white">
       <div className="grid grid-cols-4 h-16 max-w-lg mx-auto items-center px-2">
         
         {/* Home */}

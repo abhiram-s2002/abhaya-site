@@ -35,16 +35,16 @@ export default function AdminFloatingDock() {
     >
       {/* Main Dock Panel */}
       {!collapsed && (
-        <div className="bg-[#1A0F0E] border border-yellow-500/30 rounded-2xl shadow-2xl overflow-hidden animate-fade-in min-w-[220px]">
+        <div className="bg-[#2D143D] border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-fade-in min-w-[220px]">
           {/* Header */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-[#2E1C1A] to-[#3D1F4A] border-b border-white/10">
-            <Crown className="w-3.5 h-3.5 text-yellow-400" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-300/90">
+          <div className="flex items-center gap-2 px-4 py-3 bg-[#1A0924] border-b border-white/10">
+            <Crown className="w-3.5 h-3.5 text-[#FFD700]" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFF0A0]">
               Admin Controls
             </span>
             <span className="ml-auto flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-[9px] text-green-400 font-semibold">LIVE</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[9px] text-emerald-400 font-semibold">LIVE</span>
             </span>
           </div>
 
@@ -75,7 +75,7 @@ export default function AdminFloatingDock() {
             {/* Quick CMS shortcuts when edit mode on */}
             {isAdminEditMode && (
               <div className="space-y-1 pt-1 border-t border-white/10">
-                <p className="text-[9px] uppercase tracking-widest text-white/30 px-3 pt-1">Quick Edit</p>
+                <p className="text-[9px] uppercase tracking-widest text-white/40 px-3 pt-1">Quick Edit</p>
                 {[
                   { key: 'announcement', label: '📢 Announcement Bar' },
                   { key: 'hero_slides', label: '🖼️ Hero Carousel' },
@@ -132,12 +132,12 @@ export default function AdminFloatingDock() {
         className={`flex items-center gap-2 px-4 py-2.5 rounded-full shadow-2xl font-sans font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
           isAdminEditMode
             ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-300'
-            : 'bg-[#2E1C1A] text-white/90 hover:bg-[#3D1F4A] border border-yellow-500/20'
+            : 'bg-[#D975BD] text-white hover:bg-[#CF6EB2] border border-white/40 shadow-lg'
         }`}
         title={collapsed ? 'Expand Admin Dock' : 'Minimize Admin Dock'}
         aria-expanded={!collapsed}
       >
-        <Crown className="w-3.5 h-3.5" />
+        <Crown className="w-3.5 h-3.5 text-[#FFF0A0]" />
         <span>{collapsed ? 'Admin' : 'Minimize'}</span>
         {collapsed ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
       </button>
