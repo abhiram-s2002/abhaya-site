@@ -113,7 +113,7 @@ export default function HomePage() {
                     </p>
                     <button
                       onClick={() => navigateTo('shop', slide.productId)}
-                      className="btn-primary w-fit !bg-white !text-[#2D143D] hover:!bg-[#2D143D] hover:!text-white border border-white"
+                      className="btn-primary w-fit !bg-[#D975BD] !text-white hover:!bg-[#C85DA9] border border-white/60 shadow-xl uppercase tracking-[0.14em] font-bold cursor-pointer"
                     >
                       Shop Now
                     </button>
@@ -128,17 +128,17 @@ export default function HomePage() {
             <>
               <button
                 onClick={prevSlide}
-                className="cursor-pointer absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/30 backdrop-blur-md hover:bg-white text-black rounded-none flex items-center justify-center transition-all"
+                className="cursor-pointer absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#D975BD]/80 backdrop-blur-md hover:bg-[#D975BD] text-white border border-white/40 rounded-none flex items-center justify-center transition-all shadow-lg"
                 aria-label="Previous slide"
               >
-                <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
+                <ChevronLeft className="w-5 h-5 text-white" strokeWidth={2} />
               </button>
               <button
                 onClick={nextSlide}
-                className="cursor-pointer absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/30 backdrop-blur-md hover:bg-white text-black rounded-none flex items-center justify-center transition-all"
+                className="cursor-pointer absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#D975BD]/80 backdrop-blur-md hover:bg-[#D975BD] text-white border border-white/40 rounded-none flex items-center justify-center transition-all shadow-lg"
                 aria-label="Next slide"
               >
-                <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
+                <ChevronRight className="w-5 h-5 text-white" strokeWidth={2} />
               </button>
             </>
           )}
@@ -151,10 +151,10 @@ export default function HomePage() {
                   key={i}
                   onClick={() => setCurrentSlide(i)}
                   aria-label={`Go to slide ${i + 1}`}
-                  className={`cursor-pointer h-[2px] transition-all duration-300 ${
+                  className={`cursor-pointer h-[3px] transition-all duration-300 ${
                     currentSlide === i
-                      ? 'w-8 bg-white'
-                      : 'w-3 bg-white/40 hover:bg-white/70'
+                      ? 'w-8 bg-[#D975BD] ring-1 ring-white/60'
+                      : 'w-3 bg-white/50 hover:bg-white/90'
                   }`}
                 />
               ))}

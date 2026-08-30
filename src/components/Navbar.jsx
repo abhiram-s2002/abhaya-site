@@ -366,7 +366,7 @@ export default function Navbar() {
       )}
 
       {/* ========================================================================= */}
-      {/* FULL LUXURY NAVIGATION DRAWER (Exact CasBasics & Luxury Boutique Layout) */}
+      {/* FULL LUXURY NAVIGATION DRAWER (Logo Violet Edition) */}
       {/* ========================================================================= */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex">
@@ -377,10 +377,10 @@ export default function Navbar() {
           />
 
           {/* Drawer Panel */}
-          <div className="relative flex flex-col w-[85%] max-w-sm bg-[#fcfaf7] h-full shadow-2xl z-10 overflow-hidden animate-slide-in-left">
+          <div className="relative flex flex-col w-[85%] max-w-sm bg-[#C85DA9] text-white h-full shadow-2xl z-10 overflow-hidden animate-slide-in-left border-r border-white/20">
             
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-stone-200/80 bg-white">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-white/20 bg-[#C85DA9]">
               <button
                 onClick={() => { handleNav('home'); setMobileMenuOpen(false); }}
                 className="flex items-center gap-2.5 text-left focus:outline-none"
@@ -389,20 +389,20 @@ export default function Navbar() {
                 <img
                   src={brandLogo}
                   alt="NOOR AL DHUHA Logo"
-                  className="h-9 w-auto object-contain"
+                  className="h-9 w-auto object-contain brightness-200"
                 />
                 <div className="flex flex-col">
-                  <span className="font-serif text-sm sm:text-base tracking-[0.16em] font-semibold text-[#2E1C1A] leading-tight">
+                  <span className="font-serif text-sm sm:text-base tracking-[0.16em] font-semibold text-white leading-tight">
                     NOOR AL DHUHA
                   </span>
-                  <span className="text-[7px] tracking-[0.28em] text-stone-500 uppercase font-light">
+                  <span className="text-[7px] tracking-[0.28em] text-white/80 uppercase font-light">
                     DUBAI HAUTE COUTURE
                   </span>
                 </div>
               </button>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-full text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition-colors"
+                className="p-2 rounded-full text-white hover:bg-white/15 transition-colors"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />
@@ -410,63 +410,63 @@ export default function Navbar() {
             </div>
 
             {/* Scrollable Navigation Body */}
-            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5 divide-y divide-[#E5E5E5] text-sm">
+            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5 divide-y divide-white/20 text-sm">
               
               {/* Accordion 1: SHOP BY CATEGORY */}
               <div className="pt-1">
                 <button
                   onClick={() => toggleAccordion('category')}
-                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-[#1C1C1C] py-1 hover:text-[#707070] transition-colors"
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors"
                 >
                   <span>Shop by Category</span>
                   {openAccordions.category ? (
-                    <Minus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   ) : (
-                    <Plus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   )}
                 </button>
 
                 {openAccordions.category && (
-                  <div className="mt-2.5 pl-3 space-y-2 border-l border-[#E5E5E5] animate-fade-in">
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Open abaya')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Open Abaya
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Closed cut')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Closed Cut
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Butterfly cut')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Butterfly / Farasha Cut
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Kimono & Kaftan')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Kimono & Kaftan
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, '2-Piece set')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       2-Piece Abaya Set
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, 'Batwing')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Batwing Silhouette
                     </button>
                     <button
                       onClick={() => handleNav('collections')}
-                      className="block w-full text-left py-1 text-xs text-[#1C1C1C] font-semibold hover:text-[#707070] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide"
                     >
                       View All Categories
                     </button>
@@ -478,57 +478,57 @@ export default function Navbar() {
               <div className="pt-4">
                 <button
                   onClick={() => toggleAccordion('work')}
-                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-[#1C1C1C] py-1 hover:text-[#707070] transition-colors"
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors"
                 >
                   <span>Shop by Work</span>
                   {openAccordions.work ? (
-                    <Minus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   ) : (
-                    <Plus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   )}
                 </button>
 
                 {openAccordions.work && (
-                  <div className="mt-2.5 pl-3 space-y-2 border-l border-[#E5E5E5] animate-fade-in">
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
                     <button
                       onClick={() => handleNav('shop', null, null, null, null, 'Handwork')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Handwork Embroidery
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, null, 'Stonework')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Stonework & Crystal Detailing
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, null, 'Embroidery')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Artisanal Thread Embroidery
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, null, 'Cutwork')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Cutwork & French Seam
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, null, 'Pearl detailing')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Pearl Detailing
                     </button>
                     <button
                       onClick={() => handleNav('shop', null, null, null, null, 'Plain / Minimal')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Minimalist Plain Atelier
                     </button>
                     <button
                       onClick={() => handleNav('collections')}
-                      className="block w-full text-left py-1 text-xs text-[#1C1C1C] font-semibold hover:text-[#707070] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide"
                     >
                       View All Work Styles
                     </button>
@@ -540,33 +540,33 @@ export default function Navbar() {
               <div className="pt-4">
                 <button
                   onClick={() => toggleAccordion('about')}
-                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-[#1C1C1C] py-1 hover:text-[#707070] transition-colors"
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors"
                 >
                   <span>Our Story & Atelier</span>
                   {openAccordions.about ? (
-                    <Minus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   ) : (
-                    <Plus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   )}
                 </button>
 
                 {openAccordions.about && (
-                  <div className="mt-2.5 pl-3 space-y-2 border-l border-[#E5E5E5] animate-fade-in text-xs text-[#707070]">
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in text-xs text-white/85">
                     <button
                       onClick={() => handleNav('story')}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Our Story & Dubai Atelier
                     </button>
                     <button
                       onClick={() => handleNav('story')}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Mulberry Silk Certification & Ethics
                     </button>
                     <button
                       onClick={() => handleNav('story')}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Master Artisans & Handwork Heritage
                     </button>
@@ -578,42 +578,42 @@ export default function Navbar() {
               <div className="pt-4 pb-2">
                 <button
                   onClick={() => toggleAccordion('help')}
-                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-[#1C1C1C] py-1 hover:text-[#707070] transition-colors"
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors"
                 >
                   <span>Help Center</span>
                   {openAccordions.help ? (
-                    <Minus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   ) : (
-                    <Plus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   )}
                 </button>
 
                 {openAccordions.help && (
-                  <div className="mt-2.5 pl-3 space-y-2 border-l border-[#E5E5E5] animate-fade-in text-xs text-[#707070]">
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in text-xs text-white/85">
                     <button
                       onClick={() => {
                         setMobileMenuOpen(false);
                         openWhatsApp('Salam / Hello! I would like to speak with the NOOR AL DHUHA Atelier concierge.');
                       }}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       WhatsApp Concierge ({WHATSAPP_PHONE_DISPLAY})
                     </button>
                     <button
                       onClick={() => handleNav('offers')}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Atelier Privileges & Gifting
                     </button>
                     <button
                       onClick={() => handleNav('refund-policy')}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Returns & Exchanges Policy
                     </button>
                     <button
                       onClick={() => handleNav('terms')}
-                      className="block w-full text-left py-1 hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                      className="block w-full text-left py-1 hover:text-white transition-colors uppercase tracking-wide"
                     >
                       Terms of Service & Privacy
                     </button>
@@ -623,40 +623,40 @@ export default function Navbar() {
 
             </div>
 
-            {/* Drawer Footer: Account & Currency Selector (Exact Screenshot Style) */}
-            <div className="p-6 bg-stone-100/90 border-t border-stone-200/80 space-y-4">
+            {/* Drawer Footer: Account & Currency Selector */}
+            <div className="p-6 bg-[#B84E99] border-t border-white/20 space-y-4 text-white">
               
               {/* Account Links */}
-              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-stone-800">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white">
                 <button
                   onClick={() => showToast('VIP Patron Portal Login')}
-                  className="hover:text-royal-violet transition-colors"
+                  className="hover:text-white/80 transition-colors"
                 >
                   Log In
                 </button>
-                <span className="text-stone-300">|</span>
+                <span className="text-white/40">|</span>
                 <button
                   onClick={() => showToast('VIP Registration opened')}
-                  className="hover:text-royal-violet transition-colors"
+                  className="hover:text-white/80 transition-colors"
                 >
                   Create Account
                 </button>
-                <span className="text-stone-300">|</span>
+                <span className="text-white/40">|</span>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     setIsSearchOpen(true);
                   }}
-                  className="hover:text-royal-violet transition-colors flex items-center gap-1"
+                  className="hover:text-white/80 transition-colors flex items-center gap-1"
                 >
                   <Search className="w-3.5 h-3.5" />
                   <span>Search</span>
                 </button>
-                <span className="text-stone-300">|</span>
+                <span className="text-white/40">|</span>
                 {adminEnabled && (
                   <button
                     onClick={() => handleNav('admin')}
-                    className="text-royal-violet font-semibold hover:text-primary transition-colors flex items-center gap-1"
+                    className="text-white font-semibold hover:text-white/80 transition-colors flex items-center gap-1"
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
                     <span>Admin</span>
@@ -664,8 +664,8 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Currency Selector (Matches screenshot: [Flag] INR v) */}
-              <div className="pt-2 border-t border-stone-200 flex items-center justify-between">
+              {/* Currency Selector */}
+              <div className="pt-2 border-t border-white/20 flex items-center justify-between">
                 <div className="relative w-full">
                   <select
                     value={currency}
@@ -673,19 +673,19 @@ export default function Navbar() {
                       setCurrency(e.target.value);
                       showToast(`Region updated to ${CURRENCIES[e.target.value]?.name}`);
                     }}
-                    className="w-full appearance-none bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-stone-500 shadow-xs cursor-pointer"
+                    className="w-full appearance-none bg-[#C85DA9] border border-white/30 rounded-none px-3.5 py-2 text-xs font-semibold text-white focus:outline-none focus:border-white shadow-xs cursor-pointer"
                   >
                     {Object.entries(CURRENCIES).map(([code, item]) => (
-                      <option key={code} value={code}>
+                      <option key={code} value={code} className="bg-[#2D143D] text-white">
                         {item.flag} {item.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-stone-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-white absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
-              <div className="text-[10px] text-stone-500 text-center font-light leading-snug">
+              <div className="text-[10px] text-white/80 text-center font-light leading-snug">
                 Complimentary luxury keepsake box & free worldwide tracked delivery.
               </div>
 
