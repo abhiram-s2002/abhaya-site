@@ -71,7 +71,7 @@ export default function MobileBottomNav() {
           <div className="relative">
             <ShoppingBag className="w-5 h-5" strokeWidth={1.4} />
             {totalCartCount > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-white text-[#2D143D] text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold shadow-xs">
+              <span className="absolute -top-1.5 -right-2 bg-white text-[#C85DA9] text-[10px] min-w-[16px] h-[16px] px-0.5 rounded-full flex items-center justify-center font-bold shadow-xs leading-none">
                 {totalCartCount}
               </span>
             )}

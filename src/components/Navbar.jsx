@@ -283,7 +283,7 @@ export default function Navbar() {
             >
               <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
               {totalCartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-white text-[#C85DA9] text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold shadow-xs">
+                <span className="absolute -top-1 -right-1.5 bg-white text-[#C85DA9] text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-bold shadow-sm leading-none">
                   {totalCartCount}
                 </span>
               )}
