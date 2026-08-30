@@ -112,26 +112,63 @@ export default function CollectionsPage() {
   useEffect(() => {
     if (selectedStyleFilter && selectedStyleFilter !== 'All') {
       setSelectedStyles([selectedStyleFilter]);
+    } else if (selectedStyleFilter === 'All' || selectedStyleFilter === null) {
+      setSelectedStyles([]);
     }
   }, [selectedStyleFilter]);
 
   useEffect(() => {
     if (selectedWorkFilter && selectedWorkFilter !== 'All') {
       setSelectedWorks([selectedWorkFilter]);
+    } else if (selectedWorkFilter === 'All' || selectedWorkFilter === null) {
+      setSelectedWorks([]);
     }
   }, [selectedWorkFilter]);
 
   useEffect(() => {
     if (selectedCategoryFilter && selectedCategoryFilter !== 'All') {
       setSelectedFabrics([selectedCategoryFilter]);
+    } else if (selectedCategoryFilter === 'All' || selectedCategoryFilter === null) {
+      setSelectedFabrics([]);
     }
   }, [selectedCategoryFilter]);
 
   useEffect(() => {
     if (selectedColorFilter && selectedColorFilter !== 'All') {
       setSelectedColors([selectedColorFilter]);
+    } else if (selectedColorFilter === 'All' || selectedColorFilter === null) {
+      setSelectedColors([]);
     }
   }, [selectedColorFilter]);
+
+  // Dynamic Page Title
+  const pageTitle = useMemo(() => {
+    if (searchQuery && searchQuery.trim() !== '') {
+      return searchQuery;
+    }
+    if (selectedStyles.length === 1) {
+      return selectedStyles[0];
+    }
+    if (selectedStyles.length > 1) {
+      return selectedStyles.join(' & ');
+    }
+    if (selectedWorks.length === 1) {
+      return selectedWorks[0];
+    }
+    if (selectedWorks.length > 1) {
+      return selectedWorks.join(' & ');
+    }
+    if (selectedFabrics.length === 1) {
+      return selectedFabrics[0];
+    }
+    if (selectedFabrics.length > 1) {
+      return selectedFabrics.join(' & ');
+    }
+    if (selectedColors.length === 1) {
+      return `${selectedColors[0]} Abayas`;
+    }
+    return 'SHOP';
+  }, [searchQuery, selectedStyles, selectedWorks, selectedFabrics, selectedColors]);
 
   // Handle Sort Menu Outside Click
   useEffect(() => {
@@ -316,9 +353,9 @@ export default function CollectionsPage() {
       
       {/* 1. Header Banner */}
       <div className="pt-6 pb-4 sm:pt-8 sm:pb-5 px-4 max-w-7xl mx-auto text-center">
-        {/* Collection Title */}
+        {/* Collection Title / Dynamic search or filter term */}
         <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-[#1C1C1C]">
-          SHOP
+          {pageTitle}
         </h1>
       </div>
 
@@ -440,100 +477,7 @@ export default function CollectionsPage() {
         </div>
       </div>
 
-      {/* 3. Active Filter Chips Bar */}
-      {activeFiltersCount > 0 && (
-        <div className="bg-[#FAF8F5] border-b border-[#E5E5E5] px-4 sm:px-8 py-2.5">
-          <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-2">
-            <span className="text-[11px] uppercase tracking-wider text-[#707070] font-semibold mr-1">
-              Active:
-            </span>
-
-            {selectedStyles.map((item) => (
-              <button
-                key={`style-${item}`}
-                onClick={() => toggleItem(selectedStyles, setSelectedStyles, item)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>Cut: {item}</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            ))}
-
-            {selectedWorks.map((item) => (
-              <button
-                key={`work-${item}`}
-                onClick={() => toggleItem(selectedWorks, setSelectedWorks, item)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>Work: {item}</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            ))}
-
-            {selectedFabrics.map((item) => (
-              <button
-                key={`fab-${item}`}
-                onClick={() => toggleItem(selectedFabrics, setSelectedFabrics, item)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>Fabric: {item}</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            ))}
-
-            {selectedColors.map((item) => (
-              <button
-                key={`col-${item}`}
-                onClick={() => toggleItem(selectedColors, setSelectedColors, item)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>Color: {item}</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            ))}
-
-            {selectedSizes.map((item) => (
-              <button
-                key={`size-${item}`}
-                onClick={() => toggleItem(selectedSizes, setSelectedSizes, item)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>Size: {item}</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            ))}
-
-            {onlyInStock && (
-              <button
-                onClick={() => setOnlyInStock(false)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>In Stock Only</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            )}
-
-            {priceRange < maxPriceLimit && (
-              <button
-                onClick={() => setPriceRange(maxPriceLimit)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
-              >
-                <span>Max: {formatPrice(priceRange)}</span>
-                <X className="w-3 h-3 text-[#707070]" />
-              </button>
-            )}
-
-            <button
-              onClick={clearAllFilters}
-              className="text-[11px] uppercase tracking-wider text-[#707070] hover:text-[#1C1C1C] underline font-semibold ml-2 cursor-pointer"
-            >
-              Clear all
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* 4. Main Products Grid */}
+      {/* 3. Main Products Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8">
         {filteredProducts.length > 0 ? (
           <div
