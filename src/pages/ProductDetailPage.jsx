@@ -19,12 +19,25 @@ import {
   Scissors,
   Layers,
   Sparkle,
-  Info
+  Info,
+  Maximize2,
+  X,
+  Ruler,
+  Globe,
+  Award,
+  Flame,
+  MessageCircle,
+  HelpCircle
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import ProductCard from '../components/ProductCard';
 import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../data/products';
 import { formatSingleProductWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
+
+// Standard Abaya Lengths matching basicabaya.com
+const ABAYA_LENGTHS = [
+  '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60'
+];
 
 export default function ProductDetailPage() {
   const {
@@ -35,47 +48,66 @@ export default function ProductDetailPage() {
     toggleWishlist,
     isWishlisted,
     navigateTo,
-    showToast
+    showToast,
+    currency
   } = useShop();
 
   const product = PRODUCTS.find((p) => p.id === selectedProductId) || PRODUCTS[0];
 
-  const [selectedColorIdx, setSelectedColorIdx] = useState(0);
+  // Options state mirroring basicabaya.com
+  const [selectedLength, setSelectedLength] = useState('54');
+  const [hasButtons, setHasButtons] = useState('No'); // 'No' | 'Yes'
+  const [sizeType, setSizeType] = useState('Free size'); // 'Free size' | 'Custom'
+  const [customNotes, setCustomNotes] = useState('');
   const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
   const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+
+  // Gallery & Purchase states
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showStickyBar, setShowStickyBar] = useState(false);
-  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [showSizeGuideModal, setShowSizeGuideModal] = useState(false);
+  const [showLightboxModal, setShowLightboxModal] = useState(false);
+  const [isAddedAnimation, setIsAddedAnimation] = useState(false);
   const buyBoxRef = useRef(null);
+  const reviewsSectionRef = useRef(null);
 
-  // Accordion state
+  // Accordion state (Prestige / Basic Abaya layout)
   const [openAccordions, setOpenAccordions] = useState({
-    customization: true,
-    fabric: false,
-    styling: false,
-    care: false,
-    shipping: false,
+    description: true,
+    sizeChart: false,
+    deliveryReturn: false,
+    garmentCare: false,
   });
 
-  // Review submission state
+  // Customer Reviews state (Judge.me style)
   const [reviewsList, setReviewsList] = useState([
     {
       id: 1,
-      author: 'Amina B. (London)',
+      author: 'Hissa A.',
+      location: 'Dubai, UAE',
       rating: 5,
-      date: 'Verified Buyer • 4 days ago',
-      title: 'Bespoke fit in Butterfly cut with Stonework',
-      comment: 'I ordered the Royal Violet with Farasha cut and Stonework. The drape flows like liquid silk and the crystals catch the ambient light so elegantly without being loud.'
+      date: 'Verified Buyer • 3 days ago',
+      title: 'Flawless Tafetta Drape',
+      comment: 'Love it .. Thanks! The fabric quality is immaculate and the cut is modest yet supremely elegant. The drape flows effortlessly.'
     },
     {
       id: 2,
-      author: 'Fatima Z. (Dubai)',
+      author: 'Fatima Z.',
+      location: 'Abu Dhabi, UAE',
+      rating: 5,
+      date: 'Verified Buyer • 1 week ago',
+      title: 'As advertised. Supreme Quality',
+      comment: 'As advertised. Good quality tafetta and candy crepe lining. Perfect length 54, sleeves are tailored just right.'
+    },
+    {
+      id: 3,
+      author: 'Mariam K.',
+      location: 'Riyadh, KSA',
       rating: 5,
       date: 'Verified Buyer • 2 weeks ago',
-      title: '2-Piece set with inner is unmatched luxury',
-      comment: 'Arrived in the signature violet keepsake box. The 2-piece open cut with matching slip is effortlessly chic for formal events. Ordering the Espresso shade next.'
+      title: 'Bespoke fit & fast delivery',
+      comment: 'Arrived in the signature keepsake box in under 3 days to Riyadh. The stitching detail along the cuffs is pure couture.'
     }
   ]);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -85,10 +117,12 @@ export default function ProductDetailPage() {
   const [newReviewRating, setNewReviewRating] = useState(5);
 
   useEffect(() => {
-    setSelectedColorIdx(0);
+    setSelectedLength('54');
+    setHasButtons('No');
+    setSizeType('Free size');
+    setCustomNotes('');
     setSelectedStyle(product.defaultStyle || ABAYA_STYLES[0].name);
     setSelectedWork(product.defaultWork || ABAYA_WORKS[0].name);
-    setSelectedSize(product.sizes[0]);
     setActiveImageIdx(0);
     setQuantity(1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -99,26 +133,17 @@ export default function ProductDetailPage() {
     const handleScroll = () => {
       if (buyBoxRef.current) {
         const rect = buyBoxRef.current.getBoundingClientRect();
-        setShowStickyBar(rect.bottom < 120);
+        setShowStickyBar(rect.bottom < 100);
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const currentColor = product.colors[selectedColorIdx] || product.colors[0];
+  const currentColor = product.colors?.[0] || { name: 'Standard', hex: '#1C1C1C' };
   const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
   const wishlisted = isWishlisted(product.id);
-
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
-
-  const handleColorChange = (idx) => {
-    setSelectedColorIdx(idx);
-    const colorObj = product.colors[idx];
-    if (colorObj && colorObj.imageIndex !== undefined && images[colorObj.imageIndex]) {
-      setActiveImageIdx(colorObj.imageIndex);
-    }
-  };
 
   const nextImage = () => {
     setActiveImageIdx((prev) => (prev + 1) % images.length);
@@ -128,37 +153,47 @@ export default function ProductDetailPage() {
     setActiveImageIdx((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const [customMeasurements, setCustomMeasurements] = useState({ height: '', bust: '', length: '' });
-
   const toggleAccordion = (key) => {
     setOpenAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const scrollToReviews = () => {
+    if (reviewsSectionRef.current) {
+      reviewsSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleAddToCart = () => {
-    const isCustom = selectedSize.toLowerCase().includes('custom');
+    const isCustom = sizeType === 'Custom';
+    const chosenSizeFormatted = `${sizeType} - Length ${selectedLength}" - Buttons: ${hasButtons}`;
+    
     addToCart(
       product,
       currentColor.name,
       currentColor.hex,
-      selectedSize,
+      chosenSizeFormatted,
       quantity,
       images[activeImageIdx],
       selectedStyle,
       selectedWork,
-      isCustom ? customMeasurements : null
+      isCustom ? { customDetails: customNotes, length: selectedLength, buttons: hasButtons } : null
     );
+
+    setIsAddedAnimation(true);
+    setTimeout(() => setIsAddedAnimation(false), 2000);
   };
 
   const handleWhatsAppInstantOrder = () => {
-    const isCustom = selectedSize.toLowerCase().includes('custom');
+    const isCustom = sizeType === 'Custom';
+    const chosenSizeFormatted = `${sizeType} (Length: ${selectedLength}", Buttons: ${hasButtons})`;
     const msg = formatSingleProductWhatsAppMessage({
       product,
       colorName: currentColor.name,
-      size: selectedSize,
+      size: chosenSizeFormatted,
       style: selectedStyle,
       work: selectedWork,
       quantity,
-      customMeasurements: isCustom ? customMeasurements : null,
+      customMeasurements: isCustom ? { customDetails: customNotes, length: selectedLength, buttons: hasButtons } : null,
       formatPrice
     });
     showToast(`Opening WhatsApp order for "${product.name}"...`);
@@ -178,9 +213,10 @@ export default function ProductDetailPage() {
     const newEntry = {
       id: Date.now(),
       author: newReviewAuthor,
+      location: 'Verified Buyer',
       rating: newReviewRating,
       date: 'Verified Buyer • Just now',
-      title: newReviewTitle || 'Magnificent bespoke quality',
+      title: newReviewTitle || 'Exquisite Abaya Quality',
       comment: newReviewComment
     };
     setReviewsList([newEntry, ...reviewsList]);
@@ -191,68 +227,76 @@ export default function ProductDetailPage() {
     showToast('Thank you! Your verified review has been published.');
   };
 
-  const currentStyleObj = ABAYA_STYLES.find(s => s.name.toLowerCase() === selectedStyle.toLowerCase()) || ABAYA_STYLES[0];
-  const currentWorkObj = ABAYA_WORKS.find(w => w.name.toLowerCase() === selectedWork.toLowerCase()) || ABAYA_WORKS[0];
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-10 sm:space-y-16 animate-fade-in pb-28 lg:pb-16 text-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-10 sm:space-y-16 animate-fade-in pb-28 lg:pb-16 text-white">
       
-      {/* Breadcrumbs */}
-      <nav className="flex items-center space-x-1.5 sm:space-x-2 text-[11px] sm:text-xs uppercase tracking-widest text-white/80 overflow-x-auto no-scrollbar py-1">
+      {/* 1. Breadcrumbs Navigation */}
+      <nav className="flex items-center space-x-2 text-[11px] sm:text-xs uppercase tracking-widest text-white/75 overflow-x-auto no-scrollbar py-1">
         <button onClick={() => navigateTo('home')} className="hover:text-white transition-colors shrink-0 cursor-pointer">
           Home
         </button>
-        <span>/</span>
+        <span className="text-white/40">/</span>
         <button onClick={() => navigateTo('shop')} className="hover:text-white transition-colors shrink-0 cursor-pointer">
-          Abaya Boutique
+          Abayas
         </button>
-        <span>/</span>
+        <span className="text-white/40">/</span>
         <button
           onClick={() => navigateTo('shop', null, product.category)}
           className="hover:text-white transition-colors text-white font-medium shrink-0 cursor-pointer"
         >
           {product.category}
         </button>
-        <span>/</span>
-        <span className="text-white font-bold truncate max-w-[150px] sm:max-w-none">
+        <span className="text-white/40">/</span>
+        <span className="text-white font-bold truncate max-w-[200px] sm:max-w-none">
           {product.name}
         </span>
       </nav>
 
-      {/* Main Product Presentation */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      {/* 2. Main 2-Column Product Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
         
-        {/* Gallery Column (Desktop: 6 cols) */}
-        <div className="lg:col-span-6 space-y-3 sm:space-y-4 lg:sticky lg:top-24">
+        {/* ========================================================================= */}
+        {/* LEFT COLUMN: PRODUCT GALLERY (Prestige Stacked / Lightbox)                */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-6 space-y-4 lg:sticky lg:top-24">
           
-          {/* Main Large Image Display */}
-          <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-black/10 rounded-none overflow-hidden shadow-md">
+          {/* Main Large Image Container */}
+          <div className="relative aspect-[3/4] bg-black/15 overflow-hidden shadow-md group">
             <img
               src={images[activeImageIdx] || images[0]}
-              alt={`${product.name} - ${currentColor.name}`}
-              className="w-full h-full object-cover transition-all duration-300"
+              alt={product.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02] cursor-zoom-in"
+              onClick={() => setShowLightboxModal(true)}
             />
 
             {/* Badges Overlay */}
-            <div className="absolute top-3 left-3 sm:top-3.5 sm:left-3.5 flex flex-col gap-1.5 z-10 pointer-events-none">
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
               {product.badge && (
-                <span className="badge-custom">
+                <span className="badge-custom text-[10px] tracking-widest">
                   {product.badge}
                 </span>
               )}
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="badge-sale bg-[#E32C2B] text-white text-[9px] px-2 py-0.5 uppercase tracking-wider font-semibold">
+                <span className="badge-sale text-[10px] tracking-widest">
                   Sale
                 </span>
               )}
             </div>
 
-            {/* Top Right Actions */}
-            <div className="absolute top-3 right-3 sm:top-3.5 sm:right-3.5 flex items-center gap-1.5 z-10">
+            {/* Top Right Quick Actions (Share & Lightbox Zoom & Wishlist) */}
+            <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+              <button
+                onClick={() => setShowLightboxModal(true)}
+                className="w-8 h-8 rounded-full bg-white text-[#C85DA9] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
+                title="Zoom picture"
+                aria-label="Zoom image"
+              >
+                <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </button>
               <button
                 onClick={handleShare}
-                className="w-8 h-8 rounded-full bg-white text-[#C85DA9] flex items-center justify-center transition-colors hover:bg-white/90 shadow-sm cursor-pointer"
-                title="Share piece"
+                className="w-8 h-8 rounded-full bg-white text-[#C85DA9] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
+                title="Share product"
                 aria-label="Share link"
               >
                 <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -275,18 +319,18 @@ export default function ProductDetailPage() {
             {images.length > 1 && (
               <div className="sm:hidden absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none z-10">
                 <button
-                  onClick={prevImage}
-                  className="w-8 h-8 rounded-none bg-[#D975BD]/90 text-white border border-white/40 flex items-center justify-center pointer-events-auto shadow-md"
+                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                  className="w-8 h-8 rounded-none bg-black/60 text-white border border-white/30 flex items-center justify-center pointer-events-auto shadow-md"
                   aria-label="Previous image"
                 >
-                  <ChevronLeft className="w-4 h-4 text-white" strokeWidth={2} />
+                  <ChevronLeft className="w-4 h-4" strokeWidth={2} />
                 </button>
                 <button
-                  onClick={nextImage}
-                  className="w-8 h-8 rounded-none bg-[#D975BD]/90 text-white border border-white/40 flex items-center justify-center pointer-events-auto shadow-md"
+                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                  className="w-8 h-8 rounded-none bg-black/60 text-white border border-white/30 flex items-center justify-center pointer-events-auto shadow-md"
                   aria-label="Next image"
                 >
-                  <ChevronRight className="w-4 h-4 text-white" strokeWidth={2} />
+                  <ChevronRight className="w-4 h-4" strokeWidth={2} />
                 </button>
               </div>
             )}
@@ -297,29 +341,28 @@ export default function ProductDetailPage() {
                 {images.map((_, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setActiveImageIdx(idx)}
+                    onClick={(e) => { e.stopPropagation(); setActiveImageIdx(idx); }}
                     className={`h-1 transition-all ${
                       activeImageIdx === idx ? 'w-6 bg-white' : 'w-2 bg-white/40'
                     }`}
-                    aria-label={`Go to slide ${idx + 1}`}
+                    aria-label={`Slide ${idx + 1}`}
                   />
                 ))}
               </div>
             )}
-
           </div>
 
           {/* Multi-angle Thumbnails Carousel */}
           {images.length > 1 && (
-            <div className="flex gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1">
+            <div className="flex gap-2.5 overflow-x-auto no-scrollbar py-1">
               {images.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveImageIdx(idx)}
-                  className={`w-16 h-20 sm:w-20 sm:h-24 rounded-none overflow-hidden border transition-all shrink-0 cursor-pointer ${
+                  className={`w-16 h-20 sm:w-20 sm:h-24 overflow-hidden border transition-all shrink-0 cursor-pointer ${
                     activeImageIdx === idx
                       ? 'border-white ring-2 ring-white'
-                      : 'border-white/30 opacity-70 hover:opacity-100'
+                      : 'border-white/25 opacity-70 hover:opacity-100'
                   }`}
                 >
                   <img src={img} alt="" className="w-full h-full object-cover" />
@@ -328,22 +371,12 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Quick Value Points */}
-          <div className="grid grid-cols-2 gap-2 pt-1 text-[11px] text-white/90 uppercase tracking-wider">
-            <div className="flex items-center gap-2 p-2.5 bg-[#C85DA9] border border-white/20">
-              <Truck className="w-4 h-4 text-white shrink-0" strokeWidth={1.5} />
-              <span>Complimentary Express ($150+)</span>
-            </div>
-            <div className="flex items-center gap-2 p-2.5 bg-[#C85DA9] border border-white/20">
-              <Sparkles className="w-4 h-4 text-white shrink-0" strokeWidth={1.5} />
-              <span>Bespoke Keepsake Box</span>
-            </div>
-          </div>
-
         </div>
 
-        {/* Product Details & Purchase Actions Column (Desktop: 6 cols) */}
-        <div className="lg:col-span-6 space-y-5" ref={buyBoxRef}>
+        {/* ========================================================================= */}
+        {/* RIGHT COLUMN: PRODUCT INFO & BUY BOX                                      */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-6 space-y-6" ref={buyBoxRef}>
           
           {/* Header & Pricing */}
           <div className="space-y-2 pb-4 border-b border-white/20">
@@ -351,21 +384,28 @@ export default function ProductDetailPage() {
               <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-medium text-white/80">
                 {product.category}
               </span>
-              <div className="flex items-center gap-1 text-[#FFD700] text-xs">
-                <Star className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
-                <span className="font-semibold text-white">{product.rating}</span>
-                <span className="text-white/70">({product.reviewsCount} reviews)</span>
-              </div>
+              
+              {/* Star Rating Badge */}
+              <button
+                onClick={scrollToReviews}
+                className="flex items-center gap-1.5 text-xs text-white hover:text-white/80 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center text-[#FFD700]">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
+                  ))}
+                </div>
+                <span className="font-semibold">{product.rating || '5.0'}</span>
+                <span className="text-white/70 group-hover:underline">({product.reviewsCount || '118'} reviews)</span>
+              </button>
             </div>
 
+            {/* Product Title */}
             <h1 className="text-xl sm:text-2xl lg:text-3xl text-white font-medium uppercase tracking-wider leading-tight">
               {product.name}
             </h1>
 
-            <p className="text-xs text-white/80 tracking-wider uppercase font-normal">
-              {product.subtitle}
-            </p>
-
+            {/* Price Row */}
             <div className="flex items-baseline gap-3 pt-1">
               <span className="text-xl sm:text-2xl text-white font-semibold tabular-nums tracking-tight">
                 {formatPrice(product.price)}
@@ -378,42 +418,29 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Description */}
-          <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-normal">
-            {product.description}
-          </p>
-
           {/* ========================================================================= */}
-          {/* OPTION 1: CATEGORY STYLE / SILHOUETTE CUT */}
+          {/* OPTION 1: LENGTH (INCHES) SELECTOR (basicabaya.com Grid)                  */}
           {/* ========================================================================= */}
-          <div className="space-y-2 bg-[#C85DA9] p-4 rounded-none border border-white/20 text-white">
-            <div className="flex justify-between items-center text-xs uppercase tracking-wider">
-              <span className="font-semibold text-white">1. Category:</span>
-              <span className="font-medium text-white bg-white/20 px-2 py-0.5 border border-white/25">
-                {selectedStyle}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs uppercase tracking-wider">
+              <span className="text-white/80">
+                Length: <strong className="text-white font-semibold">{selectedLength}</strong>
               </span>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-              {ABAYA_STYLES.map((styleObj) => {
-                const isSelected = selectedStyle.toLowerCase() === styleObj.name.toLowerCase();
+            <div className="grid grid-cols-6 sm:grid-cols-12 gap-1.5">
+              {ABAYA_LENGTHS.map((len) => {
+                const isSelected = selectedLength === len;
                 return (
                   <button
-                    key={styleObj.id}
-                    onClick={() => setSelectedStyle(styleObj.name)}
-                    className={`p-2.5 text-left rounded-none transition-all border flex flex-col justify-between min-h-[58px] cursor-pointer ${
+                    key={len}
+                    onClick={() => setSelectedLength(len)}
+                    className={`py-2 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
-                        : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
+                        ? 'bg-white text-[#C85DA9] border-2 border-white shadow-sm'
+                        : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-1">
-                      <span className="text-xs uppercase tracking-wide font-medium leading-tight">{styleObj.name}</span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#C85DA9] shrink-0" strokeWidth={2} />}
-                    </div>
-                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/60'}`}>
-                      {styleObj.tag}
-                    </span>
+                    {len}
                   </button>
                 );
               })}
@@ -421,36 +448,28 @@ export default function ProductDetailPage() {
           </div>
 
           {/* ========================================================================= */}
-          {/* OPTION 2: WORK */}
+          {/* OPTION 2: BUTTONS SELECTOR (No / Yes)                                     */}
           {/* ========================================================================= */}
-          <div className="space-y-2 bg-[#C85DA9] p-4 rounded-none border border-white/20 text-white">
-            <div className="flex justify-between items-center text-xs uppercase tracking-wider">
-              <span className="font-semibold text-white">2. Work:</span>
-              <span className="font-medium text-white bg-white/20 px-2 py-0.5 border border-white/25">
-                {selectedWork}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs uppercase tracking-wider">
+              <span className="text-white/80">
+                Buttons: <strong className="text-white font-semibold">{hasButtons}</strong>
               </span>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-              {ABAYA_WORKS.map((workObj) => {
-                const isSelected = selectedWork.toLowerCase() === workObj.name.toLowerCase();
+            <div className="flex gap-2">
+              {['No', 'Yes'].map((btnOption) => {
+                const isSelected = hasButtons === btnOption;
                 return (
                   <button
-                    key={workObj.id}
-                    onClick={() => setSelectedWork(workObj.name)}
-                    className={`p-2.5 text-left rounded-none transition-all border flex flex-col justify-between min-h-[58px] cursor-pointer ${
+                    key={btnOption}
+                    onClick={() => setHasButtons(btnOption)}
+                    className={`flex-1 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
-                        : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
+                        ? 'bg-white text-[#C85DA9] border-2 border-white shadow-sm'
+                        : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-1">
-                      <span className="text-xs uppercase tracking-wide font-medium leading-tight capitalize">{workObj.name}</span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#C85DA9] shrink-0" strokeWidth={2} />}
-                    </div>
-                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/60'}`}>
-                      {workObj.tag}
-                    </span>
+                    {btnOption}
                   </button>
                 );
               })}
@@ -458,256 +477,257 @@ export default function ProductDetailPage() {
           </div>
 
           {/* ========================================================================= */}
-          {/* OPTION 3: ABAYA SIZE & LENGTH + COLOR SWATCHES */}
+          {/* OPTION 3: SIZE / FIT SELECTOR + SIZE CHART LINK                           */}
           {/* ========================================================================= */}
-          <div className="space-y-4 bg-[#C85DA9] p-4 rounded-none border border-white/20 text-white">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs uppercase tracking-wider">
+              <span className="text-white/80">
+                Size: <strong className="text-white font-semibold">{sizeType}</strong>
+              </span>
+              <button
+                onClick={() => setShowSizeGuideModal(true)}
+                className="flex items-center gap-1 text-[11px] text-white hover:underline uppercase tracking-wider font-semibold cursor-pointer"
+              >
+                <Ruler className="w-3.5 h-3.5" />
+                <span>Size Chart</span>
+              </button>
+            </div>
             
-            {/* Color Swatches */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs uppercase tracking-wider">
-                <span className="font-semibold text-white">3. Color Shade:</span>
-                <span className="text-white/80">
-                  <strong className="text-white font-semibold">{currentColor.name}</strong>
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
-                {product.colors.map((c, idx) => (
+            <div className="flex gap-2">
+              {['Free size', 'Custom'].map((fit) => {
+                const isSelected = sizeType === fit;
+                return (
                   <button
-                    key={c.name}
-                    onClick={() => handleColorChange(idx)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all border shrink-0 cursor-pointer ${
-                      selectedColorIdx === idx
-                        ? 'ring-2 ring-white ring-offset-2 ring-offset-[#C85DA9] scale-110 border-transparent'
-                        : 'border-white/30 hover:scale-105'
-                    }`}
-                    style={{ backgroundColor: c.hex }}
-                    title={c.name}
-                  >
-                    {selectedColorIdx === idx && (
-                      <Check className="w-3.5 h-3.5 text-white drop-shadow" strokeWidth={2} />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Sizing & Length Options */}
-            <div className="space-y-2 pt-2 border-t border-white/20">
-              <div className="flex justify-between items-center text-xs uppercase tracking-wider">
-                <span className="font-medium text-white/80">Abaya Length / Size:</span>
-                <button
-                  onClick={() => setShowSizeGuide(!showSizeGuide)}
-                  className="text-white hover:underline text-[11px] font-medium flex items-center gap-1 cursor-pointer"
-                >
-                  <Info className="w-3 h-3" strokeWidth={1.5} />
-                  <span>Size Reference</span>
-                </button>
-              </div>
-
-              {showSizeGuide && (
-                <div className="p-3 bg-white/10 rounded-none border border-white/20 text-[11px] text-white/90 space-y-1 animate-fade-in uppercase tracking-wide">
-                  <div className="font-bold text-white">Standard Length Reference:</div>
-                  <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1 text-[10px]">
-                    <div>• Size 52: Height 5'0" – 5'2"</div>
-                    <div>• Size 54: Height 5'3" – 5'4"</div>
-                    <div>• Size 56: Height 5'5" – 5'6"</div>
-                    <div>• Size 58: Height 5'7" – 5'8"</div>
-                    <div>• Size 60: Height 5'9"+</div>
-                    <div>• Custom: Tailored dimensions</div>
-                  </div>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {product.sizes.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSelectedSize(s)}
-                    className={`px-3 py-2 text-xs font-medium rounded-none text-center transition-all border uppercase tracking-wider cursor-pointer ${
-                      selectedSize === s
-                        ? 'bg-white text-[#C85DA9] border-white shadow-sm font-bold'
-                        : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
+                    key={fit}
+                    onClick={() => setSizeType(fit)}
+                    className={`flex-1 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-white text-[#C85DA9] border-2 border-white shadow-sm'
+                        : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
                     }`}
                   >
-                    {s}
+                    {fit}
                   </button>
-                ))}
-              </div>
-
-              {selectedSize.toLowerCase().includes('custom') && (
-                <div className="p-3.5 bg-white/10 rounded-none border border-white/20 space-y-2 animate-fade-in">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-white">
-                    <Scissors className="w-3.5 h-3.5" strokeWidth={1.5} />
-                    <span>Enter Custom Measurements:</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <label className="block text-[10px] uppercase font-medium text-white/80 mb-1">Height (e.g. 164cm)</label>
-                      <input
-                        type="text"
-                        value={customMeasurements.height}
-                        onChange={(e) => setCustomMeasurements(prev => ({ ...prev, height: e.target.value }))}
-                        placeholder="e.g. 164 cm"
-                        className="w-full bg-[#B84E99] border border-white/30 text-white placeholder-white/60 rounded-none px-2.5 py-1.5 text-xs focus:outline-none focus:border-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-medium text-white/80 mb-1">Bust (e.g. 38")</label>
-                      <input
-                        type="text"
-                        value={customMeasurements.bust}
-                        onChange={(e) => setCustomMeasurements(prev => ({ ...prev, bust: e.target.value }))}
-                        placeholder="e.g. 38 inches"
-                        className="w-full bg-[#B84E99] border border-white/30 text-white placeholder-white/60 rounded-none px-2.5 py-1.5 text-xs focus:outline-none focus:border-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-medium text-white/80 mb-1">Length (e.g. 56")</label>
-                      <input
-                        type="text"
-                        value={customMeasurements.length}
-                        onChange={(e) => setCustomMeasurements(prev => ({ ...prev, length: e.target.value }))}
-                        placeholder="e.g. 56 inches"
-                        className="w-full bg-[#B84E99] border border-white/30 text-white placeholder-white/60 rounded-none px-2.5 py-1.5 text-xs focus:outline-none focus:border-white"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+                );
+              })}
             </div>
 
+            {/* Custom Sizing Input (shown only if Custom is selected) */}
+            {sizeType === 'Custom' && (
+              <div className="pt-2 animate-fade-in">
+                <textarea
+                  value={customNotes}
+                  onChange={(e) => setCustomNotes(e.target.value)}
+                  placeholder="Enter custom measurements (e.g., Bust, Sleeves, Hip, Length in inches)..."
+                  rows={2}
+                  className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white transition-colors resize-none"
+                />
+              </div>
+            )}
           </div>
 
-          {/* Quantity & Add to Cart Controls */}
-          <div className="space-y-2.5 pt-2">
+          {/* Social Proof Live Badge */}
+          <div className="flex items-center gap-2 text-xs text-white/90 py-1">
+            <Flame className="w-4 h-4 text-[#FFD700] fill-[#FFD700] animate-pulse" />
+            <span>
+              <strong>24 people</strong> have added this product to cart in the past week
+            </span>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* QUANTITY & PRIMARY ACTION BUTTONS                                         */}
+          {/* ========================================================================= */}
+          <div className="space-y-3 pt-2">
             <div className="flex gap-3">
               
-              {/* Quantity counter */}
-              <div className="flex items-center border border-white/30 rounded-none bg-[#C85DA9] px-2 py-2 text-white">
+              {/* Quantity Counter */}
+              <div className="flex items-center border border-white/40 bg-white/10 shrink-0">
                 <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="text-white hover:text-white/70 px-2 font-medium text-base cursor-pointer"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="w-10 h-12 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer text-base font-semibold"
+                  aria-label="Decrease quantity"
                 >
                   -
                 </button>
-                <span className="w-7 text-center text-xs font-semibold text-white">{quantity}</span>
+                <span className="w-10 text-center text-sm font-semibold text-white">
+                  {quantity}
+                </span>
                 <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="text-white hover:text-white/70 px-2 font-medium text-base cursor-pointer"
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="w-10 h-12 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer text-base font-semibold"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
               </div>
 
-              {/* Add to Bag Button */}
+              {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="btn-primary flex-1 flex items-center justify-center gap-2 !bg-white hover:!bg-white/90 !text-[#C85DA9] border border-white shadow-xl cursor-pointer font-bold"
+                className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-bold tracking-[0.1em] transition-all duration-200 cursor-pointer shadow-md ${
+                  isAddedAnimation
+                    ? 'bg-emerald-600 text-white border-2 border-emerald-500 scale-[1.01]'
+                    : 'bg-white text-[#C85DA9] hover:bg-white/90 active:scale-[0.99]'
+                }`}
               >
-                <ShoppingBag className="w-4 h-4 text-[#C85DA9]" strokeWidth={1.5} />
-                <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
+                {isAddedAnimation ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Added to Cart!</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>Add to Cart</span>
+                  </>
+                )}
               </button>
-
             </div>
 
-            {/* Direct WhatsApp Order Button */}
+            {/* Instant WhatsApp Order Button */}
             <button
               onClick={handleWhatsAppInstantOrder}
-              className="btn-secondary w-full flex items-center justify-center gap-2 !bg-white/20 !text-white hover:!bg-white hover:!text-[#C85DA9] border border-white/40 shadow-md cursor-pointer font-bold"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] bg-white/20 text-white border border-white/50 hover:bg-white hover:text-[#C85DA9] transition-all duration-200 cursor-pointer shadow-sm"
             >
-              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-              </svg>
-              <span>Instant WhatsApp Inquiry & Order</span>
+              <MessageCircle className="w-4 h-4" />
+              <span>Order via WhatsApp</span>
             </button>
           </div>
 
-          {/* Collapsible Accordions */}
-          <div className="space-y-2.5 sm:space-y-3 pt-4 sm:pt-6 border-t border-white/20">
+          {/* ========================================================================= */}
+          {/* ACCORDIONS / DETAILS SECTION                                              */}
+          {/* ========================================================================= */}
+          <div className="divide-y divide-white/20 border-y border-white/20 pt-2">
             
-            {/* Accordion 1: Fabric */}
-            <div className="border border-white/20 rounded-none bg-[#C85DA9] overflow-hidden text-white">
+            {/* 1. Description Accordion */}
+            <div className="py-3">
               <button
-                onClick={() => toggleAccordion('fabric')}
-                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left text-xs font-semibold uppercase tracking-wider text-white hover:text-white/80 transition-colors"
+                onClick={() => toggleAccordion('description')}
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
               >
-                <span className="flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
-                  Fabric & Master Tailoring
-                </span>
-                {openAccordions.fabric ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                <span>Description & Fabric</span>
+                {openAccordions.description ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
-              {openAccordions.fabric && (
-                <div className="px-4 sm:px-5 pb-4 text-xs text-white/90 leading-relaxed border-t border-white/20 pt-3 space-y-2">
-                  <p>{product.fabricDetails}</p>
+              {openAccordions.description && (
+                <div className="pt-3 pb-2 space-y-3 text-xs sm:text-sm text-white/90 leading-relaxed">
+                  <p>{product.description}</p>
+                  <div className="p-3 bg-white/10 border border-white/15 space-y-1.5 text-xs">
+                    <p><strong>Fabric:</strong> {product.fabric || 'Tafetta & Candy Crepe'}</p>
+                    <p><strong>Garment Care:</strong> Dry Clean recommended</p>
+                    <p className="text-white/75 italic">
+                      <strong>Note:</strong> Shaila exact color shade might differ slightly from displayed studio lighting.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 2. Size Guide & Measurements Table Accordion */}
+            <div className="py-3">
+              <button
+                onClick={() => toggleAccordion('sizeChart')}
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
+              >
+                <span>Size Guide & Measurements</span>
+                {openAccordions.sizeChart ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+              {openAccordions.sizeChart && (
+                <div className="pt-3 pb-2 space-y-3 text-xs text-white/90">
                   <p className="text-[11px] text-white/80">
-                    • Certified Oeko-Tex Standard 100 non-toxic dyes.<br />
-                    • Artisanal French seam finishes and reinforced modest cuts.
+                    Standard basic abaya measurement chart (all measurements in inches):
+                  </p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs border border-white/20">
+                      <thead className="bg-white/20 uppercase tracking-wider text-[10px] text-white font-semibold">
+                        <tr>
+                          <th className="p-2 border-b border-white/20">Length (inches)</th>
+                          <th className="p-2 border-b border-white/20">Sleeves from neck</th>
+                          <th className="p-2 border-b border-white/20">Chest Width</th>
+                          <th className="p-2 border-b border-white/20">Height Guide</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/15">
+                        <tr>
+                          <td className="p-2 font-medium">49 - 51"</td>
+                          <td className="p-2">23"</td>
+                          <td className="p-2">26 - 27"</td>
+                          <td className="p-2">4'10" – 5'0"</td>
+                        </tr>
+                        <tr>
+                          <td className="p-2 font-medium">52 - 53"</td>
+                          <td className="p-2">25"</td>
+                          <td className="p-2">27"</td>
+                          <td className="p-2">5'1" – 5'2"</td>
+                        </tr>
+                        <tr>
+                          <td className="p-2 font-medium">54 - 55"</td>
+                          <td className="p-2">26"</td>
+                          <td className="p-2">27"</td>
+                          <td className="p-2">5'3" – 5'4"</td>
+                        </tr>
+                        <tr>
+                          <td className="p-2 font-medium">56 - 57"</td>
+                          <td className="p-2">27"</td>
+                          <td className="p-2">28"</td>
+                          <td className="p-2">5'5" – 5'6"</td>
+                        </tr>
+                        <tr>
+                          <td className="p-2 font-medium">58 - 60"</td>
+                          <td className="p-2">28"</td>
+                          <td className="p-2">28"</td>
+                          <td className="p-2">5'7" – 5'10"+</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3. Delivery & Returns Accordion */}
+            <div className="py-3">
+              <button
+                onClick={() => toggleAccordion('deliveryReturn')}
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
+              >
+                <span>Delivery & Return Policy</span>
+                {openAccordions.deliveryReturn ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+              {openAccordions.deliveryReturn && (
+                <div className="pt-3 pb-2 space-y-2 text-xs sm:text-sm text-white/90 leading-relaxed">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <div className="p-2.5 bg-white/10 border border-white/15">
+                      <p className="font-semibold text-white">🇦🇪 UAE Delivery</p>
+                      <p className="text-white/80">Express delivery within 1 - 3 business days.</p>
+                    </div>
+                    <div className="p-2.5 bg-white/10 border border-white/15">
+                      <p className="font-semibold text-white">🌍 Worldwide Shipping</p>
+                      <p className="text-white/80">DHL Express delivery in 3 - 7 business days.</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-white/80 pt-1">
+                    Free size abayas can be exchanged within 7 days of delivery. Custom-tailored pieces are made to order and non-refundable.
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Accordion 2: Styling */}
-            <div className="border border-white/20 rounded-none bg-[#C85DA9] overflow-hidden text-white">
+            {/* 4. Garment Care Accordion */}
+            <div className="py-3">
               <button
-                onClick={() => toggleAccordion('styling')}
-                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left text-xs font-semibold uppercase tracking-wider text-white hover:text-white/80 transition-colors cursor-pointer"
+                onClick={() => toggleAccordion('garmentCare')}
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
               >
-                <span className="flex items-center gap-2">
-                  <Heart className="w-3.5 h-3.5 text-white" />
-                  Silhouette & Styling Advice
-                </span>
-                {openAccordions.styling ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                <span>Garment Care & Steaming</span>
+                {openAccordions.garmentCare ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
-              {openAccordions.styling && (
-                <div className="px-4 sm:px-5 pb-4 text-xs text-white/90 leading-relaxed border-t border-white/20 pt-3">
-                  <p>{product.stylingAdvice}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Accordion 3: Care */}
-            <div className="border border-white/20 rounded-none bg-[#C85DA9] overflow-hidden text-white">
-              <button
-                onClick={() => toggleAccordion('care')}
-                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left text-xs font-semibold uppercase tracking-wider text-white hover:text-white/80 transition-colors cursor-pointer"
-              >
-                <span className="flex items-center gap-2">
-                  <RotateCcw className="w-3.5 h-3.5 text-white" />
-                  Longevity & Garment Care
-                </span>
-                {openAccordions.care ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-              {openAccordions.care && (
-                <div className="px-4 sm:px-5 pb-4 text-xs text-white/90 leading-relaxed border-t border-white/20 pt-3">
-                  <p>{product.careInstructions}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Accordion 4: Shipping */}
-            <div className="border border-white/20 rounded-none bg-[#C85DA9] overflow-hidden text-white">
-              <button
-                onClick={() => toggleAccordion('shipping')}
-                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left text-xs font-semibold uppercase tracking-wider text-white hover:text-white/80 transition-colors cursor-pointer"
-              >
-                <span className="flex items-center gap-2">
-                  <PackageCheck className="w-3.5 h-3.5 text-white" />
-                  Packaging & Global Delivery
-                </span>
-                {openAccordions.shipping ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-              {openAccordions.shipping && (
-                <div className="px-4 sm:px-5 pb-4 text-xs text-white/90 leading-relaxed border-t border-white/20 pt-3 space-y-1.5">
-                  <p>
-                    Every NOOR AL DHUHA Abaya arrives carefully hand-folded in acid-free tissue paper and enclosed inside our signature embossed violet keepsake box with bespoke satin ribbon.
-                  </p>
-                  <p className="text-[11px] text-white/80">
-                    • Dispatch: 24–48 hours via DHL Express Worldwide.<br />
-                    • Returns: 30 days complimentary exchange privilege.
-                  </p>
+              {openAccordions.garmentCare && (
+                <div className="pt-3 pb-2 space-y-2 text-xs text-white/90 leading-relaxed">
+                  <ul className="list-disc list-inside space-y-1 text-white/80">
+                    <li>Dry clean strictly recommended for silk, tafetta, and crepe abayas.</li>
+                    <li>Use a vertical garment steamer instead of hot contact iron.</li>
+                    <li>Store in breathable garment bags away from direct sunlight.</li>
+                  </ul>
                 </div>
               )}
             </div>
@@ -718,109 +738,172 @@ export default function ProductDetailPage() {
 
       </div>
 
-      {/* Customer Reviews & Feedback Section */}
-      {/* Customer Reviews & Feedback Section */}
-      <section className="bg-[#C85DA9] rounded-none p-5 sm:p-10 lg:p-12 border border-white/20 shadow-md space-y-6 sm:space-y-8 text-white">
+      {/* ========================================================================= */}
+      {/* 3. REVIEWS SECTION ("Let customers speak for us")                         */}
+      {/* ========================================================================= */}
+      <section ref={reviewsSectionRef} className="pt-8 sm:pt-14 border-t border-white/20 space-y-8">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/20 pb-4 sm:pb-6">
-          <div className="space-y-1">
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-semibold text-white/80">
-              Patron Testimonials
-            </span>
-            <h3 className="text-xl sm:text-2xl lg:text-3xl text-white font-medium uppercase tracking-wider">
-              Verified Client Reviews
-            </h3>
+        <div className="text-center space-y-2">
+          <p className="text-xs uppercase tracking-[0.2em] font-medium text-white/80">
+            Verified Customer Reviews
+          </p>
+          <h2 className="text-xl sm:text-3xl font-medium tracking-wider uppercase text-white">
+            Let Customers Speak For Us
+          </h2>
+          <div className="flex items-center justify-center gap-2 pt-1 text-sm">
+            <div className="flex items-center text-[#FFD700]">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
+              ))}
+            </div>
+            <span className="font-semibold text-white">5.0 / 5</span>
+            <span className="text-white/70">based on {reviewsList.length + 115} reviews</span>
           </div>
-
-          <button
-            onClick={() => setShowReviewForm(!showReviewForm)}
-            className="px-4 py-2 sm:px-5 sm:py-2.5 bg-white text-[#2D143D] hover:bg-white/90 text-xs uppercase tracking-wider font-bold rounded-none transition-colors active:scale-95 self-start sm:self-auto cursor-pointer shadow-sm"
-          >
-            {showReviewForm ? 'Cancel Review' : 'Write A Review'}
-          </button>
         </div>
 
-        {/* Review Submission Form */}
-        {showReviewForm && (
-          <form onSubmit={handleReviewSubmit} className="p-4 sm:p-6 bg-[#B84E99] rounded-none border border-white/20 space-y-4 animate-fade-in text-white">
-            <h4 className="text-base sm:text-lg text-white font-medium uppercase tracking-wide">Share Your Experience with {product.name}</h4>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div>
-                <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-white/90 mb-1">Your Name</label>
-                <input
-                  type="text"
-                  required
-                  value={newReviewAuthor}
-                  onChange={(e) => setNewReviewAuthor(e.target.value)}
-                  placeholder="e.g. Layla M."
-                  className="w-full px-3 py-2 text-xs bg-white text-[#2D143D] border border-white/30 rounded-none focus:outline-none focus:border-white font-medium"
-                />
+        {/* Rating Breakdown Bars & Write a Review Action */}
+        <div className="max-w-3xl mx-auto p-4 sm:p-6 bg-white/10 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="w-full sm:w-1/2 space-y-1.5 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-12 text-white/80">5 star</span>
+              <div className="flex-1 h-2 bg-white/20 overflow-hidden">
+                <div className="h-full bg-white w-[96%]" />
               </div>
+              <span className="w-8 text-right font-medium">96%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-12 text-white/80">4 star</span>
+              <div className="flex-1 h-2 bg-white/20 overflow-hidden">
+                <div className="h-full bg-white w-[4%]" />
+              </div>
+              <span className="w-8 text-right font-medium">4%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-12 text-white/80">3 star</span>
+              <div className="flex-1 h-2 bg-white/20 overflow-hidden">
+                <div className="h-full bg-white w-[0%]" />
+              </div>
+              <span className="w-8 text-right font-medium">0%</span>
+            </div>
+          </div>
 
-              <div>
-                <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-white/90 mb-1">Rating</label>
-                <select
-                  value={newReviewRating}
-                  onChange={(e) => setNewReviewRating(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-xs bg-white text-[#2D143D] border border-white/30 rounded-none focus:outline-none focus:border-white font-medium cursor-pointer"
-                >
-                  <option value={5}>⭐️⭐️⭐️⭐️⭐️ (5 - Extraordinary)</option>
-                  <option value={4}>⭐️⭐️⭐️⭐️ (4 - Very Good)</option>
-                  <option value={3}>⭐️⭐️⭐️ (3 - Average)</option>
-                </select>
+          <div className="text-center sm:text-right shrink-0">
+            <button
+              onClick={() => setShowReviewForm(!showReviewForm)}
+              className="py-2.5 px-6 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-sm"
+            >
+              {showReviewForm ? 'Cancel Review' : 'Write a Review'}
+            </button>
+          </div>
+        </div>
+
+        {/* Interactive Review Form */}
+        {showReviewForm && (
+          <form onSubmit={handleReviewSubmit} className="max-w-2xl mx-auto p-6 bg-white/15 border border-white/30 space-y-4 animate-fade-in">
+            <h3 className="text-sm uppercase tracking-wider font-bold text-white text-center">
+              Write Your Verified Review
+            </h3>
+
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+                Rating
+              </label>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setNewReviewRating(star)}
+                    className="cursor-pointer text-[#FFD700]"
+                  >
+                    <Star
+                      className={`w-6 h-6 ${
+                        star <= newReviewRating ? 'fill-[#FFD700]' : 'text-white/40'
+                      }`}
+                    />
+                  </button>
+                ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-white/90 mb-1">Headline</label>
+              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+                Your Name
+              </label>
               <input
                 type="text"
-                value={newReviewTitle}
-                onChange={(e) => setNewReviewTitle(e.target.value)}
-                placeholder="e.g. Incredible liquid drape and custom cut"
-                className="w-full px-3 py-2 text-xs bg-white text-[#2D143D] border border-white/30 rounded-none focus:outline-none focus:border-white font-medium"
+                required
+                value={newReviewAuthor}
+                onChange={(e) => setNewReviewAuthor(e.target.value)}
+                placeholder="E.g., Hissa Al-Maktoum"
+                className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-white/90 mb-1">Your Detailed Review</label>
+              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+                Review Title
+              </label>
+              <input
+                type="text"
+                value={newReviewTitle}
+                onChange={(e) => setNewReviewTitle(e.target.value)}
+                placeholder="E.g., Beautiful flow & fabric"
+                className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+                Review Content
+              </label>
               <textarea
                 required
                 rows={3}
                 value={newReviewComment}
                 onChange={(e) => setNewReviewComment(e.target.value)}
-                placeholder="Share your thoughts on the cut silhouette, craftsmanship, silk weight, fit..."
-                className="w-full px-3 py-2 text-xs bg-white text-[#2D143D] border border-white/30 rounded-none focus:outline-none focus:border-white font-medium"
+                placeholder="Share your experience with the cut, fabric, and fit..."
+                className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white resize-none"
               />
             </div>
 
             <button
               type="submit"
-              className="px-6 py-2.5 bg-white hover:bg-white/90 text-[#C85DA9] text-xs uppercase tracking-widest font-bold rounded-none transition-colors active:scale-95 cursor-pointer shadow-md border border-white"
+              className="w-full py-3 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-md"
             >
-              Submit Verified Review
+              Submit Review
             </button>
           </form>
         )}
 
-        {/* Reviews List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        {/* Reviews Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {reviewsList.map((rev) => (
-            <div key={rev.id} className="p-4 sm:p-6 rounded-none bg-[#B84E99] border border-white/20 space-y-2.5 sm:space-y-3 text-white">
-              <div className="flex items-center justify-between">
-                <div className="flex gap-1 text-[#FFD700]">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-[#FFD700] text-[#FFD700]" />
-                  ))}
+            <div key={rev.id} className="p-5 bg-white/10 border border-white/20 space-y-2.5 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-[#FFD700]">
+                    {[...Array(rev.rating)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-white/60 uppercase tracking-wider">{rev.date}</span>
                 </div>
-                <span className="text-[10px] sm:text-[11px] text-white/70 font-medium">{rev.date}</span>
+
+                <h4 className="text-xs uppercase font-bold tracking-wider text-white">
+                  {rev.title}
+                </h4>
+
+                <p className="text-xs text-white/85 leading-relaxed">
+                  "{rev.comment}"
+                </p>
               </div>
-              <h5 className="text-sm sm:text-base text-white font-semibold uppercase tracking-wide">{rev.title}</h5>
-              <p className="text-xs text-white/90 leading-relaxed italic">"{rev.comment}"</p>
-              <div className="pt-1.5 flex items-center gap-1.5 text-xs text-white/90 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                <span>{rev.author}</span>
+
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
+                <span className="font-semibold text-white">{rev.author}</span>
+                <span className="text-[10px] px-1.5 py-0.5 bg-white/20 text-white uppercase tracking-wider">
+                  Verified Buyer
+                </span>
               </div>
             </div>
           ))}
@@ -828,57 +911,178 @@ export default function ProductDetailPage() {
 
       </section>
 
-      {/* Related Products 2-Column Mobile Grid */}
-      <section className="space-y-4 sm:space-y-8 pt-4 sm:pt-8 border-t border-white/20">
-        <div className="flex justify-between items-end">
-          <div>
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-semibold text-white/80">
-              Curated Harmonies
-            </span>
-            <h3 className="text-xl sm:text-2xl lg:text-3xl text-white font-medium mt-0.5 uppercase tracking-wider">
-              Complete Your Wardrobe
-            </h3>
-          </div>
-          <button
-            onClick={() => navigateTo('shop')}
-            className="text-[11px] sm:text-xs uppercase tracking-widest font-semibold text-white hover:text-white/80 flex items-center gap-1 cursor-pointer"
-          >
-            <span>View All</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+      {/* ========================================================================= */}
+      {/* 4. RELATED PRODUCTS / "YOU MAY ALSO LIKE" SECTION                         */}
+      {/* ========================================================================= */}
+      <section className="pt-8 sm:pt-14 border-t border-white/20 space-y-6">
+        <div className="text-center space-y-1">
+          <p className="text-xs uppercase tracking-[0.2em] font-medium text-white/80">
+            Complementary Pieces
+          </p>
+          <h2 className="text-xl sm:text-2xl font-medium tracking-wider uppercase text-white">
+            You May Also Like
+          </h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-          {relatedProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+          {relatedProducts.map((relProd) => (
+            <ProductCard key={relProd.id} product={relProd} />
           ))}
         </div>
       </section>
 
-      {/* Sticky Mobile Purchase Bar (Visible on mobile when scrolled past main buy box) */}
+      {/* ========================================================================= */}
+      {/* 5. STICKY BOTTOM ACTION BAR (Mobile & Tablet)                             */}
+      {/* ========================================================================= */}
       {showStickyBar && (
-        <div className="lg:hidden fixed bottom-16 inset-x-0 z-30 bg-[#C85DA9]/95 backdrop-blur-md border-t border-white/20 px-4 py-2.5 shadow-xl animate-fade-in text-white">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <img
-                src={images[activeImageIdx] || images[0]}
-                alt=""
-                className="w-10 h-12 object-cover rounded-none bg-black/10 shrink-0 border border-white/20"
-              />
-              <div className="min-w-0">
-                <h4 className="text-xs font-semibold text-white truncate uppercase">{product.name}</h4>
-                <p className="text-[10px] text-white/80 truncate">{selectedStyle} • {selectedWork}</p>
-                <p className="text-xs font-bold text-white">{formatPrice(product.price * quantity)}</p>
-              </div>
+        <div className="fixed bottom-0 inset-x-0 bg-[#C85DA9] border-t border-white/30 p-3 z-40 lg:hidden shadow-2xl flex items-center justify-between gap-3 animate-slide-up">
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <img
+              src={images[activeImageIdx] || images[0]}
+              alt=""
+              className="w-11 h-13 object-cover border border-white/30 shrink-0"
+            />
+            <div className="truncate">
+              <p className="text-xs font-semibold uppercase text-white truncate">{product.name}</p>
+              <p className="text-xs font-bold text-white tabular-nums">{formatPrice(product.price)}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleAddToCart}
+            className="py-2.5 px-4 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all shrink-0 cursor-pointer shadow-md flex items-center gap-1.5"
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>Add to Cart</span>
+          </button>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 6. MODAL: SIZE CHART DIALOG                                               */}
+      {/* ========================================================================= */}
+      {showSizeGuideModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#C85DA9] border border-white/30 text-white max-w-lg w-full p-6 space-y-4 relative shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowSizeGuideModal(false)}
+              className="absolute top-4 right-4 text-white/80 hover:text-white cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-1">
+              <h3 className="text-base uppercase tracking-widest font-bold text-white">
+                Abaya Size Guide
+              </h3>
+              <p className="text-xs text-white/80">
+                Find your recommended abaya length based on your overall height.
+              </p>
+            </div>
+
+            <div className="overflow-x-auto pt-2">
+              <table className="w-full text-left text-xs border border-white/25">
+                <thead className="bg-white/20 uppercase tracking-wider text-[10px] text-white font-bold">
+                  <tr>
+                    <th className="p-2.5 border-b border-white/25">Abaya Length</th>
+                    <th className="p-2.5 border-b border-white/25">Sleeves from Neck</th>
+                    <th className="p-2.5 border-b border-white/25">Chest Width</th>
+                    <th className="p-2.5 border-b border-white/25">Recommended Height</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/20">
+                  <tr>
+                    <td className="p-2.5 font-bold">49 - 51"</td>
+                    <td className="p-2.5">23"</td>
+                    <td className="p-2.5">26 - 27"</td>
+                    <td className="p-2.5">4'10" – 5'0" (148–152 cm)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold">52 - 53"</td>
+                    <td className="p-2.5">25"</td>
+                    <td className="p-2.5">27"</td>
+                    <td className="p-2.5">5'1" – 5'2" (153–158 cm)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold">54 - 55"</td>
+                    <td className="p-2.5">26"</td>
+                    <td className="p-2.5">27"</td>
+                    <td className="p-2.5">5'3" – 5'4" (159–163 cm)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold">56 - 57"</td>
+                    <td className="p-2.5">27"</td>
+                    <td className="p-2.5">28"</td>
+                    <td className="p-2.5">5'5" – 5'6" (164–168 cm)</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold">58 - 60"</td>
+                    <td className="p-2.5">28"</td>
+                    <td className="p-2.5">28"</td>
+                    <td className="p-2.5">5'7" – 5'10"+ (169–178 cm)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="p-3 bg-white/10 border border-white/20 text-xs space-y-1">
+              <p className="font-semibold text-white">💡 Need a custom tailored fit?</p>
+              <p className="text-white/80 text-[11px]">
+                Choose <strong>Size: Custom</strong> and specify your exact bust, sleeve, and shoulder measurements in the order notes.
+              </p>
             </div>
 
             <button
-              onClick={handleAddToCart}
-              className="px-4 py-2.5 bg-white text-[#C85DA9] hover:bg-white/90 active:scale-95 text-xs uppercase tracking-wider font-bold rounded-none shadow-md flex items-center gap-1.5 shrink-0 border border-white cursor-pointer"
+              onClick={() => setShowSizeGuideModal(false)}
+              className="w-full py-2.5 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-colors cursor-pointer"
             >
-              <ShoppingBag className="w-3.5 h-3.5 text-[#C85DA9]" />
-              <span>Add to Bag</span>
+              Close Size Guide
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 7. MODAL: LIGHTBOX FULL IMAGE ZOOM                                        */}
+      {/* ========================================================================= */}
+      {showLightboxModal && (
+        <div
+          className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setShowLightboxModal(false)}
+        >
+          <button
+            onClick={() => setShowLightboxModal(false)}
+            className="absolute top-5 right-5 text-white bg-black/50 p-2 rounded-full hover:bg-black transition-colors cursor-pointer z-50"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          <div
+            className="relative max-w-4xl max-h-[90vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={images[activeImageIdx] || images[0]}
+              alt=""
+              className="max-h-[85vh] w-auto object-contain shadow-2xl"
+            />
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 text-white flex items-center justify-center hover:bg-black transition-colors cursor-pointer"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 text-white flex items-center justify-center hover:bg-black transition-colors cursor-pointer"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
