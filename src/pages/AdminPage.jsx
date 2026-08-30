@@ -13,12 +13,10 @@ import {
   AlertCircle,
   Package,
   Layers,
-  Database,
   CloudCheck,
   LogOut,
   Lock,
   ArrowRight,
-  TrendingUp,
   LayoutGrid,
   List,
   ShieldCheck,
@@ -34,7 +32,6 @@ import { useShop } from '../context/ShopContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import { CMS_SECTIONS } from '../lib/cms';
 import AdminProductEditor from '../components/admin/AdminProductEditor';
-import AdminOrdersTab from '../components/admin/AdminOrdersTab';
 import brandLogo from '../assets/logo.png';
 
 export default function AdminPage() {
@@ -45,7 +42,6 @@ export default function AdminPage() {
     updateProduct,
     deleteProduct,
     refreshProducts,
-    seedCatalog,
     formatPrice,
     navigateTo,
     showToast,
@@ -67,7 +63,7 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('');
 
   // Active Admin Section
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'orders' | 'cms' | 'settings'
+  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'cms' | 'settings'
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'cards'
   const [isTogglingAdmin, setIsTogglingAdmin] = useState(false);
 
@@ -83,7 +79,6 @@ export default function AdminPage() {
   const [isProductEditorOpen, setIsProductEditorOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
-  const [isSeeding, setIsSeeding] = useState(false);
 
   // Handle PIN Login
   const handlePinSubmit = (e) => {
@@ -207,23 +202,6 @@ export default function AdminPage() {
     e.stopPropagation();
     await updateProduct(product.id, { isVioletEdition: !product.isVioletEdition });
     showToast(`Updated "${product.name}" Violet Edition status.`);
-  };
-
-  const handleSeedCatalog = async () => {
-    if (!window.confirm('This will seed the default haute couture catalog into Supabase. Proceed?')) {
-      return;
-    }
-    setIsSeeding(true);
-    try {
-      const result = await seedCatalog();
-      if (result.success) {
-        showToast(`Catalog seeded successfully with ${result.count} items.`);
-      } else {
-        showToast(`Seeding failed: ${result.error}`, 'error');
-      }
-    } finally {
-      setIsSeeding(false);
-    }
   };
 
   const handleSaveProductModal = async (productData) => {
@@ -356,23 +334,13 @@ export default function AdminPage() {
               Luxury Abaya & Catalog Management
             </h1>
             <p className="text-xs sm:text-sm text-stone-500">
-              Publish haute couture creations, upload high-resolution photography, and manage customer orders.
+              Publish haute couture creations and upload high-resolution photography.
             </p>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
-          <button
-            onClick={handleSeedCatalog}
-            disabled={isSeeding}
-            className="px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] hover:bg-surface-container text-xs font-semibold text-stone-700 flex items-center gap-2 transition-colors"
-            title="Seed default 6 haute couture items to Supabase"
-          >
-            <Database className={`w-3.5 h-3.5 ${isSeeding ? 'animate-spin' : 'text-royal-violet'}`} />
-            <span>{isSeeding ? 'Seeding...' : 'Seed Catalog'}</span>
-          </button>
-
           <button
             onClick={handleOpenAddModal}
             className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary via-royal-violet to-primary text-white text-xs font-semibold uppercase tracking-wider hover:opacity-95 transition-all shadow-luxury flex items-center gap-2"
@@ -392,23 +360,11 @@ export default function AdminPage() {
       </div>
 
       {/* KPI Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
           <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Total Abayas</div>
           <div className="font-serif text-2xl sm:text-3xl font-bold text-primary">{stats.total}</div>
           <div className="text-[11px] text-stone-400">Active catalog items</div>
-        </div>
-
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
-          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Pure Silk & Georgette</div>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-royal-violet">{stats.silkCount + stats.georgetteCount}</div>
-          <div className="text-[11px] text-stone-400">Haute couture fabrics</div>
-        </div>
-
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
-          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Violet Edition</div>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#982476]">{stats.violetCount}</div>
-          <div className="text-[11px] text-stone-400">Signature capsule items</div>
         </div>
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
@@ -432,18 +388,6 @@ export default function AdminPage() {
         >
           <Package className="w-4 h-4" />
           <span>Product Catalog ({products.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('orders')}
-          className={`pb-3 text-sm font-serif font-medium border-b-2 transition-all flex items-center gap-2 shrink-0 ${
-            activeTab === 'orders'
-              ? 'border-royal-violet text-royal-violet font-semibold'
-              : 'border-transparent text-stone-500 hover:text-stone-800'
-          }`}
-        >
-          <TrendingUp className="w-4 h-4" />
-          <span>Client Inquiries & Order Tracking</span>
         </button>
 
         <button
@@ -890,11 +834,6 @@ export default function AdminPage() {
           )}
 
         </div>
-      )}
-
-      {/* TAB CONTENT: ORDERS & TRACKING */}
-      {activeTab === 'orders' && (
-        <AdminOrdersTab formatPrice={formatPrice} showToast={showToast} />
       )}
 
       {/* TAB CONTENT: CMS CONTENT MANAGEMENT */}
