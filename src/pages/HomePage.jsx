@@ -165,104 +165,83 @@ export default function HomePage() {
 
 
       {/* ═══════════════════════════════════════════════
-          SECTION 2 — SHOP BY COLLECTION
+          SECTION 2 — SHOP BY CATEGORY
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-collection" className="py-14 sm:py-20 bg-white border-b border-[#E5E5E5]">
+      <section id="shop-by-category" className="py-14 sm:py-20 bg-white border-b border-[#E5E5E5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Main Section Title */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em] mb-2">
-              Shop by Collection
+          {/* Centered Section Title */}
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
+              Shop by Category
             </h2>
-            <div className="w-12 h-[1px] bg-[#1C1C1C] mx-auto" />
           </div>
 
-          {/* ── SUB-SECTION: By Category ── */}
-          <div className="mb-14 sm:mb-20">
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div>
-                <h3 className="text-base sm:text-lg md:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-                  By Category
-                </h3>
-              </div>
-              <button
-                onClick={() => navigateTo('shop')}
-                className="cursor-pointer hidden sm:inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] hover:text-[#707070] transition-colors"
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+            {STYLES_LIST.map((styleName) => (
+              <div
+                key={styleName}
+                onClick={() => navigateTo('shop', null, null, null, null, styleName)}
+                className="group cursor-pointer"
               >
-                <span>View All</span>
-                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-              {STYLES_LIST.map((styleName) => (
-                <div
-                  key={styleName}
-                  onClick={() => navigateTo('shop', null, null, null, null, styleName)}
-                  className="group cursor-pointer"
-                >
-                  {/* Card Image */}
-                  <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
-                    <img
-                      src={STYLE_IMAGES[styleName]}
-                      alt={styleName}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  {/* Card Label */}
-                  <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200">
-                    {styleName}
-                  </h4>
+                {/* Card Image */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
+                  <img
+                    src={STYLE_IMAGES[styleName]}
+                    alt={styleName}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
-              ))}
-            </div>
+                {/* Card Label */}
+                <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200">
+                  {styleName}
+                </h4>
+              </div>
+            ))}
           </div>
 
+        </div>
+      </section>
 
-          {/* ── SUB-SECTION: By Work ── */}
-          <div>
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <div>
-                <h3 className="text-base sm:text-lg md:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-                  Work
-                </h3>
-              </div>
-              <button
-                onClick={() => navigateTo('shop')}
-                className="cursor-pointer hidden sm:inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] hover:text-[#707070] transition-colors"
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 3 — SHOP BY WORK
+          ═══════════════════════════════════════════════ */}
+      <section id="shop-by-work" className="py-14 sm:py-20 bg-white border-b border-[#E5E5E5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Centered Section Title */}
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
+              Shop by Work
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+            {WORKS_LIST.map((workName) => (
+              <div
+                key={workName}
+                onClick={() => navigateTo('shop', null, null, null, null, null, workName)}
+                className="group cursor-pointer"
               >
-                <span>View All</span>
-                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-              {WORKS_LIST.map((workName) => (
-                <div
-                  key={workName}
-                  onClick={() => navigateTo('shop', null, null, null, null, null, workName)}
-                  className="group cursor-pointer"
-                >
-                  {/* Card Image */}
-                  <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
-                    <img
-                      src={WORK_IMAGES[workName]}
-                      alt={workName}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  {/* Card Label */}
-                  <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200 capitalize">
-                    {workName}
-                  </h4>
+                {/* Card Image */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
+                  <img
+                    src={WORK_IMAGES[workName]}
+                    alt={workName}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
-              ))}
-            </div>
+                {/* Card Label */}
+                <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200 capitalize">
+                  {workName}
+                </h4>
+              </div>
+            ))}
           </div>
 
         </div>

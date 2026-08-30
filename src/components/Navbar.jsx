@@ -42,7 +42,8 @@ export default function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openAccordions, setOpenAccordions] = useState({
-    collection: true,
+    category: true,
+    work: false,
     fabric: false,
     color: false,
     essentials: false,
@@ -84,8 +85,8 @@ export default function Navbar() {
     }));
   };
 
-  const handleNav = (view, category = null, collectionsTab = null, color = null) => {
-    navigateTo(view, null, category, collectionsTab, color);
+  const handleNav = (view, category = null, collectionsTab = null, color = null, style = null, work = null) => {
+    navigateTo(view, null, category, collectionsTab, color, style, work);
     setMobileMenuOpen(false);
   };
 
@@ -310,57 +311,125 @@ export default function Navbar() {
             {/* Scrollable Navigation Body */}
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5 divide-y divide-[#E5E5E5] text-sm">
               
-              {/* Accordion 1: SHOP BY COLLECTION */}
+              {/* Accordion 1: SHOP BY CATEGORY */}
               <div className="pt-1">
                 <button
-                  onClick={() => toggleAccordion('collection')}
+                  onClick={() => toggleAccordion('category')}
                   className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-[#1C1C1C] py-1 hover:text-[#707070] transition-colors"
                 >
-                  <span>Shop By Collection</span>
-                  {openAccordions.collection ? (
+                  <span>Shop by Category</span>
+                  {openAccordions.category ? (
                     <Minus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
                   ) : (
                     <Plus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
                   )}
                 </button>
 
-                {openAccordions.collection && (
+                {openAccordions.category && (
                   <div className="mt-2.5 pl-3 space-y-2 border-l border-[#E5E5E5] animate-fade-in">
                     <button
-                      onClick={() => handleNav('collections', null, 'collection')}
-                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors font-medium uppercase tracking-wide"
+                      onClick={() => handleNav('shop', null, null, null, 'Open abaya')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
                     >
-                      Explore All Collections Hub
+                      Open Abaya
                     </button>
                     <button
-                      onClick={() => handleNav('violet-edition')}
+                      onClick={() => handleNav('shop', null, null, null, 'Closed cut')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      Closed Cut
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, 'Butterfly cut')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      Butterfly / Farasha Cut
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, 'Kimono & Kaftan')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      Kimono & Kaftan
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, '2-Piece set')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      2-Piece Abaya Set
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, 'Batwing')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      Batwing Silhouette
+                    </button>
+                    <button
+                      onClick={() => handleNav('collections')}
                       className="block w-full text-left py-1 text-xs text-[#1C1C1C] font-semibold hover:text-[#707070] transition-colors uppercase tracking-wide"
                     >
-                      The Violet Edition Lookbook
+                      View All Categories
                     </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 2: SHOP BY WORK */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('work')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-[#1C1C1C] py-1 hover:text-[#707070] transition-colors"
+                >
+                  <span>Shop by Work</span>
+                  {openAccordions.work ? (
+                    <Minus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-[#707070]" strokeWidth={1.5} />
+                  )}
+                </button>
+
+                {openAccordions.work && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-[#E5E5E5] animate-fade-in">
                     <button
-                      onClick={() => handleNav('shop', 'Modal Jersey')}
+                      onClick={() => handleNav('shop', null, null, null, null, 'Handwork')}
                       className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
                     >
-                      Everyday Abaya Essentials
+                      Handwork Embroidery
                     </button>
                     <button
-                      onClick={() => handleNav('shop', 'bridal')}
+                      onClick={() => handleNav('shop', null, null, null, null, 'Stonework')}
                       className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
                     >
-                      Occasion & Bridal Atelier
+                      Stonework & Crystal Detailing
                     </button>
                     <button
-                      onClick={() => handleNav('shop', 'Silk')}
+                      onClick={() => handleNav('shop', null, null, null, null, 'Embroidery')}
                       className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
                     >
-                      Pure Mulberry Silk Edit
+                      Artisanal Thread Embroidery
                     </button>
                     <button
-                      onClick={() => handleNav('shop')}
+                      onClick={() => handleNav('shop', null, null, null, null, 'Cutwork')}
                       className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
                     >
-                      Signature Silhouette Cuts (Farashas & Kimonos)
+                      Cutwork & French Seam
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, null, 'Pearl detailing')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      Pearl Detailing
+                    </button>
+                    <button
+                      onClick={() => handleNav('shop', null, null, null, null, 'Plain / Minimal')}
+                      className="block w-full text-left py-1 text-xs text-[#707070] hover:text-[#1C1C1C] transition-colors uppercase tracking-wide"
+                    >
+                      Minimalist Plain Atelier
+                    </button>
+                    <button
+                      onClick={() => handleNav('collections')}
+                      className="block w-full text-left py-1 text-xs text-[#1C1C1C] font-semibold hover:text-[#707070] transition-colors uppercase tracking-wide"
+                    >
+                      View All Work Styles
                     </button>
                   </div>
                 )}
