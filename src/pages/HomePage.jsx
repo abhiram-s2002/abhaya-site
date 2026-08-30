@@ -53,10 +53,9 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, [testimonials.length]);
 
-  // ── Newsletter — from CMS ──
-  const newsletter = siteContent?.newsletter || {};
 
   const handleQuickAdd = (e, product) => {
+
     e.stopPropagation();
     addToCart(
       product,
@@ -70,18 +69,7 @@ export default function HomePage() {
     );
   };
 
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
 
-  const handleNewsletterSubmit = (e) => {
-    e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      showToast('Please enter a valid email address.', 'error');
-      return;
-    }
-    setNewsletterSubmitted(true);
-    showToast('Welcome to the NOOR AL DHUHA VIP Inner Circle.');
-  };
 
   return (
     <div className="bg-neutral-white text-primary font-sans antialiased overflow-x-hidden selection:bg-royal-violet selection:text-white">
@@ -152,128 +140,7 @@ export default function HomePage() {
 
 
 
-      {/* 3. "The Crowd's Favourites" Horizontal Scroll Carousel */}
-      <section className="py-16 md:py-28 bg-primary text-white overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-          <div className="flex flex-col md:flex-row gap-10 lg:gap-16 xl:gap-24 items-center">
 
-            {/* Left Headline Column */}
-            <div className="order-1 md:order-2 w-full md:w-1/3 lg:w-1/4 flex flex-col justify-center text-center md:text-left">
-              <span className="text-xs font-sans tracking-[0.2em] uppercase text-secondary font-bold mb-3">
-                CURATED EDIT
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white font-medium tracking-tight mb-4 leading-tight">
-                The Crowd's Favourites
-              </h2>
-              <p className="text-white/75 font-sans text-xs sm:text-sm leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
-                Discover our most loved shades and weaves. We maintain a refined balance of timeless modesty and bespoke convenience, bringing gallery-quality silks directly to you.
-              </p>
-              <button
-                onClick={() => navigateTo('shop')}
-                className="bg-neutral-white text-primary px-8 py-3.5 font-sans font-bold uppercase tracking-widest text-xs w-fit mx-auto md:mx-0 hover:bg-white transition-all shadow-md active:scale-95 cursor-pointer rounded-xs"
-              >
-                EXPLORE ALL
-              </button>
-            </div>
-
-            {/* Right Carousel Track */}
-            <div className="order-2 md:order-1 w-full md:w-2/3 lg:w-3/4 relative">
-              <div
-                ref={scrollContainerRef}
-                onScroll={handleFavoritesScroll}
-                className="flex space-x-4 md:space-x-6 overflow-x-auto snap-x snap-mandatory pb-6 no-scrollbar"
-              >
-                {PRODUCTS.map((product) => (
-                  <div
-                    key={product.id}
-                    className="w-[70vw] sm:w-[42vw] md:w-[30vw] lg:w-[24vw] xl:w-[20vw] shrink-0 snap-start group flex flex-col gap-3"
-                  >
-                    {/* Image Block */}
-                    <div
-                      onClick={() => navigateTo('product-detail', product.id)}
-                      className="relative aspect-4/5 w-full overflow-hidden bg-secondary/15 rounded-xs block text-left cursor-pointer"
-                    >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading="lazy"
-                      />
-
-                      {product.tag && (
-                        <div className="absolute top-3 left-3">
-                          <span className="bg-secondary text-primary text-[9px] font-sans font-bold uppercase tracking-widest px-2 py-1 rounded-xs shadow-xs">
-                            {product.tag}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Quick Add '+' Button */}
-                      <button
-                        onClick={(e) => handleQuickAdd(e, product)}
-                        aria-label={`Add ${product.name} to bag`}
-                        className="absolute bottom-3 right-3 bg-white text-primary p-2.5 rounded-full shadow-lg opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 hidden sm:flex items-center justify-center cursor-pointer"
-                      >
-                        <Plus className="w-4 h-4 stroke-[2.5]" />
-                      </button>
-                    </div>
-
-                    {/* Meta info */}
-                    <div
-                      onClick={() => navigateTo('product-detail', product.id)}
-                      className="flex flex-col gap-1 text-left cursor-pointer"
-                    >
-                      <span className="inline-flex w-fit items-center rounded-full px-2 py-0.5 font-sans text-[9px] uppercase tracking-[0.18em] bg-white/10 text-white/90">
-                        {product.category}
-                      </span>
-                      <h3 className="font-serif text-base font-medium text-white truncate">
-                        {product.name}
-                      </h3>
-                      <p className="font-sans text-[11px] line-clamp-1 text-white/60">
-                        {product.description}
-                      </p>
-                      <span className="font-sans font-bold tabular-nums text-sm tracking-wide mt-0.5 text-white">
-                        {formatPrice(product.price)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Slider Controls Bar */}
-              <div className="flex items-center gap-4 mt-6 mx-auto md:mx-0 w-fit">
-                <button
-                  onClick={() => scrollFavorites('left')}
-                  disabled={!canScrollLeft}
-                  aria-label="Scroll left"
-                  className="p-2 border rounded-full transition-all disabled:opacity-25 disabled:cursor-not-allowed border-white/30 text-white hover:bg-white hover:text-primary cursor-pointer"
-                >
-                  <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-                </button>
-
-                {/* Progress bar */}
-                <div className="w-[100px] sm:w-[140px] h-1 bg-white/20 relative rounded-full overflow-hidden">
-                  <div
-                    className="absolute top-0 left-0 h-full w-1/3 bg-white rounded-full transition-all duration-150 ease-out"
-                    style={{ transform: `translateX(${scrollProgress * 2}%)` }}
-                  />
-                </div>
-
-                <button
-                  onClick={() => scrollFavorites('right')}
-                  disabled={!canScrollRight}
-                  aria-label="Scroll right"
-                  className="p-2 border rounded-full transition-all disabled:opacity-25 disabled:cursor-not-allowed border-white/30 text-white hover:bg-white hover:text-primary cursor-pointer"
-                >
-                  <ChevronRight className="w-4 h-4 stroke-[2.5]" />
-                </button>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* 4. "Find Your Finish" Asymmetrical Collections Grid */}
       <section className="py-16 md:py-28 bg-neutral-white">
@@ -432,48 +299,7 @@ export default function HomePage() {
         </section>
       </EditableSection>
 
-      {/* 6. VIP Inner Circle Newsletter Bar */}
-      <EditableSection cmsKey="newsletter" label="Newsletter Section">
-        <section className="bg-primary text-white py-14 sm:py-16 border-t border-primary/20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
-            <div className="space-y-2">
-              <span className="text-xs font-sans tracking-[0.25em] uppercase text-secondary font-bold">
-                {newsletter.badge || 'JOIN THE ATELIER CIRCLE'}
-              </span>
-              <h3 className="font-serif text-2xl sm:text-4xl font-medium">
-                {newsletter.title || 'Receive Editorial Privileges & First Access'}
-              </h3>
-              <p className="text-xs sm:text-sm text-white/75 font-sans max-w-lg mx-auto leading-relaxed">
-                {newsletter.subtitle || 'Sign up for private capsule lookbooks, secret archive sales, and a 10% privilege on your upcoming order.'}
-              </p>
-            </div>
 
-            {newsletterSubmitted ? (
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-sans font-bold uppercase tracking-wider">
-                <Check className="w-4 h-4" />
-                <span>You are now subscribed to the VIP Patron Circle</span>
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email address..."
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-secondary transition-all"
-                />
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-neutral-white hover:bg-white text-primary font-sans text-xs font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 shrink-0 cursor-pointer shadow-md"
-                >
-                  {newsletter.ctaText || 'Subscribe'}
-                </button>
-              </form>
-            )}
-          </div>
-        </section>
-      </EditableSection>
 
     </div>
   );

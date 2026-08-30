@@ -159,19 +159,14 @@ export default function Navbar() {
             </nav>
           </div>
 
-          {/* Center: Brand Logo & Name */}
+          {/* Center: Brand Name */}
           <div className="absolute left-1/2 -translate-x-1/2 text-center flex items-center group cursor-pointer z-20">
             <button
               onClick={() => handleNav('home')}
-              className="flex items-center gap-2 sm:gap-2.5 focus:outline-none"
+              className="flex items-center focus:outline-none"
               aria-label="NOOR AL DHUHA - Home"
             >
-              <img
-                src={brandLogo}
-                alt="NOOR AL DHUHA Logo"
-                className="h-8 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-              />
-              <span className="font-serif text-sm sm:text-base md:text-lg font-bold tracking-[0.14em] text-primary uppercase whitespace-nowrap">
+              <span className="font-serif text-sm sm:text-base md:text-lg font-bold tracking-[0.14em] text-primary uppercase whitespace-nowrap transition-transform duration-300 group-hover:scale-105">
                 NOOR AL DHUHA
               </span>
             </button>
