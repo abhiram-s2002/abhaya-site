@@ -171,10 +171,10 @@ function QuickViewModalContent({ product, onClose }) {
                 </div>
               </div>
 
-              {/* 2. Work / Craftsmanship Selector */}
+              {/* 2. Work Selector */}
               <div className="space-y-1.5 pt-2 border-t border-[#E5E5E5]">
                 <div className="flex justify-between text-xs uppercase tracking-wider">
-                  <span className="font-medium text-[#707070]">2. Work / Craftsmanship:</span>
+                  <span className="font-medium text-[#707070]">2. Work:</span>
                   <span className="font-semibold text-[#1C1C1C]">{selectedWork}</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">

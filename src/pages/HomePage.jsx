@@ -178,16 +178,13 @@ export default function HomePage() {
             <div className="w-12 h-[1px] bg-[#1C1C1C] mx-auto" />
           </div>
 
-          {/* ── SUB-SECTION: By Style ── */}
+          {/* ── SUB-SECTION: By Category ── */}
           <div className="mb-14 sm:mb-20">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
                 <h3 className="text-base sm:text-lg md:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-                  By Silhouette & Style
+                  By Category
                 </h3>
-                <p className="text-xs text-[#707070] mt-0.5 tracking-wide">
-                  Tailored cuts from open drapes to kimono silhouettes
-                </p>
               </div>
               <button
                 onClick={() => navigateTo('shop')}
@@ -230,11 +227,8 @@ export default function HomePage() {
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
                 <h3 className="text-base sm:text-lg md:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-                  By Craftsmanship & Work
+                  Work
                 </h3>
-                <p className="text-xs text-[#707070] mt-0.5 tracking-wide">
-                  Artisanal embroidery, stonework, and thread detailing
-                </p>
               </div>
               <button
                 onClick={() => navigateTo('shop')}

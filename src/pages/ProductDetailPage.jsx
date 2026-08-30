@@ -388,7 +388,7 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           <div className="space-y-2 bg-white p-4 rounded-none border border-[#E5E5E5]">
             <div className="flex justify-between items-center text-xs uppercase tracking-wider">
-              <span className="font-semibold text-[#1C1C1C]">1. Silhouette & Style:</span>
+              <span className="font-semibold text-[#1C1C1C]">1. Category:</span>
               <span className="font-medium text-[#707070] bg-[#F7F7F7] px-2 py-0.5 border border-[#E5E5E5]">
                 {selectedStyle}
               </span>
@@ -421,11 +421,11 @@ export default function ProductDetailPage() {
           </div>
 
           {/* ========================================================================= */}
-          {/* OPTION 2: WORK / CRAFTSMANSHIP */}
+          {/* OPTION 2: WORK */}
           {/* ========================================================================= */}
           <div className="space-y-2 bg-white p-4 rounded-none border border-[#E5E5E5]">
             <div className="flex justify-between items-center text-xs uppercase tracking-wider">
-              <span className="font-semibold text-[#1C1C1C]">2. Work & Detailing:</span>
+              <span className="font-semibold text-[#1C1C1C]">2. Work:</span>
               <span className="font-medium text-[#707070] bg-[#F7F7F7] px-2 py-0.5 border border-[#E5E5E5]">
                 {selectedWork}
               </span>

@@ -217,13 +217,13 @@ export default function CollectionsPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. SECTION 1: EXPLORE BY SILHOUETTE */}
+      {/* 2. SECTION 1: EXPLORE BY CATEGORY */}
       {/* ========================================================================= */}
       <section className="space-y-4">
         {/* Section Heading with subtle underline */}
         <div className="border-b border-[#E5E5E5] pb-2">
           <h2 className="text-lg sm:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-            Explore by Silhouette
+            Explore by Category
           </h2>
         </div>
 
@@ -269,13 +269,13 @@ export default function CollectionsPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. SECTION 2: EXPLORE BY CRAFTSMANSHIP */}
+      {/* 3. SECTION 2: EXPLORE BY WORK */}
       {/* ========================================================================= */}
       <section className="space-y-4 pt-2">
         {/* Section Heading with subtle underline */}
         <div className="border-b border-[#E5E5E5] pb-2">
           <h2 className="text-lg sm:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-            Explore by Craftsmanship
+            Explore by Work
           </h2>
         </div>
 
