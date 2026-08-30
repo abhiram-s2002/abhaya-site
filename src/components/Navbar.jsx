@@ -259,14 +259,8 @@ export default function Navbar() {
               <Search className="w-4.5 h-4.5" strokeWidth={1.5} />
             </button>
             
-            {/* VIP Member Icon */}
-            <button
-              onClick={() => showToast('VIP Patron Portal: Logged in as VIP Member')}
-              aria-label="Account"
-              className="hidden sm:block text-white hover:text-white/80 transition-colors p-1.5 cursor-pointer"
-            >
-              <User className="w-4.5 h-4.5" strokeWidth={1.5} />
-            </button>
+            {/* VIP Member Icon (Temporarily disabled) */}
+
 
             {/* Admin Portal Button */}
             {adminEnabled && (
@@ -626,37 +620,22 @@ export default function Navbar() {
             {/* Drawer Footer: Account & Currency Selector */}
             <div className="p-6 bg-[#B84E99] border-t border-white/20 space-y-4 text-white">
               
-              {/* Account Links */}
+              {/* Quick Links */}
               <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white">
-                <button
-                  onClick={() => showToast('VIP Patron Portal Login')}
-                  className="hover:text-white/80 transition-colors"
-                >
-                  Log In
-                </button>
-                <span className="text-white/40">|</span>
-                <button
-                  onClick={() => showToast('VIP Registration opened')}
-                  className="hover:text-white/80 transition-colors"
-                >
-                  Create Account
-                </button>
-                <span className="text-white/40">|</span>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     setIsSearchOpen(true);
                   }}
-                  className="hover:text-white/80 transition-colors flex items-center gap-1"
+                  className="hover:text-white/80 transition-colors flex items-center gap-1.5 py-1"
                 >
                   <Search className="w-3.5 h-3.5" />
-                  <span>Search</span>
+                  <span>Search Catalog</span>
                 </button>
-                <span className="text-white/40">|</span>
                 {adminEnabled && (
                   <button
                     onClick={() => handleNav('admin')}
-                    className="text-white font-semibold hover:text-white/80 transition-colors flex items-center gap-1"
+                    className="text-white font-semibold hover:text-white/80 transition-colors flex items-center gap-1.5 py-1"
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
                     <span>Admin</span>
