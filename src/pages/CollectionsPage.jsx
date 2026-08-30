@@ -55,6 +55,7 @@ export default function CollectionsPage() {
     setSelectedStyleFilter,
     selectedWorkFilter,
     setSelectedWorkFilter,
+    setWishlistOnlyFilter,
     navigateTo,
     formatPrice,
     searchQuery,
@@ -223,10 +224,12 @@ export default function CollectionsPage() {
     setSelectedSizes([]);
     setPriceRange(maxPriceLimit);
     setOnlyInStock(false);
-    if (setSelectedCategoryFilter) setSelectedCategoryFilter('All');
-    if (setSelectedColorFilter) setSelectedColorFilter('All');
-    if (setSelectedStyleFilter) setSelectedStyleFilter('All');
-    if (setSelectedWorkFilter) setSelectedWorkFilter('All');
+    if (typeof setSearchQuery === 'function') setSearchQuery('');
+    if (typeof setSelectedCategoryFilter === 'function') setSelectedCategoryFilter('All');
+    if (typeof setSelectedColorFilter === 'function') setSelectedColorFilter('All');
+    if (typeof setSelectedStyleFilter === 'function') setSelectedStyleFilter('All');
+    if (typeof setSelectedWorkFilter === 'function') setSelectedWorkFilter('All');
+    if (typeof setWishlistOnlyFilter === 'function') setWishlistOnlyFilter(false);
   };
 
   // Active filters count
@@ -237,7 +240,8 @@ export default function CollectionsPage() {
     selectedColors.length +
     selectedSizes.length +
     (onlyInStock ? 1 : 0) +
-    (priceRange < maxPriceLimit ? 1 : 0);
+    (priceRange < maxPriceLimit ? 1 : 0) +
+    (searchQuery && searchQuery.trim() !== '' ? 1 : 0);
 
   // Available Fabrics extracted from products
   const availableFabrics = useMemo(() => {
@@ -354,9 +358,21 @@ export default function CollectionsPage() {
       {/* 1. Header Banner */}
       <div className="pt-6 pb-4 sm:pt-8 sm:pb-5 px-4 max-w-7xl mx-auto text-center">
         {/* Collection Title / Dynamic search or filter term */}
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-[#1C1C1C]">
-          {pageTitle}
-        </h1>
+        <div className="inline-flex items-center justify-center gap-2.5">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-[#1C1C1C]">
+            {pageTitle}
+          </h1>
+          {activeFiltersCount > 0 && (
+            <button
+              onClick={clearAllFilters}
+              className="p-1 rounded-full text-[#707070] hover:text-black hover:bg-[#F0F0F0] transition-colors cursor-pointer"
+              title="Clear all filters"
+              aria-label="Clear all filters"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 2. Collection Sticky Toolbar (Filter, Sort, Count, Layout Switchers) */}
@@ -418,6 +434,21 @@ export default function CollectionsPage() {
                 </div>
               )}
             </div>
+
+            {/* Quick Clear All in Sticky Toolbar */}
+            {activeFiltersCount > 0 && (
+              <>
+                <span className="text-[#E5E5E5] hidden sm:inline">|</span>
+                <button
+                  onClick={clearAllFilters}
+                  className="flex items-center gap-1 text-[11px] sm:text-xs uppercase tracking-wider text-[#707070] hover:text-[#1C1C1C] underline font-medium cursor-pointer"
+                  title="Clear all filters"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Clear all</span>
+                </button>
+              </>
+            )}
 
           </div>
 

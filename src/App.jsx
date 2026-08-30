@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { ShopProvider, useShop } from './context/ShopContext';
-import AnnouncementBar from './components/AnnouncementBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
@@ -67,9 +66,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fff7fc] text-on-background selection:bg-royal-violet selection:text-white">
-      {/* Top Promotional Bar */}
-      <AnnouncementBar />
-
       {/* Main Sticky Luxury Navbar */}
       <Navbar />
 
