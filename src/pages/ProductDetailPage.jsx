@@ -269,19 +269,14 @@ export default function ProductDetailPage() {
               onClick={() => setShowLightboxModal(true)}
             />
 
-            {/* Badges Overlay */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
-              {product.badge && (
-                <span className="badge-custom text-[10px] tracking-widest">
-                  {product.badge}
-                </span>
-              )}
-              {product.originalPrice && product.originalPrice > product.price && (
-                <span className="badge-sale text-[10px] tracking-widest">
+            {/* Badges Overlay - Only Sale if on discount */}
+            {product.originalPrice && product.originalPrice > product.price && (
+              <div className="absolute top-3 left-3 z-10 pointer-events-none">
+                <span className="badge-sale text-[10px] tracking-widest uppercase">
                   Sale
                 </span>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Top Right Quick Actions (Share & Lightbox Zoom & Wishlist) */}
             <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">

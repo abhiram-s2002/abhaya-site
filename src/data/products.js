@@ -206,7 +206,7 @@ export const PRODUCTS = [
     price: 135,
     originalPrice: 170,
     category: "Chiffon",
-    badge: "New Arrival",
+    badge: "",
     targetRegion: "india",
     rating: 4.8,
     reviewsCount: 84,
