@@ -247,21 +247,21 @@ export default function ShopPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 sm:space-y-7 animate-fade-in pb-28">
       
-      {/* 1. Header Section (Exact Nailberrie.in/shop style) */}
-      <div className="space-y-2 pt-1 text-left">
-        <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-primary font-normal tracking-tight">
-          Shop
+      {/* 1. Header Section */}
+      <div className="space-y-1 pt-1 text-left">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
+          All Abayas & Collections
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 font-normal leading-relaxed max-w-xl">
-          Discover our collections of premium bespoke abayas. Gallery-quality modest silhouettes, ready to wear.
+        <p className="text-xs sm:text-sm text-[#707070] font-normal leading-relaxed max-w-xl">
+          Discover our collections of premium bespoke abayas. Minimalist, modern modesty tailored to perfection.
         </p>
       </div>
 
       {/* 2. Items Count & Sort Pill Row */}
-      <div className="flex items-center justify-between gap-3 pt-1">
+      <div className="flex items-center justify-between gap-3 pt-1 border-t border-[#E5E5E5]">
         {/* Item count in clean uppercase */}
-        <div className="text-[11px] sm:text-xs font-semibold tracking-widest text-stone-500 uppercase">
-          {filteredProducts.length} ITEMS
+        <div className="text-[11px] font-medium tracking-widest text-[#707070] uppercase">
+          {filteredProducts.length} PRODUCTS
         </div>
 
         {/* Sort Pill Dropdown + Deep Filters Trigger */}
@@ -269,17 +269,17 @@ export default function ShopPage() {
           {/* Deep Filters Button (Silhouettes & Craft) */}
           <button
             onClick={() => setMobileFilterOpen(true)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs uppercase tracking-wider font-medium border transition-colors ${
               secondaryFiltersActiveCount > 0
-                ? 'bg-royal-violet text-white border-royal-violet shadow-xs'
-                : 'bg-[#f7f2ea] hover:bg-[#ede5da] text-stone-800 border-[#e8ded2]'
+                ? 'bg-[#1C1C1C] text-white border-[#1C1C1C]'
+                : 'bg-white hover:bg-[#F9F9F9] text-[#1C1C1C] border-[#E5E5E5]'
             }`}
             aria-label="Filter Silhouettes and Craft"
           >
-            <Filter className="w-3.5 h-3.5" />
+            <Filter className="w-3.5 h-3.5" strokeWidth={1.5} />
             <span>Filters</span>
             {secondaryFiltersActiveCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-gold-accent text-primary text-[10px] flex items-center justify-center font-bold">
+              <span className="w-4 h-4 rounded-full bg-[#1C1C1C] text-white text-[10px] flex items-center justify-center font-bold">
                 {secondaryFiltersActiveCount}
               </span>
             )}
@@ -289,18 +289,18 @@ export default function ShopPage() {
           <div className="relative" ref={sortDropdownRef}>
             <button
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="bg-[#f7f2ea] hover:bg-[#ede5da] text-stone-800 border border-[#e8ded2] rounded-lg px-3 py-1.5 text-xs sm:text-sm font-medium flex items-center gap-2 shadow-xs transition-colors"
+              className="bg-white hover:bg-[#F9F9F9] text-[#1C1C1C] border border-[#E5E5E5] rounded-none px-3 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-2 transition-colors"
               aria-expanded={isSortOpen}
               aria-label="Sort products"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-stone-700" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#1C1C1C]" strokeWidth={1.5} />
               <span>{currentSortLabel}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-[#707070] transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
             </button>
 
             {/* Sort Popover Menu */}
             {isSortOpen && (
-              <div className="absolute right-0 mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-surface-container-highest py-1.5 z-30 animate-fade-in">
+              <div className="absolute right-0 mt-1 w-48 bg-white rounded-none shadow-lg border border-[#E5E5E5] py-1 z-30 animate-fade-in">
                 {sortOptions.map((option) => (
                   <button
                     key={option.id}
@@ -308,14 +308,14 @@ export default function ShopPage() {
                       setSortBy(option.id);
                       setIsSortOpen(false);
                     }}
-                    className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-3.5 py-2 text-xs uppercase tracking-wide flex items-center justify-between transition-colors ${
                       sortBy === option.id
-                        ? 'bg-surface-container-low text-primary font-semibold'
-                        : 'text-stone-700 hover:bg-surface-container'
+                        ? 'bg-[#F5EFE9] text-[#1C1C1C] font-semibold'
+                        : 'text-[#707070] hover:bg-[#FAFAFA]'
                     }`}
                   >
                     <span>{option.label}</span>
-                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-royal-violet" />}
+                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-[#1C1C1C]" strokeWidth={1.5} />}
                   </button>
                 ))}
               </div>
@@ -325,34 +325,34 @@ export default function ShopPage() {
       </div>
 
       {/* 3. Search Box */}
-      <div className="space-y-1.5">
-        <label className="block text-[10px] sm:text-[11px] uppercase tracking-widest font-semibold text-stone-500">
+      <div className="space-y-1">
+        <label className="block text-[10px] sm:text-[11px] uppercase tracking-widest font-medium text-[#707070]">
           SEARCH
         </label>
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8E8E8E] pointer-events-none" strokeWidth={1.5} />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Find a product..."
-            className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#fbf7f2] border border-[#ebdcd0] rounded-xl text-xs sm:text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-stone-500 focus:bg-white transition-all shadow-xs"
+            placeholder="Find an abaya style or fabric..."
+            className="w-full pl-10 pr-9 py-2.5 bg-white border border-[#E5E5E5] rounded-none text-xs sm:text-sm text-[#1C1C1C] placeholder-[#8E8E8E] focus:outline-none focus:border-[#1C1C1C] uppercase tracking-wide transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#707070] hover:text-[#1C1C1C] p-1"
               title="Clear search"
               aria-label="Clear search"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5" strokeWidth={1.5} />
             </button>
           )}
         </div>
       </div>
 
       {/* 4. Horizontal Scrolling Category Navigation Tabs */}
-      <div className="border-b border-[#ebdcd0]/70">
+      <div className="border-b border-[#E5E5E5]">
         <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
           {categoryTabs.map((tab) => {
             const isActive = selectedTab === tab.id;
@@ -360,10 +360,10 @@ export default function ShopPage() {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`relative pb-2.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`relative pb-2.5 text-xs uppercase tracking-wider font-medium whitespace-nowrap transition-colors ${
                   isActive
-                    ? 'text-stone-900 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary'
-                    : 'text-stone-500 hover:text-stone-800'
+                    ? 'text-[#1C1C1C] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#1C1C1C]'
+                    : 'text-[#707070] hover:text-[#1C1C1C]'
                 }`}
               >
                 {tab.label}

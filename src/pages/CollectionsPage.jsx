@@ -201,42 +201,42 @@ export default function CollectionsPage() {
     activeFabricFilter !== 'All';
 
   return (
-    <div className="min-h-screen bg-[#fff7fc] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-20 animate-fade-in pb-32">
+    <div className="min-h-screen bg-white py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 sm:space-y-16 animate-fade-in pb-32">
       
       {/* ========================================================================= */}
-      {/* 1. HERO HEADER (Exact Screenshot Style) */}
+      {/* 1. HERO HEADER */}
       {/* ========================================================================= */}
-      <section className="text-center space-y-3.5 pt-4 sm:pt-8 max-w-3xl mx-auto">
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#2E1C1A] font-medium tracking-tight">
+      <section className="text-center space-y-2 pt-2 max-w-3xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
           Explore Collections
         </h1>
         
-        <p className="text-xs sm:text-sm md:text-[15px] text-stone-600 font-normal leading-relaxed max-w-2xl mx-auto px-4">
+        <p className="text-xs sm:text-sm text-[#707070] font-normal leading-relaxed max-w-2xl mx-auto px-4">
           Discover our curated selection of luxury abayas, categorized by distinctive silhouettes and exquisite craftsmanship.
         </p>
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. SECTION 1: EXPLORE BY SILHOUETTE (Exact Screenshot 4-Column Grid) */}
+      {/* 2. SECTION 1: EXPLORE BY SILHOUETTE */}
       {/* ========================================================================= */}
-      <section className="space-y-6">
+      <section className="space-y-4">
         {/* Section Heading with subtle underline */}
-        <div className="border-b border-stone-200/80 pb-2.5">
-          <h2 className="font-serif text-2xl sm:text-3xl text-[#2E1C1A] font-normal tracking-tight">
+        <div className="border-b border-[#E5E5E5] pb-2">
+          <h2 className="text-lg sm:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
             Explore by Silhouette
           </h2>
         </div>
 
         {/* 4 Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
           {SILHOUETTE_CARDS.map((card) => {
             const isSelected = activeSilhouette === card.filterValue;
             return (
               <div
                 key={card.id}
                 onClick={() => handleSilhouetteClick(card.filterValue)}
-                className={`group relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden cursor-pointer transition-all duration-500 bg-stone-100 shadow-xs hover:shadow-xl ${
-                  isSelected ? 'ring-3 ring-royal-violet shadow-lg' : ''
+                className={`group relative aspect-[3/4] sm:aspect-[4/5] rounded-none overflow-hidden cursor-pointer transition-all bg-[#FAFAFA] border ${
+                  isSelected ? 'border-[#1C1C1C] ring-1 ring-[#1C1C1C]' : 'border-[#E5E5E5]'
                 }`}
               >
                 {/* Image */}
@@ -246,19 +246,19 @@ export default function CollectionsPage() {
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
 
-                {/* Dark Gradient Overlay at bottom for clear text readability */}
+                {/* Dark Gradient Overlay at bottom */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none transition-opacity duration-300" />
 
                 {/* Selected Indicator Badge */}
                 {isSelected && (
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-royal-violet text-white text-[9px] font-bold uppercase tracking-wider shadow-md">
+                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-none bg-[#1C1C1C] text-white text-[9px] font-medium uppercase tracking-wider">
                     Selected
                   </div>
                 )}
 
-                {/* Text Label on bottom-left matching reference screenshot */}
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] drop-shadow-sm group-hover:text-gold-accent transition-colors">
+                {/* Text Label on bottom-left */}
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <h3 className="text-xs sm:text-sm font-medium uppercase tracking-wider drop-shadow-sm">
                     {card.title}
                   </h3>
                 </div>
@@ -269,30 +269,30 @@ export default function CollectionsPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. SECTION 2: EXPLORE BY CRAFTSMANSHIP (Exact Screenshot 3-Column Grid) */}
+      {/* 3. SECTION 2: EXPLORE BY CRAFTSMANSHIP */}
       {/* ========================================================================= */}
-      <section className="space-y-6 pt-4">
+      <section className="space-y-4 pt-2">
         {/* Section Heading with subtle underline */}
-        <div className="border-b border-stone-200/80 pb-2.5">
-          <h2 className="font-serif text-2xl sm:text-3xl text-[#2E1C1A] font-normal tracking-tight">
+        <div className="border-b border-[#E5E5E5] pb-2">
+          <h2 className="text-lg sm:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
             Explore by Craftsmanship
           </h2>
         </div>
 
         {/* 3 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
           {CRAFTSMANSHIP_CARDS.map((card) => {
             const isSelected = activeCraftsmanship === card.filterValue;
             return (
               <div
                 key={card.id}
                 onClick={() => handleCraftsmanshipClick(card.filterValue)}
-                className="group cursor-pointer space-y-3"
+                className="group cursor-pointer space-y-2"
               >
                 {/* Image Container */}
                 <div
-                  className={`relative aspect-[4/3] sm:aspect-square md:aspect-[4/3] overflow-hidden bg-stone-100 transition-all duration-500 shadow-xs hover:shadow-xl ${
-                    isSelected ? 'ring-3 ring-royal-violet shadow-lg' : ''
+                  className={`relative aspect-[4/3] sm:aspect-square md:aspect-[4/3] rounded-none overflow-hidden bg-[#FAFAFA] transition-all border ${
+                    isSelected ? 'border-[#1C1C1C] ring-1 ring-[#1C1C1C]' : 'border-[#E5E5E5]'
                   }`}
                 >
                   <img
@@ -303,15 +303,15 @@ export default function CollectionsPage() {
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300 pointer-events-none" />
 
                   {isSelected && (
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-royal-violet text-white text-[9px] font-bold uppercase tracking-wider shadow-md">
+                    <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-none bg-[#1C1C1C] text-white text-[9px] font-medium uppercase tracking-wider">
                       Selected
                     </div>
                   )}
                 </div>
 
-                {/* Text Label Below Image (Exact Screenshot format) */}
+                {/* Text Label Below Image */}
                 <div>
-                  <h3 className="text-xs sm:text-[13px] font-bold uppercase tracking-[0.18em] text-[#2E1C1A] group-hover:text-royal-violet transition-colors">
+                  <h3 className="text-xs sm:text-[13px] font-medium uppercase tracking-wider text-[#1C1C1C] group-hover:text-[#707070] transition-colors">
                     {card.title}
                   </h3>
                 </div>
@@ -322,29 +322,29 @@ export default function CollectionsPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. CURATED CATALOG VIEW (Interactive live product browsing) */}
+      {/* 4. CURATED CATALOG VIEW */}
       {/* ========================================================================= */}
-      <section id="curated-catalog-view" className="pt-8 border-t border-stone-200/80 space-y-6">
+      <section id="curated-catalog-view" className="pt-6 border-t border-[#E5E5E5] space-y-5">
         
         {/* Header & Filter Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h3 className="font-serif text-2xl sm:text-3xl text-[#2E1C1A]">
+            <h3 className="text-xl sm:text-2xl text-[#1C1C1C] font-medium uppercase tracking-wider">
               Curated Selection
             </h3>
-            <p className="text-xs text-stone-500 mt-0.5">
-              Showing {displayedProducts.length} luxury bespoke abayas
+            <p className="text-xs text-[#707070] uppercase tracking-wider mt-0.5">
+              Showing {displayedProducts.length} abayas
             </p>
           </div>
 
           {/* Quick Filter Controls */}
-          <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             {isAnyFilterActive && (
               <button
                 onClick={resetAllFilters}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-semibold transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-white hover:bg-[#FAFAFA] border border-[#E5E5E5] text-[#1C1C1C] text-xs font-medium uppercase tracking-wider transition-colors cursor-pointer"
               >
-                <RotateCcw className="w-3 h-3" />
+                <RotateCcw className="w-3 h-3" strokeWidth={1.5} />
                 <span>Reset Filters</span>
               </button>
             )}

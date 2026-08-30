@@ -220,13 +220,13 @@ export default function ProductDetailPage() {
       </nav>
 
       {/* Main Product Presentation */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         
         {/* Gallery Column (Desktop: 6 cols) */}
         <div className="lg:col-span-6 space-y-3 sm:space-y-4 lg:sticky lg:top-24">
           
           {/* Main Large Image Display */}
-          <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-stone-100 rounded-2xl overflow-hidden border border-surface-container-highest shadow-luxury">
+          <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-[#F7F7F7] rounded-none overflow-hidden border border-[#E5E5E5]">
             <img
               src={images[activeImageIdx] || images[0]}
               alt={`${product.name} - ${currentColor.name}`}
@@ -234,39 +234,40 @@ export default function ProductDetailPage() {
             />
 
             {/* Badges Overlay */}
-            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex flex-col gap-1.5 z-10">
+            <div className="absolute top-3 left-3 sm:top-3.5 sm:left-3.5 flex flex-col gap-1.5 z-10 pointer-events-none">
               {product.badge && (
-                <span className="bg-primary/95 backdrop-blur-md text-gold-soft text-[9px] sm:text-xs uppercase tracking-[0.2em] font-semibold px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded shadow-md">
+                <span className="badge-custom">
                   {product.badge}
                 </span>
               )}
-              <span className="bg-royal-violet/90 backdrop-blur-md text-white text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-md flex items-center gap-1">
-                <Scissors className="w-3 h-3 text-gold-soft" />
-                <span>Bespoke Tailored</span>
-              </span>
+              {product.originalPrice && product.originalPrice > product.price && (
+                <span className="badge-sale">
+                  Sale
+                </span>
+              )}
             </div>
 
             {/* Top Right Actions */}
-            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-1.5 sm:gap-2 z-10">
+            <div className="absolute top-3 right-3 sm:top-3.5 sm:right-3.5 flex items-center gap-1.5 z-10">
               <button
                 onClick={handleShare}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 backdrop-blur-md hover:bg-white text-stone-700 flex items-center justify-center shadow-md transition-colors active:scale-95"
+                className="w-8 h-8 rounded-full bg-white/90 text-[#1C1C1C] flex items-center justify-center transition-colors hover:bg-white"
                 title="Share piece"
                 aria-label="Share link"
               >
-                <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => toggleWishlist(product.id)}
-                className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                   wishlisted
-                    ? 'bg-royal-violet text-white scale-105'
-                    : 'bg-white/80 backdrop-blur-md hover:bg-white text-stone-700'
+                    ? 'bg-[#1C1C1C] text-white'
+                    : 'bg-white/90 text-[#1C1C1C] hover:bg-white'
                 }`}
                 title="Save to Wishlist"
                 aria-label="Save to Wishlist"
               >
-                <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${wishlisted ? 'fill-white' : ''}`} />
+                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-white' : ''}`} strokeWidth={1.5} />
               </button>
             </div>
 
@@ -275,17 +276,17 @@ export default function ProductDetailPage() {
               <div className="sm:hidden absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none z-10">
                 <button
                   onClick={prevImage}
-                  className="w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm text-stone-700 flex items-center justify-center shadow pointer-events-auto active:scale-90"
+                  className="w-8 h-8 rounded-none bg-white/90 text-[#1C1C1C] flex items-center justify-center pointer-events-auto"
                   aria-label="Previous image"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4" strokeWidth={1.5} />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm text-stone-700 flex items-center justify-center shadow pointer-events-auto active:scale-90"
+                  className="w-8 h-8 rounded-none bg-white/90 text-[#1C1C1C] flex items-center justify-center pointer-events-auto"
                   aria-label="Next image"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
                 </button>
               </div>
             )}
@@ -297,8 +298,8 @@ export default function ProductDetailPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIdx(idx)}
-                    className={`h-1.5 rounded-full transition-all ${
-                      activeImageIdx === idx ? 'w-5 bg-royal-violet' : 'w-1.5 bg-black/30'
+                    className={`h-1 transition-all ${
+                      activeImageIdx === idx ? 'w-6 bg-[#1C1C1C]' : 'w-2 bg-black/30'
                     }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
@@ -315,10 +316,10 @@ export default function ProductDetailPage() {
                 <button
                   key={idx}
                   onClick={() => setActiveImageIdx(idx)}
-                  className={`w-16 h-20 sm:w-20 sm:h-24 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                  className={`w-16 h-20 sm:w-20 sm:h-24 rounded-none overflow-hidden border transition-all shrink-0 ${
                     activeImageIdx === idx
-                      ? 'border-royal-violet ring-2 ring-royal-violet/30 shadow-md scale-100'
-                      : 'border-transparent opacity-65 hover:opacity-100 hover:scale-95'
+                      ? 'border-[#1C1C1C] ring-1 ring-[#1C1C1C]'
+                      : 'border-[#E5E5E5] opacity-70 hover:opacity-100'
                   }`}
                 >
                   <img src={img} alt="" className="w-full h-full object-cover" />
@@ -328,80 +329,70 @@ export default function ProductDetailPage() {
           )}
 
           {/* Quick Value Points */}
-          <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-stone-600">
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container/60 border border-surface-container-highest">
-              <Truck className="w-4 h-4 text-royal-violet shrink-0" />
+          <div className="grid grid-cols-2 gap-2 pt-1 text-[11px] text-[#707070] uppercase tracking-wider">
+            <div className="flex items-center gap-2 p-2.5 bg-[#FAFAFA] border border-[#E5E5E5]">
+              <Truck className="w-4 h-4 text-[#1C1C1C] shrink-0" strokeWidth={1.5} />
               <span>Complimentary Express ($150+)</span>
             </div>
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container/60 border border-surface-container-highest">
-              <Sparkles className="w-4 h-4 text-gold-accent shrink-0" />
-              <span>Embossed Keepsake Box</span>
+            <div className="flex items-center gap-2 p-2.5 bg-[#FAFAFA] border border-[#E5E5E5]">
+              <Sparkles className="w-4 h-4 text-[#1C1C1C] shrink-0" strokeWidth={1.5} />
+              <span>Bespoke Keepsake Box</span>
             </div>
           </div>
 
         </div>
 
         {/* Product Details & Purchase Actions Column (Desktop: 6 cols) */}
-        <div className="lg:col-span-6 space-y-6 sm:space-y-7" ref={buyBoxRef}>
+        <div className="lg:col-span-6 space-y-5" ref={buyBoxRef}>
           
           {/* Header & Pricing */}
-          <div className="space-y-3 sm:space-y-4 pb-5 border-b border-surface-container-high">
+          <div className="space-y-2 pb-4 border-b border-[#E5E5E5]">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-semibold text-royal-violet">
-                {product.category} Abaya Atelier
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-medium text-[#707070]">
+                {product.category}
               </span>
-              <div className="flex items-center gap-1 text-amber-600 text-xs">
-                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                <span className="font-bold">{product.rating}</span>
-                <span className="text-stone-400">({product.reviewsCount} reviews)</span>
+              <div className="flex items-center gap-1 text-[#1C1C1C] text-xs">
+                <Star className="w-3.5 h-3.5 fill-[#1C1C1C] text-[#1C1C1C]" strokeWidth={1} />
+                <span className="font-semibold">{product.rating}</span>
+                <span className="text-[#8E8E8E]">({product.reviewsCount} reviews)</span>
               </div>
             </div>
 
-            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-primary font-medium leading-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl text-[#1C1C1C] font-medium uppercase tracking-wider leading-tight">
               {product.name}
             </h1>
 
-            <p className="text-xs text-stone-500 tracking-wider uppercase font-medium">
+            <p className="text-xs text-[#707070] tracking-wider uppercase font-normal">
               {product.subtitle}
             </p>
 
-            <div className="flex items-baseline gap-3">
-              <span className="font-sans text-2xl sm:text-3xl text-primary font-bold tabular-nums tracking-tight">
+            <div className="flex items-baseline gap-3 pt-1">
+              <span className="text-xl sm:text-2xl text-[#1C1C1C] font-semibold tabular-nums tracking-tight">
                 {formatPrice(product.price)}
               </span>
-              {product.originalPrice && (
-                <span className="text-sm sm:text-base text-stone-400 line-through font-sans tabular-nums">
+              {product.originalPrice && product.originalPrice > product.price && (
+                <span className="text-sm sm:text-base text-[#8E8E8E] line-through tabular-nums">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-800 bg-emerald-100 font-semibold px-2.5 py-0.5 rounded-full">
-                Custom Tailored • Ready to Order
-              </span>
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+          <p className="text-xs sm:text-sm text-[#707070] leading-relaxed font-normal">
             {product.description}
           </p>
 
           {/* ========================================================================= */}
-          {/* OPTION 1: CATEGORY STYLE / SILHOUETTE CUT (7 Options) */}
+          {/* OPTION 1: CATEGORY STYLE / SILHOUETTE CUT */}
           {/* ========================================================================= */}
-          <div className="space-y-2.5 bg-white p-4 sm:p-5 rounded-xl border border-surface-container-highest shadow-sm">
-            <div className="flex justify-between items-center text-xs">
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-royal-violet text-white text-[10px] font-bold flex items-center justify-center">1</span>
-                <span className="font-semibold text-stone-900 uppercase tracking-wider">Category Style:</span>
-              </div>
-              <span className="font-serif font-medium text-royal-violet text-xs bg-surface-container px-2.5 py-0.5 rounded-full">
+          <div className="space-y-2 bg-white p-4 rounded-none border border-[#E5E5E5]">
+            <div className="flex justify-between items-center text-xs uppercase tracking-wider">
+              <span className="font-semibold text-[#1C1C1C]">1. Silhouette & Style:</span>
+              <span className="font-medium text-[#707070] bg-[#F7F7F7] px-2 py-0.5 border border-[#E5E5E5]">
                 {selectedStyle}
               </span>
             </div>
-
-            <p className="text-[11px] text-stone-500 leading-snug">
-              {currentStyleObj.description}
-            </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
               {ABAYA_STYLES.map((styleObj) => {
@@ -410,17 +401,17 @@ export default function ProductDetailPage() {
                   <button
                     key={styleObj.id}
                     onClick={() => setSelectedStyle(styleObj.name)}
-                    className={`p-2.5 text-left rounded-lg transition-all border flex flex-col justify-between min-h-[64px] ${
+                    className={`p-2.5 text-left rounded-none transition-all border flex flex-col justify-between min-h-[58px] ${
                       isSelected
-                        ? 'bg-primary text-white border-primary shadow-md ring-2 ring-royal-violet/30'
-                        : 'bg-[#fff7fc] text-stone-700 border-surface-container-high hover:border-royal-violet hover:bg-white'
+                        ? 'bg-[#1C1C1C] text-white border-[#1C1C1C]'
+                        : 'bg-white text-[#1C1C1C] border-[#E5E5E5] hover:border-[#1C1C1C]'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1">
-                      <span className="text-xs font-semibold leading-tight">{styleObj.name}</span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-gold-soft shrink-0" />}
+                      <span className="text-xs uppercase tracking-wide font-medium leading-tight">{styleObj.name}</span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" strokeWidth={2} />}
                     </div>
-                    <span className={`text-[9px] uppercase tracking-wider font-medium mt-1 ${isSelected ? 'text-gold-soft' : 'text-amethyst-soft'}`}>
+                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-white/80' : 'text-[#8E8E8E]'}`}>
                       {styleObj.tag}
                     </span>
                   </button>
@@ -430,22 +421,15 @@ export default function ProductDetailPage() {
           </div>
 
           {/* ========================================================================= */}
-          {/* OPTION 2: WORK / CRAFTSMANSHIP (7 Options) */}
+          {/* OPTION 2: WORK / CRAFTSMANSHIP */}
           {/* ========================================================================= */}
-          <div className="space-y-2.5 bg-white p-4 sm:p-5 rounded-xl border border-surface-container-highest shadow-sm">
-            <div className="flex justify-between items-center text-xs">
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-royal-violet text-white text-[10px] font-bold flex items-center justify-center">2</span>
-                <span className="font-semibold text-stone-900 uppercase tracking-wider">Work / Craftsmanship:</span>
-              </div>
-              <span className="font-serif font-medium text-royal-violet text-xs bg-surface-container px-2.5 py-0.5 rounded-full">
+          <div className="space-y-2 bg-white p-4 rounded-none border border-[#E5E5E5]">
+            <div className="flex justify-between items-center text-xs uppercase tracking-wider">
+              <span className="font-semibold text-[#1C1C1C]">2. Work & Detailing:</span>
+              <span className="font-medium text-[#707070] bg-[#F7F7F7] px-2 py-0.5 border border-[#E5E5E5]">
                 {selectedWork}
               </span>
             </div>
-
-            <p className="text-[11px] text-stone-500 leading-snug">
-              {currentWorkObj.description}
-            </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
               {ABAYA_WORKS.map((workObj) => {
@@ -454,17 +438,17 @@ export default function ProductDetailPage() {
                   <button
                     key={workObj.id}
                     onClick={() => setSelectedWork(workObj.name)}
-                    className={`p-2.5 text-left rounded-lg transition-all border flex flex-col justify-between min-h-[64px] ${
+                    className={`p-2.5 text-left rounded-none transition-all border flex flex-col justify-between min-h-[58px] ${
                       isSelected
-                        ? 'bg-royal-violet text-white border-royal-violet shadow-md ring-2 ring-primary/30'
-                        : 'bg-[#fff7fc] text-stone-700 border-surface-container-high hover:border-royal-violet hover:bg-white'
+                        ? 'bg-[#1C1C1C] text-white border-[#1C1C1C]'
+                        : 'bg-white text-[#1C1C1C] border-[#E5E5E5] hover:border-[#1C1C1C]'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1">
-                      <span className="text-xs font-semibold leading-tight capitalize">{workObj.name}</span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-gold-soft shrink-0" />}
+                      <span className="text-xs uppercase tracking-wide font-medium leading-tight capitalize">{workObj.name}</span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" strokeWidth={2} />}
                     </div>
-                    <span className={`text-[9px] uppercase tracking-wider font-medium mt-1 ${isSelected ? 'text-gold-soft' : 'text-stone-500'}`}>
+                    <span className={`text-[9px] uppercase tracking-wider font-normal mt-1 ${isSelected ? 'text-white/80' : 'text-[#8E8E8E]'}`}>
                       {workObj.tag}
                     </span>
                   </button>
@@ -476,17 +460,14 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           {/* OPTION 3: ABAYA SIZE & LENGTH + COLOR SWATCHES */}
           {/* ========================================================================= */}
-          <div className="space-y-4 bg-white p-4 sm:p-5 rounded-xl border border-surface-container-highest shadow-sm">
+          <div className="space-y-4 bg-white p-4 rounded-none border border-[#E5E5E5]">
             
             {/* Color Swatches */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-royal-violet text-white text-[10px] font-bold flex items-center justify-center">3</span>
-                  <span className="font-semibold text-stone-900 uppercase tracking-wider">Shade & Length:</span>
-                </div>
-                <span className="text-stone-700">
-                  Shade: <strong className="text-primary font-semibold">{currentColor.name}</strong>
+              <div className="flex justify-between text-xs uppercase tracking-wider">
+                <span className="font-semibold text-[#1C1C1C]">3. Color Shade:</span>
+                <span className="text-[#707070]">
+                  <strong className="text-[#1C1C1C] font-semibold">{currentColor.name}</strong>
                 </span>
               </div>
               
@@ -495,16 +476,16 @@ export default function ProductDetailPage() {
                   <button
                     key={c.name}
                     onClick={() => handleColorChange(idx)}
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all border shrink-0 ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all border shrink-0 ${
                       selectedColorIdx === idx
-                        ? 'ring-2 ring-royal-violet ring-offset-2 scale-110 border-transparent shadow-md'
-                        : 'border-black/10 hover:scale-105 active:scale-95'
+                        ? 'ring-1 ring-[#1C1C1C] ring-offset-2 scale-110 border-transparent'
+                        : 'border-black/20 hover:scale-105'
                     }`}
                     style={{ backgroundColor: c.hex }}
                     title={c.name}
                   >
                     {selectedColorIdx === idx && (
-                      <Check className="w-4 h-4 text-white drop-shadow" />
+                      <Check className="w-3.5 h-3.5 text-white drop-shadow" strokeWidth={2} />
                     )}
                   </button>
                 ))}
@@ -512,28 +493,28 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Sizing & Length Options */}
-            <div className="space-y-2 pt-2 border-t border-surface-container-high">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-medium text-stone-700">Abaya Length / Size:</span>
+            <div className="space-y-2 pt-2 border-t border-[#E5E5E5]">
+              <div className="flex justify-between items-center text-xs uppercase tracking-wider">
+                <span className="font-medium text-[#707070]">Abaya Length / Size:</span>
                 <button
                   onClick={() => setShowSizeGuide(!showSizeGuide)}
-                  className="text-royal-violet hover:underline text-[11px] font-medium flex items-center gap-1"
+                  className="text-[#1C1C1C] hover:underline text-[11px] font-medium flex items-center gap-1"
                 >
-                  <Info className="w-3 h-3" />
-                  <span>Size & Height Guide</span>
+                  <Info className="w-3 h-3" strokeWidth={1.5} />
+                  <span>Size Reference</span>
                 </button>
               </div>
 
               {showSizeGuide && (
-                <div className="p-3 bg-surface-container-low rounded-lg border border-surface-container-high text-[11px] text-stone-600 space-y-1 animate-fade-in">
-                  <div className="font-semibold text-primary">Standard Abaya Sizing Reference:</div>
+                <div className="p-3 bg-[#FAFAFA] rounded-none border border-[#E5E5E5] text-[11px] text-[#707070] space-y-1 animate-fade-in uppercase tracking-wide">
+                  <div className="font-semibold text-[#1C1C1C]">Standard Length Reference:</div>
                   <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1 text-[10px]">
-                    <div>• Size 52: Height 5'0" – 5'2" (152–158 cm)</div>
-                    <div>• Size 54: Height 5'3" – 5'4" (160–164 cm)</div>
-                    <div>• Size 56: Height 5'5" – 5'6" (165–169 cm)</div>
-                    <div>• Size 58: Height 5'7" – 5'8" (170–174 cm)</div>
-                    <div>• Size 60: Height 5'9"+ (175 cm+)</div>
-                    <div>• Custom: Tailored to your measurements</div>
+                    <div>• Size 52: Height 5'0" – 5'2"</div>
+                    <div>• Size 54: Height 5'3" – 5'4"</div>
+                    <div>• Size 56: Height 5'5" – 5'6"</div>
+                    <div>• Size 58: Height 5'7" – 5'8"</div>
+                    <div>• Size 60: Height 5'9"+</div>
+                    <div>• Custom: Tailored dimensions</div>
                   </div>
                 </div>
               )}
@@ -543,10 +524,10 @@ export default function ProductDetailPage() {
                   <button
                     key={s}
                     onClick={() => setSelectedSize(s)}
-                    className={`px-3 py-2 text-xs font-medium rounded-lg text-center transition-all border ${
+                    className={`px-3 py-2 text-xs font-medium rounded-none text-center transition-all border uppercase tracking-wider ${
                       selectedSize === s
-                        ? 'bg-primary text-white border-primary shadow-sm font-semibold'
-                        : 'bg-[#fff7fc] text-stone-700 border-surface-container-high hover:border-royal-violet hover:bg-white'
+                        ? 'bg-[#1C1C1C] text-white border-[#1C1C1C]'
+                        : 'bg-white text-[#1C1C1C] border-[#E5E5E5] hover:border-[#1C1C1C]'
                     }`}
                   >
                     {s}
@@ -555,40 +536,40 @@ export default function ProductDetailPage() {
               </div>
 
               {selectedSize.toLowerCase().includes('custom') && (
-                <div className="p-3.5 bg-royal-violet/5 rounded-xl border border-royal-violet/20 space-y-2.5 animate-fade-in">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-royal-violet">
-                    <Scissors className="w-3.5 h-3.5" />
-                    <span>Enter Your Bespoke Atelier Measurements:</span>
+                <div className="p-3.5 bg-[#FAFAFA] rounded-none border border-[#E5E5E5] space-y-2 animate-fade-in">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C]">
+                    <Scissors className="w-3.5 h-3.5" strokeWidth={1.5} />
+                    <span>Enter Custom Measurements:</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                     <div>
-                      <label className="block text-[10px] uppercase font-bold text-stone-600 mb-1">Height (e.g. 5'4" / 164cm)</label>
+                      <label className="block text-[10px] uppercase font-medium text-[#707070] mb-1">Height (e.g. 164cm)</label>
                       <input
                         type="text"
                         value={customMeasurements.height}
                         onChange={(e) => setCustomMeasurements(prev => ({ ...prev, height: e.target.value }))}
                         placeholder="e.g. 164 cm"
-                        className="w-full bg-white border border-stone-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-royal-violet"
+                        className="w-full bg-white border border-[#E5E5E5] rounded-none px-2.5 py-1.5 text-xs focus:outline-none focus:border-[#1C1C1C]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] uppercase font-bold text-stone-600 mb-1">Bust / Width (e.g. 38")</label>
+                      <label className="block text-[10px] uppercase font-medium text-[#707070] mb-1">Bust (e.g. 38")</label>
                       <input
                         type="text"
                         value={customMeasurements.bust}
                         onChange={(e) => setCustomMeasurements(prev => ({ ...prev, bust: e.target.value }))}
                         placeholder="e.g. 38 inches"
-                        className="w-full bg-white border border-stone-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-royal-violet"
+                        className="w-full bg-white border border-[#E5E5E5] rounded-none px-2.5 py-1.5 text-xs focus:outline-none focus:border-[#1C1C1C]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] uppercase font-bold text-stone-600 mb-1">Desired Length (e.g. 56")</label>
+                      <label className="block text-[10px] uppercase font-medium text-[#707070] mb-1">Length (e.g. 56")</label>
                       <input
                         type="text"
                         value={customMeasurements.length}
                         onChange={(e) => setCustomMeasurements(prev => ({ ...prev, length: e.target.value }))}
                         placeholder="e.g. 56 inches"
-                        className="w-full bg-white border border-stone-300 rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-royal-violet"
+                        className="w-full bg-white border border-[#E5E5E5] rounded-none px-2.5 py-1.5 text-xs focus:outline-none focus:border-[#1C1C1C]"
                       />
                     </div>
                   </div>
@@ -598,46 +579,22 @@ export default function ProductDetailPage() {
 
           </div>
 
-          {/* ========================================================================= */}
-          {/* BESPOKE CUSTOMIZATION SUMMARY CARD */}
-          {/* ========================================================================= */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-royal-violet/10 via-surface-container to-gold-accent/10 border border-royal-violet/20 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-royal-violet uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-gold-accent" />
-              <span>Your Bespoke Selection Preview:</span>
-            </div>
-            <div className="text-xs text-stone-800 flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
-                <strong>Cut:</strong> {selectedStyle}
-              </span>
-              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
-                <strong>Work:</strong> {selectedWork}
-              </span>
-              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
-                <strong>Shade:</strong> {currentColor.name}
-              </span>
-              <span className="bg-white/80 px-2 py-0.5 rounded border border-stone-200 font-medium">
-                <strong>Size:</strong> {selectedSize}
-              </span>
-            </div>
-          </div>
-
           {/* Quantity & Add to Cart Controls */}
-          <div className="space-y-3 pt-2">
-            <div className="flex gap-3 sm:gap-4">
+          <div className="space-y-2.5 pt-2">
+            <div className="flex gap-3">
               
               {/* Quantity counter */}
-              <div className="flex items-center border border-outline-variant/80 rounded-lg bg-white px-2 sm:px-3 py-2">
+              <div className="flex items-center border border-[#E5E5E5] rounded-none bg-white px-2 py-2">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="text-stone-500 hover:text-primary px-2 font-bold text-base"
+                  className="text-[#707070] hover:text-[#1C1C1C] px-2 font-medium text-base"
                 >
                   -
                 </button>
-                <span className="w-7 sm:w-8 text-center text-xs sm:text-sm font-bold text-primary">{quantity}</span>
+                <span className="w-7 text-center text-xs font-semibold text-[#1C1C1C]">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="text-stone-500 hover:text-primary px-2 font-bold text-base"
+                  className="text-[#707070] hover:text-[#1C1C1C] px-2 font-medium text-base"
                 >
                   +
                 </button>
@@ -646,9 +603,9 @@ export default function ProductDetailPage() {
               {/* Add to Bag Button */}
               <button
                 onClick={handleAddToCart}
-                className="flex-1 py-3.5 sm:py-4 bg-primary hover:bg-royal-violet text-white text-xs uppercase tracking-[0.2em] font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] group"
+                className="btn-primary flex-1 flex items-center justify-center gap-2"
               >
-                <ShoppingBag className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <ShoppingBag className="w-4 h-4" strokeWidth={1.5} />
                 <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
               </button>
 
@@ -657,17 +614,17 @@ export default function ProductDetailPage() {
             {/* Direct WhatsApp Order Button */}
             <button
               onClick={handleWhatsAppInstantOrder}
-              className="w-full py-3.5 bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/50 text-[#0d6840] text-xs uppercase tracking-[0.14em] font-bold rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm"
+              className="btn-secondary w-full flex items-center justify-center gap-2"
             >
-              <svg className="w-4 h-4 fill-current shrink-0 text-[#25D366]" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
               </svg>
-              <span>Instant WhatsApp Bespoke Order</span>
+              <span>Instant WhatsApp Inquiry & Order</span>
             </button>
           </div>
 
           {/* Collapsible Accordions */}
-          <div className="space-y-2.5 sm:space-y-3 pt-4 sm:pt-6 border-t border-surface-container-high">
+          <div className="space-y-2.5 sm:space-y-3 pt-4 sm:pt-6 border-t border-[#E5E5E5]">
             
             {/* Accordion 1: Fabric */}
             <div className="border border-surface-container-highest rounded-lg bg-white overflow-hidden">

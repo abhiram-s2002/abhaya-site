@@ -72,7 +72,7 @@ export default function HomePage() {
   const newArrivals = PRODUCTS.slice(0, 8);
 
   return (
-    <div className="bg-white text-primary font-sans antialiased overflow-x-hidden">
+    <div className="bg-white text-[#1C1C1C] font-sans antialiased overflow-x-hidden">
 
       {/* ═══════════════════════════════════════════════
           SECTION 1 — HERO / SHOP NOW
@@ -96,24 +96,24 @@ export default function HomePage() {
                   />
 
                   {/* Dark gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
 
                   {/* Content over image — bottom-left */}
                   <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 md:p-16 lg:p-20 max-w-2xl">
                     {slide.badge && (
-                      <span className="inline-block w-fit text-[10px] sm:text-xs font-sans tracking-[0.25em] font-bold text-white/80 uppercase mb-2 sm:mb-3">
+                      <span className="inline-block w-fit text-[10px] sm:text-xs tracking-[0.2em] font-medium text-white/90 uppercase mb-2">
                         {slide.badge}
                       </span>
                     )}
-                    <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-medium leading-[1.1] mb-3 sm:mb-4 drop-shadow-lg">
+                    <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-medium uppercase tracking-[0.06em] leading-[1.15] mb-3 drop-shadow-md">
                       {slide.title}
                     </h1>
-                    <p className="text-white/80 font-sans text-sm sm:text-base max-w-md leading-relaxed mb-6 sm:mb-8 drop-shadow-sm">
+                    <p className="text-white/90 text-xs sm:text-sm max-w-md leading-relaxed mb-6 drop-shadow-sm font-normal">
                       {slide.description}
                     </p>
                     <button
                       onClick={() => navigateTo('shop', slide.productId)}
-                      className="cursor-pointer w-fit bg-white text-primary px-8 sm:px-10 py-3 sm:py-3.5 font-sans font-bold uppercase tracking-[0.15em] text-xs sm:text-sm transition-all duration-300 hover:bg-primary hover:text-white active:scale-95 shadow-lg"
+                      className="btn-primary w-fit !bg-white !text-[#1C1C1C] hover:!bg-[#1C1C1C] hover:!text-white border border-white"
                     >
                       Shop Now
                     </button>
@@ -128,17 +128,17 @@ export default function HomePage() {
             <>
               <button
                 onClick={prevSlide}
-                className="cursor-pointer absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-all"
+                className="cursor-pointer absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/30 backdrop-blur-md hover:bg-white text-black rounded-none flex items-center justify-center transition-all"
                 aria-label="Previous slide"
               >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
               </button>
               <button
                 onClick={nextSlide}
-                className="cursor-pointer absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-all"
+                className="cursor-pointer absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/30 backdrop-blur-md hover:bg-white text-black rounded-none flex items-center justify-center transition-all"
                 aria-label="Next slide"
               >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
               </button>
             </>
           )}
@@ -151,9 +151,9 @@ export default function HomePage() {
                   key={i}
                   onClick={() => setCurrentSlide(i)}
                   aria-label={`Go to slide ${i + 1}`}
-                  className={`cursor-pointer h-[3px] transition-all duration-500 rounded-full ${
+                  className={`cursor-pointer h-[2px] transition-all duration-300 ${
                     currentSlide === i
-                      ? 'w-10 bg-white'
+                      ? 'w-8 bg-white'
                       : 'w-3 bg-white/40 hover:bg-white/70'
                   }`}
                 />
@@ -167,34 +167,34 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 2 — SHOP BY COLLECTION
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-collection" className="py-14 sm:py-20 md:py-28 bg-white">
+      <section id="shop-by-collection" className="py-14 sm:py-20 bg-white border-b border-[#E5E5E5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Main Section Title */}
-          <div className="text-center mb-14 sm:mb-20">
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-[2.75rem] text-primary font-medium tracking-tight mb-3">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em] mb-2">
               Shop by Collection
             </h2>
-            <div className="w-16 h-[2px] bg-primary/30 mx-auto" />
+            <div className="w-12 h-[1px] bg-[#1C1C1C] mx-auto" />
           </div>
 
           {/* ── SUB-SECTION: By Style ── */}
-          <div className="mb-16 sm:mb-24">
-            <div className="flex items-center justify-between mb-8 sm:mb-10">
+          <div className="mb-14 sm:mb-20">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h3 className="font-serif text-xl sm:text-2xl md:text-3xl text-primary font-medium">
-                  By Style
+                <h3 className="text-base sm:text-lg md:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
+                  By Silhouette & Style
                 </h3>
-                <p className="text-xs sm:text-sm text-stone-500 font-sans mt-1 tracking-wide">
-                  Discover abayas by silhouette
+                <p className="text-xs text-[#707070] mt-0.5 tracking-wide">
+                  Tailored cuts from open drapes to kimono silhouettes
                 </p>
               </div>
               <button
                 onClick={() => navigateTo('shop')}
-                className="cursor-pointer hidden sm:inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-[0.12em] text-primary hover:text-royal-violet transition-colors"
+                className="cursor-pointer hidden sm:inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] hover:text-[#707070] transition-colors"
               >
                 <span>View All</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
             </div>
 
@@ -206,18 +206,17 @@ export default function HomePage() {
                   className="group cursor-pointer"
                 >
                   {/* Card Image */}
-                  <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-3">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
                     <img
                       src={STYLE_IMAGES[styleName]}
                       alt={styleName}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       loading="lazy"
                     />
-                    {/* Subtle overlay on hover */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
                   {/* Card Label */}
-                  <h4 className="font-sans text-xs sm:text-sm font-semibold text-primary uppercase tracking-[0.08em] text-center group-hover:text-royal-violet transition-colors duration-300">
+                  <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200">
                     {styleName}
                   </h4>
                 </div>
@@ -228,21 +227,21 @@ export default function HomePage() {
 
           {/* ── SUB-SECTION: By Work ── */}
           <div>
-            <div className="flex items-center justify-between mb-8 sm:mb-10">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div>
-                <h3 className="font-serif text-xl sm:text-2xl md:text-3xl text-primary font-medium">
-                  By Work
+                <h3 className="text-base sm:text-lg md:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
+                  By Craftsmanship & Work
                 </h3>
-                <p className="text-xs sm:text-sm text-stone-500 font-sans mt-1 tracking-wide">
-                  Explore artisan craftsmanship
+                <p className="text-xs text-[#707070] mt-0.5 tracking-wide">
+                  Artisanal embroidery, stonework, and thread detailing
                 </p>
               </div>
               <button
                 onClick={() => navigateTo('shop')}
-                className="cursor-pointer hidden sm:inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-[0.12em] text-primary hover:text-royal-violet transition-colors"
+                className="cursor-pointer hidden sm:inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] hover:text-[#707070] transition-colors"
               >
                 <span>View All</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
             </div>
 
@@ -254,17 +253,17 @@ export default function HomePage() {
                   className="group cursor-pointer"
                 >
                   {/* Card Image */}
-                  <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-3">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-[#F7F7F7] border border-[#E5E5E5] group-hover:border-[#1C1C1C] transition-colors mb-2.5">
                     <img
                       src={WORK_IMAGES[workName]}
                       alt={workName}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
                   {/* Card Label */}
-                  <h4 className="font-sans text-xs sm:text-sm font-semibold text-primary uppercase tracking-[0.08em] text-center group-hover:text-royal-violet transition-colors duration-300 capitalize">
+                  <h4 className="text-xs sm:text-[13px] font-medium text-[#1C1C1C] uppercase tracking-wider text-center group-hover:text-[#707070] transition-colors duration-200 capitalize">
                     {workName}
                   </h4>
                 </div>
@@ -279,30 +278,30 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 3 — NEW ARRIVALS
           ═══════════════════════════════════════════════ */}
-      <section id="new-arrivals" className="py-14 sm:py-20 md:py-28 bg-[#faf8f6]">
+      <section id="new-arrivals" className="py-14 sm:py-20 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="flex items-center justify-between mb-8 sm:mb-12">
+          <div className="flex items-center justify-between mb-8 sm:mb-10">
             <div>
-              <h2 className="font-serif text-3xl sm:text-4xl md:text-[2.75rem] text-primary font-medium tracking-tight mb-1">
+              <h2 className="text-xl sm:text-2xl md:text-3xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em] mb-0.5">
                 New Arrivals
               </h2>
-              <p className="text-xs sm:text-sm text-stone-500 font-sans tracking-wide">
-                Our latest bespoke creations
+              <p className="text-xs text-[#707070] tracking-wide uppercase">
+                Explore our latest boutique releases
               </p>
             </div>
             <button
               onClick={() => navigateTo('shop')}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-[0.12em] text-primary hover:text-royal-violet transition-colors"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] hover:text-[#707070] transition-colors"
             >
               <span className="hidden sm:inline">View All</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             </button>
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
             {newArrivals.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
