@@ -166,12 +166,7 @@ export default function CartDrawer() {
                         </div>
                         
                         <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] uppercase text-white/85">
-                          {item.style && (
-                            <span className="bg-white/20 text-white px-1.5 py-0.5 rounded-none font-medium truncate max-w-[140px]">
-                              {item.style}
-                            </span>
-                          )}
-                          <span className="bg-white/10 text-white px-1.5 py-0.5 rounded-none font-medium truncate max-w-[160px]">
+                          <span className="bg-white/15 text-white px-1.5 py-0.5 rounded-none font-medium truncate max-w-[200px]">
                             {item.size}
                           </span>
                         </div>
