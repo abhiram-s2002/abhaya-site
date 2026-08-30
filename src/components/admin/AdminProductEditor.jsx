@@ -768,9 +768,9 @@ export default function AdminProductEditor({
                     <span>Auto Converted Rates:</span>
                   </span>
                   <div className="flex items-center gap-3 text-stone-700 font-mono font-medium">
-                    <span>🇮🇳 ₹{inrPrice.toLocaleString()} {inrOrig ? <del className="text-stone-400">₹{inrOrig.toLocaleString()}</del> : ''}</span>
+                    <span>INR ₹{inrPrice.toLocaleString()} {inrOrig ? <del className="text-stone-400">₹{inrOrig.toLocaleString()}</del> : ''}</span>
                     <span>•</span>
-                    <span>🇦🇪 AED {aedPrice.toLocaleString()} {aedOrig ? <del className="text-stone-400">AED {aedOrig.toLocaleString()}</del> : ''}</span>
+                    <span>AED {aedPrice.toLocaleString()} {aedOrig ? <del className="text-stone-400">AED {aedOrig.toLocaleString()}</del> : ''}</span>
                   </div>
                 </div>
 
@@ -791,7 +791,7 @@ export default function AdminProductEditor({
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl">🌐</span>
+                        <span className="text-xs font-bold text-royal-violet uppercase tracking-wider">Global</span>
                         {targetRegion === 'all' && (
                           <span className="text-[10px] font-bold uppercase tracking-wider text-royal-violet bg-royal-violet/15 px-2 py-0.5 rounded-full">
                             Active
@@ -799,7 +799,7 @@ export default function AdminProductEditor({
                         )}
                       </div>
                       <div className="mt-3">
-                        <div className="text-xs font-bold text-stone-900">Global / Both Markets</div>
+                        <div className="text-xs font-bold text-stone-900">Global / All Markets</div>
                         <div className="text-[11px] text-stone-500">Available to all India & UAE shoppers</div>
                       </div>
                     </button>
@@ -814,7 +814,7 @@ export default function AdminProductEditor({
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl">🇮🇳</span>
+                        <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">India</span>
                         {targetRegion === 'india' && (
                           <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
                             Active
@@ -837,7 +837,7 @@ export default function AdminProductEditor({
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl">🇦🇪</span>
+                        <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Arab / UAE</span>
                         {targetRegion === 'arab' && (
                           <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
                             Active
@@ -1580,24 +1580,21 @@ export default function AdminProductEditor({
                   )}
                 </div>
 
-                {/* Target Audience Flag */}
+                {/* Target Audience Badge */}
                 <div className="absolute top-3 right-3">
                   {targetRegion === 'india' && (
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-emerald-800 shadow-sm flex items-center gap-1">
-                      <span>🇮🇳</span>
-                      <span>India Exclusive</span>
+                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-emerald-800 shadow-sm">
+                      India Exclusive
                     </span>
                   )}
                   {targetRegion === 'arab' && (
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-amber-900 shadow-sm flex items-center gap-1">
-                      <span>🇦🇪</span>
-                      <span>UAE & Arab Exclusive</span>
+                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-amber-900 shadow-sm">
+                      UAE & Arab Exclusive
                     </span>
                   )}
                   {targetRegion === 'all' && (
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-royal-violet shadow-sm flex items-center gap-1">
-                      <span>🌐</span>
-                      <span>Global Boutique</span>
+                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-royal-violet shadow-sm">
+                      Global Boutique
                     </span>
                   )}
                 </div>

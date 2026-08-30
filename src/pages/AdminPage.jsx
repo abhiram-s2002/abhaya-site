@@ -31,6 +31,7 @@ import {
 import { useShop } from '../context/ShopContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import { CMS_SECTIONS } from '../lib/cms';
+import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
 import AdminProductEditor from '../components/admin/AdminProductEditor';
 import brandLogo from '../assets/logo.png';
 
@@ -70,10 +71,10 @@ export default function AdminPage() {
   // Product Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedMarketFilter, setSelectedMarketFilter] = useState('all'); // 'all' | 'india' | 'arab' | 'both'
+  const [selectedStyle, setSelectedStyle] = useState('All');
+  const [selectedWork, setSelectedWork] = useState('All');
+  const [selectedMarketFilter, setSelectedMarketFilter] = useState('all'); // 'all' | 'india' | 'arab'
   const [stockFilter, setStockFilter] = useState('all'); // 'all' | 'low' | 'out'
-  const [featuredOnly, setFeaturedOnly] = useState(false);
-  const [violetOnly, setVioletOnly] = useState(false);
 
   // Full-page Editor State
   const [isProductEditorOpen, setIsProductEditorOpen] = useState(false);
@@ -120,17 +121,35 @@ export default function AdminPage() {
   // Filtered Products List
   const filteredProducts = useMemo(() => {
     return baseProducts.filter(p => {
-      // Search
-      const q = searchQuery.toLowerCase();
-      const matchesSearch =
-        !q ||
-        p.name.toLowerCase().includes(q) ||
-        (p.subtitle && p.subtitle.toLowerCase().includes(q)) ||
-        p.category.toLowerCase().includes(q) ||
-        (p.badge && p.badge.toLowerCase().includes(q));
+      // Search across name, subtitle, category, badge, styles, works, colors, description
+      const q = searchQuery.toLowerCase().trim();
+      let matchesSearch = true;
+      if (q) {
+        matchesSearch =
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.subtitle && p.subtitle.toLowerCase().includes(q)) ||
+          (p.category && p.category.toLowerCase().includes(q)) ||
+          (p.badge && p.badge.toLowerCase().includes(q)) ||
+          (p.defaultStyle && p.defaultStyle.toLowerCase().includes(q)) ||
+          (Array.isArray(p.styles) && p.styles.some(s => s.toLowerCase().includes(q))) ||
+          (p.defaultWork && p.defaultWork.toLowerCase().includes(q)) ||
+          (Array.isArray(p.works) && p.works.some(w => w.toLowerCase().includes(q))) ||
+          (Array.isArray(p.colors) && p.colors.some(c => c.name.toLowerCase().includes(q))) ||
+          (p.description && p.description.toLowerCase().includes(q));
+      }
 
       // Category
       const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+
+      // Style / Silhouette
+      const matchesStyle = selectedStyle === 'All' ||
+        p.defaultStyle === selectedStyle ||
+        (Array.isArray(p.styles) && p.styles.includes(selectedStyle));
+
+      // Work / Craftsmanship
+      const matchesWork = selectedWork === 'All' ||
+        p.defaultWork === selectedWork ||
+        (Array.isArray(p.works) && p.works.includes(selectedWork));
 
       // Market / Region Filter
       let matchesMarket = true;
@@ -138,29 +157,15 @@ export default function AdminPage() {
         matchesMarket = p.targetRegion === 'india';
       } else if (selectedMarketFilter === 'arab') {
         matchesMarket = p.targetRegion === 'arab';
-      } else if (selectedMarketFilter === 'both') {
-        matchesMarket = p.targetRegion === 'all' || !p.targetRegion;
       }
 
       // Stock
       const stock = p.stockCount ?? 10;
       let matchesStock = true;
       if (stockFilter === 'low') matchesStock = stock <= 5 && stock > 0;
-      if (stockFilter === 'out') matchesStock = stock === 0;
-
-      // Featured / Violet
-      const matchesFeatured = !featuredOnly || p.isFeatured;
-      const matchesViolet = !violetOnly || p.isVioletEdition;
-
-      return matchesSearch && matchesCategory && matchesMarket && matchesStock && matchesFeatured && matchesViolet;
+      return matchesSearch && matchesCategory && matchesStyle && matchesWork && matchesMarket && matchesStock;
     });
-  }, [baseProducts, searchQuery, selectedCategory, selectedMarketFilter, stockFilter, featuredOnly, violetOnly]);
-
-  // Categories list for filter pills
-  const categories = useMemo(() => {
-    const set = new Set(baseProducts.map(p => p.category).filter(Boolean));
-    return ['All', ...Array.from(set)];
-  }, [baseProducts]);
+  }, [baseProducts, searchQuery, selectedCategory, selectedStyle, selectedWork, selectedMarketFilter, stockFilter]);
 
   // Handlers
   const handleOpenAddModal = () => {
@@ -310,26 +315,6 @@ export default function AdminPage() {
             className="h-14 sm:h-16 w-auto object-contain shrink-0 drop-shadow-sm"
           />
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-royal-violet/10 border border-royal-violet/20 text-royal-violet text-[10px] uppercase tracking-[0.2em] font-semibold">
-                <Sparkles className="w-3 h-3 text-gold-accent" />
-                <span>Atelier Control Center</span>
-              </div>
-              
-              {/* Supabase Connection Badge */}
-              {isSupabaseConfigured ? (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Supabase Live Cloud</span>
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-semibold" title="Add VITE_SUPABASE_URL in .env to connect to live Supabase">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  <span>Local Active Storage (Cloud Ready)</span>
-                </span>
-              )}
-            </div>
-
             <h1 className="font-serif text-2xl sm:text-3xl text-primary font-medium">
               Luxury Abaya & Catalog Management
             </h1>
@@ -419,7 +404,7 @@ export default function AdminPage() {
       {activeTab === 'products' && (
         <div className="space-y-6 animate-fade-in">
           
-          {/* Controls Bar: Search, Category Pills, View Mode */}
+          {/* Controls Bar: Search, Category Pills, Style/Work Dropdowns, View Mode */}
           <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
               
@@ -428,37 +413,15 @@ export default function AdminPage() {
                 <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
                 <input
                   type="text"
-                  placeholder="Search abayas by name, category, badge..."
+                  placeholder="Search abayas by name, fabric, silhouette, work, color..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 rounded-xl border border-secondary/30 bg-[#fff9fd] text-xs focus:outline-none focus:ring-2 focus:ring-royal-violet/30"
                 />
               </div>
 
-              {/* View Switcher & Filters */}
+              {/* View Switcher */}
               <div className="flex items-center gap-2 self-end sm:self-auto">
-                <button
-                  onClick={() => setFeaturedOnly(!featuredOnly)}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors ${
-                    featuredOnly
-                      ? 'bg-royal-violet text-white border-royal-violet'
-                      : 'border-secondary/30 text-stone-600 hover:bg-surface-container'
-                  }`}
-                >
-                  Featured Only
-                </button>
-
-                <button
-                  onClick={() => setVioletOnly(!violetOnly)}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors ${
-                    violetOnly
-                      ? 'bg-[#982476] text-white border-[#982476]'
-                      : 'border-secondary/30 text-stone-600 hover:bg-surface-container'
-                  }`}
-                >
-                  Violet Edition Only
-                </button>
-
                 <div className="flex items-center border border-secondary/30 rounded-xl p-0.5 bg-[#fff9fd]">
                   <button
                     onClick={() => setViewMode('table')}
@@ -482,48 +445,93 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* Market & Category Filter Pills */}
+            {/* Filter Dropdowns Row: Silhouette, Craftsmanship, Stock Status */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-surface-container-highest">
+              {/* Silhouette / Style Filter */}
+              <div className="flex items-center gap-2 bg-[#fff9fd] px-3 py-1.5 rounded-xl border border-secondary/20">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 shrink-0">Style:</span>
+                <select
+                  value={selectedStyle}
+                  onChange={(e) => setSelectedStyle(e.target.value)}
+                  className="w-full bg-transparent text-xs text-stone-700 font-medium focus:outline-none cursor-pointer"
+                >
+                  <option value="All">All Silhouettes</option>
+                  {ABAYA_STYLES.map(s => (
+                    <option key={s.id} value={s.name}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Craftsmanship / Work Filter */}
+              <div className="flex items-center gap-2 bg-[#fff9fd] px-3 py-1.5 rounded-xl border border-secondary/20">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 shrink-0">Work:</span>
+                <select
+                  value={selectedWork}
+                  onChange={(e) => setSelectedWork(e.target.value)}
+                  className="w-full bg-transparent text-xs text-stone-700 font-medium focus:outline-none cursor-pointer"
+                >
+                  <option value="All">All Craftsmanship</option>
+                  {ABAYA_WORKS.map(w => (
+                    <option key={w.id} value={w.name}>{w.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Stock Status Filter */}
+              <div className="flex items-center gap-2 bg-[#fff9fd] px-3 py-1.5 rounded-xl border border-secondary/20">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 shrink-0">Stock:</span>
+                <select
+                  value={stockFilter}
+                  onChange={(e) => setStockFilter(e.target.value)}
+                  className="w-full bg-transparent text-xs text-stone-700 font-medium focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Stock Statuses</option>
+                  <option value="low">Low Stock (≤ 5 pieces)</option>
+                  <option value="out">Out of Stock (0 pieces)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Market Filter Row */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-surface-container-highest">
               {/* Market pills */}
               <div className="flex items-center gap-1.5 bg-surface-container/60 p-1 rounded-xl">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 px-2">Market:</span>
                 {[
-                  { id: 'all', label: 'All', icon: '🌐' },
-                  { id: 'india', label: 'India', icon: '🇮🇳' },
-                  { id: 'arab', label: 'Arab / UAE', icon: '🇦🇪' },
-                  { id: 'both', label: 'Both', icon: '✨' }
+                  { id: 'all', label: 'All' },
+                  { id: 'india', label: 'India' },
+                  { id: 'arab', label: 'Arab / UAE' }
                 ].map((m) => (
                   <button
                     key={m.id}
                     onClick={() => setSelectedMarketFilter(m.id)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       selectedMarketFilter === m.id
                         ? 'bg-white text-primary shadow-xs ring-1 ring-black/5 font-bold'
                         : 'text-stone-600 hover:text-stone-900'
                     }`}
                   >
-                    <span>{m.icon}</span>
                     <span>{m.label}</span>
                   </button>
                 ))}
               </div>
 
-              {/* Category pills */}
-              <div className="flex flex-wrap gap-1.5">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
-                      selectedCategory === cat
-                        ? 'bg-primary text-white shadow-xs'
-                        : 'bg-surface-container text-stone-600 hover:bg-surface-container-high'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
+              {/* Reset Filters button if active */}
+              {(searchQuery || selectedCategory !== 'All' || selectedStyle !== 'All' || selectedWork !== 'All' || selectedMarketFilter !== 'all' || stockFilter !== 'all') && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('All');
+                    setSelectedStyle('All');
+                    setSelectedWork('All');
+                    setSelectedMarketFilter('all');
+                    setStockFilter('all');
+                  }}
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                >
+                  Reset Filters
+                </button>
+              )}
             </div>
           </div>
 
@@ -533,7 +541,7 @@ export default function AdminPage() {
               <Package className="w-12 h-12 text-stone-300 mx-auto" />
               <h3 className="font-serif text-lg text-primary font-medium">No Products Found</h3>
               <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                No items matched your current search filters. Try clearing your search query or add a new piece.
+                No items matched your current search filters. Try clearing your filters or adding a new piece to the atelier.
               </p>
               <button
                 onClick={handleOpenAddModal}
@@ -550,10 +558,10 @@ export default function AdminPage() {
                   <thead className="bg-[#fff9fd] border-b border-surface-container-highest text-stone-500 font-semibold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="py-3.5 px-4">Abaya Creation</th>
-                      <th className="py-3.5 px-4">Category & Badge</th>
-                      <th className="py-3.5 px-4">Target Market</th>
+                      <th className="py-3.5 px-4">Fabric, Silhouette & Craft</th>
+                      <th className="py-3.5 px-4">Market & Rating</th>
                       <th className="py-3.5 px-4">Price</th>
-                      <th className="py-3.5 px-4">Stock</th>
+                      <th className="py-3.5 px-4">Stock Status</th>
                       <th className="py-3.5 px-4 text-center">Featured</th>
                       <th className="py-3.5 px-4 text-center">Violet Edition</th>
                       <th className="py-3.5 px-4 text-right">Actions</th>
@@ -569,62 +577,70 @@ export default function AdminPage() {
                             <img
                               src={p.image}
                               alt={p.name}
-                              className="w-12 h-16 rounded-lg object-cover border border-secondary/20 shrink-0 bg-surface-container"
+                              className="w-12 h-16 rounded-lg object-cover border border-secondary/20 shrink-0 bg-surface-container shadow-xs"
                             />
                             <div>
                               <div className="font-serif font-medium text-sm text-primary">{p.name}</div>
-                              <div className="text-[11px] text-stone-500 truncate max-w-xs">{p.subtitle || '100% Luxury Weave'}</div>
-                              <div className="flex items-center gap-1 mt-1">
+                              <div className="text-[11px] text-stone-500 truncate max-w-xs">{p.subtitle || '100% Luxury Modest Wear'}</div>
+                              <div className="flex items-center gap-1 mt-1.5">
                                 {(p.colors || []).slice(0, 4).map((c, i) => (
                                   <span
                                     key={i}
                                     title={c.name}
-                                    className="w-3 h-3 rounded-full border border-black/10 inline-block shadow-inner"
+                                    className="w-3 h-3 rounded-full border border-black/10 inline-block shadow-xs"
                                     style={{ backgroundColor: c.hex }}
                                   />
                                 ))}
                                 {(p.colors || []).length > 4 && (
-                                  <span className="text-[9px] text-stone-400">+{p.colors.length - 4}</span>
+                                  <span className="text-[9px] text-stone-400">+{p.colors.length - 4} shades</span>
                                 )}
                               </div>
                             </div>
                           </div>
                         </td>
 
-                        {/* Category & Badge */}
+                        {/* Fabric, Silhouette & Craft */}
                         <td className="py-3.5 px-4">
-                          <span className="inline-block px-2.5 py-0.5 rounded-full bg-surface-container text-stone-700 font-medium">
-                            {p.category}
-                          </span>
-                          {p.badge && (
-                            <span className="block mt-1 text-[10px] text-royal-violet font-semibold">
-                              {p.badge}
-                            </span>
-                          )}
-                          <div className="flex items-center gap-1 mt-1 text-[11px] text-amber-700">
-                            <span className="font-semibold">★ {Number(p.rating || 5.0).toFixed(1)}</span>
-                            <span className="text-stone-400">({p.reviewsCount || 0})</span>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="inline-block px-2 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-semibold text-[10px]">
+                                {p.category}
+                              </span>
+                              {p.badge && (
+                                <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-semibold">
+                                  {p.badge}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-stone-600 font-medium">
+                              {p.defaultStyle || 'Open abaya'} • <span className="text-stone-500 font-normal">{p.defaultWork || 'plain'}</span>
+                            </div>
                           </div>
                         </td>
 
-                        {/* Target Market */}
+                        {/* Market & Rating */}
                         <td className="py-3.5 px-4">
-                          {p.targetRegion === 'india' ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 text-[11px] font-semibold border border-emerald-200/50">
-                              <span>🇮🇳</span>
-                              <span>India</span>
-                            </span>
-                          ) : p.targetRegion === 'arab' ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[11px] font-semibold border border-amber-200/50">
-                              <span>🇦🇪</span>
-                              <span>Arab / UAE</span>
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 text-purple-800 text-[11px] font-semibold border border-purple-200/50">
-                              <span>🌐</span>
-                              <span>Both</span>
-                            </span>
-                          )}
+                          <div className="space-y-1">
+                            <div>
+                              {p.targetRegion === 'india' ? (
+                                <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 text-[10px] font-semibold border border-emerald-200/50">
+                                  India
+                                </span>
+                              ) : p.targetRegion === 'arab' ? (
+                                <span className="inline-block px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-semibold border border-amber-200/50">
+                                  Arab / UAE
+                                </span>
+                              ) : (
+                                <span className="inline-block px-2 py-0.5 rounded-md bg-purple-50 text-purple-800 text-[10px] font-semibold border border-purple-200/50">
+                                  Global
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 text-[10px] text-amber-700">
+                              <span className="font-semibold">★ {Number(p.rating || 5.0).toFixed(1)}</span>
+                              <span className="text-stone-400">({p.reviewsCount || 0} reviews)</span>
+                            </div>
+                          </div>
                         </td>
 
                         {/* Price */}
@@ -637,16 +653,16 @@ export default function AdminPage() {
                           )}
                         </td>
 
-                        {/* Stock */}
+                        {/* Stock Status */}
                         <td className="py-3.5 px-4">
-                          <span className={`px-2 py-0.5 rounded-md font-semibold text-[10px] ${
+                          <span className={`inline-block px-2.5 py-1 rounded-md font-semibold text-[10px] ${
                             (p.stockCount ?? 10) === 0
-                              ? 'bg-red-50 text-red-700'
+                              ? 'bg-red-50 text-red-700 border border-red-200'
                               : (p.stockCount ?? 10) <= 5
-                              ? 'bg-amber-50 text-amber-800'
-                              : 'bg-emerald-50 text-emerald-700'
+                              ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                              : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           }`}>
-                            {p.stockCount ?? 10} in stock
+                            {(p.stockCount ?? 10) === 0 ? 'Out of stock' : `${p.stockCount ?? 10} in stock`}
                           </span>
                         </td>
 
@@ -654,8 +670,8 @@ export default function AdminPage() {
                         <td className="py-3.5 px-4 text-center">
                           <button
                             onClick={(e) => handleToggleFeatured(p, e)}
-                            className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors ${
-                              p.isFeatured ? 'bg-royal-violet text-white' : 'bg-surface-container text-stone-400 hover:text-stone-600'
+                            className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors cursor-pointer ${
+                              p.isFeatured ? 'bg-royal-violet text-white shadow-xs' : 'bg-surface-container text-stone-400 hover:text-stone-600'
                             }`}
                             title="Toggle Homepage Featured"
                           >
@@ -667,8 +683,8 @@ export default function AdminPage() {
                         <td className="py-3.5 px-4 text-center">
                           <button
                             onClick={(e) => handleToggleViolet(p, e)}
-                            className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors ${
-                              p.isVioletEdition ? 'bg-[#982476] text-white' : 'bg-surface-container text-stone-400 hover:text-stone-600'
+                            className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors cursor-pointer ${
+                              p.isVioletEdition ? 'bg-[#982476] text-white shadow-xs' : 'bg-surface-container text-stone-400 hover:text-stone-600'
                             }`}
                             title="Toggle Violet Edition"
                           >
@@ -678,10 +694,10 @@ export default function AdminPage() {
 
                         {/* Actions */}
                         <td className="py-3.5 px-4 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
+                          <div className="flex items-center justify-end gap-1">
                             <button
                               onClick={() => navigateTo('product-detail', p.id)}
-                              className="p-1.5 rounded-lg text-stone-400 hover:text-stone-800 hover:bg-surface-container transition-colors"
+                              className="p-1.5 rounded-lg text-stone-400 hover:text-stone-800 hover:bg-surface-container transition-colors cursor-pointer"
                               title="View in Customer Store"
                             >
                               <Eye className="w-4 h-4" />
@@ -689,7 +705,7 @@ export default function AdminPage() {
 
                             <button
                               onClick={() => handleDuplicateProduct(p)}
-                              className="p-1.5 rounded-lg text-stone-400 hover:text-royal-violet hover:bg-royal-violet/10 transition-colors"
+                              className="p-1.5 rounded-lg text-stone-400 hover:text-royal-violet hover:bg-royal-violet/10 transition-colors cursor-pointer"
                               title="Duplicate Listing"
                             >
                               <Copy className="w-4 h-4" />
@@ -697,7 +713,7 @@ export default function AdminPage() {
 
                             <button
                               onClick={() => handleOpenEditModal(p)}
-                              className="p-1.5 rounded-lg text-stone-400 hover:text-royal-violet hover:bg-royal-violet/10 transition-colors"
+                              className="p-1.5 rounded-lg text-stone-400 hover:text-royal-violet hover:bg-royal-violet/10 transition-colors cursor-pointer"
                               title="Edit Abaya"
                             >
                               <Edit2 className="w-4 h-4" />
@@ -707,13 +723,13 @@ export default function AdminPage() {
                               <div className="flex items-center gap-1 bg-red-50 p-1 rounded-lg border border-red-200">
                                 <button
                                   onClick={() => handleDelete(p.id)}
-                                  className="px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-semibold"
+                                  className="px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-semibold cursor-pointer"
                                 >
                                   Delete
                                 </button>
                                 <button
                                   onClick={() => setDeleteConfirmId(null)}
-                                  className="px-1 text-stone-500 text-[10px]"
+                                  className="px-1 text-stone-500 text-[10px] cursor-pointer"
                                 >
                                   Cancel
                                 </button>
@@ -721,7 +737,7 @@ export default function AdminPage() {
                             ) : (
                               <button
                                 onClick={() => setDeleteConfirmId(p.id)}
-                                className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                                 title="Delete Abaya"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -775,16 +791,16 @@ export default function AdminPage() {
                             {p.category}
                           </span>
                           {p.targetRegion === 'india' ? (
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[9px] font-bold border border-emerald-200">
-                              🇮🇳 India
+                            <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[9px] font-bold border border-emerald-200">
+                              India
                             </span>
                           ) : p.targetRegion === 'arab' ? (
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 text-[9px] font-bold border border-amber-200">
-                              🇦🇪 Arab / UAE
+                            <span className="inline-block px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 text-[9px] font-bold border border-amber-200">
+                              Arab / UAE
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-purple-50 text-purple-800 text-[9px] font-bold border border-purple-200">
-                              🌐 Both
+                            <span className="inline-block px-1.5 py-0.5 rounded bg-purple-50 text-purple-800 text-[9px] font-bold border border-purple-200">
+                              Global
                             </span>
                           )}
                         </div>
@@ -792,6 +808,7 @@ export default function AdminPage() {
                           {formatPrice(p.price)}
                         </span>
                       </div>
+
                       <div className="flex items-center justify-between mt-1">
                         <h3 className="font-serif text-base text-primary font-medium">
                           {p.name}
@@ -801,9 +818,29 @@ export default function AdminPage() {
                           <span className="text-stone-400 font-normal">({p.reviewsCount || 0})</span>
                         </div>
                       </div>
+
+                      <div className="text-[11px] text-stone-600 font-medium mt-1">
+                        {p.defaultStyle || 'Open abaya'} • <span className="text-stone-500 font-normal">{p.defaultWork || 'plain'}</span>
+                      </div>
+
                       <p className="text-xs text-stone-500 line-clamp-2 mt-1">
                         {p.description}
                       </p>
+
+                      {/* Color Palette Dots */}
+                      <div className="flex items-center gap-1 mt-2.5">
+                        {(p.colors || []).slice(0, 5).map((c, i) => (
+                          <span
+                            key={i}
+                            title={c.name}
+                            className="w-3.5 h-3.5 rounded-full border border-black/10 inline-block shadow-xs"
+                            style={{ backgroundColor: c.hex }}
+                          />
+                        ))}
+                        {(p.colors || []).length > 5 && (
+                          <span className="text-[9px] text-stone-400">+{p.colors.length - 5}</span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-surface-container-highest flex items-center justify-between">
@@ -813,14 +850,21 @@ export default function AdminPage() {
                       
                       <div className="flex items-center gap-1">
                         <button
+                          onClick={() => navigateTo('product-detail', p.id)}
+                          className="p-1.5 rounded-lg text-stone-400 hover:text-stone-800 hover:bg-surface-container transition-colors cursor-pointer"
+                          title="View Live in Store"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                        <button
                           onClick={() => handleOpenEditModal(p)}
-                          className="px-3 py-1 rounded-lg bg-surface-container hover:bg-royal-violet hover:text-white text-stone-700 text-xs font-medium transition-colors"
+                          className="px-3 py-1 rounded-lg bg-surface-container hover:bg-royal-violet hover:text-white text-stone-700 text-xs font-medium transition-colors cursor-pointer"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDuplicateProduct(p)}
-                          className="p-1.5 rounded-lg text-stone-400 hover:text-royal-violet"
+                          className="p-1.5 rounded-lg text-stone-400 hover:text-royal-violet cursor-pointer"
                           title="Duplicate"
                         >
                           <Copy className="w-3.5 h-3.5" />
