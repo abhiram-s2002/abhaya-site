@@ -15,25 +15,17 @@ const STYLE_IMAGES = {
   'Butterfly or farasha':    '/collection-images/style_butterfly_farasha.jpg',
   'umbrella cut or Flare':   '/collection-images/style_umbrella_flare.jpg',
   '2 piece abaya (with inner)': '/collection-images/style_two_piece.jpg',
-  'Coat abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuCaxkyIqLmyOOOYWe4t17RXa7iRSCynbDrN6ywtJPf_xfaZiQGiTrejAu_Y_jqoa5NK9NtZTqNASt0n7GYiMTOvuZi_xPbW_YEfybM1GEZ94_QdPMo5CXKUwTJqQtTsaGYducUj0ebdjb6CCa_VJ7nazh54quuGFSOALMq9e9LVwMVGfLN3NthKYvgJjKK8pxisrSBk20C56m3SqGRkW9HmYuXUcCRYBR5w0nTDqakaeh2oYXKWKIq1UA',
+  'Coat abaya':              '/collection-images/style_coat_abaya.jpg',
 };
 
 const WORK_IMAGES = {
-  'Embroidery Abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g',
-  'Handwork Abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw',
-  'Stonework Abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA',
-  'Threadwork Abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuD6VCCXcrsIQMHcP3Y2cwPwjMw26HSpdXZRpo1lY76HCdTo-vZ5b4M8do6PcZ7DqQvXu3-GlMe2pgswNgngMTx9SsTOZ72uI6VKzR9AO30LImVq-vABf8hOJGP7ROTu8ggWAFYVzo2IbWQV-aYchjycdwCWyhodCmGPBoTo_aAcIjMZuF8wfHjLz_fQt_sGTpPBO2Ddgqm5H07QGTDc4ZBfNS_nT9uyWZncjWeLoA1KPl20JxdlmW11w',
-  'Printed Abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuAZVub0VhEbfZ42RjVHsOuVG7wBCgHLelkGY6dOel_gT0hCj9B2RVezHENmxJ_Y2puqMuVud0p4ezu2BAO-tDYec2p7u7R0BrlAnxqF8-sj5o6hzp952ZimvWdQMJ27T2bnI0izDnupYarV-4dSCuZNTV4ZI5LIGSBrB7x8UtRvKe2pzAHzOircRZsc5QdPR8BNHP9tTFY1_m7T5pjTpfYw7dLDbvqK7NRWpybaJqeALvz9q6tLOqfhTQ',
-  'Lace Work Abaya':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuCnqkoPTiUDviPUgD5wOYrSVBgUqgYocEhMRfjaPR0AEGQLNSU0reQ8ubR7uxH960qrPF_FqZly7nHa6M1eLYxa5g-5swQgYvy9Z47DR5Ph3pItsJjdCgLs1rkJOUsw_YtUrEPMsYWIosdqamteTBxBFcTP3dxNNOMXvIUzzwnK72cUnoROgWljIfcYMCZlhKDCFJZAJAexcU4FPc2ghiwZ4a4GWa-zXbuRhhx6hDiAwUFdTToqcj62cg',
-  'plain':
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g',
+  'Embroidery Abaya':        '/collection-images/work_embroidery.jpg',
+  'Handwork Abaya':          '/collection-images/work_handwork.jpg',
+  'Stonework Abaya':         '/collection-images/work_stonework.jpg',
+  'Threadwork Abaya':        '/collection-images/work_threadwork.jpg',
+  'Printed Abaya':           '/collection-images/work_printed.jpg',
+  'Lace Work Abaya':         '/collection-images/work_lacework.jpg',
+  'plain':                   '/collection-images/work_plain.jpg',
 };
 
 const STYLES_LIST = [
