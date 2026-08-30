@@ -65,7 +65,7 @@ export default function CollectionsPage() {
   // Filter States
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
-  const [sortBy, setSortBy] = useState('featured'); // 'featured' | 'best-selling' | 'price-low' | 'price-high' | 'date-new' | 'alpha-az' | 'alpha-za'
+  const [sortBy, setSortBy] = useState('featured'); // 'featured' | 'price-low' | 'price-high' | 'latest' | 'alpha-az' | 'alpha-za'
   
   // Selected Filters
   const [selectedStyles, setSelectedStyles] = useState([]);
@@ -197,10 +197,9 @@ export default function CollectionsPage() {
   // Sort Options
   const sortOptions = [
     { id: 'featured', label: 'Featured' },
-    { id: 'best-selling', label: 'Best selling' },
     { id: 'price-low', label: 'Price, low to high' },
     { id: 'price-high', label: 'Price, high to low' },
-    { id: 'date-new', label: 'Date, new to old' },
+    { id: 'latest', label: 'Latest' },
     { id: 'alpha-az', label: 'Alphabetically, A-Z' },
     { id: 'alpha-za', label: 'Alphabetically, Z-A' },
   ];
@@ -326,8 +325,7 @@ export default function CollectionsPage() {
           return a.price - b.price;
         case 'price-high':
           return b.price - a.price;
-        case 'best-selling':
-          return (b.reviewsCount || 0) - (a.reviewsCount || 0);
+        case 'latest':
         case 'date-new':
           return (b.badge === 'New Arrival' ? 1 : 0) - (a.badge === 'New Arrival' ? 1 : 0);
         case 'alpha-az':
