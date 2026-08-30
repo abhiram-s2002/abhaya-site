@@ -375,9 +375,9 @@ export const COLLECTIONS = [
     itemCount: "18 Styles"
   },
   {
-    id: "violet-edition",
-    name: "The Violet Edition Abayas",
-    description: "Artisanal Mulberry silk abayas in regal amethyst and deep espresso hues.",
+    id: "pure-silk-atelier",
+    name: "Pure Mulberry Silk Atelier",
+    description: "Artisanal Mulberry silk abayas in rich espresso and delicate amethyst hues.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA",
     categoryFilter: "Silk",
     itemCount: "12 Styles"

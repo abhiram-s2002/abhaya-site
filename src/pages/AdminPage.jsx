@@ -209,12 +209,6 @@ export default function AdminPage() {
     showToast(`Updated "${product.name}" featured status.`);
   };
 
-  const handleToggleViolet = async (product, e) => {
-    e.stopPropagation();
-    await updateProduct(product.id, { isVioletEdition: !product.isVioletEdition });
-    showToast(`Updated "${product.name}" Violet Edition status.`);
-  };
-
   const handleSaveProductModal = async (productData) => {
     if (editingProduct) {
       await updateProduct(editingProduct.id, productData);
@@ -580,7 +574,6 @@ export default function AdminPage() {
                       <th className="py-3.5 px-4">Price</th>
                       <th className="py-3.5 px-4">Stock Status</th>
                       <th className="py-3.5 px-4 text-center">Featured</th>
-                      <th className="py-3.5 px-4 text-center">Violet Edition</th>
                       <th className="py-3.5 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
@@ -696,19 +689,6 @@ export default function AdminPage() {
                           </button>
                         </td>
 
-                        {/* Violet Edition Toggle */}
-                        <td className="py-3.5 px-4 text-center">
-                          <button
-                            onClick={(e) => handleToggleViolet(p, e)}
-                            className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors cursor-pointer ${
-                              p.isVioletEdition ? 'bg-[#982476] text-white shadow-xs' : 'bg-surface-container text-stone-400 hover:text-stone-600'
-                            }`}
-                            title="Toggle Violet Edition"
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-
                         {/* Actions */}
                         <td className="py-3.5 px-4 text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -786,18 +766,13 @@ export default function AdminPage() {
                       </div>
                     )}
 
-                    <div className="absolute bottom-3 right-3 flex gap-1">
-                      {p.isFeatured && (
+                    {p.isFeatured && (
+                      <div className="absolute bottom-3 right-3 flex gap-1">
                         <span className="px-2 py-0.5 rounded bg-royal-violet text-white text-[9px] font-semibold">
                           Featured
                         </span>
-                      )}
-                      {p.isVioletEdition && (
-                        <span className="px-2 py-0.5 rounded bg-[#982476] text-white text-[9px] font-semibold">
-                          Violet Capsule
-                        </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-3">

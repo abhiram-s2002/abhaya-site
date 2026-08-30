@@ -63,7 +63,6 @@ export default function AdminProductEditor({
   const [rating, setRating] = useState('5.0');
   const [reviewsCount, setReviewsCount] = useState('0');
   const [isFeatured, setIsFeatured] = useState(false);
-  const [isVioletEdition, setIsVioletEdition] = useState(false);
   const [stockCount, setStockCount] = useState(12);
 
   // Media State
@@ -121,7 +120,6 @@ export default function AdminProductEditor({
       setRating(product.rating !== undefined ? String(product.rating) : '5.0');
       setReviewsCount(product.reviewsCount !== undefined ? String(product.reviewsCount) : '0');
       setIsFeatured(Boolean(product.isFeatured));
-      setIsVioletEdition(Boolean(product.isVioletEdition));
       setStockCount(product.stockCount ?? 10);
       setImage(product.image || '');
       setGallery(Array.isArray(product.gallery) && product.gallery.length > 0 ? product.gallery : (product.image ? [product.image] : []));
@@ -148,7 +146,6 @@ export default function AdminProductEditor({
       setRating('5.0');
       setReviewsCount('0');
       setIsFeatured(false);
-      setIsVioletEdition(false);
       setStockCount(12);
       setImage('https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
       setGallery([
@@ -357,7 +354,6 @@ export default function AdminProductEditor({
       rating: Number(rating) || 5.0,
       reviewsCount: Number(reviewsCount) || 0,
       isFeatured,
-      isVioletEdition,
       defaultStyle,
       defaultWork,
       styles: styles.length > 0 ? styles : [defaultStyle],
@@ -428,11 +424,6 @@ export default function AdminProductEditor({
                   <Sparkles className="w-3 h-3 text-gold-accent" />
                   {isEditing ? 'Atelier Studio • Item Editor' : 'Atelier Studio • New Creation'}
                 </span>
-                {isVioletEdition && (
-                  <span className="px-2 py-0.5 rounded-full bg-[#982476]/10 text-[#982476] text-[9px] font-bold uppercase tracking-wider border border-[#982476]/20">
-                    Violet Edition
-                  </span>
-                )}
               </div>
               <h1 className="font-serif text-lg sm:text-xl font-bold text-stone-900 truncate max-w-[280px] sm:max-w-md">
                 {name || (isEditing ? 'Untitled Abaya' : 'New Abaya Creation')}
@@ -688,7 +679,7 @@ export default function AdminProductEditor({
                 </div>
 
                 {/* Flags / Featured Switches */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
+                <div className="pt-3">
                   <label className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
                     isFeatured ? 'bg-royal-violet/5 border-royal-violet ring-1 ring-royal-violet/20' : 'bg-white border-stone-200 hover:bg-stone-50'
                   }`}>
@@ -701,21 +692,6 @@ export default function AdminProductEditor({
                     <div>
                       <div className="text-xs font-bold text-stone-900">Featured in Hero & Top Picks</div>
                       <div className="text-[11px] text-stone-500">Showcased prominently on boutique homepage</div>
-                    </div>
-                  </label>
-
-                  <label className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
-                    isVioletEdition ? 'bg-[#982476]/10 border-[#982476] ring-1 ring-[#982476]/30' : 'bg-white border-stone-200 hover:bg-stone-50'
-                  }`}>
-                    <input
-                      type="checkbox"
-                      checked={isVioletEdition}
-                      onChange={(e) => setIsVioletEdition(e.target.checked)}
-                      className="w-4 h-4 mt-0.5 text-[#982476] rounded focus:ring-[#982476] cursor-pointer"
-                    />
-                    <div>
-                      <div className="text-xs font-bold text-[#982476]">The Violet Edition Capsule</div>
-                      <div className="text-[11px] text-stone-500">Signature royal violet capsule lookbook</div>
                     </div>
                   </label>
                 </div>
@@ -1582,18 +1558,13 @@ export default function AdminProductEditor({
                 )}
 
                 {/* Badges Overlay */}
-                <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
-                  {badge && (
+                {badge && (
+                  <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
                     <span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-stone-900 shadow-sm">
                       {badge}
                     </span>
-                  )}
-                  {isVioletEdition && (
-                    <span className="px-3 py-1 rounded-full bg-gradient-to-r from-royal-violet to-[#982476] text-white text-[10px] font-bold uppercase tracking-wider shadow">
-                      Violet Edition
-                    </span>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Target Audience Badge */}
                 <div className="absolute top-3 right-3">

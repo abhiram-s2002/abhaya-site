@@ -36,7 +36,7 @@ export default function MobileBottomNav() {
         <button
           onClick={() => navigateTo('collections')}
           className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors relative ${
-            currentView === 'collections' || currentView === 'shop' || currentView === 'violet-edition'
+            currentView === 'collections' || currentView === 'shop'
               ? 'text-white font-semibold'
               : 'text-white/70 hover:text-white'
           }`}
@@ -47,7 +47,7 @@ export default function MobileBottomNav() {
             strokeWidth={currentView === 'collections' || currentView === 'shop' ? 1.8 : 1.4}
           />
           <span className="text-[10px] tracking-wider uppercase font-medium">Explore</span>
-          {(currentView === 'collections' || currentView === 'shop' || currentView === 'violet-edition') && (
+          {(currentView === 'collections' || currentView === 'shop') && (
             <span className="absolute top-1 right-1/2 translate-x-3 w-1.5 h-1.5 rounded-full bg-white" />
           )}
         </button>

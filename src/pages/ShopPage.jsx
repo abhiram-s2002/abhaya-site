@@ -98,7 +98,6 @@ export default function ShopPage() {
     { id: 'Georgette', label: 'Georgette' },
     { id: 'new-arrivals', label: 'New Arrivals' },
     { id: 'bridal', label: 'Bridal Atelier' },
-    { id: 'violet-edition', label: 'The Violet Edition' },
   ];
 
   const shades = [
@@ -147,8 +146,6 @@ export default function ShopPage() {
         if (product.badge !== 'New Arrival' && product.badge !== 'Trending') return false;
       } else if (selectedTab === 'bridal') {
         if (product.category !== 'Georgette' && !product.name.toLowerCase().includes('bridal')) return false;
-      } else if (selectedTab === 'violet-edition') {
-        if (!product.isVioletEdition) return false;
       } else if (selectedTab !== 'All') {
         if (product.category !== selectedTab) return false;
       }

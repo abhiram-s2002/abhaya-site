@@ -15,7 +15,6 @@ import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import CollectionsPage from './pages/CollectionsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import VioletEditionPage from './pages/VioletEditionPage';
 import StoryPage from './pages/StoryPage';
 import ContactPage from './pages/ContactPage';
 import OffersPage from './pages/OffersPage';
@@ -46,8 +45,6 @@ function AppContent() {
         return <CollectionsPage />;
       case 'product-detail':
         return <ProductDetailPage />;
-      case 'violet-edition':
-        return <VioletEditionPage />;
       case 'story':
         return <StoryPage />;
       case 'contact':
