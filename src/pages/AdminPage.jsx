@@ -345,23 +345,11 @@ export default function AdminPage() {
       </div>
 
       {/* KPI Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
           <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Total Abayas</div>
           <div className="font-serif text-2xl sm:text-3xl font-bold text-primary">{stats.total}</div>
           <div className="text-[11px] text-stone-400">Active catalog creations</div>
-        </div>
-
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
-          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-royal-violet">Category Styles</div>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-royal-violet">{stats.uniqueStyles}</div>
-          <div className="text-[11px] text-stone-400">Distinct silhouettes</div>
-        </div>
-
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
-          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-700">Artisan Works</div>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-amber-800">{stats.uniqueWorks}</div>
-          <div className="text-[11px] text-stone-400">Craftsmanship techniques</div>
         </div>
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
@@ -425,7 +413,7 @@ export default function AdminPage() {
                 <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3" />
                 <input
                   type="text"
-                  placeholder="Search abayas by name, category style, work, color..."
+                  placeholder="Search abayas by name, style, work, color..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 rounded-xl border border-secondary/30 bg-[#fff9fd] text-xs focus:outline-none focus:ring-2 focus:ring-royal-violet/30"
@@ -467,7 +455,7 @@ export default function AdminPage() {
                   onChange={(e) => setSelectedStyle(e.target.value)}
                   className="w-full bg-transparent text-xs text-stone-700 font-semibold focus:outline-none cursor-pointer"
                 >
-                  <option value="All">All Category Styles ({ABAYA_STYLES.length})</option>
+                  <option value="All">All Styles</option>
                   {ABAYA_STYLES.map(s => (
                     <option key={s.id} value={s.name}>{s.name}</option>
                   ))}
@@ -482,7 +470,7 @@ export default function AdminPage() {
                   onChange={(e) => setSelectedWork(e.target.value)}
                   className="w-full bg-transparent text-xs text-stone-700 font-semibold focus:outline-none cursor-pointer"
                 >
-                  <option value="All">All Craftsmanship Works ({ABAYA_WORKS.length})</option>
+                  <option value="All">All Works</option>
                   {ABAYA_WORKS.map(w => (
                     <option key={w.id} value={w.name}>{w.name}</option>
                   ))}
@@ -569,7 +557,6 @@ export default function AdminPage() {
                   <thead className="bg-[#fff9fd] border-b border-surface-container-highest text-stone-500 font-semibold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="py-3.5 px-4">Abaya Creation</th>
-                      <th className="py-3.5 px-4">Category Style & Craftsmanship</th>
                       <th className="py-3.5 px-4">Market & Rating</th>
                       <th className="py-3.5 px-4">Price</th>
                       <th className="py-3.5 px-4">Stock Status</th>
@@ -592,6 +579,13 @@ export default function AdminPage() {
                             <div>
                               <div className="font-serif font-medium text-sm text-primary">{p.name}</div>
                               <div className="text-[11px] text-stone-500 truncate max-w-xs">{p.subtitle || '100% Luxury Modest Wear'}</div>
+                              <div className="flex items-center gap-1.5 mt-1">
+                                {p.badge && (
+                                  <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-semibold">
+                                    {p.badge}
+                                  </span>
+                                )}
+                              </div>
                               <div className="flex items-center gap-1 mt-1.5">
                                 {(p.colors || []).slice(0, 4).map((c, i) => (
                                   <span
@@ -606,25 +600,6 @@ export default function AdminPage() {
                                 )}
                               </div>
                             </div>
-                          </div>
-                        </td>
-
-                        {/* Category Style & Craftsmanship */}
-                        <td className="py-3.5 px-4">
-                          <div className="space-y-1.5">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="inline-block px-2.5 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-bold text-[10px]">
-                                {p.defaultStyle || 'Open abaya'}
-                              </span>
-                              <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 font-semibold text-[9px]">
-                                {p.defaultWork || 'plain'}
-                              </span>
-                            </div>
-                            {p.badge && (
-                              <div className="text-[10px] text-stone-400 font-medium">
-                                ★ <span className="text-stone-600">{p.badge}</span>
-                              </div>
-                            )}
                           </div>
                         </td>
 
@@ -778,14 +753,9 @@ export default function AdminPage() {
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div>
                       <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="inline-block px-2 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-bold text-[10px]">
-                            {p.defaultStyle || 'Open abaya'}
-                          </span>
-                          <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 font-semibold text-[9px]">
-                            {p.defaultWork || 'plain'}
-                          </span>
-                        </div>
+                        <span className="text-[11px] text-stone-500 font-medium truncate max-w-[180px]">
+                          {p.subtitle || p.category || 'Luxury Abaya'}
+                        </span>
                         <span className="font-serif font-bold text-sm text-primary">
                           {formatPrice(p.price)}
                         </span>
