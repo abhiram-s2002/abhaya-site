@@ -1,29 +1,48 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
-  Sparkles,
-  ChevronRight,
-  ArrowRight,
-  Check,
-  Filter,
   X,
-  Star,
-  ShieldCheck,
-  Shirt,
+  ChevronDown,
+  ChevronRight,
+  Check,
   RotateCcw,
-  SlidersHorizontal
+  SlidersHorizontal,
+  LayoutGrid,
+  Grid2X2,
+  Grid3X3,
+  Columns,
+  Square
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import ProductCard from '../components/ProductCard';
+import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../data/products';
 
-// Local Assets matching the exact reference design
-import openAbayaImg from '../assets/explore/open-abaya.jpg';
-import closedCutImg from '../assets/explore/silhouette_closed_cut_1786950775902.jpg';
-import kimonoKaftanImg from '../assets/explore/silhouette_kimono_kaftan_1786951078768.jpg';
-import butterflyCutImg from '../assets/explore/silhouette_butterfly_cut_1786951741883.jpg';
-
-import craftEmbroideryImg from '../assets/explore/craft_embroidery.jpg';
-import craftHandworkImg from '../assets/explore/craft_handwork.jpg';
-import craftStoneworkImg from '../assets/explore/craft_stonework.jpg';
+// Comprehensive color swatches matching BasicAbaya
+const COLOR_SWATCHES = [
+  { name: 'Beige', hex: '#D8C8B8', border: false },
+  { name: 'Black', hex: '#1C1C1C', border: false },
+  { name: 'Blue', hex: '#3B6E8C', border: false },
+  { name: 'Brown', hex: '#5C3A21', border: false },
+  { name: 'Espresso', hex: '#2E1C1A', border: false },
+  { name: 'Gold', hex: '#D4AF37', border: false },
+  { name: 'Green', hex: '#3A5F43', border: false },
+  { name: 'Grey', hex: '#8E9196', border: false },
+  { name: 'Light Pink', hex: '#F2D6DC', border: false },
+  { name: 'Maroon', hex: '#5E1914', border: false },
+  { name: 'Navy', hex: '#1B263B', border: false },
+  { name: 'Olive', hex: '#556B2F', border: false },
+  { name: 'Orange', hex: '#D97724', border: false },
+  { name: 'Peach', hex: '#FAD2B8', border: false },
+  { name: 'Pink', hex: '#E295A8', border: false },
+  { name: 'Plum Noir', hex: '#260A22', border: false },
+  { name: 'Purple', hex: '#6A2E7E', border: false },
+  { name: 'Royal Violet', hex: '#982476', border: false },
+  { name: 'Red', hex: '#9E2A2B', border: false },
+  { name: 'Sage Green', hex: '#7D8B79', border: false },
+  { name: 'Silver', hex: '#C0C0C0', border: false },
+  { name: 'Sky Blue', hex: '#87CEEB', border: false },
+  { name: 'White', hex: '#FFFFFF', border: true },
+  { name: 'Yellow', hex: '#E5A93B', border: false },
+];
 
 export default function CollectionsPage() {
   const {
@@ -37,460 +56,817 @@ export default function CollectionsPage() {
     selectedWorkFilter,
     setSelectedWorkFilter,
     navigateTo,
-    formatPrice
+    formatPrice,
+    searchQuery,
+    setSearchQuery
   } = useShop();
 
-  // Active Filter States
-  const [activeSilhouette, setActiveSilhouette] = useState('All');
-  const [activeCraftsmanship, setActiveCraftsmanship] = useState('All');
-  const [activeFabricFilter, setActiveFabricFilter] = useState('All');
-  const [sortBy, setSortBy] = useState('featured');
+  // Filter States
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [sortBy, setSortBy] = useState('featured'); // 'featured' | 'best-selling' | 'price-low' | 'price-high' | 'date-new' | 'alpha-az' | 'alpha-za'
+  
+  // Selected Filters
+  const [selectedStyles, setSelectedStyles] = useState([]);
+  const [selectedWorks, setSelectedWorks] = useState([]);
+  const [selectedFabrics, setSelectedFabrics] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [onlyInStock, setOnlyInStock] = useState(false);
 
-  // Sync external filters if passed via context
+  // Price calculations
+  const maxPriceLimit = useMemo(() => {
+    return Math.max(...PRODUCTS.map(p => p.price), 300);
+  }, [PRODUCTS]);
+
+  const minPriceLimit = useMemo(() => {
+    return Math.min(...PRODUCTS.map(p => p.price), 50);
+  }, [PRODUCTS]);
+
+  const [priceRange, setPriceRange] = useState(maxPriceLimit);
+
+  // Grid layout switcher:
+  // Mobile: 1 or 2 cols (default 2)
+  // Desktop: 2, 3, or 4 cols (default 3)
+  const [mobileCols, setMobileCols] = useState(2);
+  const [desktopCols, setDesktopCols] = useState(3);
+
+  // Accordion Open States inside Filter Drawer
+  const [openAccordions, setOpenAccordions] = useState({
+    color: true,
+    style: true,
+    work: true,
+    fabric: true,
+    size: false,
+    price: false,
+    availability: false
+  });
+
+  const toggleAccordion = (key) => {
+    setOpenAccordions(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const sortMenuRef = useRef(null);
+
+  // Sync external filters from context
   useEffect(() => {
     if (selectedStyleFilter && selectedStyleFilter !== 'All') {
-      setActiveSilhouette(selectedStyleFilter);
+      setSelectedStyles([selectedStyleFilter]);
     }
   }, [selectedStyleFilter]);
 
   useEffect(() => {
     if (selectedWorkFilter && selectedWorkFilter !== 'All') {
-      setActiveCraftsmanship(selectedWorkFilter);
+      setSelectedWorks([selectedWorkFilter]);
     }
   }, [selectedWorkFilter]);
 
   useEffect(() => {
     if (selectedCategoryFilter && selectedCategoryFilter !== 'All') {
-      setActiveFabricFilter(selectedCategoryFilter);
+      setSelectedFabrics([selectedCategoryFilter]);
     }
   }, [selectedCategoryFilter]);
 
-  // 1. Explore by Silhouette Cards Data (Exact Screenshot items)
-  const SILHOUETTE_CARDS = [
-    {
-      id: 'open-abaya',
-      title: 'OPEN ABAYA',
-      filterValue: 'Open abaya',
-      image: openAbayaImg,
-      description: 'Classic front-open silhouette designed for effortless layering & fluid movement.'
-    },
-    {
-      id: 'closed-cut',
-      title: 'CLOSED CUT',
-      filterValue: 'Closed cut',
-      image: closedCutImg,
-      description: 'Traditional full-length continuous modest cut with seamless tailored lines.'
-    },
-    {
-      id: 'kimono-kaftan',
-      title: 'KIMONO & KAFTAN',
-      filterValue: 'Kimono or kaftan',
-      image: kimonoKaftanImg,
-      description: 'Relaxed wide-sleeved drape offering contemporary royal elegance.'
-    },
-    {
-      id: 'butterfly-cut',
-      title: 'BUTTERFLY CUT',
-      filterValue: 'Butterfly or farasha',
-      image: butterflyCutImg,
-      description: 'Sweeping winged farasha drape with regal volume and ceremonial presence.'
+  useEffect(() => {
+    if (selectedColorFilter && selectedColorFilter !== 'All') {
+      setSelectedColors([selectedColorFilter]);
     }
+  }, [selectedColorFilter]);
+
+  // Handle Sort Menu Outside Click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sortMenuRef.current && !sortMenuRef.current.contains(e.target)) {
+        setIsSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Prevent background scroll when filter drawer is open
+  useEffect(() => {
+    if (filterDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [filterDrawerOpen]);
+
+  // Sort Options
+  const sortOptions = [
+    { id: 'featured', label: 'Featured' },
+    { id: 'best-selling', label: 'Best selling' },
+    { id: 'price-low', label: 'Price, low to high' },
+    { id: 'price-high', label: 'Price, high to low' },
+    { id: 'date-new', label: 'Date, new to old' },
+    { id: 'alpha-az', label: 'Alphabetically, A-Z' },
+    { id: 'alpha-za', label: 'Alphabetically, Z-A' },
   ];
 
-  // 2. Explore by Craftsmanship Cards Data (Exact Screenshot items)
-  const CRAFTSMANSHIP_CARDS = [
-    {
-      id: 'embroidery-abaya',
-      title: 'EMBROIDERY ABAYA',
-      filterValue: 'Embroidery Abaya',
-      image: craftEmbroideryImg,
-      description: 'Intricate artisanal floral and geometric needlework along cuffs and collar.'
-    },
-    {
-      id: 'handwork-abaya',
-      title: 'HANDWORK ABAYA',
-      filterValue: 'Handwork Abaya',
-      image: craftHandworkImg,
-      description: 'Bespoke handcrafted zardozi embroidery with delicate micro-crystals and beads.'
-    },
-    {
-      id: 'stonework-abaya',
-      title: 'STONEWORK ABAYA',
-      filterValue: 'Stonework Abaya',
-      image: craftStoneworkImg,
-      description: 'High-clarity light-reflecting crystals and stone embellishments for grand occasions.'
-    }
-  ];
+  const currentSortLabel = sortOptions.find(o => o.id === sortBy)?.label || 'Featured';
 
-  // Filtered Products for Live Product Grid
-  const displayedProducts = useMemo(() => {
+  // Toggle Selection Helpers
+  const toggleItem = (list, setList, item) => {
+    if (list.includes(item)) {
+      setList(list.filter(i => i !== item));
+    } else {
+      setList([...list, item]);
+    }
+  };
+
+  const clearAllFilters = () => {
+    setSelectedStyles([]);
+    setSelectedWorks([]);
+    setSelectedFabrics([]);
+    setSelectedColors([]);
+    setSelectedSizes([]);
+    setPriceRange(maxPriceLimit);
+    setOnlyInStock(false);
+    if (setSelectedCategoryFilter) setSelectedCategoryFilter('All');
+    if (setSelectedColorFilter) setSelectedColorFilter('All');
+    if (setSelectedStyleFilter) setSelectedStyleFilter('All');
+    if (setSelectedWorkFilter) setSelectedWorkFilter('All');
+  };
+
+  // Active filters count
+  const activeFiltersCount =
+    selectedStyles.length +
+    selectedWorks.length +
+    selectedFabrics.length +
+    selectedColors.length +
+    selectedSizes.length +
+    (onlyInStock ? 1 : 0) +
+    (priceRange < maxPriceLimit ? 1 : 0);
+
+  // Available Fabrics extracted from products
+  const availableFabrics = useMemo(() => {
+    const set = new Set(PRODUCTS.map(p => p.category).filter(Boolean));
+    return Array.from(set);
+  }, [PRODUCTS]);
+
+  // Filtered & Sorted Products
+  const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((product) => {
-      // Silhouette Filter
-      if (activeSilhouette !== 'All') {
-        const matchesStyle =
-          product.defaultStyle?.toLowerCase() === activeSilhouette.toLowerCase() ||
-          product.styles?.some(s => s.toLowerCase() === activeSilhouette.toLowerCase());
-        if (!matchesStyle) return false;
+      // 1. Search Query
+      if (searchQuery && searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesName = product.name.toLowerCase().includes(q);
+        const matchesCat = product.category.toLowerCase().includes(q);
+        if (!matchesName && !matchesCat) return false;
       }
 
-      // Craftsmanship Filter
-      if (activeCraftsmanship !== 'All') {
-        const matchesWork =
-          product.defaultWork?.toLowerCase() === activeCraftsmanship.toLowerCase() ||
-          product.works?.some(w => w.toLowerCase() === activeCraftsmanship.toLowerCase());
-        if (!matchesWork) return false;
+      // 2. Silhouette / Styles Filter
+      if (selectedStyles.length > 0) {
+        const productStyles = [
+          product.defaultStyle,
+          ...(product.styles || [])
+        ].filter(Boolean).map(s => s.toLowerCase());
+
+        const hasMatch = selectedStyles.some(sel =>
+          productStyles.some(ps => ps.includes(sel.toLowerCase()) || sel.toLowerCase().includes(ps))
+        );
+        if (!hasMatch) return false;
       }
 
-      // Fabric Filter
-      if (activeFabricFilter !== 'All') {
-        if (product.category !== activeFabricFilter) return false;
+      // 3. Work / Craftsmanship Filter
+      if (selectedWorks.length > 0) {
+        const productWorks = [
+          product.defaultWork,
+          ...(product.works || [])
+        ].filter(Boolean).map(w => w.toLowerCase());
+
+        const hasMatch = selectedWorks.some(sel =>
+          productWorks.some(pw => pw.includes(sel.toLowerCase()) || sel.toLowerCase().includes(pw))
+        );
+        if (!hasMatch) return false;
+      }
+
+      // 4. Fabric Filter
+      if (selectedFabrics.length > 0) {
+        if (!selectedFabrics.includes(product.category)) return false;
+      }
+
+      // 5. Color Filter
+      if (selectedColors.length > 0) {
+        const productColors = (product.colors || []).map(c => c.name.toLowerCase());
+        const hasMatch = selectedColors.some(sel =>
+          productColors.some(pc => pc.includes(sel.toLowerCase()) || sel.toLowerCase().includes(pc))
+        );
+        if (!hasMatch) return false;
+      }
+
+      // 6. Size Filter
+      if (selectedSizes.length > 0) {
+        const productSizes = product.sizes || [];
+        const hasMatch = selectedSizes.some(sel =>
+          productSizes.some(ps => ps.includes(sel))
+        );
+        if (!hasMatch) return false;
+      }
+
+      // 7. In stock
+      if (onlyInStock && product.stockCount <= 0) {
+        return false;
+      }
+
+      // 8. Price Range
+      if (product.price > priceRange) {
+        return false;
       }
 
       return true;
     }).sort((a, b) => {
-      if (sortBy === 'price-low') return a.price - b.price;
-      if (sortBy === 'price-high') return b.price - a.price;
-      if (sortBy === 'rating') return b.rating - a.rating;
-      return 0;
+      switch (sortBy) {
+        case 'price-low':
+          return a.price - b.price;
+        case 'price-high':
+          return b.price - a.price;
+        case 'best-selling':
+          return (b.reviewsCount || 0) - (a.reviewsCount || 0);
+        case 'date-new':
+          return (b.badge === 'New Arrival' ? 1 : 0) - (a.badge === 'New Arrival' ? 1 : 0);
+        case 'alpha-az':
+          return a.name.localeCompare(b.name);
+        case 'alpha-za':
+          return b.name.localeCompare(a.name);
+        case 'featured':
+        default:
+          return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+      }
     });
-  }, [PRODUCTS, activeSilhouette, activeCraftsmanship, activeFabricFilter, sortBy]);
-
-  const handleSilhouetteClick = (filterVal) => {
-    if (activeSilhouette === filterVal) {
-      setActiveSilhouette('All');
-      setSelectedStyleFilter('All');
-    } else {
-      setActiveSilhouette(filterVal);
-      setSelectedStyleFilter(filterVal);
-      // Smooth scroll to catalog view
-      const elem = document.getElementById('curated-catalog-view');
-      if (elem) {
-        elem.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const handleCraftsmanshipClick = (filterVal) => {
-    if (activeCraftsmanship === filterVal) {
-      setActiveCraftsmanship('All');
-      setSelectedWorkFilter('All');
-    } else {
-      setActiveCraftsmanship(filterVal);
-      setSelectedWorkFilter(filterVal);
-      // Smooth scroll to catalog view
-      const elem = document.getElementById('curated-catalog-view');
-      if (elem) {
-        elem.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const resetAllFilters = () => {
-    setActiveSilhouette('All');
-    setActiveCraftsmanship('All');
-    setActiveFabricFilter('All');
-    setSelectedStyleFilter('All');
-    setSelectedWorkFilter('All');
-    setSelectedCategoryFilter('All');
-    setSelectedColorFilter('All');
-  };
-
-  const isAnyFilterActive =
-    activeSilhouette !== 'All' ||
-    activeCraftsmanship !== 'All' ||
-    activeFabricFilter !== 'All';
+  }, [
+    PRODUCTS,
+    searchQuery,
+    selectedStyles,
+    selectedWorks,
+    selectedFabrics,
+    selectedColors,
+    selectedSizes,
+    onlyInStock,
+    priceRange,
+    sortBy
+  ]);
 
   return (
-    <div className="min-h-screen bg-white py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 sm:space-y-16 animate-fade-in pb-32">
+    <div className="bg-white min-h-screen pb-20">
       
-      {/* ========================================================================= */}
-      {/* 1. HERO HEADER */}
-      {/* ========================================================================= */}
-      <section className="text-center space-y-2 pt-2 max-w-3xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-[#1C1C1C] font-medium uppercase tracking-[0.06em]">
-          Explore Collections
+      {/* 1. Header Banner & Breadcrumbs (Exact BasicAbaya Style) */}
+      <div className="pt-6 pb-4 sm:pt-10 sm:pb-6 px-4 max-w-7xl mx-auto text-center">
+        {/* Breadcrumb navigation */}
+        <nav aria-label="Breadcrumb" className="mb-3 sm:mb-4">
+          <ol className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.14em] text-[#707070]">
+            <li>
+              <button
+                onClick={() => navigateTo('home')}
+                className="hover:text-[#1C1C1C] transition-colors"
+              >
+                Home
+              </button>
+            </li>
+            <li className="text-[#C0C0C0]">/</li>
+            <li>
+              <button
+                onClick={() => navigateTo('shop')}
+                className="hover:text-[#1C1C1C] transition-colors"
+              >
+                Shop
+              </button>
+            </li>
+            <li className="text-[#C0C0C0]">/</li>
+            <li className="text-[#1C1C1C] font-semibold" aria-current="page">
+              SHOP ALL
+            </li>
+          </ol>
+        </nav>
+
+        {/* Collection Title */}
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-[0.08em] uppercase text-[#1C1C1C]">
+          SHOP ALL
         </h1>
-        
-        <p className="text-xs sm:text-sm text-[#707070] font-normal leading-relaxed max-w-2xl mx-auto px-4">
-          Discover our curated selection of luxury abayas, categorized by distinctive silhouettes and exquisite craftsmanship.
-        </p>
-      </section>
+      </div>
 
-      {/* ========================================================================= */}
-      {/* 2. SECTION 1: EXPLORE BY CATEGORY */}
-      {/* ========================================================================= */}
-      <section className="space-y-4">
-        {/* Section Heading with subtle underline */}
-        <div className="border-b border-[#E5E5E5] pb-2">
-          <h2 className="text-lg sm:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-            Explore by Category
-          </h2>
-        </div>
+      {/* 2. Collection Sticky Toolbar (Filter, Sort, Count, Layout Switchers) */}
+      <div className="sticky top-[60px] sm:top-[70px] z-30 bg-white border-y border-[#E5E5E5] px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-12 sm:h-14">
+          
+          {/* Left Buttons: Filter & Sort */}
+          <div className="flex items-center gap-3 sm:gap-6">
+            
+            {/* Filter Drawer Trigger */}
+            <button
+              onClick={() => setFilterDrawerOpen(true)}
+              className="flex items-center gap-2 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-medium text-[#1C1C1C] hover:opacity-75 transition-opacity cursor-pointer"
+              aria-label="Open filter drawer"
+            >
+              <span>Filter</span>
+              {activeFiltersCount > 0 && (
+                <span className="w-5 h-5 rounded-full bg-[#1C1C1C] text-white text-[10px] flex items-center justify-center font-bold">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
 
-        {/* 4 Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-          {SILHOUETTE_CARDS.map((card) => {
-            const isSelected = activeSilhouette === card.filterValue;
-            return (
-              <div
-                key={card.id}
-                onClick={() => handleSilhouetteClick(card.filterValue)}
-                className={`group relative aspect-[3/4] sm:aspect-[4/5] rounded-none overflow-hidden cursor-pointer transition-all bg-[#FAFAFA] border ${
-                  isSelected ? 'border-[#1C1C1C] ring-1 ring-[#1C1C1C]' : 'border-[#E5E5E5]'
-                }`}
+            <span className="text-[#E5E5E5] hidden sm:inline">|</span>
+
+            {/* Sort Popover Dropdown */}
+            <div className="relative" ref={sortMenuRef}>
+              <button
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="flex items-center gap-1.5 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-medium text-[#1C1C1C] hover:opacity-75 transition-opacity cursor-pointer"
+                aria-label="Sort options"
               >
-                {/* Image */}
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
+                <span>Sort by</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} strokeWidth={1.75} />
+              </button>
 
-                {/* Dark Gradient Overlay at bottom */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none transition-opacity duration-300" />
-
-                {/* Selected Indicator Badge */}
-                {isSelected && (
-                  <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-none bg-[#1C1C1C] text-white text-[9px] font-medium uppercase tracking-wider">
-                    Selected
+              {isSortOpen && (
+                <div className="absolute left-0 mt-2 w-56 bg-white border border-[#E5E5E5] shadow-xl py-2 z-50 animate-fade-in rounded-none">
+                  <div className="px-4 py-1.5 text-[10px] uppercase font-bold tracking-wider text-[#707070] border-b border-[#F0F0F0]">
+                    Sort by
                   </div>
-                )}
-
-                {/* Text Label on bottom-left */}
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <h3 className="text-xs sm:text-sm font-medium uppercase tracking-wider drop-shadow-sm">
-                    {card.title}
-                  </h3>
+                  {sortOptions.map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        setSortBy(opt.id);
+                        setIsSortOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between transition-colors ${
+                        sortBy === opt.id
+                          ? 'bg-[#F9F9F9] font-semibold text-[#1C1C1C]'
+                          : 'text-[#505050] hover:bg-[#F5F5F5] hover:text-[#1C1C1C]'
+                      }`}
+                    >
+                      <span>{opt.label}</span>
+                      {sortBy === opt.id && <Check className="w-3.5 h-3.5 text-[#1C1C1C]" strokeWidth={2} />}
+                    </button>
+                  ))}
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              )}
+            </div>
 
-      {/* ========================================================================= */}
-      {/* 3. SECTION 2: EXPLORE BY WORK */}
-      {/* ========================================================================= */}
-      <section className="space-y-4 pt-2">
-        {/* Section Heading with subtle underline */}
-        <div className="border-b border-[#E5E5E5] pb-2">
-          <h2 className="text-lg sm:text-xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-            Explore by Work
-          </h2>
-        </div>
-
-        {/* 3 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-          {CRAFTSMANSHIP_CARDS.map((card) => {
-            const isSelected = activeCraftsmanship === card.filterValue;
-            return (
-              <div
-                key={card.id}
-                onClick={() => handleCraftsmanshipClick(card.filterValue)}
-                className="group cursor-pointer space-y-2"
-              >
-                {/* Image Container */}
-                <div
-                  className={`relative aspect-[4/3] sm:aspect-square md:aspect-[4/3] rounded-none overflow-hidden bg-[#FAFAFA] transition-all border ${
-                    isSelected ? 'border-[#1C1C1C] ring-1 ring-[#1C1C1C]' : 'border-[#E5E5E5]'
-                  }`}
-                >
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300 pointer-events-none" />
-
-                  {isSelected && (
-                    <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-none bg-[#1C1C1C] text-white text-[9px] font-medium uppercase tracking-wider">
-                      Selected
-                    </div>
-                  )}
-                </div>
-
-                {/* Text Label Below Image */}
-                <div>
-                  <h3 className="text-xs sm:text-[13px] font-medium uppercase tracking-wider text-[#1C1C1C] group-hover:text-[#707070] transition-colors">
-                    {card.title}
-                  </h3>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 4. CURATED CATALOG VIEW */}
-      {/* ========================================================================= */}
-      <section id="curated-catalog-view" className="pt-6 border-t border-[#E5E5E5] space-y-5">
-        
-        {/* Header & Filter Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div>
-            <h3 className="text-xl sm:text-2xl text-[#1C1C1C] font-medium uppercase tracking-wider">
-              Curated Selection
-            </h3>
-            <p className="text-xs text-[#707070] uppercase tracking-wider mt-0.5">
-              Showing {displayedProducts.length} abayas
-            </p>
           </div>
 
-          {/* Quick Filter Controls */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {isAnyFilterActive && (
+
+
+          {/* Right: Grid Layout Switchers */}
+          <div className="flex items-center gap-2">
+            
+            {/* Mobile Layout Toggle (1 col vs 2 cols) */}
+            <div className="flex items-center sm:hidden border border-[#E5E5E5]">
               <button
-                onClick={resetAllFilters}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-white hover:bg-[#FAFAFA] border border-[#E5E5E5] text-[#1C1C1C] text-xs font-medium uppercase tracking-wider transition-colors cursor-pointer"
+                onClick={() => setMobileCols(1)}
+                className={`p-1.5 transition-colors ${mobileCols === 1 ? 'bg-[#1C1C1C] text-white' : 'text-[#707070] hover:text-[#1C1C1C]'}`}
+                aria-label="1 column mobile view"
               >
-                <RotateCcw className="w-3 h-3" strokeWidth={1.5} />
-                <span>Reset Filters</span>
+                <Square className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </button>
+              <button
+                onClick={() => setMobileCols(2)}
+                className={`p-1.5 transition-colors ${mobileCols === 2 ? 'bg-[#1C1C1C] text-white' : 'text-[#707070] hover:text-[#1C1C1C]'}`}
+                aria-label="2 columns mobile view"
+              >
+                <Grid2X2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </button>
+            </div>
+
+            {/* Desktop Layout Toggle (2, 3, 4 cols) */}
+            <div className="hidden sm:flex items-center border border-[#E5E5E5]">
+              <button
+                onClick={() => setDesktopCols(2)}
+                className={`p-1.5 transition-colors ${desktopCols === 2 ? 'bg-[#1C1C1C] text-white' : 'text-[#707070] hover:text-[#1C1C1C]'}`}
+                title="2 columns view"
+                aria-label="2 columns desktop view"
+              >
+                <Grid2X2 className="w-4 h-4" strokeWidth={1.5} />
+              </button>
+              <button
+                onClick={() => setDesktopCols(3)}
+                className={`p-1.5 transition-colors ${desktopCols === 3 ? 'bg-[#1C1C1C] text-white' : 'text-[#707070] hover:text-[#1C1C1C]'}`}
+                title="3 columns view"
+                aria-label="3 columns desktop view"
+              >
+                <Grid3X3 className="w-4 h-4" strokeWidth={1.5} />
+              </button>
+              <button
+                onClick={() => setDesktopCols(4)}
+                className={`p-1.5 transition-colors ${desktopCols === 4 ? 'bg-[#1C1C1C] text-white' : 'text-[#707070] hover:text-[#1C1C1C]'}`}
+                title="4 columns view"
+                aria-label="4 columns desktop view"
+              >
+                <LayoutGrid className="w-4 h-4" strokeWidth={1.5} />
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* 3. Active Filter Chips Bar */}
+      {activeFiltersCount > 0 && (
+        <div className="bg-[#FAF8F5] border-b border-[#E5E5E5] px-4 sm:px-8 py-2.5">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-2">
+            <span className="text-[11px] uppercase tracking-wider text-[#707070] font-semibold mr-1">
+              Active:
+            </span>
+
+            {selectedStyles.map((item) => (
+              <button
+                key={`style-${item}`}
+                onClick={() => toggleItem(selectedStyles, setSelectedStyles, item)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>Cut: {item}</span>
+                <X className="w-3 h-3 text-[#707070]" />
+              </button>
+            ))}
+
+            {selectedWorks.map((item) => (
+              <button
+                key={`work-${item}`}
+                onClick={() => toggleItem(selectedWorks, setSelectedWorks, item)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>Work: {item}</span>
+                <X className="w-3 h-3 text-[#707070]" />
+              </button>
+            ))}
+
+            {selectedFabrics.map((item) => (
+              <button
+                key={`fab-${item}`}
+                onClick={() => toggleItem(selectedFabrics, setSelectedFabrics, item)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>Fabric: {item}</span>
+                <X className="w-3 h-3 text-[#707070]" />
+              </button>
+            ))}
+
+            {selectedColors.map((item) => (
+              <button
+                key={`col-${item}`}
+                onClick={() => toggleItem(selectedColors, setSelectedColors, item)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>Color: {item}</span>
+                <X className="w-3 h-3 text-[#707070]" />
+              </button>
+            ))}
+
+            {selectedSizes.map((item) => (
+              <button
+                key={`size-${item}`}
+                onClick={() => toggleItem(selectedSizes, setSelectedSizes, item)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>Size: {item}</span>
+                <X className="w-3 h-3 text-[#707070]" />
+              </button>
+            ))}
+
+            {onlyInStock && (
+              <button
+                onClick={() => setOnlyInStock(false)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>In Stock Only</span>
+                <X className="w-3 h-3 text-[#707070]" />
               </button>
             )}
 
-            {/* Quick Fabric Tabs */}
-            <div className="inline-flex rounded-xl bg-stone-100 p-1 border border-stone-200 text-xs">
-              {['All', 'Silk', 'Georgette', 'Chiffon', 'Modal Jersey'].map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setActiveFabricFilter(f)}
-                  className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
-                    activeFabricFilter === f
-                      ? 'bg-white text-stone-900 font-bold shadow-xs'
-                      : 'text-stone-600 hover:text-stone-900'
-                  }`}
-                >
-                  {f === 'Modal Jersey' ? 'Modal' : f}
-                </button>
-              ))}
-            </div>
+            {priceRange < maxPriceLimit && (
+              <button
+                onClick={() => setPriceRange(maxPriceLimit)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#E5E5E5] text-[11px] uppercase tracking-wider text-[#1C1C1C] hover:border-[#1C1C1C] transition-colors"
+              >
+                <span>Max: {formatPrice(priceRange)}</span>
+                <X className="w-3 h-3 text-[#707070]" />
+              </button>
+            )}
 
-            {/* Sort Dropdown */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-semibold text-stone-800 focus:outline-none cursor-pointer"
+            <button
+              onClick={clearAllFilters}
+              className="text-[11px] uppercase tracking-wider text-[#707070] hover:text-[#1C1C1C] underline font-semibold ml-2 cursor-pointer"
             >
-              <option value="featured">Sort: Featured</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
-            </select>
+              Clear all
+            </button>
           </div>
         </div>
+      )}
 
-        {/* Active Filter Badges */}
-        {isAnyFilterActive && (
-          <div className="flex items-center gap-2 flex-wrap text-xs pt-1">
-            <span className="text-stone-400 font-semibold uppercase text-[10px] tracking-wider">
-              Active:
-            </span>
-            {activeSilhouette !== 'All' && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-royal-violet/40 text-royal-violet font-semibold shadow-xs">
-                Silhouette: {activeSilhouette}
-                <button
-                  onClick={() => {
-                    setActiveSilhouette('All');
-                    setSelectedStyleFilter('All');
-                  }}
-                  className="cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5 hover:text-red-600 transition-colors" />
-                </button>
-              </span>
-            )}
-            {activeCraftsmanship !== 'All' && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-royal-violet/40 text-royal-violet font-semibold shadow-xs">
-                Craftsmanship: {activeCraftsmanship}
-                <button
-                  onClick={() => {
-                    setActiveCraftsmanship('All');
-                    setSelectedWorkFilter('All');
-                  }}
-                  className="cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5 hover:text-red-600 transition-colors" />
-                </button>
-              </span>
-            )}
-            {activeFabricFilter !== 'All' && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-stone-300 text-stone-800 font-medium shadow-xs">
-                Fabric: {activeFabricFilter}
-                <button
-                  onClick={() => setActiveFabricFilter('All')}
-                  className="cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5 hover:text-stone-900 transition-colors" />
-                </button>
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Product Grid */}
-        {displayedProducts.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-6">
-            {displayedProducts.map((product) => (
+      {/* 4. Main Products Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8">
+        {filteredProducts.length > 0 ? (
+          <div
+            className={`grid gap-x-3 gap-y-8 sm:gap-x-6 sm:gap-y-10 ${
+              // Mobile cols
+              mobileCols === 1 ? 'grid-cols-1' : 'grid-cols-2'
+            } ${
+              // Desktop cols
+              desktopCols === 2
+                ? 'sm:grid-cols-2'
+                : desktopCols === 4
+                ? 'sm:grid-cols-3 lg:grid-cols-4'
+                : 'sm:grid-cols-3'
+            }`}
+          >
+            {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 bg-white rounded-2xl border border-stone-200 space-y-3">
-            <p className="font-serif text-lg text-stone-800">
-              No matching abayas found in this filter combination.
+          /* Empty State */
+          <div className="py-24 text-center max-w-md mx-auto space-y-4">
+            <h3 className="text-base font-semibold text-[#1C1C1C] uppercase tracking-wider">
+              No abayas match your filters
+            </h3>
+            <p className="text-xs text-[#707070] leading-relaxed">
+              Try adjusting or clearing your active filters to see all available couture designs.
             </p>
             <button
-              onClick={resetAllFilters}
-              className="px-5 py-2 rounded-xl bg-stone-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-royal-violet transition-colors cursor-pointer"
+              onClick={clearAllFilters}
+              className="mt-4 px-6 py-2.5 bg-[#1C1C1C] text-white text-xs uppercase tracking-widest font-medium hover:bg-black transition-colors"
             >
-              Reset Filters
+              Clear all filters
             </button>
           </div>
         )}
+      </div>
 
-      </section>
+      {/* 5. Facets / Filter Slideout Drawer (Exact BasicAbaya Drawer) */}
+      <div
+        className={`fixed inset-0 z-50 transition-opacity duration-300 ${
+          filterDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {/* Backdrop */}
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+          onClick={() => setFilterDrawerOpen(false)}
+        />
 
-      {/* ========================================================================= */}
-      {/* 5. LUXURY ATELIER GUARANTEE BANNER */}
-      {/* ========================================================================= */}
-      <section className="p-6 sm:p-8 bg-[#f5ecdf]/50 border border-[#e5d6c5] grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
-        <div className="flex items-center gap-3.5">
-          <ShieldCheck className="w-6 h-6 text-royal-violet shrink-0" />
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-              100% Certified Mulberry Silk
-            </h4>
-            <p className="text-[11px] text-stone-500">
-              Grade 6A Oeko-Tex certified organic filaments
-            </p>
+        {/* Drawer Panel */}
+        <div
+          className={`fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-in-out ${
+            filterDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          {/* Drawer Header */}
+          <div className="px-6 py-4 border-b border-[#E5E5E5] flex items-center justify-between bg-white">
+            <h2 className="text-sm font-semibold tracking-[0.14em] uppercase text-[#1C1C1C]">
+              Filters
+            </h2>
+            <button
+              onClick={() => setFilterDrawerOpen(false)}
+              className="p-1.5 text-[#1C1C1C] hover:opacity-75 transition-opacity"
+              aria-label="Close filters drawer"
+            >
+              <X className="w-5 h-5" strokeWidth={1.5} />
+            </button>
           </div>
-        </div>
 
-        <div className="flex items-center gap-3.5">
-          <Shirt className="w-6 h-6 text-royal-violet shrink-0" />
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-              Bespoke Silhouettes & Works
-            </h4>
-            <p className="text-[11px] text-stone-500">
-              7 signature cuts tailored to your height & preference
-            </p>
-          </div>
-        </div>
+          {/* Drawer Scrollable Content */}
+          <div className="flex-1 overflow-y-auto divide-y divide-[#E5E5E5]">
+            
+            {/* Color Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('color')}
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+              >
+                <span>Color {selectedColors.length > 0 && `(${selectedColors.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.color ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
 
-        <div className="flex items-center gap-3.5">
-          <Star className="w-6 h-6 text-gold-accent shrink-0" />
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-              5,000+ Five-Star Reviews
-            </h4>
-            <p className="text-[11px] text-stone-500">
-              Free tracked DHL worldwide delivery on all orders
-            </p>
+              {openAccordions.color && (
+                <div className="pt-4 flex flex-wrap gap-2.5">
+                  {COLOR_SWATCHES.map((swatch) => {
+                    const isSelected = selectedColors.includes(swatch.name);
+                    return (
+                      <button
+                        key={swatch.name}
+                        onClick={() => toggleItem(selectedColors, setSelectedColors, swatch.name)}
+                        className={`w-7 h-7 rounded-full transition-all relative flex items-center justify-center shrink-0 ${
+                          isSelected
+                            ? 'ring-2 ring-[#1C1C1C] ring-offset-2 scale-110'
+                            : 'hover:scale-110'
+                        } ${swatch.border ? 'border border-[#D0D0D0]' : 'border border-black/10'}`}
+                        style={{ backgroundColor: swatch.hex }}
+                        title={swatch.name}
+                        aria-label={`Filter by ${swatch.name}`}
+                      >
+                        {isSelected && (
+                          <Check
+                            className={`w-3.5 h-3.5 ${swatch.name === 'White' || swatch.name === 'Beige' || swatch.name === 'Silver' ? 'text-black' : 'text-white'}`}
+                            strokeWidth={2.5}
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Silhouette / Cut Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('style')}
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+              >
+                <span>Silhouette / Cut {selectedStyles.length > 0 && `(${selectedStyles.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.style ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
+
+              {openAccordions.style && (
+                <div className="pt-3 space-y-2.5">
+                  {ABAYA_STYLES.map((style) => {
+                    const isChecked = selectedStyles.includes(style.name);
+                    return (
+                      <label
+                        key={style.id}
+                        className="flex items-center justify-between text-xs text-[#1C1C1C] cursor-pointer py-1 hover:text-black group"
+                      >
+                        <span className="group-hover:translate-x-0.5 transition-transform">{style.name}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleItem(selectedStyles, setSelectedStyles, style.name)}
+                          className="w-4 h-4 accent-[#1C1C1C] cursor-pointer"
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Craftsmanship / Work Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('work')}
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+              >
+                <span>Craftsmanship / Work {selectedWorks.length > 0 && `(${selectedWorks.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.work ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
+
+              {openAccordions.work && (
+                <div className="pt-3 space-y-2.5">
+                  {ABAYA_WORKS.map((work) => {
+                    const isChecked = selectedWorks.includes(work.name);
+                    return (
+                      <label
+                        key={work.id}
+                        className="flex items-center justify-between text-xs text-[#1C1C1C] cursor-pointer py-1 hover:text-black group"
+                      >
+                        <span className="capitalize group-hover:translate-x-0.5 transition-transform">{work.name}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleItem(selectedWorks, setSelectedWorks, work.name)}
+                          className="w-4 h-4 accent-[#1C1C1C] cursor-pointer"
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Fabric Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('fabric')}
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+              >
+                <span>Fabric / Collection {selectedFabrics.length > 0 && `(${selectedFabrics.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.fabric ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
+
+              {openAccordions.fabric && (
+                <div className="pt-3 space-y-2.5">
+                  {availableFabrics.map((fabric) => {
+                    const isChecked = selectedFabrics.includes(fabric);
+                    return (
+                      <label
+                        key={fabric}
+                        className="flex items-center justify-between text-xs text-[#1C1C1C] cursor-pointer py-1 hover:text-black group"
+                      >
+                        <span className="group-hover:translate-x-0.5 transition-transform">{fabric} Collection</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleItem(selectedFabrics, setSelectedFabrics, fabric)}
+                          className="w-4 h-4 accent-[#1C1C1C] cursor-pointer"
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Size Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('size')}
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+              >
+                <span>Size {selectedSizes.length > 0 && `(${selectedSizes.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.size ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
+
+              {openAccordions.size && (
+                <div className="pt-3 grid grid-cols-3 gap-2">
+                  {['50', '52', '54', '56', '58', '60', 'Custom'].map((size) => {
+                    const isSelected = selectedSizes.includes(size);
+                    return (
+                      <button
+                        key={size}
+                        onClick={() => toggleItem(selectedSizes, setSelectedSizes, size)}
+                        className={`py-2 text-xs font-medium uppercase tracking-wider border transition-colors ${
+                          isSelected
+                            ? 'bg-[#1C1C1C] text-white border-[#1C1C1C]'
+                            : 'bg-white text-[#1C1C1C] border-[#E5E5E5] hover:border-[#1C1C1C]'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Price Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('price')}
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer"
+              >
+                <span>Price {priceRange < maxPriceLimit && `(≤ ${formatPrice(priceRange)})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.price ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
+
+              {openAccordions.price && (
+                <div className="pt-4 space-y-3">
+                  <div className="flex items-center justify-between text-xs text-[#707070]">
+                    <span>{formatPrice(minPriceLimit)}</span>
+                    <span className="font-semibold text-[#1C1C1C]">{formatPrice(priceRange)}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={minPriceLimit}
+                    max={maxPriceLimit}
+                    step="5"
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(Number(e.target.value))}
+                    className="w-full accent-[#1C1C1C] cursor-pointer"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Availability Accordion */}
+            <div className="p-6">
+              <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1C1C1C] cursor-pointer">
+                <span>In Stock Only</span>
+                <input
+                  type="checkbox"
+                  checked={onlyInStock}
+                  onChange={(e) => setOnlyInStock(e.target.checked)}
+                  className="w-4 h-4 accent-[#1C1C1C] cursor-pointer"
+                />
+              </label>
+            </div>
+
           </div>
+
+          {/* Drawer Footer Actions */}
+          <div className="p-6 border-t border-[#E5E5E5] bg-white flex items-center gap-4">
+            <button
+              onClick={clearAllFilters}
+              className="text-xs uppercase tracking-wider font-semibold text-[#707070] hover:text-[#1C1C1C] underline cursor-pointer"
+            >
+              Clear all
+            </button>
+            <button
+              onClick={() => setFilterDrawerOpen(false)}
+              className="flex-1 py-3.5 bg-[#1C1C1C] text-white hover:bg-black text-xs uppercase tracking-[0.14em] font-medium transition-colors cursor-pointer text-center"
+            >
+              View results ({filteredProducts.length})
+            </button>
+          </div>
+
         </div>
-      </section>
+      </div>
 
     </div>
   );

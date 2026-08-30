@@ -23,7 +23,9 @@ export default function ShopPage() {
     setSelectedCategoryFilter,
     wishlistOnlyFilter,
     wishlist,
-    formatPrice
+    formatPrice,
+    searchQuery,
+    setSearchQuery
   } = useShop();
 
   // Price calculations
@@ -36,7 +38,6 @@ export default function ShopPage() {
   }, [PRODUCTS]);
 
   // Filter States
-  const [searchQuery, setSearchQuery] = useState('');
   const [maxPrice, setMaxPrice] = useState(maxPriceLimit);
   const [selectedTab, setSelectedTab] = useState('All'); // 'All' | 'Silk' | 'Chiffon' | 'Modal Jersey' | 'Georgette' | 'New Arrivals' | 'Bridal' | 'Violet Edition'
   const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');

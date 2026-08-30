@@ -31,6 +31,7 @@ export function ShopProvider({ children }) {
   const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');
   const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
   const [wishlistOnlyFilter, setWishlistOnlyFilter] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Dynamic Products State
   const [products, setProducts] = useState(() => {
@@ -321,7 +322,7 @@ export function ShopProvider({ children }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView, selectedProductId]);
 
-  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false) => {
+  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null) => {
     if (productId) {
       setSelectedProductId(productId);
     }
@@ -339,6 +340,9 @@ export function ShopProvider({ children }) {
     }
     if (work) {
       setSelectedWorkFilter(work);
+    }
+    if (search !== null) {
+      setSearchQuery(search);
     }
     setWishlistOnlyFilter(wishlistOnly);
     setCurrentView(view);
@@ -514,6 +518,8 @@ export function ShopProvider({ children }) {
         setSelectedWorkFilter,
         wishlistOnlyFilter,
         setWishlistOnlyFilter,
+        searchQuery,
+        setSearchQuery,
 
         // Modals
         isCartOpen,

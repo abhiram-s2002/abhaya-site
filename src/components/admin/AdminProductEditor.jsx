@@ -18,7 +18,8 @@ import {
   Tag,
   DollarSign,
   Info,
-  ExternalLink
+  ExternalLink,
+  Star
 } from 'lucide-react';
 import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
@@ -59,6 +60,8 @@ export default function AdminProductEditor({
   const [customCategory, setCustomCategory] = useState('');
   const [badge, setBadge] = useState('New Arrival');
   const [targetRegion, setTargetRegion] = useState('all'); // 'all' | 'india' | 'arab'
+  const [rating, setRating] = useState('5.0');
+  const [reviewsCount, setReviewsCount] = useState('0');
   const [isFeatured, setIsFeatured] = useState(false);
   const [isVioletEdition, setIsVioletEdition] = useState(false);
   const [stockCount, setStockCount] = useState(12);
@@ -120,6 +123,8 @@ export default function AdminProductEditor({
       }
       setBadge(product.badge || '');
       setTargetRegion(product.targetRegion || 'all');
+      setRating(product.rating !== undefined ? String(product.rating) : '5.0');
+      setReviewsCount(product.reviewsCount !== undefined ? String(product.reviewsCount) : '0');
       setIsFeatured(Boolean(product.isFeatured));
       setIsVioletEdition(Boolean(product.isVioletEdition));
       setStockCount(product.stockCount ?? 10);
@@ -145,6 +150,8 @@ export default function AdminProductEditor({
       setCustomCategory('');
       setBadge('New Arrival');
       setTargetRegion('all');
+      setRating('5.0');
+      setReviewsCount('0');
       setIsFeatured(false);
       setIsVioletEdition(false);
       setStockCount(12);
@@ -343,8 +350,8 @@ export default function AdminProductEditor({
       category: finalCategory,
       badge: badge.trim(),
       targetRegion: targetRegion || 'all',
-      rating: product?.rating || 5.0,
-      reviewsCount: product?.reviewsCount || 0,
+      rating: Number(rating) || 5.0,
+      reviewsCount: Number(reviewsCount) || 0,
       isFeatured,
       isVioletEdition,
       defaultStyle,
@@ -624,6 +631,45 @@ export default function AdminProductEditor({
                       </select>
                     </div>
                   )}
+                </div>
+
+                {/* Rating & Reviews Count */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                        <span>Star Rating (1.0 – 5.0)</span>
+                      </span>
+                      <span className="text-[10px] text-stone-400 font-normal">e.g. 4.9</span>
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="1.0"
+                      max="5.0"
+                      placeholder="5.0"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-semibold text-stone-800"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center justify-between">
+                      <span>Reviews Count</span>
+                      <span className="text-[10px] text-stone-400 font-normal">e.g. 128</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      placeholder="0"
+                      value={reviewsCount}
+                      onChange={(e) => setReviewsCount(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-semibold text-stone-800"
+                    />
+                  </div>
                 </div>
 
                 {/* Flags / Featured Switches */}

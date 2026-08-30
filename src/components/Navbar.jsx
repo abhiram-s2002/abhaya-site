@@ -30,15 +30,21 @@ export default function Navbar() {
     currentView,
     navigateTo,
     cart,
-    wishlist,
+    isCartOpen,
     setIsCartOpen,
+    isSearchOpen,
     setIsSearchOpen,
+    searchQuery,
+    setSearchQuery,
     currency,
     setCurrency,
     CURRENCIES,
     showToast,
     adminEnabled
   } = useShop();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const searchInputRef = useRef(null);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openAccordions, setOpenAccordions] = useState({
@@ -51,6 +57,37 @@ export default function Navbar() {
   const currencyMenuRef = useRef(null);
 
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Sync search input when opened and autofocus
+  useEffect(() => {
+    if (isSearchOpen) {
+      setSearchTerm(searchQuery || '');
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 50);
+    }
+  }, [isSearchOpen, searchQuery]);
+
+  // Handle ESC key to close search
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isSearchOpen) {
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchOpen, setIsSearchOpen]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const cleanTerm = searchTerm.trim();
+    setSearchQuery(cleanTerm);
+    setIsSearchOpen(false);
+    navigateTo('shop', null, null, null, null, null, null, false, cleanTerm);
+  };
 
   // Prevent background scrolling when menu drawer is open
   useEffect(() => {
@@ -91,7 +128,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-[#E5E5E5] transition-all duration-300">
+      <header className="sticky top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-[#E5E5E5] transition-all duration-300">
         <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3.5 md:py-4 max-w-7xl mx-auto relative">
           
           {/* Left: Desktop Navigation Links (SHOP, COLLECTIONS, OUR STORY, CONTACT) + Mobile Menu Trigger */}
@@ -99,10 +136,9 @@ export default function Navbar() {
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open Navigation Menu"
-              className="lg:hidden text-[#1C1C1C] focus:outline-none p-1.5 -ml-1 hover:bg-[#F5F5F5] transition-colors flex items-center gap-2 group cursor-pointer"
+              className="lg:hidden text-[#1C1C1C] focus:outline-none p-1.5 -ml-1 hover:bg-[#F5F5F5] transition-colors flex items-center group cursor-pointer"
             >
               <Menu className="w-5 h-5 text-[#1C1C1C]" strokeWidth={1.5} />
-              <span className="text-[11px] tracking-widest uppercase font-medium text-[#1C1C1C]">Menu</span>
             </button>
 
             {/* Desktop Navigation Links */}
@@ -214,9 +250,11 @@ export default function Navbar() {
 
             {/* Search Icon */}
             <button
-              onClick={() => setIsSearchOpen(true)}
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
               aria-label="Search"
-              className="hover:text-[#707070] transition-colors p-1.5"
+              className={`p-1.5 transition-colors cursor-pointer ${
+                isSearchOpen ? 'text-[#1C1C1C]' : 'hover:text-[#707070]'
+              }`}
             >
               <Search className="w-4.5 h-4.5" strokeWidth={1.5} />
             </button>
@@ -259,7 +297,73 @@ export default function Navbar() {
           </div>
 
         </div>
+
+        {/* Top Search Bar Directly Under the Top Section */}
+        {isSearchOpen && (
+          <div className="w-full border-t border-[#E5E5E5] bg-white animate-fade-in shadow-md">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex items-center gap-3 sm:gap-4"
+            >
+              {/* Left Search Icon */}
+              <button
+                type="submit"
+                aria-label="Search"
+                className="text-[#1C1C1C] hover:opacity-70 transition-opacity p-0.5 cursor-pointer shrink-0"
+              >
+                <Search className="w-5 h-5 text-[#1C1C1C]" strokeWidth={1.5} />
+              </button>
+
+              {/* Search Input */}
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="SEARCH FOR..."
+                className="w-full bg-transparent text-sm sm:text-base text-[#1C1C1C] placeholder-[#8E8E8E] font-medium tracking-[0.08em] uppercase focus:outline-none"
+                aria-label="Search abayas and collections"
+              />
+
+              {/* Clear button if text typed */}
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchTerm('');
+                    searchInputRef.current?.focus();
+                  }}
+                  className="p-1 text-[#8E8E8E] hover:text-[#1C1C1C] transition-colors cursor-pointer"
+                  title="Clear input"
+                  aria-label="Clear search input"
+                >
+                  <X className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+              )}
+
+              {/* Close button */}
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(false)}
+                className="p-1 text-[#1C1C1C] hover:opacity-60 transition-opacity cursor-pointer shrink-0 ml-1"
+                title="Close search"
+                aria-label="Close search"
+              >
+                <X className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
+              </button>
+            </form>
+          </div>
+        )}
       </header>
+
+      {/* Backdrop below the fixed top header when search is open */}
+      {isSearchOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 animate-fade-in"
+          onClick={() => setIsSearchOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* ========================================================================= */}
       {/* FULL LUXURY NAVIGATION DRAWER (Exact CasBasics & Luxury Boutique Layout) */}

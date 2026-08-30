@@ -657,6 +657,10 @@ export default function AdminPage() {
                               {p.badge}
                             </span>
                           )}
+                          <div className="flex items-center gap-1 mt-1 text-[11px] text-amber-700">
+                            <span className="font-semibold">★ {Number(p.rating || 5.0).toFixed(1)}</span>
+                            <span className="text-stone-400">({p.reviewsCount || 0})</span>
+                          </div>
                         </td>
 
                         {/* Target Market */}
@@ -844,9 +848,15 @@ export default function AdminPage() {
                           {formatPrice(p.price)}
                         </span>
                       </div>
-                      <h3 className="font-serif text-base text-primary font-medium mt-1">
-                        {p.name}
-                      </h3>
+                      <div className="flex items-center justify-between mt-1">
+                        <h3 className="font-serif text-base text-primary font-medium">
+                          {p.name}
+                        </h3>
+                        <div className="flex items-center gap-1 text-[11px] text-amber-700 font-semibold shrink-0">
+                          <span>★ {Number(p.rating || 5.0).toFixed(1)}</span>
+                          <span className="text-stone-400 font-normal">({p.reviewsCount || 0})</span>
+                        </div>
+                      </div>
                       <p className="text-xs text-stone-500 line-clamp-2 mt-1">
                         {p.description}
                       </p>

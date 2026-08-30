@@ -34,7 +34,7 @@ export default function MobileBottomNav() {
 
         {/* Collections & Shop Explore */}
         <button
-          onClick={() => navigateTo('collections', null, 'fabric')}
+          onClick={() => navigateTo('collections')}
           className={`flex flex-col items-center justify-center gap-1 py-1 transition-colors relative ${
             currentView === 'collections' || currentView === 'shop' || currentView === 'violet-edition'
               ? 'text-[#1C1C1C] font-semibold'
