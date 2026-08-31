@@ -68,18 +68,18 @@ export default function OffersPage() {
 
   return (
     <EditableSection cmsKey="offers_page" label="Atelier Privileges">
-      <div className="min-h-screen bg-[#7A0648] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 animate-fade-in text-white font-semibold">
+      <div className="min-h-screen bg-[#FAF8F5] pt-8 sm:pt-12 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 animate-fade-in text-[#1E141B] font-semibold">
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-xs font-sans font-bold uppercase tracking-widest text-primary">
-            <Sparkles className="w-3.5 h-3.5 text-royal-violet" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-none bg-[#F5EAF1] border border-[#7A0648]/30 text-xs font-sans font-bold uppercase tracking-widest text-[#7A0648]">
+            <Sparkles className="w-3.5 h-3.5 text-[#7A0648]" />
             <span>Atelier Privileges</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-primary font-medium tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#1E141B] font-bold tracking-tight">
             Privileges & Services
           </h1>
-          <p className="text-xs sm:text-sm text-primary/70 font-sans max-w-lg mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-stone-600 font-medium max-w-lg mx-auto leading-relaxed">
             Discover the thoughtful touches, complimentary packaging, and couture services included with every NOOR AL DHUHA creation.
           </p>
         </div>
@@ -91,37 +91,37 @@ export default function OffersPage() {
             return (
               <div
                 key={item.id}
-                className="relative rounded-2xl border border-primary/15 bg-white p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                className="relative rounded-none border border-stone-200 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden group"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className={`text-[10px] font-sans font-bold tracking-widest uppercase px-2.5 py-1 rounded-full border ${item.badgeColor}`}>
+                    <span className="text-[10px] font-sans font-bold tracking-widest uppercase px-2.5 py-1 rounded-none border border-[#7A0648]/30 bg-[#F5EAF1] text-[#7A0648]">
                       {item.badge}
                     </span>
-                    <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                    <div className="w-8 h-8 rounded-none bg-[#F5EAF1] flex items-center justify-center text-[#7A0648]">
                       <IconComponent className="w-4 h-4" />
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="font-serif text-lg font-medium text-primary mb-1.5">
+                    <h3 className="font-serif text-lg font-bold text-[#1E141B] mb-1.5">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-primary/70 font-sans leading-relaxed">
+                    <p className="text-xs text-stone-600 font-medium leading-relaxed">
                       {item.description}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-primary/10 flex items-center gap-1.5 text-xs font-sans font-semibold text-emerald-800">
+                  <div className="pt-2 border-t border-stone-100 flex items-center gap-1.5 text-xs font-sans font-bold text-emerald-700">
                     <CheckCircle className="w-3.5 h-3.5" />
                     <span>{item.highlight}</span>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-dashed border-primary/20">
+                <div className="mt-6 pt-4 border-t border-stone-100">
                   <button
                     onClick={() => navigateTo('shop', null, item.category === 'All' ? null : item.category)}
-                    className="w-full py-2.5 px-4 bg-primary hover:bg-royal-violet text-white rounded font-sans text-xs uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+                    className="w-full py-2.5 px-4 bg-[#7A0648] hover:bg-[#68043D] text-white rounded-none font-sans text-xs uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-95 cursor-pointer border border-[#7A0648]"
                   >
                     <span>{item.actionText}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -135,10 +135,10 @@ export default function OffersPage() {
         {/* Bundle & Gifting Highlights */}
         <div className="space-y-6 pt-6">
           <div className="text-center space-y-1">
-            <h2 className="font-serif text-2xl sm:text-3xl text-primary font-medium">
+            <h2 className="font-serif text-2xl sm:text-3xl text-[#1E141B] font-bold">
               Curated Wardrobe Sets & Services
             </h2>
-            <p className="text-xs text-primary/60 font-sans">
+            <p className="text-xs text-stone-600 font-medium">
               Handcrafted for seamless coordination and modesty
             </p>
           </div>
@@ -147,23 +147,23 @@ export default function OffersPage() {
             {bundleDeals.map((deal, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl border border-primary/10 bg-[#f4ede3] p-6 shadow-sm flex flex-col justify-between space-y-4"
+                className="rounded-none border border-stone-200 bg-white p-6 shadow-sm flex flex-col justify-between space-y-4"
               >
                 <div className="space-y-2">
-                  <span className="inline-block text-[10px] font-sans font-bold uppercase tracking-widest text-primary bg-white/80 px-2.5 py-1 rounded-full border border-primary/10">
+                  <span className="inline-block text-[10px] font-sans font-bold uppercase tracking-widest text-[#7A0648] bg-[#F5EAF1] px-2.5 py-1 rounded-none border border-[#7A0648]/20">
                     {deal.tag}
                   </span>
-                  <h3 className="font-serif text-lg font-medium text-primary">
+                  <h3 className="font-serif text-lg font-bold text-[#1E141B]">
                     {deal.title}
                   </h3>
-                  <p className="text-xs text-primary/70 font-sans leading-relaxed">
+                  <p className="text-xs text-stone-600 font-medium leading-relaxed">
                     {deal.subtitle}
                   </p>
                 </div>
 
                 <button
                   onClick={() => navigateTo('shop', null, deal.category === 'All' ? null : deal.category)}
-                  className="w-full py-2.5 px-4 bg-primary hover:bg-primary/90 text-white rounded font-sans text-xs uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-[#7A0648] hover:bg-[#68043D] text-white rounded-none font-sans text-xs uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-95 cursor-pointer border border-[#7A0648]"
                 >
                   <span>{deal.actionText}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -173,19 +173,19 @@ export default function OffersPage() {
           </div>
         </div>
 
-        {/* Trust & Guarantee Banner */}
-        <div className="rounded-2xl bg-primary text-white p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+        {/* Trust & Guarantee Banner (Violet Accent Look) */}
+        <div className="rounded-none bg-[#7A0648] text-white p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg border border-[#68043D]">
           <div className="space-y-2 text-center md:text-left">
-            <h3 className="font-serif text-2xl font-medium">
+            <h3 className="font-serif text-2xl font-bold">
               The Atelier Quality Assurance
             </h3>
-            <p className="text-xs sm:text-sm text-white/80 font-sans max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-white/90 font-medium max-w-xl leading-relaxed">
               Every garment is handcrafted with Grade 6A pure mulberry silk and OEKO-TEX® certified fabrics. Complimentary signature keepsake box on all orders.
             </p>
           </div>
           <button
             onClick={() => navigateTo('shop')}
-            className="px-8 py-3.5 bg-neutral-white text-primary hover:bg-white text-xs font-sans font-bold uppercase tracking-widest rounded transition-all shrink-0 active:scale-95 cursor-pointer shadow-md"
+            className="px-8 py-3.5 bg-white text-[#7A0648] hover:bg-stone-100 text-xs font-sans font-bold uppercase tracking-widest rounded-none transition-all shrink-0 active:scale-95 cursor-pointer shadow-md border border-white"
           >
             EXPLORE CATALOG
           </button>

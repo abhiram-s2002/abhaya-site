@@ -55,12 +55,12 @@ function QuickViewModalContent({ product, onClose }) {
       />
 
       {/* Modal Box */}
-      <div className="relative bg-[#68043D] text-white rounded-none max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl z-10 border border-white/20 animate-fade-in my-auto font-semibold">
+      <div className="relative bg-white text-[#1E141B] rounded-none max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl z-10 border border-stone-200 animate-fade-in my-auto font-semibold">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 rounded-none bg-white text-[#7A0648] border border-white hover:bg-white/90 flex items-center justify-center transition-colors cursor-pointer shadow-md"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-8 h-8 rounded-none bg-[#7A0648] text-white hover:bg-[#68043D] flex items-center justify-center transition-colors cursor-pointer shadow-md"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" strokeWidth={1.8} />
@@ -69,15 +69,15 @@ function QuickViewModalContent({ product, onClose }) {
         <div className="grid grid-cols-1 md:grid-cols-12">
           
           {/* Left: Gallery (5 cols) */}
-          <div className="md:col-span-5 p-4 sm:p-6 bg-[#580233] flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/20">
-            <div className="relative aspect-[3/4] max-h-[320px] md:max-h-none bg-black/10 rounded-none overflow-hidden shadow-sm">
+          <div className="md:col-span-5 p-4 sm:p-6 bg-stone-50 flex flex-col justify-between border-b md:border-b-0 md:border-r border-stone-200">
+            <div className="relative aspect-[3/4] max-h-[320px] md:max-h-none bg-stone-100 rounded-none overflow-hidden shadow-xs border border-stone-200">
               <img
                 src={images[activeImageIdx] || images[0]}
                 alt={product.name}
                 className="w-full h-full object-cover transition-all duration-300"
               />
               {product.badge && (
-                <span className="badge-custom absolute top-3 left-3 bg-[#E32C2B] text-white text-[9px] px-2 py-0.5 uppercase tracking-wider font-bold">
+                <span className="badge-custom absolute top-3 left-3 bg-[#7A0648] text-white text-[9px] px-2 py-0.5 uppercase tracking-wider font-bold">
                   {product.badge}
                 </span>
               )}
@@ -91,7 +91,7 @@ function QuickViewModalContent({ product, onClose }) {
                     key={idx}
                     onClick={() => setActiveImageIdx(idx)}
                     className={`w-12 h-14 sm:w-14 sm:h-16 rounded-none overflow-hidden border transition-all shrink-0 cursor-pointer ${
-                      activeImageIdx === idx ? 'border-white ring-2 ring-white' : 'border-white/30 opacity-70 hover:opacity-100'
+                      activeImageIdx === idx ? 'border-[#7A0648] ring-2 ring-[#7A0648]' : 'border-stone-300 opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -101,37 +101,37 @@ function QuickViewModalContent({ product, onClose }) {
             )}
 
             {/* Micro Badge */}
-            <div className="mt-3 p-2.5 bg-white/10 border border-white/20 flex items-center gap-2 text-[11px] uppercase tracking-wide text-white">
-              <Scissors className="w-3.5 h-3.5 text-white shrink-0" strokeWidth={1.5} />
-              <span className="font-semibold">Bespoke Customization Options Available</span>
+            <div className="mt-3 p-2.5 bg-white border border-stone-200 flex items-center gap-2 text-[11px] uppercase tracking-wide text-stone-700">
+              <Scissors className="w-3.5 h-3.5 text-[#7A0648] shrink-0" strokeWidth={1.5} />
+              <span className="font-bold">Bespoke Customization Options Available</span>
             </div>
           </div>
 
           {/* Right: Info & Selectors (7 cols) */}
-          <div className="md:col-span-7 p-4 sm:p-6 flex flex-col justify-between space-y-4 bg-[#68043D] text-white font-semibold">
+          <div className="md:col-span-7 p-4 sm:p-6 flex flex-col justify-between space-y-4 bg-white text-[#1E141B] font-semibold">
             
             <div className="space-y-3.5">
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-bold text-white/90">
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-bold text-stone-500">
                     {product.category || 'Abaya'} • {selectedStyle}
                   </span>
                   <div className="flex items-center gap-1 text-[#FFD700] text-xs">
                     <Star className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
-                    <span className="font-bold text-white">{product.rating}</span>
+                    <span className="font-bold text-[#1E141B]">{product.rating}</span>
                   </div>
                 </div>
 
-                <h2 className="text-base sm:text-xl font-bold uppercase tracking-wider text-white leading-tight">
+                <h2 className="text-base sm:text-xl font-bold uppercase tracking-wider text-[#1E141B] leading-tight">
                   {product.name}
                 </h2>
 
                 <div className="flex items-baseline gap-2.5 pt-0.5">
-                  <span className="text-lg sm:text-xl font-bold text-white tabular-nums tracking-tight">
+                  <span className="text-lg sm:text-xl font-bold text-[#7A0648] tabular-nums tracking-tight">
                     {formatPrice(product.price)}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-xs sm:text-sm text-white/70 line-through tabular-nums font-medium">
+                    <span className="text-xs sm:text-sm text-stone-400 line-through tabular-nums font-medium">
                       {formatPrice(product.originalPrice)}
                     </span>
                   )}
@@ -139,20 +139,20 @@ function QuickViewModalContent({ product, onClose }) {
               </div>
 
               {/* 1. Category Style Selector */}
-              <div className="space-y-1.5 pt-2 border-t border-white/20">
+              <div className="space-y-1.5 pt-2 border-t border-stone-200">
                 <div className="flex justify-between text-xs uppercase tracking-wider">
-                  <span className="font-semibold text-white/90">1. Style:</span>
-                  <span className="font-bold text-white">{selectedStyle}</span>
+                  <span className="font-bold text-stone-600">1. Style:</span>
+                  <span className="font-bold text-[#1E141B]">{selectedStyle}</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                   {ABAYA_STYLES.map((s) => (
                     <button
                       key={s.id}
                       onClick={() => setSelectedStyle(s.name)}
-                      className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-semibold rounded-none text-left transition-all border leading-tight cursor-pointer ${
+                      className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-bold rounded-none text-left transition-all border leading-tight cursor-pointer ${
                         selectedStyle.toLowerCase() === s.name.toLowerCase()
-                          ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
-                          : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
+                          ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
+                          : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                       }`}
                     >
                       {s.name}
@@ -162,20 +162,20 @@ function QuickViewModalContent({ product, onClose }) {
               </div>
 
               {/* 2. Work Selector */}
-              <div className="space-y-1.5 pt-2 border-t border-white/20">
+              <div className="space-y-1.5 pt-2 border-t border-stone-200">
                 <div className="flex justify-between text-xs uppercase tracking-wider">
-                  <span className="font-semibold text-white/90">2. Work:</span>
-                  <span className="font-bold text-white">{selectedWork}</span>
+                  <span className="font-bold text-stone-600">2. Work:</span>
+                  <span className="font-bold text-[#1E141B]">{selectedWork}</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                   {ABAYA_WORKS.map((w) => (
                     <button
                       key={w.id}
                       onClick={() => setSelectedWork(w.name)}
-                      className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-semibold rounded-none text-left transition-all border leading-tight capitalize cursor-pointer ${
+                      className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-bold rounded-none text-left transition-all border leading-tight capitalize cursor-pointer ${
                         selectedWork.toLowerCase() === w.name.toLowerCase()
-                          ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
-                          : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
+                          ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
+                          : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                       }`}
                     >
                       {w.name}
@@ -185,15 +185,15 @@ function QuickViewModalContent({ product, onClose }) {
               </div>
 
               {/* 3. Abaya Length & Sizing */}
-              <div className="space-y-1.5 pt-2 border-t border-white/20">
-                <span className="block text-xs uppercase tracking-wider font-semibold text-white/90">3. Length / Size:</span>
+              <div className="space-y-1.5 pt-2 border-t border-stone-200">
+                <span className="block text-xs uppercase tracking-wider font-bold text-stone-600">3. Length / Size:</span>
                 <select
                   value={selectedSize}
                   onChange={(e) => setSelectedSize(e.target.value)}
-                  className="w-full text-xs py-2 px-2.5 bg-[#580233] border border-white/30 rounded-none font-bold focus:outline-none focus:border-white uppercase text-white cursor-pointer"
+                  className="w-full text-xs py-2 px-2.5 bg-white border border-stone-300 rounded-none font-bold focus:outline-none focus:border-[#7A0648] uppercase text-[#1E141B] cursor-pointer"
                 >
                   {(product.sizes || []).map((s) => (
-                    <option key={s} value={s} className="bg-[#68043D] text-white font-semibold">
+                    <option key={s} value={s} className="bg-white text-[#1E141B] font-semibold">
                       {s}
                     </option>
                   ))}
@@ -201,9 +201,9 @@ function QuickViewModalContent({ product, onClose }) {
               </div>
 
               {selectedSize.toLowerCase().includes('custom') && (
-                <div className="p-2.5 bg-white/10 rounded-none border border-white/20 space-y-1.5 animate-fade-in text-[11px]">
-                  <div className="flex items-center gap-1 font-bold uppercase tracking-wider text-white">
-                    <Scissors className="w-3 h-3" strokeWidth={1.5} />
+                <div className="p-2.5 bg-stone-50 rounded-none border border-stone-200 space-y-1.5 animate-fade-in text-[11px]">
+                  <div className="flex items-center gap-1 font-bold uppercase tracking-wider text-[#1E141B]">
+                    <Scissors className="w-3 h-3 text-[#7A0648]" strokeWidth={1.5} />
                     <span>Custom Measurements:</span>
                   </div>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -212,21 +212,21 @@ function QuickViewModalContent({ product, onClose }) {
                       placeholder="Height (e.g. 164cm)"
                       value={customMeasurements.height}
                       onChange={(e) => setCustomMeasurements(prev => ({ ...prev, height: e.target.value }))}
-                      className="bg-[#580233] border border-white/30 text-white placeholder-white/70 font-semibold rounded-none px-2 py-1 text-[11px] focus:outline-none focus:border-white"
+                      className="bg-white border border-stone-300 text-[#1E141B] placeholder-stone-400 font-semibold rounded-none px-2 py-1 text-[11px] focus:outline-none focus:border-[#7A0648]"
                     />
                     <input
                       type="text"
                       placeholder="Bust (e.g. 38in)"
                       value={customMeasurements.bust}
                       onChange={(e) => setCustomMeasurements(prev => ({ ...prev, bust: e.target.value }))}
-                      className="bg-[#580233] border border-white/30 text-white placeholder-white/70 font-semibold rounded-none px-2 py-1 text-[11px] focus:outline-none focus:border-white"
+                      className="bg-white border border-stone-300 text-[#1E141B] placeholder-stone-400 font-semibold rounded-none px-2 py-1 text-[11px] focus:outline-none focus:border-[#7A0648]"
                     />
                     <input
                       type="text"
                       placeholder="Length (e.g. 56in)"
                       value={customMeasurements.length}
                       onChange={(e) => setCustomMeasurements(prev => ({ ...prev, length: e.target.value }))}
-                      className="bg-[#580233] border border-white/30 text-white placeholder-white/70 font-semibold rounded-none px-2 py-1 text-[11px] focus:outline-none focus:border-white"
+                      className="bg-white border border-stone-300 text-[#1E141B] placeholder-stone-400 font-semibold rounded-none px-2 py-1 text-[11px] focus:outline-none focus:border-[#7A0648]"
                     />
                   </div>
                 </div>
@@ -235,13 +235,13 @@ function QuickViewModalContent({ product, onClose }) {
             </div>
 
             {/* Actions */}
-            <div className="space-y-2 pt-3 border-t border-white/20">
+            <div className="space-y-2 pt-3 border-t border-stone-200">
               <div className="flex gap-2.5">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 bg-white hover:bg-white/90 text-[#7A0648] text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-white shadow-xl cursor-pointer"
+                  className="flex-1 py-3.5 bg-[#7A0648] hover:bg-[#68043D] text-white text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-[#7A0648] shadow-md cursor-pointer"
                 >
-                  <ShoppingBag className="w-4 h-4 text-[#7A0648]" strokeWidth={1.5} />
+                  <ShoppingBag className="w-4 h-4 text-white" strokeWidth={1.5} />
                   <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
                 </button>
 
@@ -249,18 +249,18 @@ function QuickViewModalContent({ product, onClose }) {
                   onClick={() => toggleWishlist(product.id)}
                   className={`p-3 border rounded-none transition-colors cursor-pointer ${
                     wishlisted
-                      ? 'bg-white text-[#7A0648] border-white shadow-sm'
-                      : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
+                      ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
+                      : 'bg-white text-stone-600 border-stone-300 hover:bg-stone-50'
                   }`}
                   aria-label="Wishlist"
                 >
-                  <Heart className={`w-4 h-4 ${wishlisted ? 'fill-[#7A0648] text-[#7A0648]' : ''}`} strokeWidth={1.5} />
+                  <Heart className={`w-4 h-4 ${wishlisted ? 'fill-white text-white' : ''}`} strokeWidth={1.5} />
                 </button>
               </div>
 
               <button
                 onClick={handleFullDetail}
-                className="w-full text-center text-xs text-white hover:text-white/80 font-bold uppercase tracking-wider flex items-center justify-center gap-1 py-1 cursor-pointer"
+                className="w-full text-center text-xs text-[#7A0648] hover:text-[#68043D] font-bold uppercase tracking-wider flex items-center justify-center gap-1 py-1 cursor-pointer"
               >
                 <span>View Full Product Details</span>
                 <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />

@@ -58,21 +58,21 @@ export default function StoryPage() {
   const foundersImageSrc = s.founders_image || defaultFoundersImg;
 
   return (
-    <div className="bg-[#7A0648] text-white font-sans antialiased overflow-x-hidden">
+    <div className="bg-[#FAF8F5] text-[#1E141B] font-sans antialiased overflow-x-hidden font-semibold">
 
       {/* ═══════════════════════════════════════════════
-          SECTION 1 — PAGE HEADER
+          SECTION 1 — PAGE HEADER (Violet Signature Top)
           ═══════════════════════════════════════════════ */}
       <EditableSection cmsKey="story_page" label="Our Story Header">
-        <section id="story-header" className="py-12 sm:py-16 bg-[#68043D] text-center border-b border-white/20">
+        <section id="story-header" className="py-12 sm:py-16 bg-[#7A0648] text-center border-b border-stone-200 text-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
-            <span className="inline-block text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase">
+            <span className="inline-block text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#FFF0A0] uppercase">
               {s.tagline || 'Heritage & Manifesto'}
             </span>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-medium uppercase tracking-[0.06em] leading-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-bold uppercase tracking-[0.06em] leading-tight">
               {s.headline || 'The House of NOOR AL DHUHA'}
             </h1>
-            <p className="text-white/90 text-xs sm:text-sm md:text-base max-w-xl mx-auto leading-relaxed font-normal">
+            <p className="text-white/90 text-xs sm:text-sm md:text-base max-w-xl mx-auto leading-relaxed font-semibold">
               {s.subheading || '"Noor in Every Thread, Wear It with Pride."'}
             </p>
           </div>
@@ -83,22 +83,22 @@ export default function StoryPage() {
       {/* ═══════════════════════════════════════════════
           SECTION 2 — ABOUT US
           ═══════════════════════════════════════════════ */}
-      <section id="about-us" className="py-14 sm:py-20 bg-[#7A0648]">
+      <section id="about-us" className="py-14 sm:py-20 bg-[#FAF8F5]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* About Us Lead Highlight Box */}
-          <div className="bg-[#68043D] border border-white/20 p-8 sm:p-12 shadow-lg text-center space-y-4">
-            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase block">
+          <div className="bg-white border border-stone-200 p-8 sm:p-12 shadow-md text-center space-y-4">
+            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#7A0648] uppercase block">
               {s.about_label || 'About Us'}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em] leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em] leading-tight">
               {s.about_title || 'Elegance, Precision & Accessible Luxury'}
             </h2>
-            <p className="text-white/90 text-xs sm:text-sm md:text-base leading-relaxed font-normal max-w-3xl mx-auto">
+            <p className="text-stone-600 text-xs sm:text-sm md:text-base leading-relaxed font-medium max-w-3xl mx-auto">
               {s.about_text || 'At NOOR AL DHUHA, we bring you premium-quality abayas and hijabs at accessible prices. Designed with elegance and crafted with precision, our collections are trusted by both individual retail customers and wholesale partners across the region.'}
             </p>
             <div className="pt-2">
-              <div className="inline-block bg-white text-[#68043D] px-6 py-2.5 text-xs sm:text-sm font-semibold tracking-wider uppercase shadow-sm">
+              <div className="inline-block bg-[#F5EAF1] text-[#7A0648] border border-[#7A0648]/20 px-6 py-2.5 text-xs sm:text-sm font-bold tracking-wider uppercase shadow-xs">
                 "{s.motto || 'Noor in Every Thread, Wear It with Pride.'}"
               </div>
             </div>
@@ -111,15 +111,15 @@ export default function StoryPage() {
       {/* ═══════════════════════════════════════════════
           SECTION 3 — WHAT WE DO
           ═══════════════════════════════════════════════ */}
-      <section id="what-we-do" className="py-14 sm:py-20 bg-[#68043D]">
+      <section id="what-we-do" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase mb-2 block">
+            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#7A0648] uppercase mb-2 block">
               {s.what_we_do_label || 'What We Do'}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
               {s.what_we_do_title || 'Tailored Excellence from Atelier to Wardrobe'}
             </h2>
           </div>
@@ -130,15 +130,15 @@ export default function StoryPage() {
               return (
                 <div
                   key={idx}
-                  className="group p-6 sm:p-8 bg-[#7A0648] border border-white/20 shadow-md hover:border-white/50 transition-all duration-300 space-y-4"
+                  className="group p-6 sm:p-8 bg-white border border-stone-200 shadow-sm hover:shadow-md hover:border-[#7A0648]/40 transition-all duration-300 space-y-4"
                 >
-                  <div className="w-12 h-12 bg-white/15 text-white flex items-center justify-center group-hover:bg-white group-hover:text-[#68043D] transition-colors duration-300">
+                  <div className="w-12 h-12 bg-[#F5EAF1] text-[#7A0648] flex items-center justify-center group-hover:bg-[#7A0648] group-hover:text-white transition-colors duration-300">
                     <Icon className="w-6 h-6 stroke-[1.8]" />
                   </div>
-                  <h3 className="text-sm sm:text-base font-semibold text-white uppercase tracking-wider">
+                  <h3 className="text-sm sm:text-base font-bold text-[#1E141B] uppercase tracking-wider">
                     {srv.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-white/85 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
                     {srv.description}
                   </p>
                 </div>
@@ -153,15 +153,15 @@ export default function StoryPage() {
       {/* ═══════════════════════════════════════════════
           SECTION 4 — MISSION & VISION
           ═══════════════════════════════════════════════ */}
-      <section id="mission-vision" className="py-14 sm:py-20 bg-[#7A0648]">
+      <section id="mission-vision" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase mb-2 block">
+            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#7A0648] uppercase mb-2 block">
               {s.mission_label || 'Mission & Vision'}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
               Our Purpose & Path Forward
             </h2>
           </div>
@@ -169,33 +169,33 @@ export default function StoryPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             
             {/* Mission Card */}
-            <div className="p-8 sm:p-10 bg-[#68043D] border border-white/20 shadow-xl space-y-4">
-              <div className="w-12 h-12 bg-white/15 text-[#FFF0A0] flex items-center justify-center">
+            <div className="p-8 sm:p-10 bg-white border border-stone-200 shadow-sm space-y-4">
+              <div className="w-12 h-12 bg-[#F5EAF1] text-[#7A0648] flex items-center justify-center">
                 <Target className="w-6 h-6" />
               </div>
-              <span className="text-[10px] uppercase tracking-[0.25em] font-medium text-[#FFF0A0] block">
+              <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#7A0648] block">
                 Core Purpose
               </span>
-              <h3 className="text-xl sm:text-2xl font-medium uppercase tracking-[0.06em] text-white">
+              <h3 className="text-xl sm:text-2xl font-bold uppercase tracking-[0.06em] text-[#1E141B]">
                 {s.mission_title || 'Our Mission'}
               </h3>
-              <p className="text-white/90 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+              <p className="text-stone-600 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
                 {s.mission_text || 'To empower women through stylish, comfortable, and modest clothing while delivering exceptional quality, affordability, and outstanding customer service.'}
               </p>
             </div>
 
             {/* Vision Card */}
-            <div className="p-8 sm:p-10 bg-[#68043D] border border-white/20 shadow-xl space-y-4">
-              <div className="w-12 h-12 bg-white/15 text-[#FFF0A0] flex items-center justify-center">
+            <div className="p-8 sm:p-10 bg-white border border-stone-200 shadow-sm space-y-4">
+              <div className="w-12 h-12 bg-[#F5EAF1] text-[#7A0648] flex items-center justify-center">
                 <Eye className="w-6 h-6" />
               </div>
-              <span className="text-[10px] uppercase tracking-[0.25em] font-medium text-[#FFF0A0] block">
+              <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#7A0648] block">
                 Long-Term Horizon
               </span>
-              <h3 className="text-xl sm:text-2xl font-medium uppercase tracking-[0.06em] text-white">
+              <h3 className="text-xl sm:text-2xl font-bold uppercase tracking-[0.06em] text-[#1E141B]">
                 {s.vision_title || 'Our Vision'}
               </h3>
-              <p className="text-white/90 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+              <p className="text-stone-600 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
                 {s.vision_text || 'To become a leading, trusted abaya and modest fashion brand across the UAE and international markets—celebrated for timeless style, superior craftsmanship, and customer satisfaction.'}
               </p>
             </div>
@@ -209,7 +209,7 @@ export default function StoryPage() {
       {/* ═══════════════════════════════════════════════
           SECTION 5 — MEET OUR CO-FOUNDERS
           ═══════════════════════════════════════════════ */}
-      <section id="co-founders" className="py-14 sm:py-20 bg-[#68043D]">
+      <section id="co-founders" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -217,7 +217,7 @@ export default function StoryPage() {
             {/* Left Col: Founders Portrait Photo */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-none group">
-                <div className="relative aspect-[3/4] w-full overflow-hidden shadow-2xl border border-white/25 bg-[#7A0648]">
+                <div className="relative aspect-[3/4] w-full overflow-hidden shadow-xl border border-stone-200 bg-stone-100">
                   <img
                     src={foundersImageSrc}
                     alt="Rafique & Kamarunnisa - Founders & Visionaries"
@@ -226,10 +226,10 @@ export default function StoryPage() {
                   
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4 sm:p-6">
                     <div className="backdrop-blur-md bg-black/40 border border-white/20 p-3 text-center">
-                      <p className="text-sm sm:text-base font-semibold text-white uppercase tracking-wider">
+                      <p className="text-sm sm:text-base font-bold text-white uppercase tracking-wider">
                         {s.founders_names || 'Rafique & Kamarunnisa'}
                       </p>
-                      <p className="text-[10px] sm:text-xs text-[#FFF0A0] uppercase tracking-widest font-medium">
+                      <p className="text-[10px] sm:text-xs text-[#FFF0A0] uppercase tracking-widest font-bold">
                         {s.founders_role || 'Founders & Visionaries'}
                       </p>
                     </div>
@@ -241,61 +241,61 @@ export default function StoryPage() {
             {/* Right Col: Founders Story & Vision Narrative */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <div>
-                <span className="text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase mb-1 block">
+                <span className="text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#7A0648] uppercase mb-1 block">
                   {s.founders_label || 'Meet Our Co-Founders'}
                 </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
                   {s.founders_names || 'Rafique & Kamarunnisa'}
                 </h2>
-                <p className="text-xs sm:text-sm uppercase tracking-[0.18em] font-medium text-[#FFF0A0] mt-1">
+                <p className="text-xs sm:text-sm uppercase tracking-[0.18em] font-bold text-[#7A0648] mt-1">
                   {s.founders_role || 'Founders & Visionaries'}
                 </p>
               </div>
 
               {/* Bio Narrative */}
-              <p className="text-white/90 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+              <p className="text-stone-600 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
                 {s.founders_bio || 'For Rafique M U and Kamarunnisa K A, abayas are more than just garments—they are an expression of pride, grace, and tradition. With years of dedication to Islamic fashion, they set out to make timeless, modern designs reachable to every woman. By combining premium craftsmanship with honest, reasonable pricing, they continue to inspire confidence and bring elegant modest fashion into everyday life.'}
               </p>
 
               {/* Pull Quote Card */}
-              <div className="p-4 sm:p-5 bg-[#7A0648] border border-white/20 shadow-sm relative space-y-2">
-                <Quote className="w-5 h-5 text-[#FFF0A0]" />
-                <p className="text-sm sm:text-base text-white italic leading-relaxed font-normal">
+              <div className="p-4 sm:p-5 bg-white border border-stone-200 shadow-sm relative space-y-2">
+                <Quote className="w-5 h-5 text-[#7A0648]" />
+                <p className="text-sm sm:text-base text-[#1E141B] italic leading-relaxed font-medium">
                   "{s.founders_quote || 'Abayas are more than just garments—they are an expression of pride, grace, and tradition.'}"
                 </p>
-                <p className="text-[11px] text-white/75 uppercase tracking-wider font-medium pt-1">
+                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-bold pt-1">
                   — Rafique M U & Kamarunnisa K A
                 </p>
               </div>
 
               {/* Highlights 3-column micro grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                <div className="p-3.5 bg-[#7A0648] border border-white/20 shadow-sm">
+                <div className="p-3.5 bg-white border border-stone-200 shadow-xs">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <Heart className="w-3.5 h-3.5 text-[#FFF0A0]" />
-                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Heritage & Pride</h4>
+                    <Heart className="w-3.5 h-3.5 text-[#7A0648]" />
+                    <h4 className="text-xs font-bold text-[#1E141B] uppercase tracking-wider">Heritage & Pride</h4>
                   </div>
-                  <p className="text-[11px] text-white/80 leading-snug">
+                  <p className="text-[11px] text-stone-500 leading-snug font-medium">
                     Rooted in timeless Islamic modest traditions.
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#7A0648] border border-white/20 shadow-sm">
+                <div className="p-3.5 bg-white border border-stone-200 shadow-xs">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <Gem className="w-3.5 h-3.5 text-[#FFF0A0]" />
-                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Master Craft</h4>
+                    <Gem className="w-3.5 h-3.5 text-[#7A0648]" />
+                    <h4 className="text-xs font-bold text-[#1E141B] uppercase tracking-wider">Master Craft</h4>
                   </div>
-                  <p className="text-[11px] text-white/80 leading-snug">
+                  <p className="text-[11px] text-stone-500 leading-snug font-medium">
                     Artisan tailoring and pure organic fabrics.
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#7A0648] border border-white/20 shadow-sm">
+                <div className="p-3.5 bg-white border border-stone-200 shadow-xs">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <Award className="w-3.5 h-3.5 text-[#FFF0A0]" />
-                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Honest Luxury</h4>
+                    <Award className="w-3.5 h-3.5 text-[#7A0648]" />
+                    <h4 className="text-xs font-bold text-[#1E141B] uppercase tracking-wider">Honest Luxury</h4>
                   </div>
-                  <p className="text-[11px] text-white/80 leading-snug">
+                  <p className="text-[11px] text-stone-500 leading-snug font-medium">
                     Couture design made reachable to every woman.
                   </p>
                 </div>
@@ -312,15 +312,15 @@ export default function StoryPage() {
       {/* ═══════════════════════════════════════════════
           SECTION 6 — GUIDING PRINCIPLES / FOUR PILLARS
           ═══════════════════════════════════════════════ */}
-      <section id="guiding-principles" className="py-14 sm:py-20 bg-[#7A0648]">
+      <section id="guiding-principles" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase mb-2 block">
+            <span className="text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#7A0648] uppercase mb-2 block">
               {s.pillars_label || 'Guiding Principles'}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
               {s.pillars_title || 'The Four Pillars of NOOR AL DHUHA'}
             </h2>
           </div>
@@ -331,15 +331,15 @@ export default function StoryPage() {
               return (
                 <div
                   key={idx}
-                  className="p-5 sm:p-6 bg-[#68043D] border border-white/20 shadow-sm space-y-3 hover:border-white/50 transition-all duration-300"
+                  className="p-5 sm:p-6 bg-white border border-stone-200 shadow-xs space-y-3 hover:border-[#7A0648]/40 transition-all duration-300"
                 >
-                  <div className="w-10 h-10 bg-white/15 text-[#FFF0A0] flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#F5EAF1] text-[#7A0648] flex items-center justify-center">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-white">
+                  <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#1E141B]">
                     {pillar.title}
                   </h3>
-                  <p className="text-xs text-white/85 leading-relaxed">
+                  <p className="text-xs text-stone-600 leading-relaxed font-medium">
                     {pillar.description}
                   </p>
                 </div>
@@ -352,29 +352,29 @@ export default function StoryPage() {
 
 
       {/* ═══════════════════════════════════════════════
-          SECTION 7 — CALL TO ACTION
+          SECTION 7 — CALL TO ACTION (Violet Signature Bottom)
           ═══════════════════════════════════════════════ */}
-      <section id="story-cta" className="py-16 sm:py-24 bg-[#68043D] border-t border-white/20">
+      <section id="story-cta" className="py-16 sm:py-24 bg-[#7A0648] text-white border-t border-stone-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase block">
+          <span className="text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#FFF0A0] uppercase block">
             Experience Noor Al Dhuha
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-bold uppercase tracking-[0.06em]">
             Experience Pure Atelier Luxury
           </h2>
-          <p className="text-xs sm:text-sm text-white/90 max-w-lg mx-auto leading-relaxed pb-4">
+          <p className="text-xs sm:text-sm text-white/90 max-w-lg mx-auto leading-relaxed pb-4 font-medium">
             Every creation is an intimate collaboration between our master artisans and your individual vision.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={() => navigateTo('shop')}
-              className="inline-flex items-center justify-center bg-white text-[#68043D] hover:bg-white/90 uppercase tracking-[0.18em] font-semibold text-xs py-3.5 px-8 shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer rounded-none border border-white"
+              className="inline-flex items-center justify-center bg-white text-[#7A0648] hover:bg-white/90 uppercase tracking-[0.18em] font-bold text-xs py-3.5 px-8 shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer rounded-none border border-white"
             >
               Explore Catalog
             </button>
             <button
               onClick={() => navigateTo('contact')}
-              className="inline-flex items-center justify-center bg-transparent text-white hover:bg-white hover:text-[#68043D] uppercase tracking-[0.18em] font-semibold text-xs py-3.5 px-8 transition-all duration-300 cursor-pointer rounded-none border border-white"
+              className="inline-flex items-center justify-center bg-transparent text-white hover:bg-white hover:text-[#7A0648] uppercase tracking-[0.18em] font-bold text-xs py-3.5 px-8 transition-all duration-300 cursor-pointer rounded-none border border-white"
             >
               Bespoke Consultation
             </button>

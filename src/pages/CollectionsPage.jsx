@@ -317,19 +317,19 @@ export default function CollectionsPage() {
   ]);
 
   return (
-    <div className="bg-[#7A0648] min-h-screen text-white pb-20 font-semibold">
+    <div className="bg-[#FAF8F5] min-h-screen text-[#1E141B] pb-20 font-semibold">
       
       {/* 1. Header Banner */}
       <div className="pt-6 pb-4 sm:pt-8 sm:pb-5 px-4 max-w-7xl mx-auto text-center">
         {/* Collection Title / Dynamic search or filter term */}
         <div className="inline-flex items-center justify-center gap-2.5">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-[0.08em] uppercase text-white drop-shadow-xs">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-[0.08em] uppercase text-[#1E141B] drop-shadow-xs">
             {pageTitle}
           </h1>
           {activeFiltersCount > 0 && (
             <button
               onClick={clearAllFilters}
-              className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+              className="p-1 rounded-full text-stone-500 hover:text-[#1E141B] hover:bg-stone-200 transition-colors cursor-pointer"
               title="Clear all filters"
               aria-label="Clear all filters"
             >
@@ -340,7 +340,7 @@ export default function CollectionsPage() {
       </div>
 
       {/* 2. Collection Sticky Toolbar (Filter, Sort, Count, Layout Switchers) */}
-      <div className="sticky top-[60px] sm:top-[70px] z-30 bg-[#7A0648]/95 backdrop-blur-md border-y border-white/20 px-4 sm:px-8 text-white font-semibold">
+      <div className="sticky top-[60px] sm:top-[70px] z-30 bg-white/95 backdrop-blur-md border-y border-stone-200 px-4 sm:px-8 text-[#1E141B] font-semibold shadow-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-12 sm:h-14">
           
           {/* Left Buttons: Filter & Sort */}
@@ -349,33 +349,33 @@ export default function CollectionsPage() {
             {/* Filter Drawer Trigger */}
             <button
               onClick={() => setFilterDrawerOpen(true)}
-              className="flex items-center gap-2 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-bold text-white hover:opacity-75 transition-opacity cursor-pointer"
+              className="flex items-center gap-2 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-bold text-[#1E141B] hover:text-[#7A0648] transition-colors cursor-pointer"
               aria-label="Open filter drawer"
             >
               <span>Filter</span>
               {activeFiltersCount > 0 && (
-                <span className="w-5 h-5 rounded-full bg-white text-[#7A0648] text-[10px] flex items-center justify-center font-bold">
+                <span className="w-5 h-5 rounded-full bg-[#7A0648] text-white text-[10px] flex items-center justify-center font-bold">
                   {activeFiltersCount}
                 </span>
               )}
             </button>
 
-            <span className="text-white/30 hidden sm:inline">|</span>
+            <span className="text-stone-300 hidden sm:inline">|</span>
 
             {/* Sort Popover Dropdown */}
             <div className="relative" ref={sortMenuRef}>
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center gap-1.5 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-bold text-white hover:opacity-75 transition-opacity cursor-pointer"
+                className="flex items-center gap-1.5 text-xs sm:text-[13px] uppercase tracking-[0.08em] font-bold text-[#1E141B] hover:text-[#7A0648] transition-colors cursor-pointer"
                 aria-label="Sort options"
               >
                 <span>Sort by</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} strokeWidth={1.75} />
+                <ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} strokeWidth={1.75} />
               </button>
 
               {isSortOpen && (
-                <div className="absolute left-0 mt-2 w-56 bg-[#68043D] border border-white/25 shadow-xl py-2 z-50 animate-fade-in rounded-none text-white font-semibold">
-                  <div className="px-4 py-1.5 text-[10px] uppercase font-bold tracking-wider text-white/90 border-b border-white/15">
+                <div className="absolute left-0 mt-2 w-56 bg-white border border-stone-200 shadow-xl py-2 z-50 animate-fade-in rounded-none text-[#1E141B] font-semibold">
+                  <div className="px-4 py-1.5 text-[10px] uppercase font-bold tracking-wider text-stone-500 border-b border-stone-100">
                     Sort by
                   </div>
                   {sortOptions.map((opt) => (
@@ -386,11 +386,11 @@ export default function CollectionsPage() {
                         setIsSortOpen(false);
                       }}
                       className={`w-full text-left px-4 py-2 text-xs uppercase tracking-wide flex items-center justify-between transition-colors cursor-pointer ${
-                        sortBy === opt.id ? 'bg-white/20 font-bold text-white' : 'text-white/90 hover:bg-white/10 font-semibold'
+                        sortBy === opt.id ? 'bg-[#F5EAF1] font-bold text-[#7A0648]' : 'text-stone-700 hover:bg-stone-100 font-semibold'
                       }`}
                     >
                       <span>{opt.label}</span>
-                      {sortBy === opt.id && <Check className="w-3.5 h-3.5 text-[#FFD700]" strokeWidth={1.8} />}
+                      {sortBy === opt.id && <Check className="w-3.5 h-3.5 text-[#7A0648]" strokeWidth={2} />}
                     </button>
                   ))}
                 </div>
@@ -400,10 +400,10 @@ export default function CollectionsPage() {
             {/* Quick Clear All in Sticky Toolbar */}
             {activeFiltersCount > 0 && (
               <>
-                <span className="text-white/30 hidden sm:inline">|</span>
+                <span className="text-stone-300 hidden sm:inline">|</span>
                 <button
                   onClick={clearAllFilters}
-                  className="flex items-center gap-1 text-[11px] sm:text-xs uppercase tracking-wider text-white hover:text-white underline font-bold cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] sm:text-xs uppercase tracking-wider text-[#7A0648] hover:text-[#68043D] underline font-bold cursor-pointer"
                   title="Clear all filters"
                 >
                   <RotateCcw className="w-3 h-3" />
@@ -418,17 +418,17 @@ export default function CollectionsPage() {
           <div className="flex items-center gap-2">
             
             {/* Mobile Layout Toggle (1 col vs 2 cols) */}
-            <div className="flex items-center sm:hidden border border-white/30">
+            <div className="flex items-center sm:hidden border border-stone-300 bg-white">
               <button
                 onClick={() => setMobileCols(1)}
-                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 1 ? 'bg-white text-[#7A0648]' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 1 ? 'bg-[#7A0648] text-white' : 'text-stone-500 hover:text-[#1E141B]'}`}
                 aria-label="1 column mobile view"
               >
                 <Square className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => setMobileCols(2)}
-                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 2 ? 'bg-white text-[#7A0648]' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${mobileCols === 2 ? 'bg-[#7A0648] text-white' : 'text-stone-500 hover:text-[#1E141B]'}`}
                 aria-label="2 columns mobile view"
               >
                 <Grid2X2 className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -436,10 +436,10 @@ export default function CollectionsPage() {
             </div>
 
             {/* Desktop Layout Toggle (2, 3, 4 cols) */}
-            <div className="hidden sm:flex items-center border border-white/30">
+            <div className="hidden sm:flex items-center border border-stone-300 bg-white">
               <button
                 onClick={() => setDesktopCols(2)}
-                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 2 ? 'bg-white text-[#7A0648]' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 2 ? 'bg-[#7A0648] text-white' : 'text-stone-500 hover:text-[#1E141B]'}`}
                 title="2 columns view"
                 aria-label="2 columns desktop view"
               >
@@ -447,7 +447,7 @@ export default function CollectionsPage() {
               </button>
               <button
                 onClick={() => setDesktopCols(3)}
-                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 3 ? 'bg-white text-[#7A0648]' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 3 ? 'bg-[#7A0648] text-white' : 'text-stone-500 hover:text-[#1E141B]'}`}
                 title="3 columns view"
                 aria-label="3 columns desktop view"
               >
@@ -455,7 +455,7 @@ export default function CollectionsPage() {
               </button>
               <button
                 onClick={() => setDesktopCols(4)}
-                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 4 ? 'bg-white text-[#7A0648]' : 'text-white/70 hover:text-white'}`}
+                className={`p-1.5 transition-colors cursor-pointer ${desktopCols === 4 ? 'bg-[#7A0648] text-white' : 'text-stone-500 hover:text-[#1E141B]'}`}
                 title="4 columns view"
                 aria-label="4 columns desktop view"
               >
@@ -490,16 +490,16 @@ export default function CollectionsPage() {
           </div>
         ) : (
           /* Empty State */
-          <div className="py-24 text-center max-w-md mx-auto space-y-4 bg-[#68043D] p-8 rounded-none border border-white/20 shadow-2xl text-white font-semibold">
-            <h3 className="text-base font-bold text-white uppercase tracking-wider">
+          <div className="py-24 text-center max-w-md mx-auto space-y-4 bg-white p-8 rounded-none border border-stone-200 shadow-md text-[#1E141B] font-semibold">
+            <h3 className="text-base font-bold text-[#1E141B] uppercase tracking-wider">
               No abayas match your filters
             </h3>
-            <p className="text-xs text-white/90 leading-relaxed font-medium">
+            <p className="text-xs text-stone-600 leading-relaxed font-medium">
               Try adjusting or clearing your active filters to see all available couture designs.
             </p>
             <button
               onClick={clearAllFilters}
-              className="mt-4 px-6 py-2.5 bg-white hover:bg-white/90 text-[#7A0648] text-xs uppercase tracking-widest font-bold transition-colors cursor-pointer border border-white"
+              className="mt-4 px-6 py-2.5 bg-[#7A0648] hover:bg-[#68043D] text-white text-xs uppercase tracking-widest font-bold transition-colors cursor-pointer border border-[#7A0648]"
             >
               Clear all filters
             </button>
@@ -521,12 +521,12 @@ export default function CollectionsPage() {
 
         {/* Drawer Panel */}
         <div
-          className={`fixed inset-y-0 right-0 max-w-md w-full bg-[#68043D] shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-in-out text-white font-semibold ${
+          className={`fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col z-10 transition-transform duration-300 ease-in-out text-[#1E141B] font-semibold border-l border-stone-200 ${
             filterDrawerOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
           {/* Drawer Header */}
-          <div className="px-6 py-4 border-b border-white/20 flex items-center justify-between bg-[#7A0648]">
+          <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-[#7A0648] text-white">
             <h2 className="text-sm font-bold tracking-[0.14em] uppercase text-white">
               Filters
             </h2>
@@ -540,13 +540,13 @@ export default function CollectionsPage() {
           </div>
 
           {/* Drawer Scrollable Content */}
-          <div className="flex-1 overflow-y-auto divide-y divide-white/15">
+          <div className="flex-1 overflow-y-auto divide-y divide-stone-200">
             
             {/* Color Accordion */}
             <div className="p-6">
               <button
                 onClick={() => toggleAccordion('color')}
-                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-800 cursor-pointer"
               >
                 <span>Color {selectedColors.length > 0 && `(${selectedColors.length})`}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.color ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -562,9 +562,9 @@ export default function CollectionsPage() {
                         onClick={() => toggleItem(selectedColors, setSelectedColors, swatch.name)}
                         className={`w-7 h-7 rounded-full transition-all relative flex items-center justify-center shrink-0 cursor-pointer ${
                           isSelected
-                            ? 'ring-2 ring-white ring-offset-2 ring-offset-[#7A0648] scale-110'
+                            ? 'ring-2 ring-[#7A0648] ring-offset-2 ring-offset-white scale-110'
                             : 'hover:scale-110'
-                        } ${swatch.border ? 'border border-white/40' : 'border border-black/10'}`}
+                        } ${swatch.border ? 'border border-stone-300' : 'border border-black/10'}`}
                         style={{ backgroundColor: swatch.hex }}
                         title={swatch.name}
                         aria-label={`Filter by ${swatch.name}`}
@@ -586,7 +586,7 @@ export default function CollectionsPage() {
             <div className="p-6">
               <button
                 onClick={() => toggleAccordion('style')}
-                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-800 cursor-pointer"
               >
                 <span>Silhouette / Cut {selectedStyles.length > 0 && `(${selectedStyles.length})`}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.style ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -599,7 +599,7 @@ export default function CollectionsPage() {
                     return (
                       <label
                         key={style.id}
-                        className="flex items-center justify-between text-xs text-white cursor-pointer py-1 hover:text-white/80 group font-semibold"
+                        className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
                       >
                         <span className="group-hover:translate-x-0.5 transition-transform">{style.name}</span>
                         <input
@@ -619,7 +619,7 @@ export default function CollectionsPage() {
             <div className="p-6">
               <button
                 onClick={() => toggleAccordion('work')}
-                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-800 cursor-pointer"
               >
                 <span>Craftsmanship / Work {selectedWorks.length > 0 && `(${selectedWorks.length})`}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.work ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -632,7 +632,7 @@ export default function CollectionsPage() {
                     return (
                       <label
                         key={work.id}
-                        className="flex items-center justify-between text-xs text-white cursor-pointer py-1 hover:text-white/80 group font-semibold"
+                        className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
                       >
                         <span className="capitalize group-hover:translate-x-0.5 transition-transform">{work.name}</span>
                         <input
@@ -652,7 +652,7 @@ export default function CollectionsPage() {
             <div className="p-6">
               <button
                 onClick={() => toggleAccordion('size')}
-                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-800 cursor-pointer"
               >
                 <span>Size {selectedSizes.length > 0 && `(${selectedSizes.length})`}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.size ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -668,8 +668,8 @@ export default function CollectionsPage() {
                         onClick={() => toggleItem(selectedSizes, setSelectedSizes, size)}
                         className={`py-2 text-xs font-bold uppercase tracking-wider border transition-colors cursor-pointer ${
                           isSelected
-                            ? 'bg-white text-[#7A0648] border-white font-bold'
-                            : 'bg-white/15 text-white border-white/25 hover:bg-white/25'
+                            ? 'bg-[#7A0648] text-white border-[#7A0648] font-bold'
+                            : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                         }`}
                       >
                         {size}
@@ -684,7 +684,7 @@ export default function CollectionsPage() {
             <div className="p-6">
               <button
                 onClick={() => toggleAccordion('price')}
-                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-800 cursor-pointer"
               >
                 <span>Price {priceRange < maxPriceLimit && `(≤ ${formatPrice(priceRange)})`}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.price ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -692,9 +692,9 @@ export default function CollectionsPage() {
 
               {openAccordions.price && (
                 <div className="pt-4 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-white">
+                  <div className="flex items-center justify-between text-xs text-stone-600">
                     <span>{formatPrice(minPriceLimit)}</span>
-                    <span className="font-bold text-white">{formatPrice(priceRange)}</span>
+                    <span className="font-bold text-[#7A0648]">{formatPrice(priceRange)}</span>
                   </div>
                   <input
                     type="range"
@@ -712,16 +712,16 @@ export default function CollectionsPage() {
           </div>
 
           {/* Drawer Footer Actions */}
-          <div className="p-6 border-t border-white/20 bg-[#580233] flex items-center gap-4">
+          <div className="p-6 border-t border-stone-200 bg-[#FAF8F5] flex items-center gap-4">
             <button
               onClick={clearAllFilters}
-              className="text-xs uppercase tracking-wider font-bold text-white hover:text-white/80 underline cursor-pointer"
+              className="text-xs uppercase tracking-wider font-bold text-stone-600 hover:text-[#7A0648] underline cursor-pointer"
             >
               Clear all
             </button>
             <button
               onClick={() => setFilterDrawerOpen(false)}
-              className="flex-1 py-3.5 bg-white text-[#7A0648] hover:bg-white/90 text-xs uppercase tracking-[0.14em] font-bold transition-colors cursor-pointer text-center shadow-md border border-white"
+              className="flex-1 py-3.5 bg-[#7A0648] text-white hover:bg-[#68043D] text-xs uppercase tracking-[0.14em] font-bold transition-colors cursor-pointer text-center shadow-md border border-[#7A0648]"
             >
               View results ({filteredProducts.length})
             </button>

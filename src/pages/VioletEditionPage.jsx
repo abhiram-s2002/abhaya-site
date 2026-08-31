@@ -43,52 +43,52 @@ export default function VioletEditionPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           <div className="lg:col-span-6 space-y-4 sm:space-y-6">
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-[#FFF0A0]">
+            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-[#7A0648]">
               The Color Story
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-white font-bold leading-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#1E141B] font-bold leading-tight">
               From Royal Violet to Lavender Mist
             </h2>
-            <p className="text-white text-xs sm:text-sm leading-relaxed font-semibold">
+            <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-medium">
               Historically reserved for royalty and spiritual sanctuaries, violet represents introspection, grace, and sovereign quietude. For this capsule, our master dyers developed non-toxic mineral dyes that yield three interconnected nuances:
             </p>
 
             <div className="space-y-2.5 sm:space-y-3 pt-1">
-              <div className="p-3 sm:p-3.5 rounded-xl bg-[#68043D] border border-white/20 shadow-sm flex items-center gap-3.5 text-white">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#7A0648] shrink-0 border border-white/30 shadow-inner" />
+              <div className="p-3 sm:p-3.5 rounded-none bg-white border border-stone-200 shadow-xs flex items-center gap-3.5 text-[#1E141B]">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#7A0648] shrink-0 border border-stone-300 shadow-inner" />
                 <div>
-                  <h4 className="font-serif text-xs sm:text-sm font-medium text-white">Royal Violet</h4>
-                  <p className="text-[10px] sm:text-[11px] text-white/80">Deep, saturated velvet tone for high-contrast evening presence.</p>
+                  <h4 className="font-serif text-xs sm:text-sm font-bold text-[#1E141B]">Royal Violet</h4>
+                  <p className="text-[10px] sm:text-[11px] text-stone-500 font-medium">Deep, saturated velvet tone for high-contrast evening presence.</p>
                 </div>
               </div>
 
-              <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-surface-container-highest shadow-sm flex items-center gap-3.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#C76AA9] shrink-0 border border-black/10 shadow-inner" />
+              <div className="p-3 sm:p-3.5 rounded-none bg-white border border-stone-200 shadow-xs flex items-center gap-3.5 text-[#1E141B]">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#B32D7F] shrink-0 border border-stone-300 shadow-inner" />
                 <div>
-                  <h4 className="font-serif text-xs sm:text-sm font-medium text-primary">Amethyst Soft</h4>
-                  <p className="text-[10px] sm:text-[11px] text-stone-500">Muted heather undertones that flatter both warm and cool complexions.</p>
+                  <h4 className="font-serif text-xs sm:text-sm font-bold text-[#1E141B]">Amethyst Soft</h4>
+                  <p className="text-[10px] sm:text-[11px] text-stone-500 font-medium">Muted heather undertones that flatter both warm and cool complexions.</p>
                 </div>
               </div>
 
-              <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-surface-container-highest shadow-sm flex items-center gap-3.5">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D4C5DD] shrink-0 border border-black/10 shadow-inner" />
+              <div className="p-3 sm:p-3.5 rounded-none bg-white border border-stone-200 shadow-xs flex items-center gap-3.5 text-[#1E141B]">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#E5D2E8] shrink-0 border border-stone-300 shadow-inner" />
                 <div>
-                  <h4 className="font-serif text-xs sm:text-sm font-medium text-primary">Lavender Mist</h4>
-                  <p className="text-[10px] sm:text-[11px] text-stone-500">Airy pastel glow that shimmers subtly in direct daylight.</p>
+                  <h4 className="font-serif text-xs sm:text-sm font-bold text-[#1E141B]">Lavender Mist</h4>
+                  <p className="text-[10px] sm:text-[11px] text-stone-500 font-medium">Airy pastel glow that shimmers subtly in direct daylight.</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-luxury">
+            <div className="aspect-[3/4] rounded-none overflow-hidden shadow-md border border-stone-200">
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA"
                 alt="Royal Violet silk"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-luxury mt-6 sm:mt-8">
+            <div className="aspect-[3/4] rounded-none overflow-hidden shadow-md border border-stone-200 mt-6 sm:mt-8">
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g"
                 alt="Soft Amethyst silk"
@@ -102,11 +102,11 @@ export default function VioletEditionPage() {
 
       {/* Curated Products for Capsule - 2 Column Mobile */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-        <div className="border-b border-surface-container-high pb-4">
-          <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-semibold text-amethyst-soft">
+        <div className="border-b border-stone-200 pb-4">
+          <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-[#7A0648]">
             Capsule Pieces
           </span>
-          <h3 className="font-serif text-2xl sm:text-3xl text-primary font-medium mt-0.5">
+          <h3 className="font-serif text-2xl sm:text-3xl text-[#1E141B] font-bold mt-0.5">
             Featured in The Violet Edition
           </h3>
         </div>

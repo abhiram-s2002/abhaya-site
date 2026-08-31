@@ -27,7 +27,7 @@ export default function ProductCard({ product }) {
     >
       {/* Product Image Box (Aspect Tall / 3:4) */}
       <div
-        className="relative aspect-[3/4] bg-[#68043D] overflow-hidden cursor-pointer shadow-sm border border-white/10"
+        className="relative aspect-[3/4] bg-stone-100 overflow-hidden cursor-pointer shadow-sm border border-stone-200/80"
         onClick={handleCardClick}
       >
         {/* Primary Image */}
@@ -67,21 +67,21 @@ export default function ProductCard({ product }) {
         
         {/* Title */}
         <h3
-          className="text-[12px] sm:text-[13px] md:text-[14px] font-bold text-white uppercase tracking-[0.04em] hover:text-white/80 transition-opacity cursor-pointer line-clamp-1 leading-snug px-1 text-center"
+          className="text-[12px] sm:text-[13px] md:text-[14px] font-bold text-[#1E141B] uppercase tracking-[0.04em] hover:text-[#7A0648] transition-colors cursor-pointer line-clamp-1 leading-snug px-1 text-center"
           onClick={handleCardClick}
         >
           {product.name}
         </h3>
 
         {/* Price display: From AED 300.00 */}
-        <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px] text-white">
-          <span className="text-white/80 text-[11px] font-medium">From</span>
+        <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px]">
+          <span className="text-stone-500 text-[11px] font-medium">From</span>
           {product.originalPrice && product.originalPrice > product.price && (
-            <span className="text-white/60 line-through tabular-nums text-[11px]">
+            <span className="text-stone-400 line-through tabular-nums text-[11px]">
               {formatPrice(product.originalPrice)}
             </span>
           )}
-          <span className="font-bold tabular-nums tracking-tight text-white">
+          <span className="font-bold tabular-nums tracking-tight text-[#7A0648]">
             {formatPrice(product.price)}
           </span>
         </div>
@@ -93,7 +93,7 @@ export default function ProductCard({ product }) {
               <Star key={i} className="w-2.5 h-2.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={0} />
             ))}
           </div>
-          <span className="text-[10px] text-white/90 tracking-wider font-semibold">
+          <span className="text-[10px] text-stone-500 tracking-wider font-semibold">
             ({Number(product.rating || 5.0).toFixed(1)})
           </span>
         </div>

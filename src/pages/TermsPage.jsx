@@ -6,32 +6,32 @@ export default function TermsPage() {
   const { navigateTo } = useShop();
 
   return (
-    <div className="min-h-screen bg-[#7A0648] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10 animate-fade-in text-white font-sans font-semibold">
+    <div className="min-h-screen bg-[#FAF8F5] pt-8 sm:pt-12 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8 animate-fade-in text-[#1E141B] font-sans font-semibold">
       
       <button
         onClick={() => navigateTo('home')}
-        className="inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider text-royal-violet hover:underline cursor-pointer"
+        className="inline-flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-wider text-[#7A0648] hover:underline cursor-pointer"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         <span>Return to Home</span>
       </button>
 
-      <div className="space-y-3">
-        <span className="text-xs font-sans font-bold uppercase tracking-widest text-secondary">
+      <div className="space-y-2">
+        <span className="text-xs font-sans font-bold uppercase tracking-widest text-[#7A0648]">
           Legal Agreement
         </span>
-        <h1 className="font-serif text-3xl sm:text-4xl text-primary font-medium tracking-tight">
+        <h1 className="font-serif text-3xl sm:text-4xl text-[#1E141B] font-bold tracking-tight">
           Terms & Conditions
         </h1>
-        <p className="text-xs sm:text-sm text-primary/70 leading-relaxed">
+        <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed">
           Please review the terms governing your purchase and use of the NOOR AL DHUHA Atelier digital boutique.
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-primary/15 p-6 sm:p-10 shadow-sm space-y-8 text-xs sm:text-sm leading-relaxed text-primary/80">
+      <div className="bg-white rounded-none border border-stone-200 p-6 sm:p-10 shadow-sm space-y-8 text-xs sm:text-sm leading-relaxed text-stone-700 font-medium">
         
         <section className="space-y-2">
-          <h2 className="font-serif text-xl font-medium text-primary">
+          <h2 className="font-serif text-xl font-bold text-[#1E141B]">
             1. Intellectual Property & Brand Rights
           </h2>
           <p>
@@ -40,7 +40,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-xl font-medium text-primary">
+          <h2 className="font-serif text-xl font-bold text-[#1E141B]">
             2. Product Representation & Color Accuracy
           </h2>
           <p>
@@ -49,7 +49,7 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-xl font-medium text-primary">
+          <h2 className="font-serif text-xl font-bold text-[#1E141B]">
             3. Pricing & Taxes
           </h2>
           <p>
@@ -58,7 +58,6 @@ export default function TermsPage() {
         </section>
 
       </div>
-
     </div>
   );
 }

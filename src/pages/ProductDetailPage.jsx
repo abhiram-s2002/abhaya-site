@@ -231,26 +231,26 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-10 sm:space-y-16 animate-fade-in pb-28 lg:pb-16 text-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-10 sm:space-y-16 animate-fade-in pb-28 lg:pb-16 text-[#1E141B]">
       
       {/* 1. Breadcrumbs Navigation */}
-      <nav className="flex items-center space-x-2 text-[11px] sm:text-xs uppercase tracking-widest text-white/75 overflow-x-auto no-scrollbar py-1">
-        <button onClick={() => navigateTo('home')} className="hover:text-white transition-colors shrink-0 cursor-pointer">
+      <nav className="flex items-center space-x-2 text-[11px] sm:text-xs uppercase tracking-widest text-stone-500 overflow-x-auto no-scrollbar py-1">
+        <button onClick={() => navigateTo('home')} className="hover:text-[#7A0648] transition-colors shrink-0 cursor-pointer">
           Home
         </button>
-        <span className="text-white/40">/</span>
-        <button onClick={() => navigateTo('shop')} className="hover:text-white transition-colors shrink-0 cursor-pointer">
+        <span className="text-stone-300">/</span>
+        <button onClick={() => navigateTo('shop')} className="hover:text-[#7A0648] transition-colors shrink-0 cursor-pointer">
           Abayas
         </button>
-        <span className="text-white/40">/</span>
+        <span className="text-stone-300">/</span>
         <button
           onClick={() => navigateTo('shop', null, null, null, null, selectedStyle || product.defaultStyle)}
-          className="hover:text-white transition-colors text-white font-medium shrink-0 cursor-pointer"
+          className="hover:text-[#7A0648] transition-colors text-stone-700 font-semibold shrink-0 cursor-pointer"
         >
           {selectedStyle || product.defaultStyle || 'Abaya'}
         </button>
-        <span className="text-white/40">/</span>
-        <span className="text-white font-bold truncate max-w-[200px] sm:max-w-none">
+        <span className="text-stone-300">/</span>
+        <span className="text-[#7A0648] font-bold truncate max-w-[200px] sm:max-w-none">
           {product.name}
         </span>
       </nav>
@@ -264,7 +264,7 @@ export default function ProductDetailPage() {
         <div className="lg:col-span-6 space-y-4 lg:sticky lg:top-24">
           
           {/* Main Large Image Container */}
-          <div className="relative aspect-[3/4] bg-black/15 overflow-hidden shadow-md group">
+          <div className="relative aspect-[3/4] bg-stone-100 overflow-hidden shadow-sm border border-stone-200 group">
             <img
               src={images[activeImageIdx] || images[0]}
               alt={product.name}
@@ -285,7 +285,7 @@ export default function ProductDetailPage() {
             <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
               <button
                 onClick={() => setShowLightboxModal(true)}
-                className="w-8 h-8 rounded-full bg-white text-[#7A0648] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white text-[#7A0648] flex items-center justify-center transition-all hover:bg-stone-50 shadow-sm cursor-pointer border border-stone-200"
                 title="Zoom picture"
                 aria-label="Zoom image"
               >
@@ -293,7 +293,7 @@ export default function ProductDetailPage() {
               </button>
               <button
                 onClick={handleShare}
-                className="w-8 h-8 rounded-full bg-white text-[#7A0648] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white text-[#7A0648] flex items-center justify-center transition-all hover:bg-stone-50 shadow-sm cursor-pointer border border-stone-200"
                 title="Share product"
                 aria-label="Share link"
               >
@@ -301,15 +301,15 @@ export default function ProductDetailPage() {
               </button>
               <button
                 onClick={() => toggleWishlist(product.id)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border border-stone-200 ${
                   wishlisted
-                    ? 'bg-white text-[#7A0648]'
-                    : 'bg-white text-[#7A0648] hover:bg-white/90'
+                    ? 'bg-[#7A0648] text-white'
+                    : 'bg-white text-[#7A0648] hover:bg-stone-50'
                 }`}
                 title="Save to Wishlist"
                 aria-label="Save to Wishlist"
               >
-                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-[#7A0648]' : ''}`} strokeWidth={1.5} />
+                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-white' : 'fill-[#7A0648]'}`} strokeWidth={1.5} />
               </button>
             </div>
 
@@ -339,32 +339,36 @@ export default function ProductDetailPage() {
                 {images.map((_, idx) => (
                   <button
                     key={idx}
-                    onClick={(e) => { e.stopPropagation(); setActiveImageIdx(idx); }}
-                    className={`h-1 transition-all ${
-                      activeImageIdx === idx ? 'w-6 bg-white' : 'w-2 bg-white/40'
+                    onClick={() => setActiveImageIdx(idx)}
+                    className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                      activeImageIdx === idx ? 'w-5 bg-[#7A0648]' : 'w-1.5 bg-black/30'
                     }`}
-                    aria-label={`Slide ${idx + 1}`}
+                    aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
               </div>
             )}
           </div>
 
-          {/* Multi-angle Thumbnails Carousel */}
+          {/* Desktop & Tablet Thumbnail Slider Bar */}
           {images.length > 1 && (
-            <div className="flex gap-2.5 overflow-x-auto no-scrollbar py-1">
-              {images.map((img, idx) => (
-                <button
+            <div className="hidden sm:grid grid-cols-5 gap-2.5">
+              {images.map((imgUrl, idx) => (
+                <div
                   key={idx}
                   onClick={() => setActiveImageIdx(idx)}
-                  className={`w-16 h-20 sm:w-20 sm:h-24 overflow-hidden border transition-all shrink-0 cursor-pointer ${
+                  className={`aspect-[3/4] bg-stone-100 overflow-hidden cursor-pointer border transition-all ${
                     activeImageIdx === idx
-                      ? 'border-white ring-2 ring-white'
-                      : 'border-white/25 opacity-70 hover:opacity-100'
+                      ? 'border-[#7A0648] ring-2 ring-[#7A0648] shadow-sm'
+                      : 'border-stone-200 opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
+                  <img
+                    src={imgUrl}
+                    alt={`${product.name} thumbnail ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               ))}
             </div>
           )}
@@ -372,44 +376,41 @@ export default function ProductDetailPage() {
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT COLUMN: PRODUCT INFO & BUY BOX                                      */}
+        {/* RIGHT COLUMN: PRODUCT TITLE, PRICING, SELECTORS & CTAS                    */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-6 space-y-6" ref={buyBoxRef}>
+        <div className="lg:col-span-6 space-y-6">
           
-          {/* Header & Pricing */}
-          <div className="space-y-2 pb-4 border-b border-white/20">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-medium text-white/80">
-                {product.category || 'Abaya'} • {selectedStyle || product.defaultStyle}
-              </span>
-              
-              {/* Star Rating Badge */}
+          {/* Header Block (Rating, Title, Price) */}
+          <div className="space-y-2 border-b border-stone-200 pb-5">
+            
+            {/* Star Rating summary (Scrolls to reviews on click) */}
+            <div className="flex items-center gap-2 text-xs">
               <button
                 onClick={scrollToReviews}
-                className="flex items-center gap-1.5 text-xs text-white hover:text-white/80 transition-colors cursor-pointer group"
+                className="flex items-center gap-1.5 text-stone-600 hover:text-[#7A0648] transition-colors cursor-pointer group"
               >
                 <div className="flex items-center text-[#FFD700]">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
                   ))}
                 </div>
-                <span className="font-semibold">{product.rating || '5.0'}</span>
-                <span className="text-white/70 group-hover:underline">({product.reviewsCount || '118'} reviews)</span>
+                <span className="font-bold text-stone-800">{product.rating || '5.0'}</span>
+                <span className="text-stone-500 group-hover:underline">({product.reviewsCount || '118'} reviews)</span>
               </button>
             </div>
 
             {/* Product Title */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl text-white font-medium uppercase tracking-wider leading-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl text-[#1E141B] font-bold uppercase tracking-wider leading-tight">
               {product.name}
             </h1>
 
             {/* Price Row */}
             <div className="flex items-baseline gap-3 pt-1">
-              <span className="text-xl sm:text-2xl text-white font-semibold tabular-nums tracking-tight">
+              <span className="text-xl sm:text-2xl text-[#7A0648] font-bold tabular-nums tracking-tight">
                 {formatPrice(product.price)}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-sm sm:text-base text-white/60 line-through tabular-nums">
+                <span className="text-sm sm:text-base text-stone-400 line-through tabular-nums">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
@@ -421,8 +422,8 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs uppercase tracking-wider">
-              <span className="text-white/80">
-                Length: <strong className="text-white font-semibold">{selectedLength}</strong>
+              <span className="text-stone-600 font-medium">
+                Length: <strong className="text-[#1E141B] font-bold">{selectedLength}</strong>
               </span>
             </div>
             <div className="grid grid-cols-6 sm:grid-cols-12 gap-1.5">
@@ -432,10 +433,10 @@ export default function ProductDetailPage() {
                   <button
                     key={len}
                     onClick={() => setSelectedLength(len)}
-                    className={`py-2 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                    className={`py-2 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#7A0648] border-2 border-white shadow-sm'
-                        : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
+                        ? 'bg-[#7A0648] text-white border-2 border-[#7A0648] shadow-xs'
+                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-100'
                     }`}
                   >
                     {len}
@@ -450,8 +451,8 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs uppercase tracking-wider">
-              <span className="text-white/80">
-                Buttons: <strong className="text-white font-semibold">{hasButtons}</strong>
+              <span className="text-stone-600 font-medium">
+                Buttons: <strong className="text-[#1E141B] font-bold">{hasButtons}</strong>
               </span>
             </div>
             <div className="flex gap-2">
@@ -461,10 +462,10 @@ export default function ProductDetailPage() {
                   <button
                     key={btnOption}
                     onClick={() => setHasButtons(btnOption)}
-                    className={`flex-1 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                    className={`flex-1 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#7A0648] border-2 border-white shadow-sm'
-                        : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
+                        ? 'bg-[#7A0648] text-white border-2 border-[#7A0648] shadow-xs'
+                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-100'
                     }`}
                   >
                     {btnOption}
@@ -479,12 +480,12 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs uppercase tracking-wider">
-              <span className="text-white/80">
-                Size: <strong className="text-white font-semibold">{sizeType}</strong>
+              <span className="text-stone-600 font-medium">
+                Size: <strong className="text-[#1E141B] font-bold">{sizeType}</strong>
               </span>
               <button
                 onClick={() => setShowSizeGuideModal(true)}
-                className="flex items-center gap-1 text-[11px] text-white hover:underline uppercase tracking-wider font-semibold cursor-pointer"
+                className="flex items-center gap-1 text-[11px] text-[#7A0648] hover:underline uppercase tracking-wider font-bold cursor-pointer"
               >
                 <Ruler className="w-3.5 h-3.5" />
                 <span>Size Chart</span>
@@ -498,10 +499,10 @@ export default function ProductDetailPage() {
                   <button
                     key={fit}
                     onClick={() => setSizeType(fit)}
-                    className={`flex-1 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                    className={`flex-1 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#7A0648] border-2 border-white shadow-sm'
-                        : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
+                        ? 'bg-[#7A0648] text-white border-2 border-[#7A0648] shadow-xs'
+                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-100'
                     }`}
                   >
                     {fit}
@@ -518,17 +519,17 @@ export default function ProductDetailPage() {
                   onChange={(e) => setCustomNotes(e.target.value)}
                   placeholder="Enter custom measurements (e.g., Bust, Sleeves, Hip, Length in inches)..."
                   rows={2}
-                  className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white transition-colors resize-none"
+                  className="w-full bg-white text-[#1E141B] placeholder-stone-400 text-xs p-2.5 border border-stone-300 focus:outline-none focus:border-[#7A0648] transition-colors resize-none shadow-xs"
                 />
               </div>
             )}
           </div>
 
           {/* Social Proof Live Badge */}
-          <div className="flex items-center gap-2 text-xs text-white/90 py-1">
-            <Flame className="w-4 h-4 text-[#FFD700] fill-[#FFD700] animate-pulse" />
+          <div className="flex items-center gap-2 text-xs text-stone-600 py-1 font-medium">
+            <Flame className="w-4 h-4 text-[#7A0648] fill-[#7A0648] animate-pulse" />
             <span>
-              <strong>24 people</strong> have added this product to cart in the past week
+              <strong className="text-[#1E141B]">24 people</strong> have added this product to cart in the past week
             </span>
           </div>
 
@@ -539,20 +540,20 @@ export default function ProductDetailPage() {
             <div className="flex gap-3">
               
               {/* Quantity Counter */}
-              <div className="flex items-center border border-white/40 bg-white/10 shrink-0">
+              <div className="flex items-center border border-stone-300 bg-white shrink-0">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-10 h-12 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer text-base font-semibold"
+                  className="w-10 h-12 flex items-center justify-center text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer text-base font-bold"
                   aria-label="Decrease quantity"
                 >
                   -
                 </button>
-                <span className="w-10 text-center text-sm font-semibold text-white">
+                <span className="w-10 text-center text-sm font-bold text-[#1E141B]">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-12 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer text-base font-semibold"
+                  className="w-10 h-12 flex items-center justify-center text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer text-base font-bold"
                   aria-label="Increase quantity"
                 >
                   +
@@ -565,7 +566,7 @@ export default function ProductDetailPage() {
                 className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-bold tracking-[0.1em] transition-all duration-200 cursor-pointer shadow-md ${
                   isAddedAnimation
                     ? 'bg-emerald-600 text-white border-2 border-emerald-500 scale-[1.01]'
-                    : 'bg-white text-[#7A0648] hover:bg-white/90 active:scale-[0.99]'
+                    : 'bg-[#7A0648] text-white hover:bg-[#68043D] active:scale-[0.99]'
                 }`}
               >
                 {isAddedAnimation ? (
@@ -585,7 +586,7 @@ export default function ProductDetailPage() {
             {/* Instant WhatsApp Order Button */}
             <button
               onClick={handleWhatsAppInstantOrder}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] bg-white/20 text-white border border-white/50 hover:bg-white hover:text-[#7A0648] transition-all duration-200 cursor-pointer shadow-sm"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-bold tracking-[0.08em] bg-white text-[#7A0648] border border-[#7A0648]/40 hover:bg-[#7A0648] hover:text-white transition-all duration-200 cursor-pointer shadow-xs"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Order via WhatsApp</span>
@@ -595,24 +596,24 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           {/* ACCORDIONS / DETAILS SECTION                                              */}
           {/* ========================================================================= */}
-          <div className="divide-y divide-white/20 border-y border-white/20 pt-2">
+          <div className="divide-y divide-stone-200 border-y border-stone-200 pt-2 text-[#1E141B]">
             
             {/* 1. Description Accordion */}
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('description')}
-                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-[#1E141B] py-1 cursor-pointer hover:text-[#7A0648] transition-colors"
               >
                 <span>Description & Fabric</span>
-                {openAccordions.description ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {openAccordions.description ? <ChevronUp className="w-4 h-4 text-[#7A0648]" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
               </button>
               {openAccordions.description && (
-                <div className="pt-3 pb-2 space-y-3 text-xs sm:text-sm text-white/90 leading-relaxed">
+                <div className="pt-3 pb-2 space-y-3 text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
                   <p>{product.description}</p>
-                  <div className="p-3 bg-white/10 border border-white/15 space-y-1.5 text-xs">
+                  <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
                     <p><strong>Fabric:</strong> {product.fabric || 'Tafetta & Candy Crepe'}</p>
                     <p><strong>Garment Care:</strong> Dry Clean recommended</p>
-                    <p className="text-white/75 italic">
+                    <p className="text-stone-500 italic">
                       <strong>Note:</strong> Shaila exact color shade might differ slightly from displayed studio lighting.
                     </p>
                   </div>
@@ -624,56 +625,56 @@ export default function ProductDetailPage() {
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('sizeChart')}
-                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-[#1E141B] py-1 cursor-pointer hover:text-[#7A0648] transition-colors"
               >
                 <span>Size Guide & Measurements</span>
-                {openAccordions.sizeChart ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {openAccordions.sizeChart ? <ChevronUp className="w-4 h-4 text-[#7A0648]" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
               </button>
               {openAccordions.sizeChart && (
-                <div className="pt-3 pb-2 space-y-3 text-xs text-white/90">
-                  <p className="text-[11px] text-white/80">
+                <div className="pt-3 pb-2 space-y-3 text-xs text-stone-600">
+                  <p className="text-[11px] text-stone-500 font-medium">
                     Standard basic abaya measurement chart (all measurements in inches):
                   </p>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border border-white/20">
-                      <thead className="bg-white/20 uppercase tracking-wider text-[10px] text-white font-semibold">
+                    <table className="w-full text-left text-xs border border-stone-200">
+                      <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-[#1E141B] font-bold">
                         <tr>
-                          <th className="p-2 border-b border-white/20">Length (inches)</th>
-                          <th className="p-2 border-b border-white/20">Sleeves from neck</th>
-                          <th className="p-2 border-b border-white/20">Chest Width</th>
-                          <th className="p-2 border-b border-white/20">Height Guide</th>
+                          <th className="p-2 border-b border-stone-200">Length (inches)</th>
+                          <th className="p-2 border-b border-stone-200">Sleeves from neck</th>
+                          <th className="p-2 border-b border-stone-200">Chest Width</th>
+                          <th className="p-2 border-b border-stone-200">Height Guide</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-white/15">
+                      <tbody className="divide-y divide-stone-200 text-[#1E141B]">
                         <tr>
-                          <td className="p-2 font-medium">49 - 51"</td>
+                          <td className="p-2 font-bold text-[#7A0648]">49 - 51"</td>
                           <td className="p-2">23"</td>
                           <td className="p-2">26 - 27"</td>
-                          <td className="p-2">4'10" – 5'0"</td>
+                          <td className="p-2 font-medium text-stone-600">4'10" – 5'0"</td>
                         </tr>
                         <tr>
-                          <td className="p-2 font-medium">52 - 53"</td>
+                          <td className="p-2 font-bold text-[#7A0648]">52 - 53"</td>
                           <td className="p-2">25"</td>
                           <td className="p-2">27"</td>
-                          <td className="p-2">5'1" – 5'2"</td>
+                          <td className="p-2 font-medium text-stone-600">5'1" – 5'2"</td>
                         </tr>
                         <tr>
-                          <td className="p-2 font-medium">54 - 55"</td>
+                          <td className="p-2 font-bold text-[#7A0648]">54 - 55"</td>
                           <td className="p-2">26"</td>
                           <td className="p-2">27"</td>
-                          <td className="p-2">5'3" – 5'4"</td>
+                          <td className="p-2 font-medium text-stone-600">5'3" – 5'4"</td>
                         </tr>
                         <tr>
-                          <td className="p-2 font-medium">56 - 57"</td>
+                          <td className="p-2 font-bold text-[#7A0648]">56 - 57"</td>
                           <td className="p-2">27"</td>
                           <td className="p-2">28"</td>
-                          <td className="p-2">5'5" – 5'6"</td>
+                          <td className="p-2 font-medium text-stone-600">5'5" – 5'6"</td>
                         </tr>
                         <tr>
-                          <td className="p-2 font-medium">58 - 60"</td>
+                          <td className="p-2 font-bold text-[#7A0648]">58 - 60"</td>
                           <td className="p-2">28"</td>
                           <td className="p-2">28"</td>
-                          <td className="p-2">5'7" – 5'10"+</td>
+                          <td className="p-2 font-medium text-stone-600">5'7" – 5'10"+</td>
                         </tr>
                       </tbody>
                     </table>
@@ -686,24 +687,24 @@ export default function ProductDetailPage() {
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('deliveryReturn')}
-                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-[#1E141B] py-1 cursor-pointer hover:text-[#7A0648] transition-colors"
               >
                 <span>Delivery & Return Policy</span>
-                {openAccordions.deliveryReturn ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {openAccordions.deliveryReturn ? <ChevronUp className="w-4 h-4 text-[#7A0648]" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
               </button>
               {openAccordions.deliveryReturn && (
-                <div className="pt-3 pb-2 space-y-2 text-xs sm:text-sm text-white/90 leading-relaxed">
+                <div className="pt-3 pb-2 space-y-2 text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div className="p-2.5 bg-white/10 border border-white/15">
-                      <p className="font-semibold text-white">🇦🇪 UAE Delivery</p>
-                      <p className="text-white/80">Express delivery within 1 - 3 business days.</p>
+                    <div className="p-2.5 bg-stone-50 border border-stone-200">
+                      <p className="font-bold text-[#1E141B]">🇦🇪 UAE Delivery</p>
+                      <p className="text-stone-500">Express delivery within 1 - 3 business days.</p>
                     </div>
-                    <div className="p-2.5 bg-white/10 border border-white/15">
-                      <p className="font-semibold text-white">🌍 Worldwide Shipping</p>
-                      <p className="text-white/80">DHL Express delivery in 3 - 7 business days.</p>
+                    <div className="p-2.5 bg-stone-50 border border-stone-200">
+                      <p className="font-bold text-[#1E141B]">🌍 Worldwide Shipping</p>
+                      <p className="text-stone-500">DHL Express delivery in 3 - 7 business days.</p>
                     </div>
                   </div>
-                  <p className="text-xs text-white/80 pt-1">
+                  <p className="text-xs text-stone-500 pt-1">
                     Free size abayas can be exchanged within 7 days of delivery. Custom-tailored pieces are made to order and non-refundable.
                   </p>
                 </div>
@@ -714,14 +715,14 @@ export default function ProductDetailPage() {
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('garmentCare')}
-                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-semibold text-white py-1 cursor-pointer"
+                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-[#1E141B] py-1 cursor-pointer hover:text-[#7A0648] transition-colors"
               >
                 <span>Garment Care & Steaming</span>
-                {openAccordions.garmentCare ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {openAccordions.garmentCare ? <ChevronUp className="w-4 h-4 text-[#7A0648]" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
               </button>
               {openAccordions.garmentCare && (
-                <div className="pt-3 pb-2 space-y-2 text-xs text-white/90 leading-relaxed">
-                  <ul className="list-disc list-inside space-y-1 text-white/80">
+                <div className="pt-3 pb-2 space-y-2 text-xs text-stone-600 leading-relaxed font-medium">
+                  <ul className="list-disc list-inside space-y-1 text-stone-600">
                     <li>Dry clean strictly recommended for silk, tafetta, and crepe abayas.</li>
                     <li>Use a vertical garment steamer instead of hot contact iron.</li>
                     <li>Store in breathable garment bags away from direct sunlight.</li>
@@ -739,13 +740,13 @@ export default function ProductDetailPage() {
       {/* ========================================================================= */}
       {/* 3. REVIEWS SECTION ("Let customers speak for us")                         */}
       {/* ========================================================================= */}
-      <section ref={reviewsSectionRef} className="pt-8 sm:pt-14 border-t border-white/20 space-y-8">
+      <section ref={reviewsSectionRef} className="pt-8 sm:pt-14 border-t border-stone-200 space-y-8 text-[#1E141B]">
         
         <div className="text-center space-y-2">
-          <p className="text-xs uppercase tracking-[0.2em] font-medium text-white/80">
+          <p className="text-xs uppercase tracking-[0.2em] font-bold text-[#7A0648]">
             Verified Customer Reviews
           </p>
-          <h2 className="text-xl sm:text-3xl font-medium tracking-wider uppercase text-white">
+          <h2 className="text-xl sm:text-3xl font-bold tracking-wider uppercase text-[#1E141B]">
             Let Customers Speak For Us
           </h2>
           <div className="flex items-center justify-center gap-2 pt-1 text-sm">
@@ -754,41 +755,41 @@ export default function ProductDetailPage() {
                 <Star key={i} className="w-4 h-4 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
               ))}
             </div>
-            <span className="font-semibold text-white">5.0 / 5</span>
-            <span className="text-white/70">based on {reviewsList.length + 115} reviews</span>
+            <span className="font-bold text-[#1E141B]">5.0 / 5</span>
+            <span className="text-stone-500 font-medium">based on {reviewsList.length + 115} reviews</span>
           </div>
         </div>
 
         {/* Rating Breakdown Bars & Write a Review Action */}
-        <div className="max-w-3xl mx-auto p-4 sm:p-6 bg-white/10 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="w-full sm:w-1/2 space-y-1.5 text-xs">
+        <div className="max-w-3xl mx-auto p-4 sm:p-6 bg-white border border-stone-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="w-full sm:w-1/2 space-y-1.5 text-xs text-stone-600">
             <div className="flex items-center gap-2">
-              <span className="w-12 text-white/80">5 star</span>
-              <div className="flex-1 h-2 bg-white/20 overflow-hidden">
-                <div className="h-full bg-white w-[96%]" />
+              <span className="w-12 text-stone-600 font-medium">5 star</span>
+              <div className="flex-1 h-2 bg-stone-200 overflow-hidden">
+                <div className="h-full bg-[#7A0648] w-[96%]" />
               </div>
-              <span className="w-8 text-right font-medium">96%</span>
+              <span className="w-8 text-right font-bold text-[#1E141B]">96%</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-12 text-white/80">4 star</span>
-              <div className="flex-1 h-2 bg-white/20 overflow-hidden">
-                <div className="h-full bg-white w-[4%]" />
+              <span className="w-12 text-stone-600 font-medium">4 star</span>
+              <div className="flex-1 h-2 bg-stone-200 overflow-hidden">
+                <div className="h-full bg-[#7A0648] w-[4%]" />
               </div>
-              <span className="w-8 text-right font-medium">4%</span>
+              <span className="w-8 text-right font-bold text-[#1E141B]">4%</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-12 text-white/80">3 star</span>
-              <div className="flex-1 h-2 bg-white/20 overflow-hidden">
-                <div className="h-full bg-white w-[0%]" />
+              <span className="w-12 text-stone-600 font-medium">3 star</span>
+              <div className="flex-1 h-2 bg-stone-200 overflow-hidden">
+                <div className="h-full bg-[#7A0648] w-[0%]" />
               </div>
-              <span className="w-8 text-right font-medium">0%</span>
+              <span className="w-8 text-right font-bold text-[#1E141B]">0%</span>
             </div>
           </div>
 
           <div className="text-center sm:text-right shrink-0">
             <button
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="py-2.5 px-6 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-sm"
+              className="py-2.5 px-6 bg-[#7A0648] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#68043D] transition-all cursor-pointer shadow-xs"
             >
               {showReviewForm ? 'Cancel Review' : 'Write a Review'}
             </button>
@@ -797,13 +798,13 @@ export default function ProductDetailPage() {
 
         {/* Interactive Review Form */}
         {showReviewForm && (
-          <form onSubmit={handleReviewSubmit} className="max-w-2xl mx-auto p-6 bg-white/15 border border-white/30 space-y-4 animate-fade-in">
-            <h3 className="text-sm uppercase tracking-wider font-bold text-white text-center">
+          <form onSubmit={handleReviewSubmit} className="max-w-2xl mx-auto p-6 bg-white border border-stone-300 shadow-md space-y-4 animate-fade-in">
+            <h3 className="text-sm uppercase tracking-wider font-bold text-[#1E141B] text-center">
               Write Your Verified Review
             </h3>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+              <label className="block text-xs uppercase tracking-wider text-stone-600 font-bold mb-1">
                 Rating
               </label>
               <div className="flex items-center gap-2">
@@ -816,7 +817,7 @@ export default function ProductDetailPage() {
                   >
                     <Star
                       className={`w-6 h-6 ${
-                        star <= newReviewRating ? 'fill-[#FFD700]' : 'text-white/40'
+                        star <= newReviewRating ? 'fill-[#FFD700]' : 'text-stone-300'
                       }`}
                     />
                   </button>
@@ -825,7 +826,7 @@ export default function ProductDetailPage() {
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+              <label className="block text-xs uppercase tracking-wider text-stone-600 font-bold mb-1">
                 Your Name
               </label>
               <input
@@ -834,12 +835,12 @@ export default function ProductDetailPage() {
                 value={newReviewAuthor}
                 onChange={(e) => setNewReviewAuthor(e.target.value)}
                 placeholder="E.g., Hissa Al-Maktoum"
-                className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white"
+                className="w-full bg-white text-[#1E141B] placeholder-stone-400 text-xs p-2.5 border border-stone-300 focus:outline-none focus:border-[#7A0648]"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+              <label className="block text-xs uppercase tracking-wider text-stone-600 font-bold mb-1">
                 Review Title
               </label>
               <input
@@ -847,12 +848,12 @@ export default function ProductDetailPage() {
                 value={newReviewTitle}
                 onChange={(e) => setNewReviewTitle(e.target.value)}
                 placeholder="E.g., Beautiful flow & fabric"
-                className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white"
+                className="w-full bg-white text-[#1E141B] placeholder-stone-400 text-xs p-2.5 border border-stone-300 focus:outline-none focus:border-[#7A0648]"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider text-white/80 mb-1">
+              <label className="block text-xs uppercase tracking-wider text-stone-600 font-bold mb-1">
                 Review Content
               </label>
               <textarea
@@ -861,13 +862,13 @@ export default function ProductDetailPage() {
                 value={newReviewComment}
                 onChange={(e) => setNewReviewComment(e.target.value)}
                 placeholder="Share your experience with the cut, fabric, and fit..."
-                className="w-full bg-white/20 text-white placeholder-white/60 text-xs p-2.5 border border-white/40 focus:outline-none focus:border-white resize-none"
+                className="w-full bg-white text-[#1E141B] placeholder-stone-400 text-xs p-2.5 border border-stone-300 focus:outline-none focus:border-[#7A0648] resize-none"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-md"
+              className="w-full py-3 bg-[#7A0648] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#68043D] transition-all cursor-pointer shadow-md"
             >
               Submit Review
             </button>
@@ -877,7 +878,7 @@ export default function ProductDetailPage() {
         {/* Reviews Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {reviewsList.map((rev) => (
-            <div key={rev.id} className="p-5 bg-white/10 border border-white/20 space-y-2.5 flex flex-col justify-between">
+            <div key={rev.id} className="p-5 bg-white border border-stone-200 shadow-xs space-y-2.5 flex flex-col justify-between">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center text-[#FFD700]">
@@ -885,21 +886,21 @@ export default function ProductDetailPage() {
                       <Star key={i} className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
                     ))}
                   </div>
-                  <span className="text-[10px] text-white/60 uppercase tracking-wider">{rev.date}</span>
+                  <span className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">{rev.date}</span>
                 </div>
 
-                <h4 className="text-xs uppercase font-bold tracking-wider text-white">
+                <h4 className="text-xs uppercase font-bold tracking-wider text-[#1E141B]">
                   {rev.title}
                 </h4>
 
-                <p className="text-xs text-white/85 leading-relaxed">
+                <p className="text-xs text-stone-600 leading-relaxed font-medium">
                   "{rev.comment}"
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
-                <span className="font-semibold text-white">{rev.author}</span>
-                <span className="text-[10px] px-1.5 py-0.5 bg-white/20 text-white uppercase tracking-wider">
+              <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px]">
+                <span className="font-bold text-[#1E141B]">{rev.author}</span>
+                <span className="text-[10px] px-1.5 py-0.5 bg-[#F5EAF1] text-[#7A0648] uppercase tracking-wider font-bold">
                   Verified Buyer
                 </span>
               </div>
@@ -912,12 +913,12 @@ export default function ProductDetailPage() {
       {/* ========================================================================= */}
       {/* 4. RELATED PRODUCTS / "YOU MAY ALSO LIKE" SECTION                         */}
       {/* ========================================================================= */}
-      <section className="pt-8 sm:pt-14 border-t border-white/20 space-y-6">
+      <section className="pt-8 sm:pt-14 border-t border-stone-200 space-y-6 text-[#1E141B]">
         <div className="text-center space-y-1">
-          <p className="text-xs uppercase tracking-[0.2em] font-medium text-white/80">
+          <p className="text-xs uppercase tracking-[0.2em] font-bold text-[#7A0648]">
             Complementary Pieces
           </p>
-          <h2 className="text-xl sm:text-2xl font-medium tracking-wider uppercase text-white">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-wider uppercase text-[#1E141B]">
             You May Also Like
           </h2>
         </div>
@@ -933,16 +934,16 @@ export default function ProductDetailPage() {
       {/* 5. STICKY BOTTOM ACTION BAR (Mobile & Tablet)                             */}
       {/* ========================================================================= */}
       {showStickyBar && (
-        <div className="fixed bottom-0 inset-x-0 bg-[#7A0648] border-t border-white/30 p-3 z-40 lg:hidden shadow-2xl flex items-center justify-between gap-3 animate-slide-up">
+        <div className="fixed bottom-0 inset-x-0 bg-[#7A0648] border-t border-[#68043D] p-3 z-40 lg:hidden shadow-2xl flex items-center justify-between gap-3 animate-slide-up text-white">
           <div className="flex items-center gap-2.5 overflow-hidden">
             <img
               src={images[activeImageIdx] || images[0]}
               alt=""
-              className="w-11 h-13 object-cover border border-white/30 shrink-0"
+              className="w-11 h-13 object-cover border border-white/30 shrink-0 bg-stone-100"
             />
             <div className="truncate">
-              <p className="text-xs font-semibold uppercase text-white truncate">{product.name}</p>
-              <p className="text-xs font-bold text-white tabular-nums">{formatPrice(product.price)}</p>
+              <p className="text-xs font-bold uppercase text-white truncate">{product.name}</p>
+              <p className="text-xs font-bold text-[#FFF0A0] tabular-nums">{formatPrice(product.price)}</p>
             </div>
           </div>
           <button
@@ -960,78 +961,78 @@ export default function ProductDetailPage() {
       {/* ========================================================================= */}
       {showSizeGuideModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#7A0648] border border-white/30 text-white max-w-lg w-full p-6 space-y-4 relative shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
+          <div className="bg-white border border-stone-200 text-[#1E141B] max-w-lg w-full p-6 space-y-4 relative shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowSizeGuideModal(false)}
-              className="absolute top-4 right-4 text-white/80 hover:text-white cursor-pointer"
+              className="absolute top-4 right-4 text-stone-500 hover:text-[#1E141B] cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-1">
-              <h3 className="text-base uppercase tracking-widest font-bold text-white">
+              <h3 className="text-base uppercase tracking-widest font-bold text-[#1E141B]">
                 Abaya Size Guide
               </h3>
-              <p className="text-xs text-white/80">
+              <p className="text-xs text-stone-600 font-medium">
                 Find your recommended abaya length based on your overall height.
               </p>
             </div>
 
             <div className="overflow-x-auto pt-2">
-              <table className="w-full text-left text-xs border border-white/25">
-                <thead className="bg-white/20 uppercase tracking-wider text-[10px] text-white font-bold">
+              <table className="w-full text-left text-xs border border-stone-200">
+                <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-[#1E141B] font-bold">
                   <tr>
-                    <th className="p-2.5 border-b border-white/25">Abaya Length</th>
-                    <th className="p-2.5 border-b border-white/25">Sleeves from Neck</th>
-                    <th className="p-2.5 border-b border-white/25">Chest Width</th>
-                    <th className="p-2.5 border-b border-white/25">Recommended Height</th>
+                    <th className="p-2.5 border-b border-stone-200">Abaya Length</th>
+                    <th className="p-2.5 border-b border-stone-200">Sleeves from Neck</th>
+                    <th className="p-2.5 border-b border-stone-200">Chest Width</th>
+                    <th className="p-2.5 border-b border-stone-200">Recommended Height</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/20">
+                <tbody className="divide-y divide-stone-200">
                   <tr>
-                    <td className="p-2.5 font-bold">49 - 51"</td>
+                    <td className="p-2.5 font-bold text-[#7A0648]">49 - 51"</td>
                     <td className="p-2.5">23"</td>
                     <td className="p-2.5">26 - 27"</td>
-                    <td className="p-2.5">4'10" – 5'0" (148–152 cm)</td>
+                    <td className="p-2.5 text-stone-600 font-medium">4'10" – 5'0" (148–152 cm)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 font-bold">52 - 53"</td>
+                    <td className="p-2.5 font-bold text-[#7A0648]">52 - 53"</td>
                     <td className="p-2.5">25"</td>
                     <td className="p-2.5">27"</td>
-                    <td className="p-2.5">5'1" – 5'2" (153–158 cm)</td>
+                    <td className="p-2.5 text-stone-600 font-medium">5'1" – 5'2" (153–158 cm)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 font-bold">54 - 55"</td>
+                    <td className="p-2.5 font-bold text-[#7A0648]">54 - 55"</td>
                     <td className="p-2.5">26"</td>
                     <td className="p-2.5">27"</td>
-                    <td className="p-2.5">5'3" – 5'4" (159–163 cm)</td>
+                    <td className="p-2.5 text-stone-600 font-medium">5'3" – 5'4" (159–163 cm)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 font-bold">56 - 57"</td>
+                    <td className="p-2.5 font-bold text-[#7A0648]">56 - 57"</td>
                     <td className="p-2.5">27"</td>
                     <td className="p-2.5">28"</td>
-                    <td className="p-2.5">5'5" – 5'6" (164–168 cm)</td>
+                    <td className="p-2.5 text-stone-600 font-medium">5'5" – 5'6" (164–168 cm)</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 font-bold">58 - 60"</td>
+                    <td className="p-2.5 font-bold text-[#7A0648]">58 - 60"</td>
                     <td className="p-2.5">28"</td>
                     <td className="p-2.5">28"</td>
-                    <td className="p-2.5">5'7" – 5'10"+ (169–178 cm)</td>
+                    <td className="p-2.5 text-stone-600 font-medium">5'7" – 5'10"+ (169–178 cm)</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <div className="p-3 bg-white/10 border border-white/20 text-xs space-y-1">
-              <p className="font-semibold text-white">💡 Need a custom tailored fit?</p>
-              <p className="text-white/80 text-[11px]">
+            <div className="p-3 bg-stone-50 border border-stone-200 text-xs space-y-1">
+              <p className="font-bold text-[#1E141B]">💡 Need a custom tailored fit?</p>
+              <p className="text-stone-600 text-[11px] font-medium">
                 Choose <strong>Size: Custom</strong> and specify your exact bust, sleeve, and shoulder measurements in the order notes.
               </p>
             </div>
 
             <button
               onClick={() => setShowSizeGuideModal(false)}
-              className="w-full py-2.5 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-colors cursor-pointer"
+              className="w-full py-2.5 bg-[#7A0648] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#68043D] transition-colors cursor-pointer shadow-sm"
             >
               Close Size Guide
             </button>
