@@ -326,23 +326,27 @@ export function ShopProvider({ children }) {
     if (productId) {
       setSelectedProductId(productId);
     }
-    if (category) {
-      setSelectedCategoryFilter(category);
+
+    if (view === 'shop' || view === 'collections') {
+      setSelectedCategoryFilter(category || 'All');
+      setSelectedStyleFilter(style || (category && category !== 'All' ? category : 'All'));
+      setSelectedWorkFilter(work || 'All');
+      setSelectedColorFilter(color || 'All');
+      if (search !== null) {
+        setSearchQuery(search);
+      } else if (!category && !style && !work && !color) {
+        setSearchQuery('');
+      }
+    } else {
+      if (category) setSelectedCategoryFilter(category);
+      if (color) setSelectedColorFilter(color);
+      if (style) setSelectedStyleFilter(style);
+      if (work) setSelectedWorkFilter(work);
+      if (search !== null) setSearchQuery(search);
     }
+
     if (collectionsTab) {
       setSelectedCollectionsTab(collectionsTab);
-    }
-    if (color) {
-      setSelectedColorFilter(color);
-    }
-    if (style) {
-      setSelectedStyleFilter(style);
-    }
-    if (work) {
-      setSelectedWorkFilter(work);
-    }
-    if (search !== null) {
-      setSearchQuery(search);
     }
     setWishlistOnlyFilter(wishlistOnly);
     setCurrentView(view);

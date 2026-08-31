@@ -67,14 +67,14 @@ export default function ShopPage() {
 
   // Sync selectedCategoryFilter from context if set from external links
   useEffect(() => {
-    if (selectedCategoryFilter && selectedCategoryFilter !== 'All') {
+    if (selectedCategoryFilter) {
       setSelectedTab(selectedCategoryFilter);
     }
   }, [selectedCategoryFilter]);
 
   // Sync selectedStyleFilter from context if set from external links (e.g. Shop by Category on Homepage or Navbar)
   useEffect(() => {
-    if (contextStyleFilter && contextStyleFilter !== 'All') {
+    if (contextStyleFilter) {
       setSelectedTab(contextStyleFilter);
       setSelectedStyleFilter(contextStyleFilter);
     }
@@ -82,14 +82,14 @@ export default function ShopPage() {
 
   // Sync selectedWorkFilter from context if set from external links (e.g. Shop by Work on Homepage or Navbar)
   useEffect(() => {
-    if (contextWorkFilter && contextWorkFilter !== 'All') {
+    if (contextWorkFilter) {
       setSelectedWorkFilter(contextWorkFilter);
     }
   }, [contextWorkFilter]);
 
   // Sync selectedColorFilter from context if set from external links
   useEffect(() => {
-    if (contextColorFilter && contextColorFilter !== 'All') {
+    if (contextColorFilter) {
       setSelectedShade(contextColorFilter);
     }
   }, [contextColorFilter]);
@@ -238,9 +238,11 @@ export default function ShopPage() {
     setSelectedTab(tabId);
     setSelectedStyleFilter(tabId);
     if (setContextStyleFilter) setContextStyleFilter(tabId);
-    if (tabId === 'All' || tabId === 'Silk' || tabId === 'Chiffon' || tabId === 'Modal Jersey' || tabId === 'Georgette') {
-      setSelectedCategoryFilter(tabId);
-    }
+    setSelectedCategoryFilter(tabId);
+    setSelectedWorkFilter('All');
+    if (setContextWorkFilter) setContextWorkFilter('All');
+    setSelectedShade('All');
+    if (setContextColorFilter) setContextColorFilter('All');
   };
 
   const resetFilters = () => {

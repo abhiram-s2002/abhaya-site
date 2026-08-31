@@ -239,27 +239,23 @@ export default function CollectionsPage() {
 
       // 2. Silhouette / Styles Filter
       if (selectedStyles.length > 0) {
-        const productStyles = [
-          product.defaultStyle,
-          ...(product.styles || [])
-        ].filter(Boolean).map(s => s.toLowerCase());
-
-        const hasMatch = selectedStyles.some(sel =>
-          productStyles.some(ps => ps.includes(sel.toLowerCase()) || sel.toLowerCase().includes(ps))
-        );
+        const hasMatch = selectedStyles.some(sel => {
+          const sLower = sel.toLowerCase();
+          return (
+            (product.defaultStyle && product.defaultStyle.toLowerCase() === sLower) ||
+            (product.name && product.name.toLowerCase().includes(sLower)) ||
+            (product.category && product.category.toLowerCase() === sLower)
+          );
+        });
         if (!hasMatch) return false;
       }
 
       // 3. Work / Craftsmanship Filter
       if (selectedWorks.length > 0) {
-        const productWorks = [
-          product.defaultWork,
-          ...(product.works || [])
-        ].filter(Boolean).map(w => w.toLowerCase());
-
-        const hasMatch = selectedWorks.some(sel =>
-          productWorks.some(pw => pw.includes(sel.toLowerCase()) || sel.toLowerCase().includes(pw))
-        );
+        const hasMatch = selectedWorks.some(sel => {
+          const wLower = sel.toLowerCase();
+          return product.defaultWork && product.defaultWork.toLowerCase() === wLower;
+        });
         if (!hasMatch) return false;
       }
 
