@@ -25,8 +25,8 @@ import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
 import { useShop } from '../../context/ShopContext';
 
-const PRESET_CATEGORIES = ['Silk', 'Chiffon', 'Modal Jersey', 'Georgette', 'Crepe', 'Organza', 'Linen', 'Velvet'];
-const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'New Arrival', 'Staff Pick', 'Artisan Atelier', 'Trending', 'Exclusive'];
+const PRESET_CATEGORIES = ['Abaya', 'Open abaya', 'Closed cut', 'Kimono or kaftan', 'Butterfly or farasha', 'umbrella cut or Flare', '2 piece abaya (with inner)', 'Coat abaya'];
+const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'Staff Pick', 'Artisan Atelier', 'Trending', 'Exclusive'];
 
 const LUXURY_PALETTE_PRESETS = [
   { name: 'Midnight Espresso', hex: '#2E1C1A' },
@@ -56,13 +56,12 @@ export default function AdminProductEditor({
   const [subtitle, setSubtitle] = useState('');
   const [price, setPrice] = useState('180');
   const [originalPrice, setOriginalPrice] = useState('');
-  const [category, setCategory] = useState('Silk');
+  const [category, setCategory] = useState('Abaya');
   const [customCategory, setCustomCategory] = useState('');
-  const [badge, setBadge] = useState('New Arrival');
+  const [badge, setBadge] = useState('');
   const [targetRegion, setTargetRegion] = useState('all'); // 'all' | 'india' | 'arab'
   const [rating, setRating] = useState('5.0');
   const [reviewsCount, setReviewsCount] = useState('0');
-  const [isFeatured, setIsFeatured] = useState(false);
   const [stockCount, setStockCount] = useState(12);
 
   // Media State
@@ -97,9 +96,6 @@ export default function AdminProductEditor({
   // UI state
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [previewCurrency, setPreviewCurrency] = useState('USD'); // 'USD' | 'INR' | 'AED'
-  const [activePreviewShade, setActivePreviewShade] = useState(0);
-  const [activePreviewImage, setActivePreviewImage] = useState(0);
 
   // Active section scroll tracking
   const [activeSection, setActiveSection] = useState('identity');
@@ -113,13 +109,12 @@ export default function AdminProductEditor({
       setSubtitle(product.subtitle || '');
       setPrice(product.price !== undefined ? String(product.price) : '');
       setOriginalPrice(product.originalPrice ? String(product.originalPrice) : '');
-      setCategory(product.category || product.defaultStyle || 'Open abaya');
+      setCategory(product.category || 'Abaya');
       setCustomCategory('');
       setBadge(product.badge || '');
       setTargetRegion(product.targetRegion || 'all');
       setRating(product.rating !== undefined ? String(product.rating) : '5.0');
       setReviewsCount(product.reviewsCount !== undefined ? String(product.reviewsCount) : '0');
-      setIsFeatured(Boolean(product.isFeatured));
       setStockCount(product.stockCount ?? 10);
       setImage(product.image || '');
       setGallery(Array.isArray(product.gallery) && product.gallery.length > 0 ? product.gallery : (product.image ? [product.image] : []));
@@ -139,13 +134,12 @@ export default function AdminProductEditor({
       setSubtitle('');
       setPrice('180');
       setOriginalPrice('');
-      setCategory('Open abaya');
+      setCategory('Abaya');
       setCustomCategory('');
-      setBadge('New Arrival');
+      setBadge('');
       setTargetRegion('all');
       setRating('5.0');
       setReviewsCount('0');
-      setIsFeatured(false);
       setStockCount(12);
       setImage('https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
       setGallery([
@@ -218,54 +212,7 @@ export default function AdminProductEditor({
     setImage(url);
   };
 
-  // Color Swatch Handlers
-  const addColorSwatch = () => {
-    setColors(prev => [
-      ...prev,
-      { name: 'New Shade', hex: '#982476', imageIndex: 0 }
-    ]);
-  };
 
-  const updateColorSwatch = (index, field, value) => {
-    setColors(prev =>
-      prev.map((c, i) => (i === index ? { ...c, [field]: value } : c))
-    );
-  };
-
-  const removeColorSwatch = (index) => {
-    if (colors.length <= 1) return;
-    setColors(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Style Toggle
-  const toggleStyle = (styleName) => {
-    if (styles.includes(styleName)) {
-      if (styles.length > 1) {
-        setStyles(styles.filter(s => s !== styleName));
-        if (defaultStyle === styleName) {
-          const remaining = styles.filter(s => s !== styleName);
-          setDefaultStyle(remaining[0] || 'Open abaya');
-        }
-      }
-    } else {
-      setStyles([...styles, styleName]);
-    }
-  };
-
-  // Work Toggle
-  const toggleWork = (workName) => {
-    if (works.includes(workName)) {
-      if (works.length > 1) {
-        setWorks(works.filter(w => w !== workName));
-        if (defaultWork === workName) {
-          const remaining = works.filter(w => w !== workName);
-          setDefaultWork(remaining[0] || 'plain');
-        }
-      }
-    } else {
-      setWorks([...works, workName]);
-    }
-  };
 
   // Size Toggle
   const toggleSize = (sizeLabel) => {
@@ -348,12 +295,11 @@ export default function AdminProductEditor({
       subtitle: subtitle.trim(),
       price: Number(price),
       originalPrice: originalPrice ? Number(originalPrice) : null,
-      category: defaultStyle,
+      category: category.trim() || 'Abaya',
       badge: badge.trim(),
       targetRegion: targetRegion || 'all',
       rating: Number(rating) || 5.0,
       reviewsCount: Number(reviewsCount) || 0,
-      isFeatured,
       defaultStyle,
       defaultWork,
       styles: styles.length > 0 ? styles : [defaultStyle],
@@ -394,8 +340,6 @@ export default function AdminProductEditor({
   const inrOrig = numOrigPrice ? Math.round(numOrigPrice * 83) : null;
   const aedPrice = Math.round(numPrice * 3.67);
   const aedOrig = numOrigPrice ? Math.round(numOrigPrice * 3.67) : null;
-
-  const currentPreviewDisplayImage = gallery[activePreviewImage] || image;
 
   return (
     <div className="min-h-screen bg-[#fff7fc] pb-24 animate-fade-in text-on-background">
@@ -471,7 +415,7 @@ export default function AdminProductEditor({
             { id: 'identity', label: '1. Style & Work' },
             { id: 'pricing', label: '2. Pricing & Market' },
             { id: 'media', label: '3. Photography Studio' },
-            { id: 'variants', label: '4. Colors & Custom Cuts' },
+            { id: 'sizes', label: '4. Sizing & Lengths' },
             { id: 'details', label: '5. Fabric & Care' }
           ].map((tab) => (
             <button
@@ -490,45 +434,31 @@ export default function AdminProductEditor({
         </div>
       </div>
 
-      {/* ── Main Studio Layout: 2 Columns ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      {/* ── Main Studio Layout ── */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         
         {errorMessage && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-xs sm:text-sm flex items-center gap-3 shadow-xs">
+          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-xs sm:text-sm flex items-center gap-3 shadow-xs">
             <AlertCircle className="w-5 h-5 shrink-0 text-red-500" />
             <div className="flex-1 font-medium">{errorMessage}</div>
           </div>
         )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* ── LEFT COLUMN: Comprehensive Studio Form (7 cols) ── */}
-          <div className="lg:col-span-7 space-y-8">
             
             {/* 1. Basic Identity, Category Style & Work */}
             <div id="identity" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
-              <div className="flex items-center justify-between border-b border-surface-container-highest pb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-royal-violet/10 text-royal-violet flex items-center justify-center font-bold text-xs">
-                    1
-                  </div>
-                  <div>
-                    <h2 className="font-serif text-lg font-bold text-stone-900">Abaya Identity, Category Style & Work</h2>
-                    <p className="text-xs text-stone-500">Primary silhouette, craftsmanship work, and boutique metadata</p>
-                  </div>
-                </div>
+              <div className="border-b border-surface-container-highest pb-4">
+                <h2 className="font-serif text-lg font-bold text-stone-900">Abaya Identity, Category Style & Work</h2>
               </div>
 
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center justify-between">
-                    <span>Creation Title *</span>
-                    <span className="text-[10px] text-stone-400 font-normal">e.g. Midnight Espresso Silk Abaya</span>
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
+                    Creation Title *
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="Enter bespoke abaya name..."
+                    placeholder="Abaya name..."
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-sm font-semibold text-stone-900"
@@ -553,58 +483,46 @@ export default function AdminProductEditor({
                   
                   {/* Category Style (Silhouette) */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-800 flex items-center gap-1.5">
-                      <Scissors className="w-3.5 h-3.5 text-royal-violet" />
-                      <span>Category Style *</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                      Category Style *
                     </label>
                     <select
                       value={defaultStyle}
                       onChange={(e) => {
                         const newStyle = e.target.value;
                         setDefaultStyle(newStyle);
-                        if (!styles.includes(newStyle)) {
-                          setStyles(prev => [...prev, newStyle]);
-                        }
+                        setStyles([newStyle]);
                       }}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
                     >
                       {ABAYA_STYLES.map(style => (
                         <option key={style.id} value={style.name}>
-                          {style.name} ({style.tag})
+                          {style.name}
                         </option>
                       ))}
                     </select>
-                    <p className="text-[10px] text-stone-500">
-                      {ABAYA_STYLES.find(s => s.name === defaultStyle)?.description || 'Select silhouette category cut.'}
-                    </p>
                   </div>
 
                   {/* Craftsmanship / Work */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-800 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-gold-accent" />
-                      <span>Craftsmanship / Work *</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                      Craftsmanship / Work *
                     </label>
                     <select
                       value={defaultWork}
                       onChange={(e) => {
                         const newWork = e.target.value;
                         setDefaultWork(newWork);
-                        if (!works.includes(newWork)) {
-                          setWorks(prev => [...prev, newWork]);
-                        }
+                        setWorks([newWork]);
                       }}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
                     >
                       {ABAYA_WORKS.map(work => (
                         <option key={work.id} value={work.name}>
-                          {work.name} ({work.tag})
+                          {work.name}
                         </option>
                       ))}
                     </select>
-                    <p className="text-[10px] text-stone-500">
-                      {ABAYA_WORKS.find(w => w.name === defaultWork)?.description || 'Select artisan craftwork.'}
-                    </p>
                   </div>
 
                 </div>
@@ -642,12 +560,8 @@ export default function AdminProductEditor({
                 {/* Rating & Reviews Count */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center justify-between">
-                      <span className="flex items-center gap-1.5">
-                        <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                        <span>Star Rating (1.0 – 5.0)</span>
-                      </span>
-                      <span className="text-[10px] text-stone-400 font-normal">e.g. 4.9</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
+                      Star Rating (1.0 – 5.0)
                     </label>
                     <input
                       type="number"
@@ -662,9 +576,8 @@ export default function AdminProductEditor({
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center justify-between">
-                      <span>Reviews Count</span>
-                      <span className="text-[10px] text-stone-400 font-normal">e.g. 128</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
+                      Reviews Count
                     </label>
                     <input
                       type="number"
@@ -677,39 +590,13 @@ export default function AdminProductEditor({
                     />
                   </div>
                 </div>
-
-                {/* Flags / Featured Switches */}
-                <div className="pt-3">
-                  <label className={`flex items-start gap-3 p-4 rounded-2xl border transition-all cursor-pointer ${
-                    isFeatured ? 'bg-royal-violet/5 border-royal-violet ring-1 ring-royal-violet/20' : 'bg-white border-stone-200 hover:bg-stone-50'
-                  }`}>
-                    <input
-                      type="checkbox"
-                      checked={isFeatured}
-                      onChange={(e) => setIsFeatured(e.target.checked)}
-                      className="w-4 h-4 mt-0.5 text-royal-violet rounded focus:ring-royal-violet cursor-pointer"
-                    />
-                    <div>
-                      <div className="text-xs font-bold text-stone-900">Featured in Hero & Top Picks</div>
-                      <div className="text-[11px] text-stone-500">Showcased prominently on boutique homepage</div>
-                    </div>
-                  </label>
-                </div>
               </div>
             </div>
 
             {/* 2. Pricing & Regional Audience */}
             <div id="pricing" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
-              <div className="flex items-center justify-between border-b border-surface-container-highest pb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-royal-violet/10 text-royal-violet flex items-center justify-center font-bold text-xs">
-                    2
-                  </div>
-                  <div>
-                    <h2 className="font-serif text-lg font-bold text-stone-900">Pricing & Regional Market</h2>
-                    <p className="text-xs text-stone-500">Base pricing and multi-market audience availability</p>
-                  </div>
-                </div>
+              <div className="border-b border-surface-container-highest pb-4">
+                <h2 className="font-serif text-lg font-bold text-stone-900">Pricing & Regional Market</h2>
               </div>
 
               <div className="space-y-5">
@@ -775,70 +662,52 @@ export default function AdminProductEditor({
                     <button
                       type="button"
                       onClick={() => setTargetRegion('all')}
-                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
                         targetRegion === 'all'
                           ? 'border-royal-violet bg-royal-violet/5 ring-2 ring-royal-violet/20 shadow-xs'
                           : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-royal-violet uppercase tracking-wider">Global</span>
-                        {targetRegion === 'all' && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-royal-violet bg-royal-violet/15 px-2 py-0.5 rounded-full">
-                            Active
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-3">
-                        <div className="text-xs font-bold text-stone-900">Global / All Markets</div>
-                        <div className="text-[11px] text-stone-500">Available to all India & UAE shoppers</div>
-                      </div>
+                      <span className="text-xs font-bold text-stone-900">Global / All Markets</span>
+                      {targetRegion === 'all' && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-royal-violet bg-royal-violet/15 px-2 py-0.5 rounded-full">
+                          Active
+                        </span>
+                      )}
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setTargetRegion('india')}
-                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
                         targetRegion === 'india'
                           ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-500/20 shadow-xs'
                           : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">India</span>
-                        {targetRegion === 'india' && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                            Active
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-3">
-                        <div className="text-xs font-bold text-stone-900">India Users Only</div>
-                        <div className="text-[11px] text-stone-500">Priced and displayed in INR (₹)</div>
-                      </div>
+                      <span className="text-xs font-bold text-stone-900">India (INR ₹)</span>
+                      {targetRegion === 'india' && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                          Active
+                        </span>
+                      )}
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setTargetRegion('arab')}
-                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
                         targetRegion === 'arab'
                           ? 'border-amber-600 bg-amber-50/70 ring-2 ring-amber-500/20 shadow-xs'
                           : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Arab / UAE</span>
-                        {targetRegion === 'arab' && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-                            Active
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-3">
-                        <div className="text-xs font-bold text-stone-900">Arab & UAE Only</div>
-                        <div className="text-[11px] text-stone-500">Priced and displayed in AED (د.إ)</div>
-                      </div>
+                      <span className="text-xs font-bold text-stone-900">Arab / UAE (AED)</span>
+                      {targetRegion === 'arab' && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                          Active
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -847,16 +716,8 @@ export default function AdminProductEditor({
 
             {/* 3. Photography & Multi-Angle Gallery */}
             <div id="media" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
-              <div className="flex items-center justify-between border-b border-surface-container-highest pb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-royal-violet/10 text-royal-violet flex items-center justify-center font-bold text-xs">
-                    3
-                  </div>
-                  <div>
-                    <h2 className="font-serif text-lg font-bold text-stone-900">Photography Studio & Multi-Angle Gallery</h2>
-                    <p className="text-xs text-stone-500">Upload high-res imagery to Supabase cloud storage or link URLs</p>
-                  </div>
-                </div>
+              <div className="border-b border-surface-container-highest pb-4">
+                <h2 className="font-serif text-lg font-bold text-stone-900">Photography & Gallery</h2>
               </div>
 
               {/* Primary Hero Image Section */}
@@ -992,235 +853,18 @@ export default function AdminProductEditor({
               </div>
             </div>
 
-            {/* 4. Shades, Cuts & Artisan Work */}
-            <div id="variants" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
-              <div className="flex items-center justify-between border-b border-surface-container-highest pb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-royal-violet/10 text-royal-violet flex items-center justify-center font-bold text-xs">
-                    4
-                  </div>
-                  <div>
-                    <h2 className="font-serif text-lg font-bold text-stone-900">Color Palette, Silhouettes & Craftsmanship</h2>
-                    <p className="text-xs text-stone-500">Interactive shade swatches, available cuts, and artisan finishes</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Color Swatches */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center gap-1.5">
-                    <Palette className="w-4 h-4 text-royal-violet" />
-                    <span>Color Swatches ({colors.length})</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={addColorSwatch}
-                    className="px-3 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add Custom Shade</span>
-                  </button>
-                </div>
-
-                <div className="space-y-2.5">
-                  {colors.map((color, idx) => (
-                    <div key={idx} className="flex flex-wrap items-center gap-3 p-3.5 rounded-2xl bg-surface-container-low border border-surface-container">
-                      <div
-                        className="w-8 h-8 rounded-full shadow-inner border-2 border-white ring-1 ring-black/10 shrink-0"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      
-                      <div className="flex-1 min-w-[140px]">
-                        <input
-                          type="text"
-                          placeholder="Shade name (e.g. Royal Violet)"
-                          value={color.name}
-                          onChange={(e) => updateColorSwatch(idx, 'name', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-xl border border-secondary/30 bg-white text-xs font-bold text-stone-900"
-                        />
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="color"
-                          value={color.hex}
-                          onChange={(e) => updateColorSwatch(idx, 'hex', e.target.value)}
-                          className="w-8 h-8 rounded-lg border-0 cursor-pointer p-0 bg-transparent"
-                        />
-                        <input
-                          type="text"
-                          value={color.hex}
-                          onChange={(e) => updateColorSwatch(idx, 'hex', e.target.value)}
-                          className="w-20 px-2 py-1.5 rounded-xl border border-secondary/30 bg-white text-xs font-mono"
-                        />
-                      </div>
-
-                      <div className="flex items-center gap-1.5 text-xs text-stone-600">
-                        <span className="text-[11px] whitespace-nowrap">Gallery Angle:</span>
-                        <select
-                          value={color.imageIndex ?? 0}
-                          onChange={(e) => updateColorSwatch(idx, 'imageIndex', Number(e.target.value))}
-                          className="px-2.5 py-1.5 rounded-xl border border-secondary/30 bg-white text-xs font-medium"
-                        >
-                          {gallery.map((_, gIdx) => (
-                            <option key={gIdx} value={gIdx}>Angle #{gIdx}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {colors.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeColorSwatch(idx)}
-                          className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Luxury Palette Presets */}
-                <div className="pt-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block mb-2">
-                    Quick Luxury Palette Presets:
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {LUXURY_PALETTE_PRESETS.map((preset) => (
-                      <button
-                        key={preset.name}
-                        type="button"
-                        onClick={() => {
-                          setColors(prev => [
-                            ...prev,
-                            { name: preset.name, hex: preset.hex, imageIndex: 0 }
-                          ]);
-                        }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-secondary/20 bg-white hover:bg-surface-container text-xs font-medium text-stone-700 transition-colors cursor-pointer"
-                      >
-                        <span className="w-3 h-3 rounded-full border border-black/10 shadow-2xs" style={{ backgroundColor: preset.hex }} />
-                        <span>{preset.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Silhouettes / Cuts */}
-              <div className="pt-4 border-t border-surface-container-highest space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center gap-1.5">
-                    <Scissors className="w-4 h-4 text-royal-violet" />
-                    <span>Silhouettes / Cut Styles</span>
-                  </label>
-                  <span className="text-xs text-stone-500">Default: <strong className="text-royal-violet">{defaultStyle}</strong></span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {ABAYA_STYLES.map((style) => {
-                    const isSelected = styles.includes(style.name);
-                    const isDefault = defaultStyle === style.name;
-                    return (
-                      <div
-                        key={style.id}
-                        onClick={() => toggleStyle(style.name)}
-                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-start justify-between ${
-                          isSelected
-                            ? 'border-royal-violet bg-royal-violet/5 shadow-2xs'
-                            : 'border-surface-container opacity-60 hover:opacity-100'
-                        }`}
-                      >
-                        <div>
-                          <div className="text-xs font-bold text-stone-900">{style.name}</div>
-                          <div className="text-[11px] text-stone-500">{style.tag}</div>
-                        </div>
-                        {isSelected && (
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setDefaultStyle(style.name);
-                              }}
-                              className={`text-[9px] px-2 py-0.5 rounded-md uppercase font-bold ${
-                                isDefault ? 'bg-royal-violet text-white' : 'bg-surface-container text-stone-600 hover:bg-surface-container-high'
-                              }`}
-                            >
-                              {isDefault ? 'Default' : 'Set Default'}
-                            </button>
-                            <Check className="w-4 h-4 text-royal-violet" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Craftsmanship / Works */}
-              <div className="pt-4 border-t border-surface-container-highest space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-gold-accent" />
-                    <span>Artisan Craftsmanship & Embellishments</span>
-                  </label>
-                  <span className="text-xs text-stone-500">Default: <strong className="text-gold-accent">{defaultWork}</strong></span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {ABAYA_WORKS.map((work) => {
-                    const isSelected = works.includes(work.name);
-                    const isDefault = defaultWork === work.name;
-                    return (
-                      <div
-                        key={work.id}
-                        onClick={() => toggleWork(work.name)}
-                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-start justify-between ${
-                          isSelected
-                            ? 'border-gold-accent bg-gold-accent/5 shadow-2xs'
-                            : 'border-surface-container opacity-60 hover:opacity-100'
-                        }`}
-                      >
-                        <div>
-                          <div className="text-xs font-bold text-stone-900">{work.name}</div>
-                          <div className="text-[11px] text-stone-500">{work.tag}</div>
-                        </div>
-                        {isSelected && (
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setDefaultWork(work.name);
-                              }}
-                              className={`text-[9px] px-2 py-0.5 rounded-md uppercase font-bold ${
-                                isDefault ? 'bg-gold-accent text-stone-950' : 'bg-surface-container text-stone-600 hover:bg-surface-container-high'
-                              }`}
-                            >
-                              {isDefault ? 'Default' : 'Set Default'}
-                            </button>
-                            <Check className="w-4 h-4 text-gold-accent" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+            {/* 4. Sizes & Custom Fit */}
+            <div id="sizes" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
+              <div className="border-b border-surface-container-highest pb-4">
+                <h2 className="font-serif text-lg font-bold text-stone-900">Abaya Lengths & Sizing</h2>
               </div>
 
               {/* Sizes & Custom Tailored Fit Studio */}
-              <div className="pt-4 border-t border-surface-container-highest space-y-4">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
-                      Available Lengths & Sizing Range ({sizes.length} active)
-                    </label>
-                    <p className="text-[11px] text-stone-500">
-                      Standard luxury lengths & bespoke made-to-measure sizing options
-                    </p>
-                  </div>
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
+                    Available Lengths & Sizing Range ({sizes.length} active)
+                  </label>
 
                   <button
                     type="button"
@@ -1277,19 +921,9 @@ export default function AdminProductEditor({
                 {(sizes.includes('Custom Tailored Fit') || showCustomSizeManager || sizes.some(s => !ABAYA_SIZES.some(std => std.label === s))) && (
                   <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-[#fff4fc] to-[#fff9fd] border-2 border-royal-violet/30 shadow-subtle space-y-4 animate-fade-in">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-xl bg-royal-violet text-white flex items-center justify-center shadow-xs">
-                          <Scissors className="w-3.5 h-3.5" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-royal-violet">
-                            Custom Tailored Fit & Bespoke Sizing Studio
-                          </h4>
-                          <p className="text-[11px] text-stone-600">
-                            Add custom lengths, petite/tall fits, or bespoke measurements for clients
-                          </p>
-                        </div>
-                      </div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-royal-violet">
+                        Custom Tailored Fit & Bespoke Sizing
+                      </h4>
                       <span className="px-2.5 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet text-[10px] font-bold uppercase tracking-wider border border-royal-violet/20">
                         Bespoke Sizing Mode
                       </span>
@@ -1401,18 +1035,10 @@ export default function AdminProductEditor({
               </div>
             </div>
 
-            {/* 5. Editorial Narrative & Care */}
+            {/* 4. Narrative & Care */}
             <div id="editorial" className="bg-white rounded-3xl p-6 sm:p-7 border border-secondary/20 shadow-subtle space-y-6">
-              <div className="flex items-center justify-between border-b border-surface-container-highest pb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-royal-violet/10 text-royal-violet flex items-center justify-center font-bold text-xs">
-                    5
-                  </div>
-                  <div>
-                    <h2 className="font-serif text-lg font-bold text-stone-900">Haute Couture Narrative & Care</h2>
-                    <p className="text-xs text-stone-500">Atelier storytelling, textile composition, and garment care</p>
-                  </div>
-                </div>
+              <div className="border-b border-surface-container-highest pb-4">
+                <h2 className="font-serif text-lg font-bold text-stone-900">Product Details & Care</h2>
               </div>
 
               <div className="space-y-4">
@@ -1499,206 +1125,6 @@ export default function AdminProductEditor({
                 )}
               </button>
             </div>
-
-          </div>
-
-          {/* ── RIGHT COLUMN: Live Interactive Storefront Preview (5 cols, sticky) ── */}
-          <div className="lg:col-span-5 sticky top-28 space-y-5">
-            
-            {/* Header / Preview Controls */}
-            <div className="bg-white rounded-3xl p-5 border border-secondary/20 shadow-subtle space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
-                    Live Storefront Preview
-                  </span>
-                </div>
-
-                {/* Currency Switcher for Preview */}
-                <div className="flex items-center gap-1 bg-surface-container/60 p-1 rounded-xl">
-                  {['USD', 'INR', 'AED'].map((curr) => (
-                    <button
-                      key={curr}
-                      type="button"
-                      onClick={() => setPreviewCurrency(curr)}
-                      className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                        previewCurrency === curr
-                          ? 'bg-white text-primary shadow-2xs font-bold'
-                          : 'text-stone-500 hover:text-stone-900'
-                      }`}
-                    >
-                      {curr}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <p className="text-[11px] text-stone-500">
-                Real-time preview of how this piece appears to shoppers on the boutique website.
-              </p>
-            </div>
-
-            {/* Live Luxury Product Card Preview */}
-            <div className="bg-white rounded-3xl border border-secondary/30 shadow-luxury overflow-hidden group">
-              
-              {/* Product Image Frame */}
-              <div className="relative aspect-[3/4] bg-surface-container overflow-hidden">
-                {currentPreviewDisplayImage ? (
-                  <img
-                    src={currentPreviewDisplayImage}
-                    alt={name || 'Preview'}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 p-6 text-center">
-                    <ImageIcon className="w-12 h-12 opacity-30 mb-2" />
-                    <span className="text-xs">No primary image specified</span>
-                  </div>
-                )}
-
-                {/* Badges Overlay */}
-                {badge && (
-                  <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
-                    <span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-stone-900 shadow-sm">
-                      {badge}
-                    </span>
-                  </div>
-                )}
-
-                {/* Target Audience Badge */}
-                <div className="absolute top-3 right-3">
-                  {targetRegion === 'india' && (
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-emerald-800 shadow-sm">
-                      India Exclusive
-                    </span>
-                  )}
-                  {targetRegion === 'arab' && (
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-amber-900 shadow-sm">
-                      UAE & Arab Exclusive
-                    </span>
-                  )}
-                  {targetRegion === 'all' && (
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-royal-violet shadow-sm">
-                      Global Boutique
-                    </span>
-                  )}
-                </div>
-
-                {/* Gallery Angle Thumbnails (Interactive) */}
-                {gallery.length > 1 && (
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-1.5 bg-black/40 backdrop-blur-md p-1.5 rounded-2xl">
-                    {gallery.map((gUrl, gIdx) => (
-                      <button
-                        key={gIdx}
-                        type="button"
-                        onClick={() => setActivePreviewImage(gIdx)}
-                        className={`w-7 h-7 rounded-lg overflow-hidden border transition-all cursor-pointer ${
-                          activePreviewImage === gIdx ? 'border-white ring-2 ring-royal-violet scale-110' : 'border-white/30 opacity-70 hover:opacity-100'
-                        }`}
-                      >
-                        <img src={gUrl} alt={`Angle ${gIdx}`} className="w-full h-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Card Meta Content */}
-              <div className="p-5 sm:p-6 space-y-3 bg-white">
-                <div className="flex items-center justify-between text-xs text-stone-500">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-royal-violet/10 text-royal-violet font-bold text-[10px] uppercase tracking-wider">
-                      {defaultStyle}
-                    </span>
-                    <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/60 font-semibold text-[10px]">
-                      {defaultWork}
-                    </span>
-                  </div>
-                  <span className="text-[11px] font-medium">{stockCount > 0 ? `${stockCount} in stock` : 'Out of stock'}</span>
-                </div>
-
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-stone-900">
-                    {name || 'Product Title'}
-                  </h3>
-                  <p className="text-xs text-stone-500 line-clamp-1">
-                    {subtitle || 'Luxury Haute Couture Abaya'}
-                  </p>
-                </div>
-
-                {/* Price Display */}
-                <div className="flex items-baseline gap-2 pt-1">
-                  <span className="font-serif text-xl font-bold text-stone-900">
-                    {previewCurrency === 'USD' && `$${numPrice}`}
-                    {previewCurrency === 'INR' && `₹${inrPrice.toLocaleString()}`}
-                    {previewCurrency === 'AED' && `AED ${aedPrice.toLocaleString()}`}
-                  </span>
-
-                  {numOrigPrice > 0 && (
-                    <del className="text-xs text-stone-400 font-mono">
-                      {previewCurrency === 'USD' && `$${numOrigPrice}`}
-                      {previewCurrency === 'INR' && `₹${inrOrig?.toLocaleString()}`}
-                      {previewCurrency === 'AED' && `AED ${aedOrig?.toLocaleString()}`}
-                    </del>
-                  )}
-                </div>
-
-                {/* Interactive Color Swatches */}
-                {colors.length > 0 && (
-                  <div className="flex items-center gap-1.5 pt-1">
-                    {colors.map((c, cIdx) => (
-                      <button
-                        key={cIdx}
-                        type="button"
-                        onClick={() => {
-                          setActivePreviewShade(cIdx);
-                          if (c.imageIndex !== undefined && gallery[c.imageIndex]) {
-                            setActivePreviewImage(c.imageIndex);
-                          }
-                        }}
-                        className={`w-5 h-5 rounded-full border border-black/10 transition-all cursor-pointer ${
-                          activePreviewShade === cIdx ? 'ring-2 ring-royal-violet ring-offset-2 scale-110' : 'opacity-80 hover:opacity-100'
-                        }`}
-                        style={{ backgroundColor: c.hex }}
-                        title={c.name}
-                      />
-                    ))}
-                    <span className="text-[11px] text-stone-500 ml-1">
-                      {colors[activePreviewShade]?.name || colors[0]?.name}
-                    </span>
-                  </div>
-                )}
-
-                {/* Available Sizes Preview */}
-                {sizes.length > 0 && (
-                  <div className="space-y-1 pt-1">
-                    <div className="text-[10px] uppercase font-bold tracking-wider text-stone-400">Available Sizes ({sizes.length})</div>
-                    <div className="flex flex-wrap gap-1">
-                      {sizes.map((s, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-0.5 rounded-md bg-stone-100 text-[10px] font-semibold text-stone-700 border border-stone-200"
-                        >
-                          {s.length > 18 ? `${s.slice(0, 16)}…` : s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Selected Defaults Summary */}
-                <div className="pt-3 border-t border-surface-container-highest flex items-center justify-between text-[11px] text-stone-500">
-                  <span>Silhouette: <strong>{defaultStyle}</strong></span>
-                  <span>Craft: <strong>{defaultWork}</strong></span>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
 
       </div>
 

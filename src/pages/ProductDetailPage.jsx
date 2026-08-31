@@ -241,10 +241,10 @@ export default function ProductDetailPage() {
         </button>
         <span className="text-white/40">/</span>
         <button
-          onClick={() => navigateTo('shop', null, product.category)}
+          onClick={() => navigateTo('shop', null, null, null, null, selectedStyle || product.defaultStyle)}
           className="hover:text-white transition-colors text-white font-medium shrink-0 cursor-pointer"
         >
-          {product.category}
+          {selectedStyle || product.defaultStyle || 'Abaya'}
         </button>
         <span className="text-white/40">/</span>
         <span className="text-white font-bold truncate max-w-[200px] sm:max-w-none">
@@ -377,7 +377,7 @@ export default function ProductDetailPage() {
           <div className="space-y-2 pb-4 border-b border-white/20">
             <div className="flex items-center justify-between">
               <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-medium text-white/80">
-                {product.category}
+                {product.category || 'Abaya'} • {selectedStyle || product.defaultStyle}
               </span>
               
               {/* Star Rating Badge */}

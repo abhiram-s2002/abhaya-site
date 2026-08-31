@@ -107,7 +107,6 @@ export default function AdminPage() {
 
     const uniqueStyles = Object.keys(styleCounts).length;
     const uniqueWorks = Object.keys(workCounts).length;
-    const featuredCount = baseProducts.filter(p => p.isFeatured).length;
     const violetCount = baseProducts.filter(p => p.isVioletEdition).length;
     const lowStockCount = baseProducts.filter(p => (p.stockCount ?? 10) <= 5 && (p.stockCount ?? 10) > 0).length;
     const outOfStockCount = baseProducts.filter(p => (p.stockCount ?? 10) === 0).length;
@@ -118,7 +117,6 @@ export default function AdminPage() {
       uniqueWorks,
       styleCounts,
       workCounts,
-      featuredCount,
       violetCount,
       lowStockCount,
       outOfStockCount
@@ -190,8 +188,7 @@ export default function AdminPage() {
     const duplicated = {
       ...product,
       id: `${product.id}-copy-${Date.now().toString().slice(-4)}`,
-      name: `${product.name} (Copy)`,
-      isFeatured: false
+      name: `${product.name} (Copy)`
     };
     await createProduct(duplicated);
     showToast(`Created duplicate copy of "${product.name}".`);
@@ -201,12 +198,6 @@ export default function AdminPage() {
     await deleteProduct(productId);
     setDeleteConfirmId(null);
     showToast('Product listing removed.');
-  };
-
-  const handleToggleFeatured = async (product, e) => {
-    e.stopPropagation();
-    await updateProduct(product.id, { isFeatured: !product.isFeatured });
-    showToast(`Updated "${product.name}" featured status.`);
   };
 
   const handleSaveProductModal = async (productData) => {
@@ -236,16 +227,10 @@ export default function AdminPage() {
             />
           </div>
 
-          <div className="space-y-2">
-            <span className="text-[11px] uppercase tracking-[0.25em] font-semibold text-royal-violet">
-              Atelier Management
-            </span>
+          <div className="space-y-1">
             <h1 className="font-serif text-2xl sm:text-3xl text-primary font-medium">
               Admin Portal
             </h1>
-            <p className="text-xs text-stone-500 max-w-xs mx-auto">
-              Please authenticate to access product inventory, Supabase database, and bespoke order operations.
-            </p>
           </div>
 
           {loginError && (
@@ -279,10 +264,6 @@ export default function AdminPage() {
               <ArrowRight className="w-4 h-4 text-gold-soft" />
             </button>
           </form>
-
-          <div className="pt-4 border-t border-surface-container text-[11px] text-stone-400">
-            Protected by Supabase Row-Level Security & Atelier Key
-          </div>
         </div>
       </div>
     );
@@ -308,20 +289,10 @@ export default function AdminPage() {
       
       {/* Top Banner & Supabase Status */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-secondary/20 shadow-luxury">
-        <div className="flex items-center gap-4">
-          <img
-            src={brandLogo}
-            alt="NOOR AL DHUHA"
-            className="h-14 sm:h-16 w-auto object-contain shrink-0 drop-shadow-sm"
-          />
-          <div className="space-y-1">
-            <h1 className="font-serif text-2xl sm:text-3xl text-primary font-medium">
-              Luxury Abaya & Catalog Management
-            </h1>
-            <p className="text-xs sm:text-sm text-stone-500">
-              Publish haute couture creations and upload high-resolution photography.
-            </p>
-          </div>
+        <div className="flex items-center gap-3">
+          <h1 className="font-serif text-xl sm:text-2xl text-primary font-bold">
+            Abaya Catalog Management
+          </h1>
         </div>
 
         {/* Action Buttons */}
@@ -349,15 +320,13 @@ export default function AdminPage() {
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
           <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Total Abayas</div>
           <div className="font-serif text-2xl sm:text-3xl font-bold text-primary">{stats.total}</div>
-          <div className="text-[11px] text-stone-400">Active catalog creations</div>
         </div>
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
           <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Inventory Status</div>
           <div className={`font-serif text-2xl sm:text-3xl font-bold ${stats.outOfStockCount > 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-            {stats.outOfStockCount > 0 ? `${stats.outOfStockCount} Out` : `${stats.total} Ready`}
+            {stats.outOfStockCount > 0 ? `${stats.outOfStockCount} Out of Stock` : `${stats.total} Ready`}
           </div>
-          <div className="text-[11px] text-stone-400">{stats.lowStockCount} items low stock</div>
         </div>
       </div>
 
@@ -560,7 +529,6 @@ export default function AdminPage() {
                       <th className="py-3.5 px-4">Market & Rating</th>
                       <th className="py-3.5 px-4">Price</th>
                       <th className="py-3.5 px-4">Stock Status</th>
-                      <th className="py-3.5 px-4 text-center">Featured</th>
                       <th className="py-3.5 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
@@ -651,19 +619,6 @@ export default function AdminPage() {
                           </span>
                         </td>
 
-                        {/* Featured Toggle */}
-                        <td className="py-3.5 px-4 text-center">
-                          <button
-                            onClick={(e) => handleToggleFeatured(p, e)}
-                            className={`w-6 h-6 rounded-full inline-flex items-center justify-center transition-colors cursor-pointer ${
-                              p.isFeatured ? 'bg-royal-violet text-white shadow-xs' : 'bg-surface-container text-stone-400 hover:text-stone-600'
-                            }`}
-                            title="Toggle Homepage Featured"
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-
                         {/* Actions */}
                         <td className="py-3.5 px-4 text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -738,14 +693,6 @@ export default function AdminPage() {
                     {p.badge && (
                       <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-royal-violet/90 backdrop-blur-md text-white text-[10px] font-semibold">
                         {p.badge}
-                      </div>
-                    )}
-
-                    {p.isFeatured && (
-                      <div className="absolute bottom-3 right-3 flex gap-1">
-                        <span className="px-2 py-0.5 rounded bg-royal-violet text-white text-[9px] font-semibold">
-                          Featured
-                        </span>
                       </div>
                     )}
                   </div>

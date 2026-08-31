@@ -89,15 +89,16 @@ export default function ShopPage() {
     };
   }, [mobileFilterOpen]);
 
-  // Tabs matching the exact reference style (All, Fabric Collections, New Arrivals, Bridal, etc.)
+  // Tabs matching the 7 Abaya Category Styles
   const categoryTabs = [
-    { id: 'All', label: 'All' },
-    { id: 'Silk', label: 'Silk Collection' },
-    { id: 'Chiffon', label: 'Chiffon' },
-    { id: 'Modal Jersey', label: 'Modal Jersey' },
-    { id: 'Georgette', label: 'Georgette' },
-    { id: 'new-arrivals', label: 'New Arrivals' },
-    { id: 'bridal', label: 'Bridal Atelier' },
+    { id: 'All', label: 'All Abayas' },
+    { id: 'Open abaya', label: 'Open Abaya' },
+    { id: 'Closed cut', label: 'Closed Cut' },
+    { id: 'Kimono or kaftan', label: 'Kimono / Kaftan' },
+    { id: 'Butterfly or farasha', label: 'Butterfly / Farasha' },
+    { id: 'umbrella cut or Flare', label: 'Umbrella / Flare' },
+    { id: '2 piece abaya (with inner)', label: '2 Piece Set' },
+    { id: 'Coat abaya', label: 'Coat Abaya' },
   ];
 
   const shades = [
@@ -141,13 +142,12 @@ export default function ShopPage() {
         }
       }
 
-      // 2. Main Horizontal Category / Collection Tab
-      if (selectedTab === 'new-arrivals') {
-        if (product.badge !== 'New Arrival' && product.badge !== 'Trending') return false;
-      } else if (selectedTab === 'bridal') {
-        if (product.category !== 'Georgette' && !product.name.toLowerCase().includes('bridal')) return false;
-      } else if (selectedTab !== 'All') {
-        if (product.category !== selectedTab) return false;
+      // 2. Main Horizontal Category Style Tab
+      if (selectedTab !== 'All') {
+        const matchesTab =
+          (product.defaultStyle && product.defaultStyle.toLowerCase() === selectedTab.toLowerCase()) ||
+          (product.styles && product.styles.some(s => s.toLowerCase() === selectedTab.toLowerCase()));
+        if (!matchesTab) return false;
       }
 
       // 3. Max Price Slider

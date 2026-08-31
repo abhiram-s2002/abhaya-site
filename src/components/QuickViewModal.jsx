@@ -124,7 +124,7 @@ function QuickViewModalContent({ product, onClose }) {
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-medium text-white/80">
-                    {product.category}
+                    {product.category || 'Abaya'} • {selectedStyle}
                   </span>
                   <div className="flex items-center gap-1 text-[#FFD700] text-xs">
                     <Star className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />

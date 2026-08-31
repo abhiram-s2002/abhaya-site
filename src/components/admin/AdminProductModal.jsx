@@ -17,8 +17,8 @@ import {
 import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
 
-const PRESET_CATEGORIES = ['Silk', 'Chiffon', 'Modal Jersey', 'Georgette', 'Crepe', 'Organza', 'Linen'];
-const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'New Arrival', 'Staff Pick', 'Artisan Atelier', 'Trending', 'Exclusive'];
+const PRESET_CATEGORIES = ['Abaya', 'Open abaya', 'Closed cut', 'Kimono or kaftan', 'Butterfly or farasha', 'umbrella cut or Flare', '2 piece abaya (with inner)', 'Coat abaya'];
+const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'Staff Pick', 'Artisan Atelier', 'Trending', 'Exclusive'];
 
 const LUXURY_PALETTE_PRESETS = [
   { name: 'Midnight Espresso', hex: '#2E1C1A' },
@@ -48,13 +48,12 @@ export default function AdminProductModal({
   const [subtitle, setSubtitle] = useState('');
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
-  const [category, setCategory] = useState('Silk');
+  const [category, setCategory] = useState('Abaya');
   const [customCategory, setCustomCategory] = useState('');
   const [badge, setBadge] = useState('');
   const [targetRegion, setTargetRegion] = useState('all'); // 'all' | 'india' | 'arab'
   const [rating, setRating] = useState('5.0');
   const [reviewsCount, setReviewsCount] = useState('0');
-  const [isFeatured, setIsFeatured] = useState(false);
   const [isVioletEdition, setIsVioletEdition] = useState(false);
   const [stockCount, setStockCount] = useState(10);
   
@@ -109,7 +108,6 @@ export default function AdminProductModal({
       setTargetRegion(product.targetRegion || 'all');
       setRating(product.rating !== undefined ? String(product.rating) : '5.0');
       setReviewsCount(product.reviewsCount !== undefined ? String(product.reviewsCount) : '0');
-      setIsFeatured(Boolean(product.isFeatured));
       setIsVioletEdition(Boolean(product.isVioletEdition));
       setStockCount(product.stockCount ?? 10);
       setImage(product.image || '');
@@ -130,13 +128,12 @@ export default function AdminProductModal({
       setSubtitle('');
       setPrice('180');
       setOriginalPrice('');
-      setCategory('Silk');
+      setCategory('Abaya');
       setCustomCategory('');
-      setBadge('New Arrival');
+      setBadge('');
       setTargetRegion('all');
       setRating('5.0');
       setReviewsCount('0');
-      setIsFeatured(false);
       setIsVioletEdition(false);
       setStockCount(12);
       setImage('https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
@@ -214,24 +211,7 @@ export default function AdminProductModal({
     setImage(url);
   };
 
-  // Color Swatch Handlers
-  const addColorSwatch = () => {
-    setColors(prev => [
-      ...prev,
-      { name: 'New Shade', hex: '#982476', imageIndex: 0 }
-    ]);
-  };
 
-  const updateColorSwatch = (index, field, value) => {
-    setColors(prev =>
-      prev.map((c, i) => (i === index ? { ...c, [field]: value } : c))
-    );
-  };
-
-  const removeColorSwatch = (index) => {
-    if (colors.length <= 1) return;
-    setColors(prev => prev.filter((_, i) => i !== index));
-  };
 
   // Style Toggle
   const toggleStyle = (styleName) => {
@@ -316,7 +296,6 @@ export default function AdminProductModal({
       targetRegion: targetRegion || 'all',
       rating: Number(rating) || 5.0,
       reviewsCount: Number(reviewsCount) || 0,
-      isFeatured,
       isVioletEdition,
       defaultStyle,
       defaultWork,
@@ -371,7 +350,7 @@ export default function AdminProductModal({
           {[
             { id: 'basic', label: '1. Basic Info & Pricing' },
             { id: 'media', label: '2. Images & Gallery' },
-            { id: 'variants', label: '3. Shades, Cuts & Craft' },
+            { id: 'variants', label: '3. Lengths & Sizing' },
             { id: 'editorial', label: '4. Editorial & Care' }
           ].map(tab => (
             <button
@@ -636,20 +615,7 @@ export default function AdminProductModal({
                 <span className="text-xs font-semibold uppercase tracking-wider text-stone-700 block">
                   Promotions & Capsule Flags
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <label className="flex items-center gap-3 p-3 rounded-xl border border-surface-container hover:bg-surface-container-low cursor-pointer transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={isFeatured}
-                      onChange={(e) => setIsFeatured(e.target.checked)}
-                      className="w-4 h-4 text-royal-violet rounded focus:ring-royal-violet"
-                    />
-                    <div>
-                      <div className="text-xs font-semibold text-primary">Featured on Homepage</div>
-                      <div className="text-[11px] text-stone-500">Showcases in Top Picks & Hero Sections</div>
-                    </div>
-                  </label>
-
+                <div>
                   <label className="flex items-center gap-3 p-3 rounded-xl border border-surface-container hover:bg-surface-container-low cursor-pointer transition-colors">
                     <input
                       type="checkbox"
@@ -790,216 +756,9 @@ export default function AdminProductModal({
             </div>
           )}
 
-          {/* TAB 3: SHADES, CUTS & CRAFT */}
+          {/* TAB 3: LENGTHS & SIZING */}
           {activeTab === 'variants' && (
             <div className="space-y-6 animate-fade-in">
-              
-              {/* Color Swatches Builder */}
-              <div className="p-5 rounded-2xl bg-white border border-secondary/20 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-semibold text-primary flex items-center gap-2">
-                      <Palette className="w-4 h-4 text-royal-violet" />
-                      <span>Color Swatches & Linked Angle</span>
-                    </h3>
-                    <p className="text-xs text-stone-500">Define color shades and tie each to an image gallery index</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={addColorSwatch}
-                    className="px-3 py-1.5 rounded-lg bg-royal-violet text-white text-xs font-medium hover:bg-royal-violet/90 transition-colors flex items-center gap-1.5"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add Shade</span>
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {colors.map((color, idx) => (
-                    <div key={idx} className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-surface-container">
-                      <div
-                        className="w-7 h-7 rounded-full shadow-inner border border-black/20 shrink-0"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      
-                      <div className="flex-1 min-w-[140px]">
-                        <input
-                          type="text"
-                          placeholder="Color Name (e.g. Royal Violet)"
-                          value={color.name}
-                          onChange={(e) => updateColorSwatch(idx, 'name', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg border border-secondary/30 bg-white text-xs font-medium"
-                        />
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="color"
-                          value={color.hex}
-                          onChange={(e) => updateColorSwatch(idx, 'hex', e.target.value)}
-                          className="w-8 h-8 rounded border-0 cursor-pointer p-0 bg-transparent"
-                        />
-                        <input
-                          type="text"
-                          value={color.hex}
-                          onChange={(e) => updateColorSwatch(idx, 'hex', e.target.value)}
-                          className="w-20 px-2 py-1.5 rounded-lg border border-secondary/30 bg-white text-xs font-mono"
-                        />
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[11px] text-stone-500 whitespace-nowrap">Gallery Index:</span>
-                        <select
-                          value={color.imageIndex ?? 0}
-                          onChange={(e) => updateColorSwatch(idx, 'imageIndex', Number(e.target.value))}
-                          className="px-2.5 py-1.5 rounded-lg border border-secondary/30 bg-white text-xs"
-                        >
-                          {gallery.map((_, gIdx) => (
-                            <option key={gIdx} value={gIdx}>Angle #{gIdx}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {colors.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeColorSwatch(idx)}
-                          className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Quick Preset Palette Palette */}
-                <div className="pt-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 block mb-2">
-                    Quick Preset Luxury Palette:
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {LUXURY_PALETTE_PRESETS.map((preset) => (
-                      <button
-                        key={preset.name}
-                        type="button"
-                        onClick={() => {
-                          setColors(prev => [
-                            ...prev,
-                            { name: preset.name, hex: preset.hex, imageIndex: 0 }
-                          ]);
-                        }}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-secondary/20 bg-white hover:bg-surface-container text-[11px] text-stone-700 transition-colors"
-                      >
-                        <span className="w-2.5 h-2.5 rounded-full border border-black/10" style={{ backgroundColor: preset.hex }} />
-                        <span>{preset.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Silhouettes / Styles Selector */}
-              <div className="p-5 rounded-2xl bg-white border border-secondary/20 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-primary flex items-center gap-2">
-                    <Scissors className="w-4 h-4 text-royal-violet" />
-                    <span>Silhouettes / Cut Options</span>
-                  </h3>
-                  <span className="text-xs text-stone-500">Default: <strong className="text-primary">{defaultStyle}</strong></span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {ABAYA_STYLES.map((style) => {
-                    const isSelected = styles.includes(style.name);
-                    const isDefault = defaultStyle === style.name;
-                    return (
-                      <div
-                        key={style.id}
-                        onClick={() => toggleStyle(style.name)}
-                        className={`p-3 rounded-xl border cursor-pointer transition-all flex items-start justify-between ${
-                          isSelected
-                            ? 'border-royal-violet bg-royal-violet/5'
-                            : 'border-surface-container opacity-60 hover:opacity-100'
-                        }`}
-                      >
-                        <div>
-                          <div className="text-xs font-semibold text-primary">{style.name}</div>
-                          <div className="text-[10px] text-stone-500">{style.tag}</div>
-                        </div>
-                        {isSelected && (
-                          <div className="flex items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setDefaultStyle(style.name);
-                              }}
-                              className={`text-[9px] px-1.5 py-0.5 rounded uppercase font-semibold ${
-                                isDefault ? 'bg-royal-violet text-white' : 'bg-surface-container text-stone-600'
-                              }`}
-                            >
-                              {isDefault ? 'Default' : 'Set Default'}
-                            </button>
-                            <Check className="w-4 h-4 text-royal-violet" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Craftsmanship / Works Selector */}
-              <div className="p-5 rounded-2xl bg-white border border-secondary/20 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-primary flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-gold-accent" />
-                    <span>Craftsmanship / Artisan Work Options</span>
-                  </h3>
-                  <span className="text-xs text-stone-500">Default: <strong className="text-primary">{defaultWork}</strong></span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {ABAYA_WORKS.map((work) => {
-                    const isSelected = works.includes(work.name);
-                    const isDefault = defaultWork === work.name;
-                    return (
-                      <div
-                        key={work.id}
-                        onClick={() => toggleWork(work.name)}
-                        className={`p-3 rounded-xl border cursor-pointer transition-all flex items-start justify-between ${
-                          isSelected
-                            ? 'border-gold-accent bg-gold-accent/5'
-                            : 'border-surface-container opacity-60 hover:opacity-100'
-                        }`}
-                      >
-                        <div>
-                          <div className="text-xs font-semibold text-primary">{work.name}</div>
-                          <div className="text-[10px] text-stone-500">{work.tag}</div>
-                        </div>
-                        {isSelected && (
-                          <div className="flex items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setDefaultWork(work.name);
-                              }}
-                              className={`text-[9px] px-1.5 py-0.5 rounded uppercase font-semibold ${
-                                isDefault ? 'bg-gold-accent text-primary' : 'bg-surface-container text-stone-600'
-                              }`}
-                            >
-                              {isDefault ? 'Default' : 'Set Default'}
-                            </button>
-                            <Check className="w-4 h-4 text-gold-accent" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
 
               {/* Sizes Selector */}
               <div className="p-5 rounded-2xl bg-white border border-secondary/20 space-y-3">

@@ -85,7 +85,6 @@ export default function CollectionsPage() {
 
   // Grid layout switcher:
   // Mobile: 1 or 2 cols (default 2)
-  // Desktop: 2, 3, or 4 cols (default 3)
   const [mobileCols, setMobileCols] = useState(2);
   const [desktopCols, setDesktopCols] = useState(3);
 
@@ -94,7 +93,6 @@ export default function CollectionsPage() {
     color: true,
     style: true,
     work: true,
-    fabric: true,
     size: false,
     price: false
   });
@@ -124,9 +122,9 @@ export default function CollectionsPage() {
 
   useEffect(() => {
     if (selectedCategoryFilter && selectedCategoryFilter !== 'All') {
-      setSelectedFabrics([selectedCategoryFilter]);
+      setSelectedStyles([selectedCategoryFilter]);
     } else if (selectedCategoryFilter === 'All' || selectedCategoryFilter === null) {
-      setSelectedFabrics([]);
+      setSelectedStyles([]);
     }
   }, [selectedCategoryFilter]);
 
@@ -155,17 +153,11 @@ export default function CollectionsPage() {
     if (selectedWorks.length > 1) {
       return selectedWorks.join(' & ');
     }
-    if (selectedFabrics.length === 1) {
-      return selectedFabrics[0];
-    }
-    if (selectedFabrics.length > 1) {
-      return selectedFabrics.join(' & ');
-    }
     if (selectedColors.length === 1) {
       return `${selectedColors[0]} Abayas`;
     }
     return 'SHOP';
-  }, [searchQuery, selectedStyles, selectedWorks, selectedFabrics, selectedColors]);
+  }, [searchQuery, selectedStyles, selectedWorks, selectedColors]);
 
   // Handle Sort Menu Outside Click
   useEffect(() => {
@@ -214,7 +206,6 @@ export default function CollectionsPage() {
   const clearAllFilters = () => {
     setSelectedStyles([]);
     setSelectedWorks([]);
-    setSelectedFabrics([]);
     setSelectedColors([]);
     setSelectedSizes([]);
     setPriceRange(maxPriceLimit);
@@ -230,17 +221,10 @@ export default function CollectionsPage() {
   const activeFiltersCount =
     selectedStyles.length +
     selectedWorks.length +
-    selectedFabrics.length +
     selectedColors.length +
     selectedSizes.length +
     (priceRange < maxPriceLimit ? 1 : 0) +
     (searchQuery && searchQuery.trim() !== '' ? 1 : 0);
-
-  // Available Fabrics extracted from products
-  const availableFabrics = useMemo(() => {
-    const set = new Set(PRODUCTS.map(p => p.category).filter(Boolean));
-    return Array.from(set);
-  }, [PRODUCTS]);
 
   // Filtered & Sorted Products
   const filteredProducts = useMemo(() => {
@@ -279,11 +263,6 @@ export default function CollectionsPage() {
         if (!hasMatch) return false;
       }
 
-      // 4. Fabric Filter
-      if (selectedFabrics.length > 0) {
-        if (!selectedFabrics.includes(product.category)) return false;
-      }
-
       // 5. Color Filter
       if (selectedColors.length > 0) {
         const productColors = (product.colors || []).map(c => c.name.toLowerCase());
@@ -316,14 +295,14 @@ export default function CollectionsPage() {
           return b.price - a.price;
         case 'latest':
         case 'date-new':
-          return (b.badge === 'New Arrival' ? 1 : 0) - (a.badge === 'New Arrival' ? 1 : 0);
+          return 0;
         case 'alpha-az':
           return a.name.localeCompare(b.name);
         case 'alpha-za':
           return b.name.localeCompare(a.name);
         case 'featured':
         default:
-          return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+          return 0;
       }
     });
   }, [
@@ -331,7 +310,6 @@ export default function CollectionsPage() {
     searchQuery,
     selectedStyles,
     selectedWorks,
-    selectedFabrics,
     selectedColors,
     selectedSizes,
     priceRange,
@@ -670,38 +648,7 @@ export default function CollectionsPage() {
               )}
             </div>
 
-            {/* Fabric Accordion */}
-            <div className="p-6">
-              <button
-                onClick={() => toggleAccordion('fabric')}
-                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white cursor-pointer"
-              >
-                <span>Fabric / Collection {selectedFabrics.length > 0 && `(${selectedFabrics.length})`}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.fabric ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-              </button>
 
-              {openAccordions.fabric && (
-                <div className="pt-3 space-y-2.5">
-                  {availableFabrics.map((fabric) => {
-                    const isChecked = selectedFabrics.includes(fabric);
-                    return (
-                      <label
-                        key={fabric}
-                        className="flex items-center justify-between text-xs text-white/90 cursor-pointer py-1 hover:text-white group"
-                      >
-                        <span className="group-hover:translate-x-0.5 transition-transform">{fabric} Collection</span>
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleItem(selectedFabrics, setSelectedFabrics, fabric)}
-                          className="w-4 h-4 accent-[#C85DA9] cursor-pointer"
-                        />
-                      </label>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
 
             {/* Size Accordion */}
             <div className="p-6">
