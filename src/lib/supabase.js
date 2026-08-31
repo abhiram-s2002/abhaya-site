@@ -49,13 +49,12 @@ export function formatProductFromDB(row) {
     works: Array.isArray(row.works) ? row.works : [],
     image: row.image || '',
     gallery: Array.isArray(row.gallery) ? row.gallery : (row.image ? [row.image] : []),
-    colors: Array.isArray(row.colors) ? row.colors : [],
     sizes: Array.isArray(row.sizes) ? row.sizes : [],
-    stockCount: Number(row.stock_count) ?? 10,
     description: row.description || '',
     fabricDetails: row.fabric_details || '',
     stylingAdvice: row.styling_advice || '',
-    careInstructions: row.care_instructions || ''
+    careInstructions: row.care_instructions || '',
+    reviews: Array.isArray(row.reviews) ? row.reviews : []
   };
 }
 
@@ -81,13 +80,12 @@ export function formatProductForDB(product) {
     works: product.works || [],
     image: product.image,
     gallery: product.gallery || [],
-    colors: product.colors || [],
     sizes: product.sizes || [],
-    stock_count: Number(product.stockCount) ?? 10,
     description: product.description || '',
     fabric_details: product.fabricDetails || '',
     styling_advice: product.stylingAdvice || '',
     care_instructions: product.careInstructions || '',
+    reviews: product.reviews || [],
     updated_at: new Date().toISOString()
   };
 }

@@ -12,35 +12,25 @@ function QuickViewModalContent({ product, onClose }) {
     navigateTo
   } = useShop();
 
-  const [selectedColorIdx, setSelectedColorIdx] = useState(0);
   const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
   const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Size 54 (54")');
   const [customMeasurements, setCustomMeasurements] = useState({ height: '', bust: '', length: '' });
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const currentColor = product.colors[selectedColorIdx] || product.colors[0];
   const images = product.gallery && product.gallery.length > 0
     ? product.gallery
-    : [product.image];
+    : (product.image ? [product.image] : []);
 
   const wishlisted = isWishlisted(product.id);
-
-  const handleColorChange = (idx) => {
-    setSelectedColorIdx(idx);
-    const colorObj = product.colors[idx];
-    if (colorObj && colorObj.imageIndex !== undefined && images[colorObj.imageIndex]) {
-      setActiveImageIdx(colorObj.imageIndex);
-    }
-  };
 
   const handleAddToCart = () => {
     const isCustom = selectedSize.toLowerCase().includes('custom');
     addToCart(
       product,
-      currentColor.name,
-      currentColor.hex,
+      'Standard',
+      '#1c1c1c',
       selectedSize,
       quantity,
       images[activeImageIdx],
@@ -194,50 +184,20 @@ function QuickViewModalContent({ product, onClose }) {
                 </div>
               </div>
 
-              {/* 3. Shade & Size Selectors */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/20">
-                {/* Shade Swatches */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs uppercase tracking-wider">
-                    <span className="font-medium text-white/80">3. Shade:</span>
-                    <span className="font-semibold text-white">{currentColor.name}</span>
-                  </div>
-                  <div className="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-                    {product.colors.map((c, idx) => (
-                      <button
-                        key={c.name}
-                        onClick={() => handleColorChange(idx)}
-                        className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform border shrink-0 cursor-pointer ${
-                          selectedColorIdx === idx
-                            ? 'ring-2 ring-white ring-offset-2 ring-offset-[#C85DA9] scale-110 border-transparent'
-                            : 'border-white/30 hover:scale-105'
-                        }`}
-                        style={{ backgroundColor: c.hex }}
-                        title={c.name}
-                      >
-                        {selectedColorIdx === idx && (
-                          <Check className="w-3 h-3 text-white drop-shadow-sm" strokeWidth={2} />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Abaya Sizing */}
-                <div className="space-y-1.5">
-                  <span className="block text-xs uppercase tracking-wider font-medium text-white/80">Length / Size:</span>
-                  <select
-                    value={selectedSize}
-                    onChange={(e) => setSelectedSize(e.target.value)}
-                    className="w-full text-xs py-2 px-2.5 bg-[#B84E99] border border-white/30 rounded-none font-medium focus:outline-none focus:border-white uppercase text-white cursor-pointer"
-                  >
-                    {product.sizes.map((s) => (
-                      <option key={s} value={s} className="bg-[#C85DA9] text-white">
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              {/* 3. Abaya Length & Sizing */}
+              <div className="space-y-1.5 pt-2 border-t border-white/20">
+                <span className="block text-xs uppercase tracking-wider font-medium text-white/80">3. Length / Size:</span>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  className="w-full text-xs py-2 px-2.5 bg-[#B84E99] border border-white/30 rounded-none font-medium focus:outline-none focus:border-white uppercase text-white cursor-pointer"
+                >
+                  {(product.sizes || []).map((s) => (
+                    <option key={s} value={s} className="bg-[#C85DA9] text-white">
+                      {s}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {selectedSize.toLowerCase().includes('custom') && (

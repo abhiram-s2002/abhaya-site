@@ -8,20 +8,12 @@ export default function ProductCard({ product }) {
     navigateTo
   } = useShop();
 
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  const currentColor = product.colors?.[selectedColorIndex] || product.colors?.[0] || { name: 'Standard', hex: '#1c1c1c' };
-  
   // Image handling
   const gallery = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
-  const primaryImage = currentColor.imageIndex !== undefined && gallery[currentColor.imageIndex]
-    ? gallery[currentColor.imageIndex]
-    : gallery[0] || product.image;
-    
-  const secondaryImage = gallery.length > 1
-    ? (currentColor.imageIndex !== undefined && gallery[(currentColor.imageIndex + 1) % gallery.length] ? gallery[(currentColor.imageIndex + 1) % gallery.length] : gallery[1])
-    : primaryImage;
+  const primaryImage = gallery[0] || product.image;
+  const secondaryImage = gallery.length > 1 ? gallery[1] : primaryImage;
 
   const handleCardClick = () => {
     navigateTo('product-detail', product.id);

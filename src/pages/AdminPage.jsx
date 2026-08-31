@@ -323,9 +323,9 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-secondary/20 shadow-subtle space-y-1">
-          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Inventory Status</div>
-          <div className={`font-serif text-2xl sm:text-3xl font-bold ${stats.outOfStockCount > 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-            {stats.outOfStockCount > 0 ? `${stats.outOfStockCount} Out of Stock` : `${stats.total} Ready`}
+          <div className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500">Catalog Reviews</div>
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-royal-violet">
+            {baseProducts.reduce((acc, p) => acc + (p.reviewsCount || p.reviews?.length || 0), 0)} Verified
           </div>
         </div>
       </div>
@@ -528,7 +528,6 @@ export default function AdminPage() {
                       <th className="py-3.5 px-4">Abaya Creation</th>
                       <th className="py-3.5 px-4">Market & Rating</th>
                       <th className="py-3.5 px-4">Price</th>
-                      <th className="py-3.5 px-4">Stock Status</th>
                       <th className="py-3.5 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
@@ -552,19 +551,6 @@ export default function AdminPage() {
                                   <span className="inline-block px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-semibold">
                                     {p.badge}
                                   </span>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-1 mt-1.5">
-                                {(p.colors || []).slice(0, 4).map((c, i) => (
-                                  <span
-                                    key={i}
-                                    title={c.name}
-                                    className="w-3 h-3 rounded-full border border-black/10 inline-block shadow-xs"
-                                    style={{ backgroundColor: c.hex }}
-                                  />
-                                ))}
-                                {(p.colors || []).length > 4 && (
-                                  <span className="text-[9px] text-stone-400">+{p.colors.length - 4} shades</span>
                                 )}
                               </div>
                             </div>
@@ -604,19 +590,6 @@ export default function AdminPage() {
                               {formatPrice(p.originalPrice)}
                             </div>
                           )}
-                        </td>
-
-                        {/* Stock Status */}
-                        <td className="py-3.5 px-4">
-                          <span className={`inline-block px-2.5 py-1 rounded-md font-semibold text-[10px] ${
-                            (p.stockCount ?? 10) === 0
-                              ? 'bg-red-50 text-red-700 border border-red-200'
-                              : (p.stockCount ?? 10) <= 5
-                              ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                              : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          }`}>
-                            {(p.stockCount ?? 10) === 0 ? 'Out of stock' : `${p.stockCount ?? 10} in stock`}
-                          </span>
                         </td>
 
                         {/* Actions */}
@@ -721,26 +694,11 @@ export default function AdminPage() {
                       <p className="text-xs text-stone-500 line-clamp-2 mt-1">
                         {p.description}
                       </p>
-
-                      {/* Color Palette Dots */}
-                      <div className="flex items-center gap-1 mt-2.5">
-                        {(p.colors || []).slice(0, 5).map((c, i) => (
-                          <span
-                            key={i}
-                            title={c.name}
-                            className="w-3.5 h-3.5 rounded-full border border-black/10 inline-block shadow-xs"
-                            style={{ backgroundColor: c.hex }}
-                          />
-                        ))}
-                        {(p.colors || []).length > 5 && (
-                          <span className="text-[9px] text-stone-400">+{p.colors.length - 5}</span>
-                        )}
-                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-surface-container-highest flex items-center justify-between">
-                      <span className="text-[11px] text-stone-500">
-                        {p.stockCount ?? 10} pieces in stock
+                      <span className="text-[11px] font-semibold text-royal-violet">
+                        {p.defaultStyle || 'Abaya'}
                       </span>
                       
                       <div className="flex items-center gap-1">

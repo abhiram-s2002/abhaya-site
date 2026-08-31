@@ -123,6 +123,9 @@ export default function ProductDetailPage() {
     setCustomNotes('');
     setSelectedStyle(product.defaultStyle || ABAYA_STYLES[0].name);
     setSelectedWork(product.defaultWork || ABAYA_WORKS[0].name);
+    if (product?.reviews && Array.isArray(product.reviews) && product.reviews.length > 0) {
+      setReviewsList(product.reviews);
+    }
     setActiveImageIdx(0);
     setQuantity(1);
     window.scrollTo({ top: 0, behavior: 'smooth' });

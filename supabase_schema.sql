@@ -19,7 +19,7 @@ create table if not exists public.products (
   target_region text default 'all' check (target_region in ('all', 'india', 'arab')),
   rating numeric default 5.0,
   reviews_count integer default 0,
-  is_featured boolean default false,
+  reviews jsonb default '[]'::jsonb,
   is_violet_edition boolean default false,
   default_style text default 'Open abaya',
   default_work text default 'plain',
@@ -27,9 +27,7 @@ create table if not exists public.products (
   works jsonb default '["plain", "Embroidery Abaya", "Handwork Abaya", "Stonework Abaya", "Threadwork Abaya", "Printed Abaya", "Lace Work Abaya"]'::jsonb,
   image text not null,
   gallery jsonb default '[]'::jsonb,
-  colors jsonb default '[]'::jsonb,
-  sizes jsonb default '["Size 52 (Length 52\")", "Size 54 (Length 54\")", "Size 56 (Length 56\")", "Size 58 (Length 58\")", "Size 60 (Length 60\")", "Custom Tailored Fit"]'::jsonb,
-  stock_count integer default 10,
+  sizes jsonb default '["Size 52 (52\")", "Size 54 (54\")", "Size 56 (56\")", "Size 58 (58\")", "Size 60 (60\")", "Custom Tailored Fit"]'::jsonb,
   description text,
   fabric_details text,
   styling_advice text,
@@ -40,6 +38,7 @@ create table if not exists public.products (
 
 -- Note: For existing Supabase instances, run:
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS target_region text DEFAULT 'all';
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS reviews jsonb DEFAULT '[]'::jsonb;
 
 -- 3. CREATE ORDERS & TRACKING TABLE
 create table if not exists public.orders (

@@ -411,19 +411,21 @@ export default function AdminProductModal({
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                    Price (USD / Base) *
+                    Price (AED د.إ) *
                   </label>
-                  <div className="relative">
-                    <span className="absolute left-3.5 top-2.5 text-stone-500 font-serif">$</span>
+                  <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
+                    <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
+                      AED
+                    </span>
                     <input
                       type="number"
                       required
                       min="1"
                       step="1"
-                      placeholder="185"
+                      placeholder="650"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm font-medium"
+                      className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
                     />
                   </div>
                   <span className="text-[10px] text-stone-500">Auto-converts to INR (₹) and AED (د.إ) based on visitor's selected market.</span>
@@ -496,24 +498,6 @@ export default function AdminProductModal({
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                    Original Price (Optional for Discount Strikethrough)
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3.5 top-2.5 text-stone-500 font-serif">$</span>
-                    <input
-                      type="number"
-                      min="1"
-                      step="1"
-                      placeholder="240"
-                      value={originalPrice}
-                      onChange={(e) => setOriginalPrice(e.target.value)}
-                      className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
                     Fabric Category *
                   </label>
                   <select
@@ -556,20 +540,6 @@ export default function AdminProductModal({
                       <option key={b} value={b}>{b ? b : 'None (No badge)'}</option>
                     ))}
                   </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                    Stock Quantity
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="10"
-                    value={stockCount}
-                    onChange={(e) => setStockCount(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm"
-                  />
                 </div>
 
                 {/* Rating & Reviews Count */}
