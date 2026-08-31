@@ -547,25 +547,25 @@ export default function ShopPage() {
           />
 
           {/* Bottom Sheet Drawer */}
-          <div className="fixed inset-x-0 bottom-0 max-h-[85vh] bg-[#C85DA9] text-white rounded-t-3xl shadow-2xl flex flex-col z-10 animate-slide-in-up border-t border-white/20">
+          <div className="fixed inset-x-0 bottom-0 max-h-[85vh] bg-[#68043D] text-white rounded-t-3xl shadow-2xl flex flex-col z-10 animate-slide-in-up border-t border-white/20 font-semibold">
             
             {/* Grab Handle */}
             <div className="w-12 h-1.5 bg-white/40 rounded-full mx-auto mt-3 mb-1" />
 
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/20">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/20 bg-[#7A0648]">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-white" />
-                <h3 className="font-serif text-lg font-medium text-white uppercase tracking-wider">Atelier Filters</h3>
+                <h3 className="font-serif text-lg font-bold text-white uppercase tracking-wider">Atelier Filters</h3>
                 {secondaryFiltersActiveCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-white text-[#C85DA9] text-[10px] flex items-center justify-center font-bold">
+                  <span className="w-5 h-5 rounded-full bg-white text-[#7A0648] text-[10px] flex items-center justify-center font-bold">
                     {secondaryFiltersActiveCount}
                   </span>
                 )}
               </div>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="p-1.5 rounded-full text-white/80 hover:bg-white/15 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-full text-white hover:bg-white/15 transition-colors cursor-pointer"
                 aria-label="Close filters"
               >
                 <X className="w-5 h-5" />
@@ -583,9 +583,9 @@ export default function ShopPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveDrawerTab(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-none text-xs font-semibold shrink-0 transition-all uppercase tracking-wider cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-none text-xs font-bold shrink-0 transition-all uppercase tracking-wider cursor-pointer ${
                     activeDrawerTab === tab.id
-                      ? 'bg-white text-[#C85DA9] shadow-xs border border-white'
+                      ? 'bg-white text-[#7A0648] shadow-xs border border-white'
                       : 'text-white/80 hover:bg-white/15'
                   }`}
                 >
@@ -609,19 +609,19 @@ export default function ShopPage() {
                   <div className="grid grid-cols-1 gap-2">
                     <button
                       onClick={() => setSelectedStyleFilter('All')}
-                      className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
+                      className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
                         selectedStyleFilter === 'All'
-                          ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
+                          ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
                           : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                       }`}
                     >
                       <div>
-                        <div className="font-semibold text-sm">All Silhouettes</div>
-                        <div className={`text-[10px] ${selectedStyleFilter === 'All' ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
+                        <div className="font-bold text-sm">All Silhouettes</div>
+                        <div className={`text-[10px] ${selectedStyleFilter === 'All' ? 'text-[#7A0648]/80' : 'text-white/80'}`}>
                           View all 7 cuts and silhouettes
                         </div>
                       </div>
-                      {selectedStyleFilter === 'All' && <Check className="w-4 h-4 text-[#C85DA9]" />}
+                      {selectedStyleFilter === 'All' && <Check className="w-4 h-4 text-[#7A0648]" />}
                     </button>
 
                     {ABAYA_STYLES.map((style) => {
@@ -630,19 +630,19 @@ export default function ShopPage() {
                         <button
                           key={style.id}
                           onClick={() => setSelectedStyleFilter(style.name)}
-                          className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
+                          className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
+                              ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
                               : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                           }`}
                         >
                           <div>
-                            <div className="font-semibold text-sm">{style.name}</div>
-                            <div className={`text-[10px] ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
+                            <div className="font-bold text-sm">{style.name}</div>
+                            <div className={`text-[10px] ${isSelected ? 'text-[#7A0648]/80' : 'text-white/80'}`}>
                               {style.description}
                             </div>
                           </div>
-                          {isSelected && <Check className="w-4 h-4 text-[#C85DA9]" />}
+                          {isSelected && <Check className="w-4 h-4 text-[#7A0648]" />}
                         </button>
                       );
                     })}
@@ -662,19 +662,19 @@ export default function ShopPage() {
                   <div className="grid grid-cols-1 gap-2">
                     <button
                       onClick={() => setSelectedWorkFilter('All')}
-                      className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
+                      className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
                         selectedWorkFilter === 'All'
-                          ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
+                          ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
                           : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                       }`}
                     >
                       <div>
-                        <div className="font-semibold text-sm">All Craftsmanship</div>
-                        <div className={`text-[10px] ${selectedWorkFilter === 'All' ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
+                        <div className="font-bold text-sm">All Craftsmanship</div>
+                        <div className={`text-[10px] ${selectedWorkFilter === 'All' ? 'text-[#7A0648]/80' : 'text-white/80'}`}>
                           All artisan needlework & embellishments
                         </div>
                       </div>
-                      {selectedWorkFilter === 'All' && <Check className="w-4 h-4 text-[#C85DA9]" />}
+                      {selectedWorkFilter === 'All' && <Check className="w-4 h-4 text-[#7A0648]" />}
                     </button>
 
                     {ABAYA_WORKS.map((work) => {
@@ -683,19 +683,19 @@ export default function ShopPage() {
                         <button
                           key={work.id}
                           onClick={() => setSelectedWorkFilter(work.name)}
-                          className={`p-3 text-xs font-medium rounded-none text-left border flex items-center justify-between transition-all capitalize cursor-pointer ${
+                          className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all capitalize cursor-pointer ${
                             isSelected
-                              ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
+                              ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
                               : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                           }`}
                         >
                           <div>
-                            <div className="font-semibold text-sm capitalize">{work.name}</div>
-                            <div className={`text-[10px] ${isSelected ? 'text-[#C85DA9]/80' : 'text-white/70'}`}>
+                            <div className="font-bold text-sm capitalize">{work.name}</div>
+                            <div className={`text-[10px] ${isSelected ? 'text-[#7A0648]/80' : 'text-white/80'}`}>
                               {work.description}
                             </div>
                           </div>
-                          {isSelected && <Check className="w-4 h-4 text-[#C85DA9]" />}
+                          {isSelected && <Check className="w-4 h-4 text-[#7A0648]" />}
                         </button>
                       );
                     })}
@@ -716,9 +716,9 @@ export default function ShopPage() {
                         <button
                           key={shade.name}
                           onClick={() => setSelectedShade(shade.name)}
-                          className={`p-3 rounded-none border flex items-center gap-2.5 transition-all text-xs font-medium cursor-pointer ${
+                          className={`p-3 rounded-none border flex items-center gap-2.5 transition-all text-xs font-bold cursor-pointer ${
                             isSelected
-                              ? 'bg-white text-[#C85DA9] border-white shadow-sm font-semibold'
+                              ? 'bg-white text-[#7A0648] border-white shadow-sm font-bold'
                               : 'bg-white/15 text-white border-white/20 hover:bg-white/25'
                           }`}
                         >
@@ -743,11 +743,11 @@ export default function ShopPage() {
                 <div className="space-y-4 animate-fade-in p-2">
                   <div className="p-4 rounded-none bg-white/15 border border-white/20 flex items-center justify-between">
                     <div className="space-y-1">
-                      <div className="font-semibold text-sm text-white flex items-center gap-1.5">
+                      <div className="font-bold text-sm text-white flex items-center gap-1.5">
                         <Heart className="w-4 h-4 text-[#FFF0A0] fill-[#FFF0A0]" />
                         <span>Saved Wishlist Only</span>
                       </div>
-                      <p className="text-xs text-white/70">
+                      <p className="text-xs text-white/80 font-medium">
                         Show only products currently in your saved wishlist ({wishlist.length})
                       </p>
                     </div>
@@ -758,7 +758,7 @@ export default function ShopPage() {
                       }`}
                     >
                       <span
-                        className={`block w-5 h-5 rounded-full ${onlyWishlist ? 'bg-[#C85DA9]' : 'bg-white'} shadow-md transform transition-transform ${
+                        className={`block w-5 h-5 rounded-full ${onlyWishlist ? 'bg-[#7A0648]' : 'bg-white'} shadow-md transform transition-transform ${
                           onlyWishlist ? 'translate-x-6' : 'translate-x-0.5'
                         }`}
                       />
@@ -770,16 +770,16 @@ export default function ShopPage() {
             </div>
 
             {/* Drawer Footer Actions */}
-            <div className="p-4 border-t border-white/20 bg-[#C85DA9] flex items-center gap-3">
+            <div className="p-4 border-t border-white/20 bg-[#580233] flex items-center gap-3">
               <button
                 onClick={resetFilters}
-                className="flex-1 py-3 border border-white/30 text-white text-xs uppercase tracking-wider font-semibold rounded-none hover:bg-white/15 active:scale-98 transition-all cursor-pointer"
+                className="flex-1 py-3 border border-white/30 text-white text-xs uppercase tracking-wider font-bold rounded-none hover:bg-white/15 active:scale-98 transition-all cursor-pointer"
               >
                 Reset All
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="flex-[2] py-3 bg-white text-[#C85DA9] text-xs uppercase tracking-wider font-bold rounded-none shadow-md hover:bg-white/90 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white"
+                className="flex-[2] py-3 bg-white text-[#7A0648] text-xs uppercase tracking-wider font-bold rounded-none shadow-md hover:bg-white/90 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white"
               >
                 <span>View {filteredProducts.length} Abayas</span>
               </button>

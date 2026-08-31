@@ -68,7 +68,7 @@ export default function OffersPage() {
 
   return (
     <EditableSection cmsKey="offers_page" label="Atelier Privileges">
-      <div className="min-h-screen bg-[#D975BD] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 animate-fade-in text-white">
+      <div className="min-h-screen bg-[#7A0648] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 animate-fade-in text-white font-semibold">
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">

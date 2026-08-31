@@ -6,7 +6,7 @@ export default function TermsPage() {
   const { navigateTo } = useShop();
 
   return (
-    <div className="min-h-screen bg-[#D975BD] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10 animate-fade-in text-white font-sans">
+    <div className="min-h-screen bg-[#7A0648] pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10 animate-fade-in text-white font-sans font-semibold">
       
       <button
         onClick={() => navigateTo('home')}

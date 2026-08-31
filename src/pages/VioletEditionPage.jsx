@@ -12,7 +12,7 @@ export default function VioletEditionPage() {
     <div className="space-y-12 sm:space-y-20 pb-20 sm:pb-24 animate-fade-in">
       
       {/* Editorial Header */}
-      <section className="relative min-h-[50vh] sm:min-h-[60vh] bg-gradient-to-b from-[#C85DA9] via-[#D975BD] to-[#C85DA9] text-white flex items-center justify-center text-center px-4 overflow-hidden">
+      <section className="relative min-h-[50vh] sm:min-h-[60vh] bg-gradient-to-b from-[#580233] via-[#7A0648] to-[#68043D] text-white flex items-center justify-center text-center px-4 overflow-hidden font-semibold">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <img
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA"
@@ -22,17 +22,17 @@ export default function VioletEditionPage() {
         </div>
 
         <div className="relative z-10 max-w-3xl mx-auto space-y-4 sm:space-y-6 py-12 sm:py-16">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white/20 border border-white/30 backdrop-blur-md text-[#FFF0A0] text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white/20 border border-white/30 backdrop-blur-md text-[#FFF0A0] text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#FFD700]" />
             <span>Limited Seasonal Capsule</span>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-white font-medium leading-tight">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-white font-bold leading-tight">
             The Violet Edition <br />
             <span className="italic font-light text-white/90">Ethereal Amethyst</span>
           </h1>
 
-          <p className="text-xs sm:text-base text-white/90 font-light leading-relaxed max-w-xl mx-auto px-2">
+          <p className="text-xs sm:text-base text-white font-semibold leading-relaxed max-w-xl mx-auto px-2">
             A celebration of regal hues, liquid sheen, and deep mineral undertones. Each piece in this capsule reflects ambient light with mysterious dimension.
           </p>
         </div>
@@ -43,19 +43,19 @@ export default function VioletEditionPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           <div className="lg:col-span-6 space-y-4 sm:space-y-6">
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-semibold text-[#FFF0A0]">
+            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-[#FFF0A0]">
               The Color Story
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-white font-medium leading-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-white font-bold leading-tight">
               From Royal Violet to Lavender Mist
             </h2>
-            <p className="text-white/90 text-xs sm:text-sm leading-relaxed font-light">
+            <p className="text-white text-xs sm:text-sm leading-relaxed font-semibold">
               Historically reserved for royalty and spiritual sanctuaries, violet represents introspection, grace, and sovereign quietude. For this capsule, our master dyers developed non-toxic mineral dyes that yield three interconnected nuances:
             </p>
 
             <div className="space-y-2.5 sm:space-y-3 pt-1">
-              <div className="p-3 sm:p-3.5 rounded-xl bg-[#C85DA9] border border-white/20 shadow-sm flex items-center gap-3.5 text-white">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D975BD] shrink-0 border border-white/30 shadow-inner" />
+              <div className="p-3 sm:p-3.5 rounded-xl bg-[#68043D] border border-white/20 shadow-sm flex items-center gap-3.5 text-white">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#7A0648] shrink-0 border border-white/30 shadow-inner" />
                 <div>
                   <h4 className="font-serif text-xs sm:text-sm font-medium text-white">Royal Violet</h4>
                   <p className="text-[10px] sm:text-[11px] text-white/80">Deep, saturated velvet tone for high-contrast evening presence.</p>

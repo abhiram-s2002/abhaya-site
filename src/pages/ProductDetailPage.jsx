@@ -285,7 +285,7 @@ export default function ProductDetailPage() {
             <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
               <button
                 onClick={() => setShowLightboxModal(true)}
-                className="w-8 h-8 rounded-full bg-white text-[#C85DA9] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white text-[#7A0648] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
                 title="Zoom picture"
                 aria-label="Zoom image"
               >
@@ -293,7 +293,7 @@ export default function ProductDetailPage() {
               </button>
               <button
                 onClick={handleShare}
-                className="w-8 h-8 rounded-full bg-white text-[#C85DA9] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white text-[#7A0648] flex items-center justify-center transition-all hover:bg-white/90 shadow-sm cursor-pointer"
                 title="Share product"
                 aria-label="Share link"
               >
@@ -303,13 +303,13 @@ export default function ProductDetailPage() {
                 onClick={() => toggleWishlist(product.id)}
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm ${
                   wishlisted
-                    ? 'bg-white text-[#C85DA9]'
-                    : 'bg-white text-[#C85DA9] hover:bg-white/90'
+                    ? 'bg-white text-[#7A0648]'
+                    : 'bg-white text-[#7A0648] hover:bg-white/90'
                 }`}
                 title="Save to Wishlist"
                 aria-label="Save to Wishlist"
               >
-                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-[#C85DA9]' : ''}`} strokeWidth={1.5} />
+                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-[#7A0648]' : ''}`} strokeWidth={1.5} />
               </button>
             </div>
 
@@ -434,7 +434,7 @@ export default function ProductDetailPage() {
                     onClick={() => setSelectedLength(len)}
                     className={`py-2 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#C85DA9] border-2 border-white shadow-sm'
+                        ? 'bg-white text-[#7A0648] border-2 border-white shadow-sm'
                         : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
                     }`}
                   >
@@ -463,7 +463,7 @@ export default function ProductDetailPage() {
                     onClick={() => setHasButtons(btnOption)}
                     className={`flex-1 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#C85DA9] border-2 border-white shadow-sm'
+                        ? 'bg-white text-[#7A0648] border-2 border-white shadow-sm'
                         : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
                     }`}
                   >
@@ -500,7 +500,7 @@ export default function ProductDetailPage() {
                     onClick={() => setSizeType(fit)}
                     className={`flex-1 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-white text-[#C85DA9] border-2 border-white shadow-sm'
+                        ? 'bg-white text-[#7A0648] border-2 border-white shadow-sm'
                         : 'bg-white/10 text-white border border-white/30 hover:bg-white/20'
                     }`}
                   >
@@ -565,7 +565,7 @@ export default function ProductDetailPage() {
                 className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-bold tracking-[0.1em] transition-all duration-200 cursor-pointer shadow-md ${
                   isAddedAnimation
                     ? 'bg-emerald-600 text-white border-2 border-emerald-500 scale-[1.01]'
-                    : 'bg-white text-[#C85DA9] hover:bg-white/90 active:scale-[0.99]'
+                    : 'bg-white text-[#7A0648] hover:bg-white/90 active:scale-[0.99]'
                 }`}
               >
                 {isAddedAnimation ? (
@@ -585,7 +585,7 @@ export default function ProductDetailPage() {
             {/* Instant WhatsApp Order Button */}
             <button
               onClick={handleWhatsAppInstantOrder}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] bg-white/20 text-white border border-white/50 hover:bg-white hover:text-[#C85DA9] transition-all duration-200 cursor-pointer shadow-sm"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] bg-white/20 text-white border border-white/50 hover:bg-white hover:text-[#7A0648] transition-all duration-200 cursor-pointer shadow-sm"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Order via WhatsApp</span>
@@ -788,7 +788,7 @@ export default function ProductDetailPage() {
           <div className="text-center sm:text-right shrink-0">
             <button
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="py-2.5 px-6 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-sm"
+              className="py-2.5 px-6 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-sm"
             >
               {showReviewForm ? 'Cancel Review' : 'Write a Review'}
             </button>
@@ -867,7 +867,7 @@ export default function ProductDetailPage() {
 
             <button
               type="submit"
-              className="w-full py-3 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-md"
+              className="w-full py-3 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all cursor-pointer shadow-md"
             >
               Submit Review
             </button>
@@ -933,7 +933,7 @@ export default function ProductDetailPage() {
       {/* 5. STICKY BOTTOM ACTION BAR (Mobile & Tablet)                             */}
       {/* ========================================================================= */}
       {showStickyBar && (
-        <div className="fixed bottom-0 inset-x-0 bg-[#C85DA9] border-t border-white/30 p-3 z-40 lg:hidden shadow-2xl flex items-center justify-between gap-3 animate-slide-up">
+        <div className="fixed bottom-0 inset-x-0 bg-[#7A0648] border-t border-white/30 p-3 z-40 lg:hidden shadow-2xl flex items-center justify-between gap-3 animate-slide-up">
           <div className="flex items-center gap-2.5 overflow-hidden">
             <img
               src={images[activeImageIdx] || images[0]}
@@ -947,7 +947,7 @@ export default function ProductDetailPage() {
           </div>
           <button
             onClick={handleAddToCart}
-            className="py-2.5 px-4 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all shrink-0 cursor-pointer shadow-md flex items-center gap-1.5"
+            className="py-2.5 px-4 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-all shrink-0 cursor-pointer shadow-md flex items-center gap-1.5"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Add to Cart</span>
@@ -960,7 +960,7 @@ export default function ProductDetailPage() {
       {/* ========================================================================= */}
       {showSizeGuideModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#C85DA9] border border-white/30 text-white max-w-lg w-full p-6 space-y-4 relative shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#7A0648] border border-white/30 text-white max-w-lg w-full p-6 space-y-4 relative shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowSizeGuideModal(false)}
               className="absolute top-4 right-4 text-white/80 hover:text-white cursor-pointer"
@@ -1031,7 +1031,7 @@ export default function ProductDetailPage() {
 
             <button
               onClick={() => setShowSizeGuideModal(false)}
-              className="w-full py-2.5 bg-white text-[#C85DA9] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-colors cursor-pointer"
+              className="w-full py-2.5 bg-white text-[#7A0648] font-bold text-xs uppercase tracking-wider hover:bg-white/90 transition-colors cursor-pointer"
             >
               Close Size Guide
             </button>
