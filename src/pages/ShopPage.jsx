@@ -65,34 +65,31 @@ export default function ShopPage() {
     }
   }, [wishlistOnlyFilter]);
 
-  // Sync selectedCategoryFilter from context if set from external links
+  // Sync external filters from context without race conditions
   useEffect(() => {
-    if (selectedCategoryFilter) {
-      setSelectedTab(selectedCategoryFilter);
-    }
-  }, [selectedCategoryFilter]);
+    console.log('[ShopPage] Syncing context filters:', {
+      contextStyleFilter,
+      selectedCategoryFilter,
+      contextWorkFilter,
+      contextColorFilter
+    });
 
-  // Sync selectedStyleFilter from context if set from external links (e.g. Shop by Category on Homepage or Navbar)
-  useEffect(() => {
-    if (contextStyleFilter) {
-      setSelectedTab(contextStyleFilter);
-      setSelectedStyleFilter(contextStyleFilter);
-    }
-  }, [contextStyleFilter]);
+    const activeTab = (contextStyleFilter && contextStyleFilter !== 'All')
+      ? contextStyleFilter
+      : (selectedCategoryFilter && selectedCategoryFilter !== 'All')
+      ? selectedCategoryFilter
+      : 'All';
 
-  // Sync selectedWorkFilter from context if set from external links (e.g. Shop by Work on Homepage or Navbar)
-  useEffect(() => {
+    setSelectedTab(activeTab);
+    setSelectedStyleFilter(activeTab);
+
     if (contextWorkFilter) {
       setSelectedWorkFilter(contextWorkFilter);
     }
-  }, [contextWorkFilter]);
-
-  // Sync selectedColorFilter from context if set from external links
-  useEffect(() => {
     if (contextColorFilter) {
       setSelectedShade(contextColorFilter);
     }
-  }, [contextColorFilter]);
+  }, [selectedCategoryFilter, contextStyleFilter, contextWorkFilter, contextColorFilter]);
 
   // Close sort dropdown when clicking outside
   useEffect(() => {

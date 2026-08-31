@@ -103,38 +103,43 @@ export default function CollectionsPage() {
 
   const sortMenuRef = useRef(null);
 
-  // Sync external filters from context
+  // Sync external filters from context cleanly without race condition overrides
   useEffect(() => {
-    if (selectedStyleFilter && selectedStyleFilter !== 'All') {
-      setSelectedStyles([selectedStyleFilter]);
-    } else if (selectedStyleFilter === 'All' || selectedStyleFilter === null) {
+    console.log('[CollectionsPage] Syncing filters from context:', {
+      selectedStyleFilter,
+      selectedCategoryFilter,
+      selectedWorkFilter,
+      selectedColorFilter
+    });
+
+    const activeStyle =
+      (selectedStyleFilter && selectedStyleFilter !== 'All')
+        ? selectedStyleFilter
+        : (selectedCategoryFilter && selectedCategoryFilter !== 'All')
+        ? selectedCategoryFilter
+        : null;
+
+    if (activeStyle) {
+      console.log('[CollectionsPage] Applying active style filter:', activeStyle);
+      setSelectedStyles([activeStyle]);
+    } else {
       setSelectedStyles([]);
     }
-  }, [selectedStyleFilter]);
 
-  useEffect(() => {
     if (selectedWorkFilter && selectedWorkFilter !== 'All') {
+      console.log('[CollectionsPage] Applying active work filter:', selectedWorkFilter);
       setSelectedWorks([selectedWorkFilter]);
-    } else if (selectedWorkFilter === 'All' || selectedWorkFilter === null) {
+    } else {
       setSelectedWorks([]);
     }
-  }, [selectedWorkFilter]);
 
-  useEffect(() => {
-    if (selectedCategoryFilter && selectedCategoryFilter !== 'All') {
-      setSelectedStyles([selectedCategoryFilter]);
-    } else if (selectedCategoryFilter === 'All' || selectedCategoryFilter === null) {
-      setSelectedStyles([]);
-    }
-  }, [selectedCategoryFilter]);
-
-  useEffect(() => {
     if (selectedColorFilter && selectedColorFilter !== 'All') {
+      console.log('[CollectionsPage] Applying active color filter:', selectedColorFilter);
       setSelectedColors([selectedColorFilter]);
-    } else if (selectedColorFilter === 'All' || selectedColorFilter === null) {
+    } else {
       setSelectedColors([]);
     }
-  }, [selectedColorFilter]);
+  }, [selectedStyleFilter, selectedCategoryFilter, selectedWorkFilter, selectedColorFilter]);
 
   // Dynamic Page Title
   const pageTitle = useMemo(() => {
@@ -228,12 +233,22 @@ export default function CollectionsPage() {
 
   // Filtered & Sorted Products
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    console.log('[CollectionsPage] Filtering products with active filters:', {
+      selectedStyles,
+      selectedWorks,
+      selectedColors,
+      selectedSizes,
+      priceRange,
+      searchQuery,
+      sortBy
+    });
+
+    const result = PRODUCTS.filter((product) => {
       // 1. Search Query
       if (searchQuery && searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = product.name.toLowerCase().includes(q);
-        const matchesCat = product.category.toLowerCase().includes(q);
+        const matchesCat = product.category ? product.category.toLowerCase().includes(q) : false;
         if (!matchesName && !matchesCat) return false;
       }
 
@@ -301,6 +316,9 @@ export default function CollectionsPage() {
           return 0;
       }
     });
+
+    console.log(`[CollectionsPage] Filtered results: ${result.length} of ${PRODUCTS.length} products match`);
+    return result;
   }, [
     PRODUCTS,
     searchQuery,

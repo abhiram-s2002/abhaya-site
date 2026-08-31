@@ -119,6 +119,7 @@ export default function Navbar() {
   };
 
   const handleNav = (view, category = null, collectionsTab = null, color = null, style = null, work = null) => {
+    console.log('[Navbar] handleNav triggered:', { view, category, collectionsTab, color, style, work });
     navigateTo(view, null, category, collectionsTab, color, style, work);
     setMobileMenuOpen(false);
   };

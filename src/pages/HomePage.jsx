@@ -157,7 +157,10 @@ export default function HomePage() {
             {STYLES_LIST.map((styleName) => (
               <div
                 key={styleName}
-                onClick={() => navigateTo('shop', null, null, null, null, styleName)}
+                onClick={() => {
+                  console.log('[HomePage] Selected Shop by Category:', styleName);
+                  navigateTo('shop', null, null, null, null, styleName);
+                }}
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
@@ -199,7 +202,10 @@ export default function HomePage() {
             {WORKS_LIST.map((workName) => (
               <div
                 key={workName}
-                onClick={() => navigateTo('shop', null, null, null, null, null, workName)}
+                onClick={() => {
+                  console.log('[HomePage] Selected Shop by Work:', workName);
+                  navigateTo('shop', null, null, null, null, null, workName);
+                }}
                 className="group cursor-pointer"
               >
                 {/* Card Image */}

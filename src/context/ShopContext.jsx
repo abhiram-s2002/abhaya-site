@@ -328,15 +328,33 @@ export function ShopProvider({ children }) {
   }, [currentView, selectedProductId]);
 
   const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null) => {
+    console.log('[ShopContext] navigateTo called:', {
+      view,
+      productId,
+      category,
+      collectionsTab,
+      color,
+      style,
+      work,
+      wishlistOnly,
+      search
+    });
+
     if (productId) {
       setSelectedProductId(productId);
     }
 
     if (view === 'shop' || view === 'collections') {
-      setSelectedCategoryFilter(category || 'All');
-      setSelectedStyleFilter(style || (category && category !== 'All' ? category : 'All'));
-      setSelectedWorkFilter(work || 'All');
-      setSelectedColorFilter(color || 'All');
+      const resolvedCategory = category || 'All';
+      const resolvedStyle = style || (category && category !== 'All' ? category : 'All');
+      const resolvedWork = work || 'All';
+      const resolvedColor = color || 'All';
+
+      setSelectedCategoryFilter(resolvedCategory);
+      setSelectedStyleFilter(resolvedStyle);
+      setSelectedWorkFilter(resolvedWork);
+      setSelectedColorFilter(resolvedColor);
+
       if (search !== null) {
         setSearchQuery(search);
       } else if (!category && !style && !work && !color) {
