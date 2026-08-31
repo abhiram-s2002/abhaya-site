@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <EditableSection cmsKey="footer_content" label="Footer">
-      <footer className="w-full bg-[#C85DA9] text-white border-t border-white/20 pt-14 pb-28 lg:py-16 mt-auto shadow-2xl">
+      <footer className="w-full bg-[#68043D] text-white border-t border-white/20 pt-14 pb-28 lg:py-16 mt-auto shadow-2xl font-semibold">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
 
           {/* Brand & Copyright (Left) */}
@@ -31,36 +31,36 @@ export default function Footer() {
             <div className="space-y-1">
               <button
                 onClick={() => navigateTo('home')}
-                className="text-lg sm:text-xl tracking-[0.16em] font-semibold text-white uppercase text-left hover:text-white/80 transition-colors block leading-tight cursor-pointer"
+                className="text-lg sm:text-xl tracking-[0.16em] font-bold text-white uppercase text-left hover:text-white/80 transition-colors block leading-tight cursor-pointer"
               >
                 {brandName}
               </button>
-              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.12em] text-white/70 font-normal">
+              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.12em] text-white/80 font-medium">
                 {copyright}
               </p>
             </div>
           </div>
 
           {/* Navigation Links (Right) */}
-          <div className="flex flex-wrap sm:items-center gap-4 sm:gap-6 lg:gap-8 text-xs uppercase tracking-[0.06em] text-white/90">
-            <button onClick={() => navigateTo('terms')} className="hover:text-white text-left transition-colors font-medium cursor-pointer">
+          <div className="flex flex-wrap sm:items-center gap-4 sm:gap-6 lg:gap-8 text-xs uppercase tracking-[0.06em] text-white">
+            <button onClick={() => navigateTo('terms')} className="hover:text-white text-left transition-colors font-bold cursor-pointer">
               Terms & Privacy
             </button>
-            <button onClick={() => navigateTo('refund-policy')} className="hover:text-white text-left transition-colors font-medium cursor-pointer">
+            <button onClick={() => navigateTo('refund-policy')} className="hover:text-white text-left transition-colors font-bold cursor-pointer">
               Shipping & Returns
             </button>
-            <button onClick={() => navigateTo('offers')} className="hover:text-white text-left transition-colors font-medium cursor-pointer">
+            <button onClick={() => navigateTo('offers')} className="hover:text-white text-left transition-colors font-bold cursor-pointer">
               Atelier Privileges
             </button>
-            <button onClick={() => navigateTo('story')} className="hover:text-white text-left transition-colors font-medium cursor-pointer">
+            <button onClick={() => navigateTo('story')} className="hover:text-white text-left transition-colors font-bold cursor-pointer">
               Our Story
             </button>
-            <button onClick={() => navigateTo('contact')} className="hover:text-white text-left transition-colors font-medium cursor-pointer">
+            <button onClick={() => navigateTo('contact')} className="hover:text-white text-left transition-colors font-bold cursor-pointer">
               Concierge & Contact
             </button>
             <button
               onClick={() => navigateTo('admin')}
-              className="inline-flex items-center gap-1.5 text-white hover:bg-white hover:text-[#C85DA9] transition-colors font-semibold cursor-pointer px-3 py-1.5 border border-white/40 text-[11px]"
+              className="inline-flex items-center gap-1.5 text-white hover:bg-white hover:text-[#7A0648] transition-colors font-bold cursor-pointer px-3 py-1.5 border border-white/40 text-[11px]"
             >
               <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.5} />
               <span>Admin Portal</span>

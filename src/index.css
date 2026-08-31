@@ -5,31 +5,32 @@
 @layer base {
   :root {
     --heading-font-family: 'Montserrat', sans-serif;
-    --heading-font-weight: 500;
+    --heading-font-weight: 700;
     --heading-text-transform: uppercase;
     --heading-letter-spacing: 0.04em;
 
     --text-font-family: 'Montserrat', sans-serif;
-    --text-font-weight: 400;
+    --text-font-weight: 600;
     --text-letter-spacing: 0.02em;
 
-    --color-primary: #C85DA9;
-    --color-primary-dark: #BF509F;
-    --color-violet-logo: #D975BD;
-    --color-background: #D975BD;
-    --color-sand: #C85DA9;
-    --color-sand-light: #CF6EB2;
-    --color-sand-border: #E5A8D2;
+    --color-primary: #7A0648;
+    --color-primary-dark: #68043D;
+    --color-violet-logo: #7A0648;
+    --color-background: #7A0648;
+    --color-sand: #68043D;
+    --color-sand-light: #73053F;
+    --color-sand-border: #9E0E5E;
     --color-border: rgba(255, 255, 255, 0.25);
     --color-sale: #E32C2B;
-    --color-gray: #F5EAF7;
+    --color-gray: #FBEAF4;
   }
 
   body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #FFFFFF;
-    background-color: #D975BD;
+    background-color: #7A0648;
     letter-spacing: 0.02em;
+    font-weight: 600;
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
   }
@@ -38,41 +39,41 @@
     font-family: 'Montserrat', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    font-weight: 500;
+    font-weight: 700;
   }
 
   /* BasicAbaya Global Button Styles */
   .btn-primary {
-    @apply inline-flex items-center justify-center bg-white text-[#C85DA9] hover:bg-white/90 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] py-3.5 px-6 rounded-none transition-all duration-200 active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none shadow-md;
+    @apply inline-flex items-center justify-center bg-white text-[#7A0648] hover:bg-white/90 uppercase text-xs sm:text-sm font-bold tracking-[0.08em] py-3.5 px-6 rounded-none transition-all duration-200 active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none shadow-md;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/50 uppercase text-xs sm:text-sm font-semibold tracking-[0.08em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#C85DA9] active:scale-[0.99] disabled:opacity-50 shadow-sm;
+    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/50 uppercase text-xs sm:text-sm font-bold tracking-[0.08em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#7A0648] active:scale-[0.99] disabled:opacity-50 shadow-sm;
   }
 
   .btn-sand {
-    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/40 uppercase text-xs sm:text-sm font-medium tracking-[0.06em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#C85DA9] active:scale-[0.99];
+    @apply inline-flex items-center justify-center bg-white/20 text-white border border-white/40 uppercase text-xs sm:text-sm font-semibold tracking-[0.06em] py-3.5 px-6 rounded-none transition-all duration-200 hover:bg-white hover:text-[#7A0648] active:scale-[0.99];
   }
 
   .badge-sale {
-    @apply inline-flex items-center bg-[#E32C2B] text-white text-[11px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-none;
+    @apply inline-flex items-center bg-[#E32C2B] text-white text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-none;
   }
 
   .badge-custom {
-    @apply inline-flex items-center bg-white text-[#C85DA9] text-[11px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-none;
+    @apply inline-flex items-center bg-white text-[#7A0648] text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-none;
   }
 
   .badge-sand {
-    @apply inline-flex items-center bg-white/25 text-white text-[11px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-none;
+    @apply inline-flex items-center bg-white/25 text-white text-[11px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-none;
   }
 }
 
 .material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
 .text-shadow-sm {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -98,12 +99,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #C85DA9;
+    background: #7A0648;
     border-radius: 0px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #B84E99;
+    background: #68043D;
   }
 }
 
@@ -181,7 +182,7 @@ input[type="range"].luxury-slider::-webkit-slider-thumb {
   height: 16px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 2px solid #C85DA9;
+  border: 2px solid #7A0648;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0,0,0,0.35);
   transition: transform 0.15s ease;
@@ -196,7 +197,7 @@ input[type="range"].luxury-slider::-moz-range-thumb {
   height: 16px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 2px solid #C85DA9;
+  border: 2px solid #7A0648;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0,0,0,0.35);
 }

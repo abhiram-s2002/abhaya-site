@@ -127,7 +127,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 w-full z-50 bg-[#D975BD]/95 backdrop-blur-md border-b border-white/20 transition-all duration-300 text-white">
+      <header className="sticky top-0 w-full z-50 bg-[#7A0648]/95 backdrop-blur-md border-b border-white/20 transition-all duration-300 text-white font-semibold">
         <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3.5 md:py-4 max-w-7xl mx-auto relative">
           
           {/* Left: Desktop Navigation Links (SHOP, COLLECTIONS, OUR STORY, CONTACT) + Mobile Menu Trigger */}
@@ -220,7 +220,7 @@ export default function Navbar() {
               </button>
 
               {currencyDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-44 bg-[#C85DA9] text-white rounded-none shadow-2xl border border-white/20 py-1 z-50 animate-fade-in">
+                <div className="absolute right-0 mt-1.5 w-44 bg-[#68043D] text-white rounded-none shadow-2xl border border-white/20 py-1 z-50 animate-fade-in font-semibold">
                   <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-white/70 border-b border-white/15 mb-1">
                     Select Region & Currency
                   </div>
@@ -233,12 +233,12 @@ export default function Navbar() {
                         showToast(`Region updated to ${item.name}`);
                       }}
                       className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors cursor-pointer ${
-                        currency === code ? 'bg-white/20 font-semibold text-white' : 'text-white/90 hover:bg-white/10'
+                        currency === code ? 'bg-white/20 font-bold text-white' : 'text-white/90 hover:bg-white/10 font-semibold'
                       }`}
                     >
                       <span className="flex items-center gap-2">
                         <span className="text-base leading-none">{item.flag}</span>
-                        <span className="font-medium leading-tight">{item.name}</span>
+                        <span className="font-semibold leading-tight">{item.name}</span>
                       </span>
                       {currency === code && <Check className="w-3.5 h-3.5 text-[#FFD700] shrink-0" strokeWidth={1.5} />}
                     </button>
@@ -267,7 +267,7 @@ export default function Navbar() {
                 onClick={() => handleNav('admin')}
                 aria-label="Admin Portal"
                 title="Admin Portal"
-                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-none border border-white/40 text-white hover:bg-white hover:text-[#C85DA9] text-[11px] font-semibold tracking-wider uppercase transition-colors cursor-pointer"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-none border border-white/40 text-white hover:bg-white hover:text-[#7A0648] text-[11px] font-bold tracking-wider uppercase transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.5} />
                 <span>Admin</span>
@@ -282,7 +282,7 @@ export default function Navbar() {
             >
               <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
               {totalCartCount > 0 && (
-                <span className="absolute -top-1 -right-1.5 bg-white text-[#C85DA9] text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-bold shadow-sm leading-none">
+                <span className="absolute -top-1 -right-1.5 bg-white text-[#7A0648] text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-bold shadow-sm leading-none">
                   {totalCartCount}
                 </span>
               )}
@@ -293,7 +293,7 @@ export default function Navbar() {
 
         {/* Top Search Bar Directly Under the Top Section */}
         {isSearchOpen && (
-          <div className="w-full border-t border-white/20 bg-[#D975BD] animate-fade-in shadow-md">
+          <div className="w-full border-t border-white/20 bg-[#7A0648] animate-fade-in shadow-md">
             <form
               onSubmit={handleSearchSubmit}
               className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex items-center gap-3 sm:gap-4"
@@ -370,10 +370,10 @@ export default function Navbar() {
           />
 
           {/* Drawer Panel */}
-          <div className="relative flex flex-col w-[85%] max-w-sm bg-[#C85DA9] text-white h-full shadow-2xl z-10 overflow-hidden animate-slide-in-left border-r border-white/20">
+          <div className="relative flex flex-col w-[85%] max-w-sm bg-[#68043D] text-white h-full shadow-2xl z-10 overflow-hidden animate-slide-in-left border-r border-white/20 font-semibold">
             
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/20 bg-[#C85DA9]">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-white/20 bg-[#7A0648]">
               <button
                 onClick={() => { handleNav('home'); setMobileMenuOpen(false); }}
                 className="flex items-center gap-2.5 text-left focus:outline-none"
@@ -601,10 +601,10 @@ export default function Navbar() {
             </div>
 
             {/* Drawer Footer: Account & Currency Selector */}
-            <div className="p-6 bg-[#B84E99] border-t border-white/20 space-y-4 text-white">
+            <div className="p-6 bg-[#580233] border-t border-white/20 space-y-4 text-white font-semibold">
               
               {/* Quick Links */}
-              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white">
+              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-white">
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
@@ -618,7 +618,7 @@ export default function Navbar() {
                 {adminEnabled && (
                   <button
                     onClick={() => handleNav('admin')}
-                    className="text-white font-semibold hover:text-white/80 transition-colors flex items-center gap-1.5 py-1"
+                    className="text-white font-bold hover:text-white/80 transition-colors flex items-center gap-1.5 py-1"
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
                     <span>Admin</span>
@@ -635,10 +635,10 @@ export default function Navbar() {
                       setCurrency(e.target.value);
                       showToast(`Region updated to ${CURRENCIES[e.target.value]?.name}`);
                     }}
-                    className="w-full appearance-none bg-[#C85DA9] border border-white/30 rounded-none px-3.5 py-2 text-xs font-semibold text-white focus:outline-none focus:border-white shadow-xs cursor-pointer"
+                    className="w-full appearance-none bg-[#68043D] border border-white/30 rounded-none px-3.5 py-2 text-xs font-bold text-white focus:outline-none focus:border-white shadow-xs cursor-pointer"
                   >
                     {Object.entries(CURRENCIES).map(([code, item]) => (
-                      <option key={code} value={code} className="bg-[#C85DA9] text-white">
+                      <option key={code} value={code} className="bg-[#68043D] text-white font-semibold">
                         {item.flag} {item.name}
                       </option>
                     ))}

@@ -265,17 +265,17 @@ export default function ShopPage() {
           {/* Deep Filters Button (Silhouettes & Craft) */}
           <button
             onClick={() => setMobileFilterOpen(true)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs uppercase tracking-wider font-medium border transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
               secondaryFiltersActiveCount > 0
-                ? 'bg-white text-[#C85DA9] border-white shadow-sm'
-                : 'bg-white/15 hover:bg-white/25 text-white border-white/30'
+                ? 'bg-white text-[#7A0648] border-white shadow-sm'
+                : 'bg-white/15 hover:bg-white/25 text-white border-white/30 font-semibold'
             }`}
             aria-label="Filter Silhouettes and Craft"
           >
-            <Filter className="w-3.5 h-3.5" strokeWidth={1.5} />
+            <Filter className="w-3.5 h-3.5" strokeWidth={1.8} />
             <span>Filters</span>
             {secondaryFiltersActiveCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-[#C85DA9] text-white text-[10px] flex items-center justify-center font-bold">
+              <span className="w-4 h-4 rounded-full bg-[#7A0648] text-white text-[10px] flex items-center justify-center font-bold">
                 {secondaryFiltersActiveCount}
               </span>
             )}
@@ -285,18 +285,18 @@ export default function ShopPage() {
           <div className="relative" ref={sortDropdownRef}>
             <button
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="bg-white/15 hover:bg-white/25 text-white border border-white/30 rounded-none px-3 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
+              className="bg-white/15 hover:bg-white/25 text-white border border-white/30 rounded-none px-3 py-1.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
               aria-expanded={isSortOpen}
               aria-label="Sort products"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-white" strokeWidth={1.5} />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-white" strokeWidth={1.8} />
               <span>{currentSortLabel}</span>
               <ChevronDown className={`w-3.5 h-3.5 text-white/70 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
             </button>
 
             {/* Sort Popover Menu */}
             {isSortOpen && (
-              <div className="absolute right-0 mt-1 w-48 bg-[#C85DA9] text-white rounded-none shadow-2xl border border-white/20 py-1 z-30 animate-fade-in">
+              <div className="absolute right-0 mt-1 w-48 bg-[#68043D] text-white rounded-none shadow-2xl border border-white/20 py-1 z-30 animate-fade-in font-semibold">
                 {sortOptions.map((option) => (
                   <button
                     key={option.id}
@@ -306,12 +306,12 @@ export default function ShopPage() {
                     }}
                     className={`w-full text-left px-3.5 py-2 text-xs uppercase tracking-wide flex items-center justify-between transition-colors cursor-pointer ${
                       sortBy === option.id
-                        ? 'bg-white/20 text-white font-semibold'
-                        : 'text-white/80 hover:bg-white/10'
+                        ? 'bg-white/20 text-white font-bold'
+                        : 'text-white/90 hover:bg-white/10 font-semibold'
                     }`}
                   >
                     <span>{option.label}</span>
-                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-[#FFD700] shrink-0" strokeWidth={1.5} />}
+                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-[#FFD700] shrink-0" strokeWidth={1.8} />}
                   </button>
                 ))}
               </div>
@@ -426,7 +426,7 @@ export default function ShopPage() {
           )}
 
           {selectedStyleFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#C85DA9] border border-white text-[11px] font-medium shadow-xs">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-white text-[11px] font-bold shadow-xs">
               Cut: {selectedStyleFilter}
               <button onClick={() => setSelectedStyleFilter('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove style filter">
                 <X className="w-3 h-3" />
@@ -435,7 +435,7 @@ export default function ShopPage() {
           )}
 
           {selectedWorkFilter !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#C85DA9] border border-white text-[11px] font-medium shadow-xs capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-white text-[11px] font-bold shadow-xs capitalize">
               Craft: {selectedWorkFilter}
               <button onClick={() => setSelectedWorkFilter('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove craftsmanship filter">
                 <X className="w-3 h-3" />
@@ -444,7 +444,7 @@ export default function ShopPage() {
           )}
 
           {selectedShade !== 'All' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-white text-[11px] text-[#C85DA9] font-medium shadow-xs">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-white text-[11px] text-[#7A0648] font-bold shadow-xs">
               Shade: {selectedShade}
               <button onClick={() => setSelectedShade('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove shade filter">
                 <X className="w-3 h-3" />
@@ -453,8 +453,8 @@ export default function ShopPage() {
           )}
 
           {onlyWishlist && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#C85DA9] border border-white text-[11px] font-medium shadow-xs">
-              <Heart className="w-3 h-3 fill-[#C85DA9]" />
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-white text-[11px] font-bold shadow-xs">
+              <Heart className="w-3 h-3 fill-[#7A0648]" />
               Wishlist
               <button onClick={() => setOnlyWishlist(false)} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove wishlist filter">
                 <X className="w-3 h-3" />
@@ -464,7 +464,7 @@ export default function ShopPage() {
 
           <button
             onClick={resetFilters}
-            className="text-[11px] text-white/90 hover:text-white font-semibold underline ml-1 cursor-pointer"
+            className="text-[11px] text-white hover:text-white/80 font-bold underline ml-1 cursor-pointer"
           >
             Clear all
           </button>
@@ -472,9 +472,9 @@ export default function ShopPage() {
       )}
 
       {/* 7. Product Grid Header / Layout Switcher */}
-      <div className="flex items-center justify-between text-xs text-white/80 pt-1">
+      <div className="flex items-center justify-between text-xs text-white pt-1 font-semibold">
         <span>
-          Showing <strong className="text-white font-semibold">{filteredProducts.length}</strong> items
+          Showing <strong className="text-white font-bold">{filteredProducts.length}</strong> items
         </span>
 
         {/* Mobile View Toggle (Single vs Two Columns) */}
@@ -482,7 +482,7 @@ export default function ShopPage() {
           <button
             onClick={() => setMobileGridCols(1)}
             className={`p-1.5 transition-all cursor-pointer ${
-              mobileGridCols === 1 ? 'bg-white text-[#C85DA9] shadow-xs' : 'text-white/70 hover:text-white'
+              mobileGridCols === 1 ? 'bg-white text-[#7A0648] shadow-xs' : 'text-white/80 hover:text-white'
             }`}
             title="Single card view"
             aria-label="1 column view"
@@ -492,7 +492,7 @@ export default function ShopPage() {
           <button
             onClick={() => setMobileGridCols(2)}
             className={`p-1.5 transition-all cursor-pointer ${
-              mobileGridCols === 2 ? 'bg-white text-[#C85DA9] shadow-xs' : 'text-white/70 hover:text-white'
+              mobileGridCols === 2 ? 'bg-white text-[#7A0648] shadow-xs' : 'text-white/80 hover:text-white'
             }`}
             title="2-column grid view"
             aria-label="2 column view"
@@ -504,22 +504,22 @@ export default function ShopPage() {
 
       {/* 8. Products Grid */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-16 sm:py-20 bg-[#C85DA9] rounded-none border border-white/20 p-6 sm:p-12 space-y-4 max-w-lg mx-auto shadow-2xl animate-fade-in text-white">
+        <div className="text-center py-16 sm:py-20 bg-[#68043D] rounded-none border border-white/20 p-6 sm:p-12 space-y-4 max-w-lg mx-auto shadow-2xl animate-fade-in text-white font-semibold">
           <div className="w-14 h-14 mx-auto rounded-full bg-white/15 flex items-center justify-center text-white">
             <Filter className="w-6 h-6 stroke-[1.5]" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-serif text-xl sm:text-2xl text-white font-medium uppercase tracking-wider">
+            <h3 className="font-serif text-xl sm:text-2xl text-white font-bold uppercase tracking-wider">
               No abayas match your filters
             </h3>
-            <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+            <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-medium">
               We couldn't find any items matching your selected criteria. Try adjusting the price slider or clearing your search.
             </p>
           </div>
           <div className="pt-2">
             <button
               onClick={resetFilters}
-              className="px-6 py-2.5 bg-white hover:bg-white/90 text-[#C85DA9] text-xs uppercase tracking-widest font-semibold rounded-none shadow-md active:scale-95 transition-all cursor-pointer border border-white"
+              className="px-6 py-2.5 bg-white hover:bg-white/90 text-[#7A0648] text-xs uppercase tracking-widest font-bold rounded-none shadow-md active:scale-95 transition-all cursor-pointer border border-white"
             >
               Reset All Filters
             </button>

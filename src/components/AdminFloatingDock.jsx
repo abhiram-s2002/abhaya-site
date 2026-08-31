@@ -35,9 +35,9 @@ export default function AdminFloatingDock() {
     >
       {/* Main Dock Panel */}
       {!collapsed && (
-        <div className="bg-[#C85DA9] border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-fade-in min-w-[220px]">
+        <div className="bg-[#68043D] border border-white/20 rounded-2xl shadow-2xl overflow-hidden animate-fade-in min-w-[220px]">
           {/* Header */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-[#B84E99] border-b border-white/10">
+          <div className="flex items-center gap-2 px-4 py-3 bg-[#580233] border-b border-white/10">
             <Crown className="w-3.5 h-3.5 text-[#FFD700]" />
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFF0A0]">
               Admin Controls
@@ -64,7 +64,7 @@ export default function AdminFloatingDock() {
               ) : (
                 <EyeOff className="w-3.5 h-3.5 shrink-0 opacity-60" />
               )}
-              <span className="flex-1 text-left">
+              <span className="flex-1 text-left font-bold">
                 {isAdminEditMode ? '✏️ Edit Mode: ON' : 'Edit Mode: OFF'}
               </span>
               <span className={`w-6 h-3 rounded-full transition-colors flex items-center px-0.5 ${isAdminEditMode ? 'bg-yellow-600' : 'bg-white/20'}`}>
@@ -75,7 +75,7 @@ export default function AdminFloatingDock() {
             {/* Quick CMS shortcuts when edit mode on */}
             {isAdminEditMode && (
               <div className="space-y-1 pt-1 border-t border-white/10">
-                <p className="text-[9px] uppercase tracking-widest text-white/40 px-3 pt-1">Quick Edit</p>
+                <p className="text-[9px] uppercase tracking-widest text-white/40 px-3 pt-1 font-semibold">Quick Edit</p>
                 {[
                   { key: 'announcement', label: '📢 Announcement Bar' },
                   { key: 'hero_slides', label: '🖼️ Hero Carousel' },
@@ -85,7 +85,7 @@ export default function AdminFloatingDock() {
                   <button
                     key={key}
                     onClick={() => setCmsDrawerOpen({ key, label: label.split(' ').slice(1).join(' ') })}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-white/70 hover:bg-white/10 hover:text-white transition-all text-left cursor-pointer"
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-white/90 hover:bg-white/10 hover:text-white transition-all text-left font-semibold cursor-pointer"
                   >
                     {label}
                   </button>
@@ -96,7 +96,7 @@ export default function AdminFloatingDock() {
             <div className="border-t border-white/10 pt-1.5 space-y-1">
               <button
                 onClick={() => navigateTo('admin')}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/70 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:bg-white/10 hover:text-white font-semibold transition-all cursor-pointer"
               >
                 <Settings className="w-3.5 h-3.5" />
                 <span>Full Admin Panel</span>
@@ -108,7 +108,7 @@ export default function AdminFloatingDock() {
                   // small timeout to let admin panel load, then open add product
                   setTimeout(() => {}, 300);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/70 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:bg-white/10 hover:text-white font-semibold transition-all cursor-pointer"
               >
                 <Package className="w-3.5 h-3.5" />
                 <span>Go to Products</span>
@@ -116,7 +116,7 @@ export default function AdminFloatingDock() {
 
               <button
                 onClick={logoutAdmin}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-red-300 hover:bg-red-500/10 font-bold transition-all cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>
@@ -132,7 +132,7 @@ export default function AdminFloatingDock() {
         className={`flex items-center gap-2 px-4 py-2.5 rounded-full shadow-2xl font-sans font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
           isAdminEditMode
             ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-300'
-            : 'bg-[#D975BD] text-white hover:bg-[#CF6EB2] border border-white/40 shadow-lg'
+            : 'bg-[#7A0648] text-white hover:bg-[#68043D] border border-white/40 shadow-lg'
         }`}
         title={collapsed ? 'Expand Admin Dock' : 'Minimize Admin Dock'}
         aria-expanded={!collapsed}

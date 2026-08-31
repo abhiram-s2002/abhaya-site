@@ -72,7 +72,7 @@ export default function HomePage() {
   const newArrivals = PRODUCTS.slice(0, 8);
 
   return (
-    <div className="bg-[#D975BD] text-white font-sans antialiased overflow-x-hidden">
+    <div className="bg-[#7A0648] text-white font-sans antialiased overflow-x-hidden font-semibold">
 
       {/* ═══════════════════════════════════════════════
           SECTION 1 — HERO / SHOP NOW
@@ -96,24 +96,24 @@ export default function HomePage() {
                   />
 
                   {/* Dark gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
 
                   {/* Content over image — bottom-left */}
                   <div className="absolute inset-0 flex flex-col justify-end p-6 pb-24 sm:p-10 md:p-16 lg:p-20 max-w-2xl">
                     {slide.badge && (
-                      <span className="inline-block w-fit text-[10px] sm:text-xs tracking-[0.25em] font-medium text-[#FFF0A0] uppercase mb-2 drop-shadow-sm">
+                      <span className="inline-block w-fit text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#FFF0A0] uppercase mb-2 drop-shadow-sm">
                         {slide.badge}
                       </span>
                     )}
-                    <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-medium uppercase tracking-[0.06em] leading-[1.15] mb-2 sm:mb-3 drop-shadow-lg">
+                    <h1 className="text-2xl sm:text-4xl md:text-5xl text-white font-bold uppercase tracking-[0.06em] leading-[1.15] mb-2 sm:mb-3 drop-shadow-lg">
                       {slide.title}
                     </h1>
-                    <p className="text-white/90 text-xs sm:text-sm max-w-md leading-relaxed mb-4 sm:mb-6 drop-shadow-md font-normal">
+                    <p className="text-white text-xs sm:text-sm max-w-md leading-relaxed mb-4 sm:mb-6 drop-shadow-md font-semibold">
                       {slide.description}
                     </p>
                     <button
                       onClick={() => navigateTo('shop', slide.productId)}
-                      className="inline-flex items-center justify-center w-fit bg-white text-[#C85DA9] hover:bg-white/90 uppercase tracking-[0.18em] font-semibold text-xs py-3.5 px-8 shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer rounded-none border border-white"
+                      className="inline-flex items-center justify-center w-fit bg-white text-[#7A0648] hover:bg-white/90 uppercase tracking-[0.18em] font-bold text-xs py-3.5 px-8 shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer rounded-none border border-white"
                     >
                       Shop Now
                     </button>
@@ -133,7 +133,7 @@ export default function HomePage() {
                   aria-label={`Go to slide ${i + 1}`}
                   className={`cursor-pointer h-[3px] transition-all duration-300 ${
                     currentSlide === i
-                      ? 'w-8 bg-[#D975BD]'
+                      ? 'w-8 bg-white shadow-sm'
                       : 'w-3 bg-white/50 hover:bg-white/90'
                   }`}
                 />
@@ -147,12 +147,12 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 2 — SHOP BY CATEGORY
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-category" className="py-14 sm:py-20 bg-[#D975BD]">
+      <section id="shop-by-category" className="py-14 sm:py-20 bg-[#7A0648]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-bold uppercase tracking-[0.06em]">
               Shop by Category
             </h2>
           </div>
@@ -165,7 +165,7 @@ export default function HomePage() {
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] mb-2.5 shadow-sm">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#68043D] mb-2.5 shadow-sm border border-white/10">
                   <img
                     src={STYLE_IMAGES[styleName]}
                     alt={styleName}
@@ -175,7 +175,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
                 {/* Card Label */}
-                <h4 className="text-xs sm:text-[13px] font-medium text-white uppercase tracking-wider text-center group-hover:text-white/80 transition-colors duration-200">
+                <h4 className="text-xs sm:text-[13px] font-bold text-white uppercase tracking-wider text-center group-hover:text-white/80 transition-colors duration-200">
                   {styleName}
                 </h4>
               </div>
@@ -189,12 +189,12 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 3 — SHOP BY WORK
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-work" className="py-14 sm:py-20 bg-[#D975BD]">
+      <section id="shop-by-work" className="py-14 sm:py-20 bg-[#7A0648]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium uppercase tracking-[0.06em]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-bold uppercase tracking-[0.06em]">
               Shop by Work
             </h2>
           </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#C85DA9] mb-2.5 shadow-sm">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#68043D] mb-2.5 shadow-sm border border-white/10">
                   <img
                     src={WORK_IMAGES[workName]}
                     alt={workName}
@@ -217,7 +217,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
                 {/* Card Label */}
-                <h4 className="text-xs sm:text-[13px] font-medium text-white uppercase tracking-wider text-center group-hover:text-white/80 transition-colors duration-200 capitalize">
+                <h4 className="text-xs sm:text-[13px] font-bold text-white uppercase tracking-wider text-center group-hover:text-white/80 transition-colors duration-200 capitalize">
                   {workName}
                 </h4>
               </div>
@@ -231,25 +231,25 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════
           SECTION 4 — NEW ARRIVALS
           ═══════════════════════════════════════════════ */}
-      <section id="new-arrivals" className="py-14 sm:py-20 bg-[#C85DA9]">
+      <section id="new-arrivals" className="py-14 sm:py-20 bg-[#68043D]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <div className="flex items-center justify-between mb-8 sm:mb-10">
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl text-white font-medium uppercase tracking-[0.06em] mb-0.5">
+              <h2 className="text-xl sm:text-2xl md:text-3xl text-white font-bold uppercase tracking-[0.06em] mb-0.5">
                 New Arrivals
               </h2>
-              <p className="text-xs text-white/80 tracking-wide uppercase">
+              <p className="text-xs text-white/90 tracking-wide uppercase font-semibold">
                 Explore our latest boutique releases
               </p>
             </div>
             <button
               onClick={() => navigateTo('shop')}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:text-white/80 transition-colors"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white hover:text-white/80 transition-colors"
             >
               <span className="hidden sm:inline">View All</span>
-              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+              <ArrowRight className="w-4 h-4" strokeWidth={1.8} />
             </button>
           </div>
 
