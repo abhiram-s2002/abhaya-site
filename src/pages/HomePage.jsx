@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import ProductCard from '../components/ProductCard';
 import EditableSection from '../components/cms/EditableSection';
 
 /* ──────────────────────────────────────────────
@@ -67,9 +66,6 @@ export default function HomePage() {
     setCurrentSlide((p) => (p - 1 + heroSlides.length) % heroSlides.length);
   const nextSlide = () =>
     setCurrentSlide((p) => (p + 1) % heroSlides.length);
-
-  // ── New Arrivals — first 8 products ──
-  const newArrivals = PRODUCTS.slice(0, 8);
 
   return (
     <div className="bg-[#FAF8F5] text-[#1E141B] font-sans antialiased overflow-x-hidden font-semibold">
@@ -224,41 +220,6 @@ export default function HomePage() {
             ))}
           </div>
 
-        </div>
-      </section>
-
-
-      {/* ═══════════════════════════════════════════════
-          SECTION 4 — NEW ARRIVALS
-          ═══════════════════════════════════════════════ */}
-      <section id="new-arrivals" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <div className="flex items-center justify-between mb-8 sm:mb-10">
-            <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl text-[#1E141B] font-bold uppercase tracking-[0.06em] mb-0.5">
-                New Arrivals
-              </h2>
-              <p className="text-xs text-stone-500 tracking-wide uppercase font-semibold">
-                Explore our latest boutique releases
-              </p>
-            </div>
-            <button
-              onClick={() => navigateTo('shop')}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#7A0648] hover:text-[#68043D] transition-colors"
-            >
-              <span className="hidden sm:inline">View All</span>
-              <ArrowRight className="w-4 h-4" strokeWidth={1.8} />
-            </button>
-          </div>
-
-          {/* Products Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            {newArrivals.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
         </div>
       </section>
 
