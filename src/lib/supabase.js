@@ -47,6 +47,7 @@ export function formatProductFromDB(row) {
     defaultWork: row.default_work || 'plain',
     styles: Array.isArray(row.styles) ? row.styles : [],
     works: Array.isArray(row.works) ? row.works : [],
+    colors: Array.isArray(row.colors) ? row.colors : [],
     image: row.image || '',
     gallery: Array.isArray(row.gallery) ? row.gallery : (row.image ? [row.image] : []),
     sizes: Array.isArray(row.sizes) ? row.sizes : [],
@@ -62,7 +63,7 @@ export function formatProductFromDB(row) {
  * Format UI product model to database row
  */
 export function formatProductForDB(product) {
-  return {
+  const payload = {
     id: product.id,
     name: product.name,
     subtitle: product.subtitle || '',
@@ -88,12 +89,19 @@ export function formatProductForDB(product) {
     reviews: product.reviews || [],
     updated_at: new Date().toISOString()
   };
+
+  if (product.colors && Array.isArray(product.colors)) {
+    payload.colors = product.colors;
+  }
+
+  return payload;
 }
 
 /**
  * Fetch all products from Supabase (or fallback to local cache/defaults)
  */
 export async function fetchProductsFromSupabase() {
+  console.log('[Supabase DB] fetchProductsFromSupabase called. isSupabaseConfigured:', isSupabaseConfigured);
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase
@@ -102,17 +110,20 @@ export async function fetchProductsFromSupabase() {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.warn('Supabase fetch error, falling back to local data:', error.message);
+        console.error('[Supabase DB ERROR] fetchProductsFromSupabase error:', error.message, error);
       } else if (data && data.length > 0) {
+        console.log(`[Supabase DB SUCCESS] Loaded ${data.length} products from Supabase table 'products':`, data);
         const formatted = data.map(formatProductFromDB);
         // Cache to localStorage for fast initial reloads
         try {
           localStorage.setItem(LOCAL_STORAGE_PRODUCTS_KEY, JSON.stringify(formatted));
         } catch (_) {}
         return { data: formatted, source: 'supabase', error: null };
+      } else {
+        console.warn('[Supabase DB] Table products is empty (0 rows).');
       }
     } catch (err) {
-      console.warn('Network/Supabase error:', err);
+      console.error('[Supabase DB CATCH] Network or fetch error:', err);
     }
   }
 
@@ -122,39 +133,72 @@ export async function fetchProductsFromSupabase() {
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
+        console.log(`[Supabase DB FALLBACK] Loaded ${parsed.length} products from localStorage:`, parsed);
         return { data: parsed, source: 'localStorage', error: null };
       }
     }
   } catch (_) {}
 
+  console.log('[Supabase DB FALLBACK] Loaded default static products:', DEFAULT_PRODUCTS);
   return { data: DEFAULT_PRODUCTS, source: 'default', error: null };
 }
 
 /**
- * Insert or Update a product in Supabase
+ * Insert or Update a product in Supabase with auto-retry for missing schema columns
  */
 export async function upsertProductToSupabase(product) {
-  const dbPayload = formatProductForDB(product);
+  console.log('[Supabase DB] Starting upsertProductToSupabase for product ID:', product?.id, product);
+  let dbPayload = formatProductForDB(product);
+  console.log('[Supabase DB] Formatted DB payload to write:', dbPayload);
 
   if (isSupabaseConfigured && supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .upsert(dbPayload, { onConflict: 'id' })
-        .select()
-        .single();
+    let attempts = 0;
+    const maxAttempts = 5;
 
-      if (error) throw error;
-      return { data: formatProductFromDB(data), error: null };
-    } catch (err) {
-      console.error('Error saving to Supabase:', err);
-      // Update local storage as well
-      saveProductLocally(product);
-      return { data: product, error: err.message };
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .upsert(dbPayload, { onConflict: 'id' })
+          .select();
+
+        if (error) {
+          // If a column is missing in the database table (PGRST204), extract column name and retry without it
+          if (error.code === 'PGRST204' || (error.message && error.message.includes("Could not find the '"))) {
+            const match = error.message.match(/Could not find the '([^']+)' column/);
+            const missingCol = match ? match[1] : null;
+
+            if (missingCol && dbPayload[missingCol] !== undefined) {
+              console.warn(`[Supabase DB RECOVERY] Column '${missingCol}' not found in database schema. Stripping and retrying save...`);
+              delete dbPayload[missingCol];
+              continue; // retry loop
+            }
+          }
+
+          console.error('[Supabase DB ERROR] Failed to save product to Supabase table:', {
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            code: error.code
+          });
+          throw error;
+        }
+
+        console.log('[Supabase DB SUCCESS] Product successfully saved/updated in Supabase:', data);
+        const returnedItem = Array.isArray(data) ? data[0] : data;
+        saveProductLocally(product);
+        return { data: formatProductFromDB(returnedItem) || product, error: null };
+      } catch (err) {
+        console.error('[Supabase DB CATCH] Exception during product save:', err);
+        // Update local storage as fallback
+        saveProductLocally(product);
+        return { data: product, error: err.message };
+      }
     }
   }
 
-  // Local fallback
+  console.warn('[Supabase DB WARN] Supabase is not configured. Saved to localStorage only.');
   saveProductLocally(product);
   return { data: product, error: null };
 }
@@ -163,6 +207,7 @@ export async function upsertProductToSupabase(product) {
  * Delete a product from Supabase
  */
 export async function deleteProductFromSupabase(productId) {
+  console.log('[Supabase DB] deleteProductFromSupabase called for ID:', productId);
   if (isSupabaseConfigured && supabase) {
     try {
       const { error } = await supabase
@@ -170,9 +215,13 @@ export async function deleteProductFromSupabase(productId) {
         .delete()
         .eq('id', productId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('[Supabase DB ERROR] Failed to delete product from Supabase:', error);
+        throw error;
+      }
+      console.log('[Supabase DB SUCCESS] Product deleted from Supabase:', productId);
     } catch (err) {
-      console.error('Error deleting from Supabase:', err);
+      console.error('[Supabase DB CATCH] Exception during delete:', err);
     }
   }
 

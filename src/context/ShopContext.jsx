@@ -218,6 +218,7 @@ export function ShopProvider({ children }) {
 
   // Update a single CMS section key (optimistic + Supabase save)
   const updateSiteContent = useCallback(async (key, newContent) => {
+    console.log('[ShopContext] updateSiteContent triggered for:', key, newContent);
     setSiteContent(prev => ({ ...prev, [key]: newContent }));
     await upsertSiteContent(key, newContent);
   }, []);
@@ -241,14 +242,13 @@ export function ShopProvider({ children }) {
     await _setAdminEnabledRemote(val);
   }, []);
 
-
-
-
   // Product CRUD Handlers
   const createProduct = async (newProduct) => {
+    console.log('[ShopContext] createProduct called:', newProduct);
     // Optimistic local update
     setProducts(prev => [newProduct, ...prev]);
     const result = await upsertProductToSupabase(newProduct);
+    console.log('[ShopContext] createProduct result from Supabase:', result);
     if (result.data) {
       setProducts(prev => {
         const filtered = prev.filter(p => p.id !== newProduct.id);
@@ -259,6 +259,7 @@ export function ShopProvider({ children }) {
   };
 
   const updateProduct = async (id, updatedFields) => {
+    console.log('[ShopContext] updateProduct called for ID:', id, 'updatedFields:', updatedFields);
     let merged = null;
     setProducts(prev =>
       prev.map(p => {
@@ -270,11 +271,15 @@ export function ShopProvider({ children }) {
       })
     );
     if (merged) {
-      await upsertProductToSupabase(merged);
+      console.log('[ShopContext] Merged product data to save to Supabase:', merged);
+      const res = await upsertProductToSupabase(merged);
+      console.log('[ShopContext] updateProduct result from Supabase:', res);
+      return res;
     }
   };
 
   const deleteProduct = async (id) => {
+    console.log('[ShopContext] deleteProduct called for ID:', id);
     setProducts(prev => prev.filter(p => p.id !== id));
     await deleteProductFromSupabase(id);
   };

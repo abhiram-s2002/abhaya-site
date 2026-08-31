@@ -253,13 +253,17 @@ const LS_KEY = 'noor_cms_content';
 // Fetch all site content (Supabase → localStorage → defaults)
 // ─────────────────────────────────────────────────────────────────────────────
 export async function fetchAllSiteContent() {
+  console.log('[CMS DB] fetchAllSiteContent called. isSupabaseConfigured:', isSupabaseConfigured);
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase
         .from('site_content')
         .select('key, content');
 
-      if (!error && data && data.length > 0) {
+      if (error) {
+        console.error('[CMS DB ERROR] Failed to fetch site_content from Supabase:', error);
+      } else if (data && data.length > 0) {
+        console.log(`[CMS DB SUCCESS] Loaded ${data.length} CMS sections from Supabase table 'site_content':`, data);
         const result = {};
         for (const row of data) {
           result[row.key] = row.content;
@@ -268,18 +272,25 @@ export async function fetchAllSiteContent() {
         const merged = mergeWithDefaults(result);
         try { localStorage.setItem(LS_KEY, JSON.stringify(merged)); } catch (_) {}
         return merged;
+      } else {
+        console.warn('[CMS DB] site_content table is empty (0 rows).');
       }
     } catch (err) {
-      console.warn('CMS fetch error:', err);
+      console.error('[CMS DB CATCH] Network or query error:', err);
     }
   }
 
   // Fallback: localStorage
   try {
     const saved = localStorage.getItem(LS_KEY);
-    if (saved) return mergeWithDefaults(JSON.parse(saved));
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      console.log('[CMS DB FALLBACK] Loaded CMS content from localStorage:', parsed);
+      return mergeWithDefaults(parsed);
+    }
   } catch (_) {}
 
+  console.log('[CMS DB FALLBACK] Loaded default static CMS content:', DEFAULT_CONTENT);
   return { ...DEFAULT_CONTENT };
 }
 
@@ -287,6 +298,7 @@ export async function fetchAllSiteContent() {
 // Save a single content key to Supabase (upsert)
 // ─────────────────────────────────────────────────────────────────────────────
 export async function upsertSiteContent(key, content) {
+  console.log('[CMS DB] upsertSiteContent called for section key:', key, 'content:', content);
   const section = CMS_SECTIONS.find(s => s.key === key)?.section || 'global';
   const label = CMS_SECTIONS.find(s => s.key === key)?.label || key;
 
@@ -297,16 +309,30 @@ export async function upsertSiteContent(key, content) {
     content,
     updated_at: new Date().toISOString(),
   };
+  console.log('[CMS DB] Payload to write into table site_content:', payload);
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('site_content')
-        .upsert(payload, { onConflict: 'key' });
-      if (error) throw error;
+        .upsert(payload, { onConflict: 'key' })
+        .select();
+
+      if (error) {
+        console.error('[CMS DB ERROR] Failed to upsert into Supabase site_content:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        throw error;
+      }
+      console.log('[CMS DB SUCCESS] CMS section saved successfully to Supabase:', data);
     } catch (err) {
-      console.warn('CMS upsert error, saving locally:', err);
+      console.error('[CMS DB CATCH] Exception during CMS save:', err);
     }
+  } else {
+    console.warn('[CMS DB WARN] Supabase is not configured. Saved to localStorage only.');
   }
 
   // Always update localStorage as well
@@ -315,7 +341,10 @@ export async function upsertSiteContent(key, content) {
     const existing = saved ? JSON.parse(saved) : { ...DEFAULT_CONTENT };
     existing[key] = content;
     localStorage.setItem(LS_KEY, JSON.stringify(existing));
-  } catch (_) {}
+    console.log('[CMS LOCAL] Updated localStorage for key:', key);
+  } catch (err) {
+    console.error('[CMS LOCAL ERROR] Error updating localStorage:', err);
+  }
 
   return { key, content };
 }
