@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import EditableSection from '../components/cms/EditableSection';
+import ProductCard from '../components/ProductCard';
 
 /* ──────────────────────────────────────────────
    Image maps for Style & Work collection cards
@@ -52,6 +53,27 @@ const WORKS_LIST = [
 
 export default function HomePage() {
   const { PRODUCTS, navigateTo, formatPrice, siteContent } = useShop();
+
+  // ── Category Products (Latest 6 listings per category) ──
+  const shailaProducts = useMemo(() => {
+    return PRODUCTS.filter(p => p.category === 'Shaila/Shawl' || (p.category && p.category.toLowerCase().includes('shaila'))).slice(0, 6);
+  }, [PRODUCTS]);
+
+  const hijabProducts = useMemo(() => {
+    return PRODUCTS.filter(p => p.category === 'Hijaab' || (p.category && (p.category.toLowerCase().includes('hijaab') || p.category.toLowerCase().includes('hijab')))).slice(0, 6);
+  }, [PRODUCTS]);
+
+  const innerPrayerProducts = useMemo(() => {
+    return PRODUCTS.filter(p => p.category === 'Inner and Prayer dress' || (p.category && (p.category.toLowerCase().includes('inner') || p.category.toLowerCase().includes('prayer')))).slice(0, 6);
+  }, [PRODUCTS]);
+
+  const kidsProducts = useMemo(() => {
+    return PRODUCTS.filter(p => p.category === 'Kids abaya' || (p.category && p.category.toLowerCase().includes('kids'))).slice(0, 6);
+  }, [PRODUCTS]);
+
+  const wholesaleProducts = useMemo(() => {
+    return PRODUCTS.filter(p => p.category === 'WHOLESALE' || (p.category && p.category.toLowerCase().includes('wholesale'))).slice(0, 6);
+  }, [PRODUCTS]);
 
   // ── Hero Carousel ──
   const heroSlides = siteContent?.hero_slides || [];
@@ -231,6 +253,176 @@ export default function HomePage() {
 
         </div>
       </section>
+
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 4 — 2. SHAILA / SHAWL
+          ═══════════════════════════════════════════════ */}
+      {shailaProducts.length > 0 && (
+        <section id="shaila-shawl-section" className="py-14 sm:py-20 bg-white border-t border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 sm:mb-14">
+              <div className="text-center sm:text-left">
+                <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-1.5">
+                  Haute Drapes & Accessories
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
+                  SHAILA / SHAWL
+                </h2>
+              </div>
+              <button
+                onClick={() => navigateTo('shop', null, 'Shaila/Shawl')}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#7A0648] hover:text-[#5E0336] transition-colors cursor-pointer group"
+              >
+                <span>View All Shailas</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+              {shailaProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 5 — 3. HIJAAB
+          ═══════════════════════════════════════════════ */}
+      {hijabProducts.length > 0 && (
+        <section id="hijab-section" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 sm:mb-14">
+              <div className="text-center sm:text-left">
+                <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-1.5">
+                  Niqabs, Caps, Gloves & Essential Sets
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
+                  HIJAAB
+                </h2>
+              </div>
+              <button
+                onClick={() => navigateTo('shop', null, 'Hijaab')}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#7A0648] hover:text-[#5E0336] transition-colors cursor-pointer group"
+              >
+                <span>View All Hijaabs</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+              {hijabProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 6 — 4. INNER & PRAYER DRESS
+          ═══════════════════════════════════════════════ */}
+      {innerPrayerProducts.length > 0 && (
+        <section id="inner-prayer-section" className="py-14 sm:py-20 bg-white border-t border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 sm:mb-14">
+              <div className="text-center sm:text-left">
+                <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-1.5">
+                  Comfort Underdresses & Blessed Prayer Wear
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
+                  INNER & PRAYER DRESS
+                </h2>
+              </div>
+              <button
+                onClick={() => navigateTo('shop', null, 'Inner and Prayer dress')}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#7A0648] hover:text-[#5E0336] transition-colors cursor-pointer group"
+              >
+                <span>View All Inners & Prayer Wear</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+              {innerPrayerProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 7 — 5. KIDS ABAYA
+          ═══════════════════════════════════════════════ */}
+      {kidsProducts.length > 0 && (
+        <section id="kids-abaya-section" className="py-14 sm:py-20 bg-[#FAF8F5] border-t border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 sm:mb-14">
+              <div className="text-center sm:text-left">
+                <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-1.5">
+                  Gentle Modest Cuts for Little Princesses
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
+                  KIDS ABAYA
+                </h2>
+              </div>
+              <button
+                onClick={() => navigateTo('shop', null, 'Kids abaya')}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#7A0648] hover:text-[#5E0336] transition-colors cursor-pointer group"
+              >
+                <span>View All Kids Abayas</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+              {kidsProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 8 — 6. WHOLESALE
+          ═══════════════════════════════════════════════ */}
+      {wholesaleProducts.length > 0 && (
+        <section id="wholesale-section" className="py-14 sm:py-20 bg-white border-t border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 sm:mb-14">
+              <div className="text-center sm:text-left">
+                <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-1.5">
+                  B2B Boutique Supply & Bulk Orders
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
+                  WHOLESALE
+                </h2>
+              </div>
+              <button
+                onClick={() => navigateTo('shop', null, 'WHOLESALE')}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#7A0648] hover:text-[#5E0336] transition-colors cursor-pointer group"
+              >
+                <span>Explore Wholesale Catalog</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+              {wholesaleProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
     </div>
   );
