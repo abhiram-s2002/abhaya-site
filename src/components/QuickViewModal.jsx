@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Star, ShoppingBag, Heart, Sparkles, Check, ArrowRight, Scissors } from 'lucide-react';
+import { X, Star, ShoppingBag, Sparkles, Check, ArrowRight, Scissors } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
 
@@ -7,8 +7,6 @@ function QuickViewModalContent({ product, onClose }) {
   const {
     formatPrice,
     addToCart,
-    toggleWishlist,
-    isWishlisted,
     navigateTo
   } = useShop();
 
@@ -22,8 +20,6 @@ function QuickViewModalContent({ product, onClose }) {
   const images = product.gallery && product.gallery.length > 0
     ? product.gallery
     : (product.image ? [product.image] : []);
-
-  const wishlisted = isWishlisted(product.id);
 
   const isAbayaCategory = !product.category || product.category === 'ABAYA' || product.category === 'Kids abaya';
 
@@ -256,22 +252,10 @@ function QuickViewModalContent({ product, onClose }) {
               <div className="flex gap-2.5">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 bg-[#7A0648] hover:bg-[#68043D] text-white text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-[#7A0648] shadow-md cursor-pointer"
+                  className="w-full py-3.5 bg-[#7A0648] hover:bg-[#68043D] text-white text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-[#7A0648] shadow-md cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4 text-white" strokeWidth={1.5} />
                   <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
-                </button>
-
-                <button
-                  onClick={() => toggleWishlist(product.id)}
-                  className={`p-3 border rounded-none transition-colors cursor-pointer ${
-                    wishlisted
-                      ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
-                      : 'bg-white text-stone-600 border-stone-300 hover:bg-stone-50'
-                  }`}
-                  aria-label="Wishlist"
-                >
-                  <Heart className={`w-4 h-4 ${wishlisted ? 'fill-white text-white' : ''}`} strokeWidth={1.5} />
                 </button>
               </div>
 

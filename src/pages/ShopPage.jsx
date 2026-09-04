@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   SlidersHorizontal,
-  Heart,
   Sparkles,
   RotateCcw,
   X,
@@ -39,8 +38,6 @@ export default function ShopPage() {
     setSelectedSubcategoryFilter: setContextSubcategoryFilter,
     selectedWholesaleTypeFilter: contextWholesaleTypeFilter,
     setSelectedWholesaleTypeFilter: setContextWholesaleTypeFilter,
-    wishlistOnlyFilter,
-    wishlist,
     formatPrice,
     searchQuery,
     setSearchQuery
@@ -64,22 +61,13 @@ export default function ShopPage() {
   const [selectedShade, setSelectedShade] = useState('All');
   const [maxPrice, setMaxPrice] = useState(maxPriceLimit);
   const [sortBy, setSortBy] = useState('featured');
-  const [onlyWishlist, setOnlyWishlist] = useState(Boolean(wishlistOnlyFilter));
-
   // UI state
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [mobileGridCols, setMobileGridCols] = useState(2);
-  const [activeDrawerTab, setActiveDrawerTab] = useState('category'); // 'category' | 'style' | 'work' | 'wholesale' | 'shade' | 'wishlist'
+  const [activeDrawerTab, setActiveDrawerTab] = useState('category'); // 'category' | 'style' | 'work' | 'wholesale' | 'shade'
 
   const sortDropdownRef = useRef(null);
-
-  // Sync wishlistOnlyFilter from context
-  useEffect(() => {
-    if (wishlistOnlyFilter) {
-      setOnlyWishlist(true);
-    }
-  }, [wishlistOnlyFilter]);
 
   // Sync external filters from context
   useEffect(() => {
@@ -142,15 +130,15 @@ export default function ShopPage() {
     };
   }, [mobileFilterOpen]);
 
-  // Main Category Tabs
+  // Main Category Tabs (aligned with Navbar Menu)
   const categoryTabs = [
     { id: 'All', label: 'All Collections' },
-    { id: 'Abaya', label: '1. Abaya' },
-    { id: 'Shaila/Shawl', label: '2. Shaila / Shawl' },
-    { id: 'Hijab', label: '3. Hijab & Niqab' },
-    { id: 'Inner & Prayer dress', label: '4. Inner & Prayer Dress' },
-    { id: 'Kids abaya', label: '5. Kids Abaya' },
-    { id: 'Wholesale', label: '6. Wholesale (B2B)' }
+    { id: 'Abaya', label: 'Abaya' },
+    { id: 'Shaila/Shawl', label: 'Shaila / Shawl' },
+    { id: 'Hijab', label: 'Hijaab' },
+    { id: 'Inner & Prayer dress', label: 'Inner & Prayer Dress' },
+    { id: 'Kids abaya', label: 'Kids Abaya' },
+    { id: 'Wholesale', label: 'Wholesale' }
   ];
 
   const shades = [
@@ -261,11 +249,6 @@ export default function ShopPage() {
         if (!matchesShade) return false;
       }
 
-      // 9. Wishlist Filter
-      if (onlyWishlist && !wishlist.includes(product.id)) {
-        return false;
-      }
-
       return true;
     }).sort((a, b) => {
       if (sortBy === 'price-low') return a.price - b.price;
@@ -283,8 +266,6 @@ export default function ShopPage() {
     selectedWholesaleType,
     selectedSubcategory,
     selectedShade,
-    onlyWishlist,
-    wishlist,
     sortBy
   ]);
 
@@ -318,7 +299,6 @@ export default function ShopPage() {
     setSelectedShade('All');
     if (setContextColorFilter) setContextColorFilter('All');
     setMaxPrice(maxPriceLimit);
-    setOnlyWishlist(false);
   };
 
   const isFiltered =
@@ -329,7 +309,6 @@ export default function ShopPage() {
     selectedSubcategory !== 'All' ||
     selectedShade !== 'All' ||
     maxPrice < maxPriceLimit ||
-    onlyWishlist ||
     Boolean(searchQuery.trim());
 
   const secondaryFiltersActiveCount =
@@ -338,8 +317,7 @@ export default function ShopPage() {
     (selectedWholesaleType !== 'All' ? 1 : 0) +
     (selectedSubcategory !== 'All' ? 1 : 0) +
     (selectedShade !== 'All' ? 1 : 0) +
-    (maxPrice < maxPriceLimit ? 1 : 0) +
-    (onlyWishlist ? 1 : 0);
+    (maxPrice < maxPriceLimit ? 1 : 0);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8 font-sans">
@@ -746,11 +724,10 @@ export default function ShopPage() {
             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar px-4 py-2 border-b border-stone-200 bg-[#FAF8F5]">
               {[
                 { id: 'category', label: 'Categories' },
-                { id: 'style', label: 'Silhouettes' },
-                { id: 'work', label: 'Craftsmanship' },
+                { id: 'style', label: 'By Category Style' },
+                { id: 'work', label: 'By Work' },
                 { id: 'wholesale', label: 'Wholesale' },
-                { id: 'shade', label: 'Colors' },
-                { id: 'wishlist', label: 'Wishlist' }
+                { id: 'shade', label: 'Colors' }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -897,22 +874,6 @@ export default function ShopPage() {
                       <span>{shade.name}</span>
                     </button>
                   ))}
-                </div>
-              )}
-
-              {/* Wishlist */}
-              {activeDrawerTab === 'wishlist' && (
-                <div className="p-4 rounded-none bg-stone-50 border border-stone-200 flex items-center justify-between">
-                  <div className="font-bold text-sm text-[#1E141B] flex items-center gap-1.5">
-                    <Heart className="w-4 h-4 text-[#7A0648] fill-[#7A0648]" />
-                    <span>Saved Wishlist Only ({wishlist.length})</span>
-                  </div>
-                  <button
-                    onClick={() => setOnlyWishlist(!onlyWishlist)}
-                    className={`w-12 h-6 rounded-full transition-colors relative ${onlyWishlist ? 'bg-[#7A0648]' : 'bg-stone-300'}`}
-                  >
-                    <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform transition-transform ${onlyWishlist ? 'translate-x-6' : 'translate-x-0.5'}`} />
-                  </button>
                 </div>
               )}
 

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Star,
   ShoppingBag,
-  Heart,
   Sparkles,
   ShieldCheck,
   Truck,
@@ -45,8 +44,6 @@ export default function ProductDetailPage() {
     selectedProductId,
     formatPrice,
     addToCart,
-    toggleWishlist,
-    isWishlisted,
     navigateTo,
     showToast,
     currency
@@ -146,7 +143,6 @@ export default function ProductDetailPage() {
 
   const currentColor = product.colors?.[0] || { name: 'Standard', hex: '#1C1C1C' };
   const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
-  const wishlisted = isWishlisted(product.id);
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
   const nextImage = () => {
@@ -307,18 +303,6 @@ export default function ProductDetailPage() {
                 aria-label="Share link"
               >
                 <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />
-              </button>
-              <button
-                onClick={() => toggleWishlist(product.id)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm border border-stone-200 ${
-                  wishlisted
-                    ? 'bg-[#7A0648] text-white'
-                    : 'bg-white text-[#7A0648] hover:bg-stone-50'
-                }`}
-                title="Save to Wishlist"
-                aria-label="Save to Wishlist"
-              >
-                <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-white' : 'fill-[#7A0648]'}`} strokeWidth={1.5} />
               </button>
             </div>
 

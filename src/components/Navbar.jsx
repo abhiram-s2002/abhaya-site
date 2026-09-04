@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Search,
   ShoppingBag,
-  Heart,
   Menu,
   X,
   Plus,
