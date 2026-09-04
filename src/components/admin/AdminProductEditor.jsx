@@ -25,11 +25,19 @@ import {
   MessageSquareQuote,
   User
 } from 'lucide-react';
-import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../../data/products';
+import {
+  MAIN_CATEGORIES,
+  ABAYA_STYLES,
+  ABAYA_WORKS,
+  ABAYA_SIZES,
+  WHOLESALE_TYPES,
+  HIJAB_TYPES,
+  INNER_PRAYER_TYPES
+} from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
 import { useShop } from '../../context/ShopContext';
 
-const PRESET_CATEGORIES = ['Abaya', 'Open abaya', 'Closed cut', 'Kimono or kaftan', 'Butterfly or farasha', 'umbrella cut or Flare', '2 piece abaya (with inner)', 'Coat abaya'];
+const PRESET_CATEGORIES = ['Abaya', 'Shaila/Shawl', 'Hijab', 'Inner & Prayer dress', 'Kids abaya', 'Wholesale'];
 const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'Staff Pick', 'Artisan Atelier', 'Trending', 'Exclusive'];
 
 const LUXURY_PALETTE_PRESETS = [
@@ -61,6 +69,9 @@ export default function AdminProductEditor({
   const [price, setPrice] = useState('180');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('Abaya');
+  const [subcategory, setSubcategory] = useState('');
+  const [wholesaleType, setWholesaleType] = useState('Simple/Basic');
+  const [wholesaleMinQty, setWholesaleMinQty] = useState(10);
   const [customCategory, setCustomCategory] = useState('');
   const [badge, setBadge] = useState('');
   const [targetRegion, setTargetRegion] = useState('all'); // 'all' | 'india' | 'arab'
@@ -80,7 +91,7 @@ export default function AdminProductEditor({
 
   // Works / Craftsmanship State
   const [works, setWorks] = useState(ABAYA_WORKS.map(w => w.name));
-  const [defaultWork, setDefaultWork] = useState('plain');
+  const [defaultWork, setDefaultWork] = useState('Plain/Basic');
 
   // Sizes State
   const [sizes, setSizes] = useState(ABAYA_SIZES.map(s => s.label));
@@ -121,6 +132,9 @@ export default function AdminProductEditor({
       setPrice(product.price !== undefined ? String(product.price) : '');
       setOriginalPrice(product.originalPrice ? String(product.originalPrice) : '');
       setCategory(product.category || 'Abaya');
+      setSubcategory(product.subcategory || '');
+      setWholesaleType(product.wholesaleType || 'Simple/Basic');
+      setWholesaleMinQty(product.wholesaleMinQty !== undefined ? Number(product.wholesaleMinQty) : 10);
       setCustomCategory('');
       setBadge(product.badge || '');
       setTargetRegion(product.targetRegion || 'all');
@@ -139,12 +153,15 @@ export default function AdminProductEditor({
       setCareInstructions(product.careInstructions || '');
       setReviews(Array.isArray(product.reviews) && product.reviews.length > 0 ? product.reviews : (Array.isArray(product.reviewsList) ? product.reviewsList : []));
     } else {
-      // Pristine defaults for new abaya
+      // Pristine defaults for new product
       setName('');
       setSubtitle('');
       setPrice('180');
       setOriginalPrice('');
       setCategory('Abaya');
+      setSubcategory('');
+      setWholesaleType('Simple/Basic');
+      setWholesaleMinQty(10);
       setCustomCategory('');
       setBadge('');
       setTargetRegion('all');
@@ -157,7 +174,7 @@ export default function AdminProductEditor({
       setStyles(ABAYA_STYLES.map(s => s.name));
       setDefaultStyle('Open abaya');
       setWorks(ABAYA_WORKS.map(w => w.name));
-      setDefaultWork('plain');
+      setDefaultWork('Plain/Basic');
       setSizes(ABAYA_SIZES.map(s => s.label));
       setDescription('Handcrafted from fine luxury grade fabric with master tailoring and quiet elegance.');
       setFabricDetails('100% Grade 6A Pure Mulberry Silk. Non-slip internal weave.');
@@ -515,54 +532,142 @@ export default function AdminProductEditor({
               />
             </div>
 
-            {/* 2 Main Classifications: Category Style & Work */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-
-              {/* Category Style (Silhouette) */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Category Style *
-                </label>
-                <select
-                  value={defaultStyle}
-                  onChange={(e) => {
-                    const newStyle = e.target.value;
-                    setDefaultStyle(newStyle);
-                    setStyles([newStyle]);
-                  }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                >
-                  {ABAYA_STYLES.map(style => (
-                    <option key={style.id} value={style.name}>
-                      {style.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Craftsmanship / Work */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Craftsmanship / Work *
-                </label>
-                <select
-                  value={defaultWork}
-                  onChange={(e) => {
-                    const newWork = e.target.value;
-                    setDefaultWork(newWork);
-                    setWorks([newWork]);
-                  }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                >
-                  {ABAYA_WORKS.map(work => (
-                    <option key={work.id} value={work.name}>
-                      {work.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
+            {/* 1. Primary Category Selector */}
+            <div className="space-y-1.5 pt-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                Primary Category *
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+              >
+                {PRESET_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            {/* 2. Conditional Sub-Classifications based on Category */}
+            {category === 'Abaya' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-stone-50/70 border border-stone-200 rounded-2xl animate-fade-in">
+                {/* Category Style (Silhouette) */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                    Category Style *
+                  </label>
+                  <select
+                    value={defaultStyle}
+                    onChange={(e) => {
+                      const newStyle = e.target.value;
+                      setDefaultStyle(newStyle);
+                      setStyles([newStyle]);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                  >
+                    {ABAYA_STYLES.map(style => (
+                      <option key={style.id} value={style.name}>
+                        {style.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Craftsmanship / Work */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                    Craftsmanship / Work *
+                  </label>
+                  <select
+                    value={defaultWork}
+                    onChange={(e) => {
+                      const newWork = e.target.value;
+                      setDefaultWork(newWork);
+                      setWorks([newWork]);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                  >
+                    {ABAYA_WORKS.map(work => (
+                      <option key={work.id} value={work.name}>
+                        {work.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {category === 'Wholesale' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-[#FFD700]/10 border border-[#FFD700]/40 rounded-2xl animate-fade-in">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-900">
+                    Wholesale Sub-Type *
+                  </label>
+                  <select
+                    value={wholesaleType}
+                    onChange={(e) => setWholesaleType(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                  >
+                    {WHOLESALE_TYPES.map(t => (
+                      <option key={t.id} value={t.name}>{t.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-900">
+                    Wholesale Minimum Order Qty (MOQ)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={wholesaleMinQty}
+                    onChange={(e) => setWholesaleMinQty(Number(e.target.value))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900"
+                    placeholder="10"
+                  />
+                </div>
+              </div>
+            )}
+
+            {category === 'Hijab' && (
+              <div className="space-y-1.5 pt-2 p-4 bg-stone-50 border border-stone-200 rounded-2xl animate-fade-in">
+                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                  Hijab Subcategory / Type
+                </label>
+                <select
+                  value={subcategory}
+                  onChange={(e) => setSubcategory(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                >
+                  <option value="">General Hijab</option>
+                  {HIJAB_TYPES.map(h => (
+                    <option key={h.id} value={h.id}>{h.name} — {h.description}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {category === 'Inner & Prayer dress' && (
+              <div className="space-y-1.5 pt-2 p-4 bg-stone-50 border border-stone-200 rounded-2xl animate-fade-in">
+                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                  Inner / Prayer Dress Subtype
+                </label>
+                <select
+                  value={subcategory}
+                  onChange={(e) => setSubcategory(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                >
+                  <option value="">General</option>
+                  {INNER_PRAYER_TYPES.map(ip => (
+                    <option key={ip.id} value={ip.id}>{ip.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="pt-2">
               <div className="space-y-1.5">

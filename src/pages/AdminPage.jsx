@@ -31,7 +31,7 @@ import {
 import { useShop } from '../context/ShopContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import { CMS_SECTIONS } from '../lib/cms';
-import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
+import { MAIN_CATEGORIES, ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
 import AdminProductEditor from '../components/admin/AdminProductEditor';
 import brandLogo from '../assets/logo.png';
 
@@ -143,6 +143,9 @@ export default function AdminPage() {
           (p.description && p.description.toLowerCase().includes(q));
       }
 
+      // Category Filter
+      const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+
       // Style / Silhouette
       const matchesStyle = selectedStyle === 'All' ||
         p.defaultStyle === selectedStyle ||
@@ -167,9 +170,9 @@ export default function AdminPage() {
       if (stockFilter === 'low') matchesStock = stock <= 5 && stock > 0;
       if (stockFilter === 'out') matchesStock = stock === 0;
 
-      return matchesSearch && matchesStyle && matchesWork && matchesMarket && matchesStock;
+      return matchesSearch && matchesCategory && matchesStyle && matchesWork && matchesMarket && matchesStock;
     });
-  }, [baseProducts, searchQuery, selectedStyle, selectedWork, selectedMarketFilter, stockFilter]);
+  }, [baseProducts, searchQuery, selectedCategory, selectedStyle, selectedWork, selectedMarketFilter, stockFilter]);
 
   // Handlers
   const handleOpenAddModal = () => {
@@ -414,6 +417,34 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Category Pills Bar */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 px-1 shrink-0">Category:</span>
+              <button
+                onClick={() => setSelectedCategory('All')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer ${
+                  selectedCategory === 'All'
+                    ? 'bg-royal-violet text-white shadow-xs'
+                    : 'bg-surface-container hover:bg-stone-200 text-stone-700'
+                }`}
+              >
+                All Categories
+              </button>
+              {MAIN_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.name)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer ${
+                    selectedCategory === cat.name
+                      ? 'bg-royal-violet text-white shadow-xs'
+                      : 'bg-surface-container hover:bg-stone-200 text-stone-700'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+
             {/* Filter Dropdowns Row: Silhouette, Craftsmanship, Stock Status */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-surface-container-highest">
               {/* Silhouette / Category Style Filter */}
@@ -486,10 +517,11 @@ export default function AdminPage() {
               </div>
 
               {/* Reset Filters button if active */}
-              {(searchQuery || selectedStyle !== 'All' || selectedWork !== 'All' || selectedMarketFilter !== 'all' || stockFilter !== 'all') && (
+              {(searchQuery || selectedCategory !== 'All' || selectedStyle !== 'All' || selectedWork !== 'All' || selectedMarketFilter !== 'all' || stockFilter !== 'all') && (
                 <button
                   onClick={() => {
                     setSearchQuery('');
+                    setSelectedCategory('All');
                     setSelectedStyle('All');
                     setSelectedWork('All');
                     setSelectedMarketFilter('all');
@@ -515,7 +547,7 @@ export default function AdminPage() {
                 onClick={handleOpenAddModal}
                 className="px-4 py-2 rounded-xl bg-royal-violet text-white text-xs font-semibold shadow hover:bg-royal-violet/90 cursor-pointer"
               >
-                + Add Abaya Now
+                + Add Product Now
               </button>
             </div>
           ) : viewMode === 'table' ? (
@@ -525,7 +557,8 @@ export default function AdminPage() {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[#fff9fd] border-b border-surface-container-highest text-stone-500 font-semibold uppercase tracking-wider text-[10px]">
                     <tr>
-                      <th className="py-3.5 px-4">Abaya Creation</th>
+                      <th className="py-3.5 px-4">Product Creation</th>
+                      <th className="py-3.5 px-4">Category & Details</th>
                       <th className="py-3.5 px-4">Market & Rating</th>
                       <th className="py-3.5 px-4">Price</th>
                       <th className="py-3.5 px-4 text-right">Actions</th>
@@ -554,6 +587,30 @@ export default function AdminPage() {
                                 )}
                               </div>
                             </div>
+                          </div>
+                        </td>
+
+                        {/* Category & Details */}
+                        <td className="py-3.5 px-4">
+                          <div className="space-y-1">
+                            <span className="inline-block px-2 py-0.5 rounded-md bg-royal-violet/10 text-royal-violet text-[10px] font-bold border border-royal-violet/20">
+                              {p.category || 'Abaya'}
+                            </span>
+                            {p.category === 'WHOLESALE' ? (
+                              <div className="text-[10px] text-stone-600 font-semibold">
+                                {p.wholesaleType && <span className="text-amber-800">Type: {p.wholesaleType}</span>}
+                                {p.wholesaleMinQty && <span className="text-stone-500 block">MOQ: {p.wholesaleMinQty} pcs</span>}
+                              </div>
+                            ) : p.category === 'ABAYA' ? (
+                              <div className="text-[10px] text-stone-500">
+                                {p.defaultStyle && <span className="font-medium text-stone-700">{p.defaultStyle}</span>}
+                                {p.defaultWork && <span className="text-stone-400"> • {p.defaultWork}</span>}
+                              </div>
+                            ) : p.subcategory ? (
+                              <div className="text-[10px] text-stone-500 font-medium">
+                                {p.subcategory}
+                              </div>
+                            ) : null}
                           </div>
                         </td>
 

@@ -22,9 +22,12 @@ create table if not exists public.products (
   reviews jsonb default '[]'::jsonb,
   is_violet_edition boolean default false,
   default_style text default 'Open abaya',
-  default_work text default 'plain',
+  default_work text default 'Plain/Basic',
   styles jsonb default '["Open abaya", "Closed cut", "Kimono or kaftan", "Butterfly or farasha", "umbrella cut or Flare", "2 piece abaya (with inner)", "Coat abaya"]'::jsonb,
-  works jsonb default '["plain", "Embroidery Abaya", "Handwork Abaya", "Stonework Abaya", "Threadwork Abaya", "Printed Abaya", "Lace Work Abaya"]'::jsonb,
+  works jsonb default '["Plain/Basic", "Embroidery Abaya", "Handwork Abaya", "Stonework Abaya", "Threadwork Abaya", "Printed Abaya", "Lace Work Abaya"]'::jsonb,
+  subcategory text,
+  wholesale_type text,
+  wholesale_min_qty integer default 1,
   image text not null,
   gallery jsonb default '[]'::jsonb,
   sizes jsonb default '["Size 52 (52\")", "Size 54 (54\")", "Size 56 (56\")", "Size 58 (58\")", "Size 60 (60\")", "Custom Tailored Fit"]'::jsonb,
@@ -36,9 +39,15 @@ create table if not exists public.products (
   updated_at timestamptz default now()
 );
 
--- Note: For existing Supabase instances, run:
+-- ==============================================================================
+-- MIGRATION SCRIPT (Run this in Supabase SQL Editor for existing databases)
+-- ==============================================================================
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS target_region text DEFAULT 'all';
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS reviews jsonb DEFAULT '[]'::jsonb;
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS subcategory text;
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS wholesale_type text;
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS wholesale_min_qty integer DEFAULT 1;
+
 
 -- 3. CREATE ORDERS & TRACKING TABLE
 create table if not exists public.orders (

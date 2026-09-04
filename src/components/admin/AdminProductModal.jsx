@@ -14,10 +14,18 @@ import {
   Scissors,
   Star
 } from 'lucide-react';
-import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../../data/products';
+import {
+  MAIN_CATEGORIES,
+  ABAYA_STYLES,
+  ABAYA_WORKS,
+  ABAYA_SIZES,
+  WHOLESALE_TYPES,
+  HIJAB_TYPES,
+  INNER_PRAYER_TYPES
+} from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
 
-const PRESET_CATEGORIES = ['Abaya', 'Open abaya', 'Closed cut', 'Kimono or kaftan', 'Butterfly or farasha', 'umbrella cut or Flare', '2 piece abaya (with inner)', 'Coat abaya'];
+const PRESET_CATEGORIES = ['Abaya', 'Shaila/Shawl', 'Hijab', 'Inner & Prayer dress', 'Kids abaya', 'Wholesale'];
 const PRESET_BADGES = ['', 'Signature Bestseller', 'Limited Edition', 'Staff Pick', 'Artisan Atelier', 'Trending', 'Exclusive'];
 
 const LUXURY_PALETTE_PRESETS = [
@@ -49,6 +57,9 @@ export default function AdminProductModal({
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('Abaya');
+  const [subcategory, setSubcategory] = useState('');
+  const [wholesaleType, setWholesaleType] = useState('Simple/Basic');
+  const [wholesaleMinQty, setWholesaleMinQty] = useState(10);
   const [customCategory, setCustomCategory] = useState('');
   const [badge, setBadge] = useState('');
   const [targetRegion, setTargetRegion] = useState('all'); // 'all' | 'india' | 'arab'
@@ -74,7 +85,7 @@ export default function AdminProductModal({
 
   // Works / Craftsmanship State
   const [works, setWorks] = useState(ABAYA_WORKS.map(w => w.name));
-  const [defaultWork, setDefaultWork] = useState(ABAYA_WORKS[0].name);
+  const [defaultWork, setDefaultWork] = useState('Plain/Basic');
 
   // Sizes State
   const [sizes, setSizes] = useState(ABAYA_SIZES.map(s => s.label));
@@ -104,6 +115,9 @@ export default function AdminProductModal({
         setCategory('Other');
         setCustomCategory(product.category || '');
       }
+      setSubcategory(product.subcategory || '');
+      setWholesaleType(product.wholesaleType || 'Simple/Basic');
+      setWholesaleMinQty(product.wholesaleMinQty !== undefined ? Number(product.wholesaleMinQty) : 10);
       setBadge(product.badge || '');
       setTargetRegion(product.targetRegion || 'all');
       setRating(product.rating !== undefined ? String(product.rating) : '5.0');
@@ -129,6 +143,9 @@ export default function AdminProductModal({
       setPrice('180');
       setOriginalPrice('');
       setCategory('Abaya');
+      setSubcategory('');
+      setWholesaleType('Simple/Basic');
+      setWholesaleMinQty(10);
       setCustomCategory('');
       setBadge('');
       setTargetRegion('all');
@@ -298,15 +315,18 @@ export default function AdminProductModal({
       price: Number(price),
       originalPrice: originalPrice ? Number(originalPrice) : null,
       category: finalCategory,
+      subcategory: subcategory ? subcategory.trim() : null,
+      wholesaleType: finalCategory === 'Wholesale' ? wholesaleType : null,
+      wholesaleMinQty: finalCategory === 'Wholesale' ? Number(wholesaleMinQty) || 1 : 1,
       badge: badge.trim(),
       targetRegion: targetRegion || 'all',
       rating: Number(rating) || 5.0,
       reviewsCount: Number(reviewsCount) || 0,
       isVioletEdition,
-      defaultStyle,
-      defaultWork,
-      styles,
-      works,
+      defaultStyle: finalCategory === 'Abaya' ? defaultStyle : null,
+      defaultWork: finalCategory === 'Abaya' ? defaultWork : null,
+      styles: finalCategory === 'Abaya' ? styles : [],
+      works: finalCategory === 'Abaya' ? works : [],
       image,
       gallery: gallery.length > 0 ? gallery : [image],
       colors,
@@ -504,12 +524,12 @@ export default function AdminProductModal({
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                    Fabric Category *
+                    Primary Category *
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm font-medium"
+                    className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm font-medium cursor-pointer"
                   >
                     {PRESET_CATEGORIES.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -517,6 +537,73 @@ export default function AdminProductModal({
                     <option value="Other">Other / Custom</option>
                   </select>
                 </div>
+
+                {category === 'Wholesale' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 bg-amber-50/60 border border-amber-200 rounded-xl">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                        Wholesale Sub-Type
+                      </label>
+                      <select
+                        value={wholesaleType}
+                        onChange={(e) => setWholesaleType(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-secondary/30 bg-white text-xs font-bold"
+                      >
+                        {WHOLESALE_TYPES.map(t => (
+                          <option key={t.id} value={t.name}>{t.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                        Minimum Order Qty (MOQ)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={wholesaleMinQty}
+                        onChange={(e) => setWholesaleMinQty(Number(e.target.value))}
+                        className="w-full px-3 py-2 rounded-lg border border-secondary/30 bg-white text-xs font-bold"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {category === 'Hijab' && (
+                  <div className="space-y-1.5 p-3 bg-stone-50 border border-stone-200 rounded-xl">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      Hijab Subcategory
+                    </label>
+                    <select
+                      value={subcategory}
+                      onChange={(e) => setSubcategory(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg border border-secondary/30 bg-white text-xs font-bold"
+                    >
+                      <option value="">General Hijab</option>
+                      {HIJAB_TYPES.map(h => (
+                        <option key={h.id} value={h.id}>{h.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {category === 'Inner & Prayer dress' && (
+                  <div className="space-y-1.5 p-3 bg-stone-50 border border-stone-200 rounded-xl">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      Inner / Prayer Dress Subtype
+                    </label>
+                    <select
+                      value={subcategory}
+                      onChange={(e) => setSubcategory(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg border border-secondary/30 bg-white text-xs font-bold"
+                    >
+                      <option value="">General</option>
+                      {INNER_PRAYER_TYPES.map(ip => (
+                        <option key={ip.id} value={ip.id}>{ip.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
                 {category === 'Other' && (
                   <div className="space-y-1.5">

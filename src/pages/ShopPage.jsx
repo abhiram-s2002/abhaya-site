@@ -10,11 +10,21 @@ import {
   ChevronDown,
   LayoutGrid,
   Square,
-  Filter
+  Filter,
+  PackageCheck,
+  MessageCircle
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import ProductCard from '../components/ProductCard';
-import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
+import {
+  MAIN_CATEGORIES,
+  ABAYA_STYLES,
+  ABAYA_WORKS,
+  WHOLESALE_TYPES,
+  HIJAB_TYPES,
+  INNER_PRAYER_TYPES
+} from '../data/products';
+import { openWhatsApp, formatSingleProductWhatsAppMessage } from '../utils/whatsapp';
 
 export default function ShopPage() {
   const {
@@ -27,6 +37,10 @@ export default function ShopPage() {
     setSelectedWorkFilter: setContextWorkFilter,
     selectedColorFilter: contextColorFilter,
     setSelectedColorFilter: setContextColorFilter,
+    selectedSubcategoryFilter: contextSubcategoryFilter,
+    setSelectedSubcategoryFilter: setContextSubcategoryFilter,
+    selectedWholesaleTypeFilter: contextWholesaleTypeFilter,
+    setSelectedWholesaleTypeFilter: setContextWholesaleTypeFilter,
     wishlistOnlyFilter,
     wishlist,
     formatPrice,
@@ -36,17 +50,21 @@ export default function ShopPage() {
 
   // Price calculations
   const maxPriceLimit = useMemo(() => {
-    return Math.max(...PRODUCTS.map(p => p.price), 250);
+    return Math.max(...PRODUCTS.map(p => p.price), 850);
   }, [PRODUCTS]);
 
   const minPriceLimit = 0;
 
-  // Filter States
-  const [maxPrice, setMaxPrice] = useState(maxPriceLimit);
-  const [selectedTab, setSelectedTab] = useState('All'); // 'All' | 'Open abaya' | 'Closed cut' | ...
+  // Primary Category Selection (e.g. 'All', 'Abaya', 'Shaila/Shawl', 'Hijab', 'Inner & Prayer dress', 'Kids abaya', 'Wholesale')
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  // Sub-filter states
   const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');
   const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
+  const [selectedWholesaleType, setSelectedWholesaleType] = useState('All');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('All');
   const [selectedShade, setSelectedShade] = useState('All');
+  const [maxPrice, setMaxPrice] = useState(maxPriceLimit);
   const [sortBy, setSortBy] = useState('featured');
   const [onlyWishlist, setOnlyWishlist] = useState(Boolean(wishlistOnlyFilter));
 
@@ -54,7 +72,7 @@ export default function ShopPage() {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [mobileGridCols, setMobileGridCols] = useState(2);
-  const [activeDrawerTab, setActiveDrawerTab] = useState('style'); // 'style' | 'work' | 'shade' | 'all'
+  const [activeDrawerTab, setActiveDrawerTab] = useState('category'); // 'category' | 'style' | 'work' | 'wholesale' | 'shade' | 'wishlist'
 
   const sortDropdownRef = useRef(null);
 
@@ -65,31 +83,43 @@ export default function ShopPage() {
     }
   }, [wishlistOnlyFilter]);
 
-  // Sync external filters from context without race conditions
+  // Sync external filters from context
   useEffect(() => {
     console.log('[ShopPage] Syncing context filters:', {
-      contextStyleFilter,
       selectedCategoryFilter,
+      contextStyleFilter,
       contextWorkFilter,
-      contextColorFilter
+      contextColorFilter,
+      contextSubcategoryFilter,
+      contextWholesaleTypeFilter
     });
 
-    const activeTab = (contextStyleFilter && contextStyleFilter !== 'All')
-      ? contextStyleFilter
-      : (selectedCategoryFilter && selectedCategoryFilter !== 'All')
-      ? selectedCategoryFilter
-      : 'All';
-
-    setSelectedTab(activeTab);
-    setSelectedStyleFilter(activeTab);
-
+    if (selectedCategoryFilter) {
+      setSelectedCategory(selectedCategoryFilter);
+    }
+    if (contextStyleFilter) {
+      setSelectedStyleFilter(contextStyleFilter);
+    }
     if (contextWorkFilter) {
       setSelectedWorkFilter(contextWorkFilter);
     }
     if (contextColorFilter) {
       setSelectedShade(contextColorFilter);
     }
-  }, [selectedCategoryFilter, contextStyleFilter, contextWorkFilter, contextColorFilter]);
+    if (contextSubcategoryFilter) {
+      setSelectedSubcategory(contextSubcategoryFilter);
+    }
+    if (contextWholesaleTypeFilter) {
+      setSelectedWholesaleType(contextWholesaleTypeFilter);
+    }
+  }, [
+    selectedCategoryFilter,
+    contextStyleFilter,
+    contextWorkFilter,
+    contextColorFilter,
+    contextSubcategoryFilter,
+    contextWholesaleTypeFilter
+  ]);
 
   // Close sort dropdown when clicking outside
   useEffect(() => {
@@ -114,16 +144,15 @@ export default function ShopPage() {
     };
   }, [mobileFilterOpen]);
 
-  // Tabs matching the 7 Abaya Category Styles
+  // Main Category Tabs
   const categoryTabs = [
-    { id: 'All', label: 'All Abayas' },
-    { id: 'Open abaya', label: 'Open Abaya' },
-    { id: 'Closed cut', label: 'Closed Cut' },
-    { id: 'Kimono or kaftan', label: 'Kimono / Kaftan' },
-    { id: 'Butterfly or farasha', label: 'Butterfly / Farasha' },
-    { id: 'umbrella cut or Flare', label: 'Umbrella / Flare' },
-    { id: '2 piece abaya (with inner)', label: '2 Piece Set' },
-    { id: 'Coat abaya', label: 'Coat Abaya' },
+    { id: 'All', label: 'All Collections' },
+    { id: 'Abaya', label: '1. Abaya' },
+    { id: 'Shaila/Shawl', label: '2. Shaila / Shawl' },
+    { id: 'Hijab', label: '3. Hijab & Niqab' },
+    { id: 'Inner & Prayer dress', label: '4. Inner & Prayer Dress' },
+    { id: 'Kids abaya', label: '5. Kids Abaya' },
+    { id: 'Wholesale', label: '6. Wholesale (B2B)' }
   ];
 
   const shades = [
@@ -133,19 +162,19 @@ export default function ShopPage() {
     { name: 'Amethyst', hex: '#C76AA9' },
     { name: 'Rose', hex: '#C49A99' },
     { name: 'Sage', hex: '#7D8B79' },
-    { name: 'Ivory', hex: '#FBF6EE' },
+    { name: 'Ivory', hex: '#FBF6EE' }
   ];
 
   const sortOptions = [
     { id: 'featured', label: 'Featured' },
     { id: 'price-low', label: 'Price: Low to High' },
     { id: 'price-high', label: 'Price: High to Low' },
-    { id: 'rating', label: 'Highest Rated' },
+    { id: 'rating', label: 'Highest Rated' }
   ];
 
   const currentSortLabel = sortOptions.find(o => o.id === sortBy)?.label || 'Featured';
 
-  // Filter products
+  // Filter products algorithm
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((product) => {
       // 1. Search Query
@@ -160,23 +189,28 @@ export default function ShopPage() {
         const matchesWork =
           (product.defaultWork && product.defaultWork.toLowerCase().includes(q)) ||
           (product.works && product.works.some(w => w.toLowerCase().includes(q)));
+        const matchesWholesale = product.wholesaleType ? product.wholesaleType.toLowerCase().includes(q) : false;
+        const matchesSubcategory = product.subcategory ? product.subcategory.toLowerCase().includes(q) : false;
         const matchesColor = product.colors && product.colors.some(c => c.name.toLowerCase().includes(q));
 
-        if (!matchesName && !matchesCategory && !matchesSubtitle && !matchesStyle && !matchesWork && !matchesColor) {
+        if (!matchesName && !matchesCategory && !matchesSubtitle && !matchesStyle && !matchesWork && !matchesWholesale && !matchesSubcategory && !matchesColor) {
           return false;
         }
       }
 
-      // 2. Main Horizontal Category Style Tab
-      if (selectedTab !== 'All') {
-        const tabLower = selectedTab.toLowerCase();
-        const matchesStyle = product.defaultStyle && product.defaultStyle.toLowerCase() === tabLower;
-        const matchesCat = product.category && product.category.toLowerCase() === tabLower;
-        const matchesNameOrSub = (product.name && product.name.toLowerCase().includes(tabLower)) ||
-                                 (product.subtitle && product.subtitle.toLowerCase().includes(tabLower));
-        const matchesSpecial = (tabLower === 'violet edition' && product.isVioletEdition);
+      // 2. Primary Category Filter
+      if (selectedCategory !== 'All') {
+        const catLower = selectedCategory.toLowerCase();
+        const prodCatLower = (product.category || '').toLowerCase();
+        
+        // Exact match or sub-token match for compound labels
+        const matchesCat = prodCatLower === catLower ||
+          (catLower === 'hijab' && prodCatLower.includes('hijab')) ||
+          (catLower === 'inner & prayer dress' && (prodCatLower.includes('inner') || prodCatLower.includes('prayer'))) ||
+          (catLower === 'kids abaya' && prodCatLower.includes('kids')) ||
+          (catLower === 'wholesale' && prodCatLower.includes('wholesale'));
 
-        if (!matchesStyle && !matchesCat && !matchesNameOrSub && !matchesSpecial) return false;
+        if (!matchesCat) return false;
       }
 
       // 3. Max Price Slider
@@ -184,21 +218,44 @@ export default function ShopPage() {
         return false;
       }
 
-      // 4. Style Filter
+      // 4. Style Filter (For Abayas)
       if (selectedStyleFilter !== 'All') {
         const styleLower = selectedStyleFilter.toLowerCase();
-        const matchesStyle = product.defaultStyle && product.defaultStyle.toLowerCase() === styleLower;
+        const matchesStyle =
+          (product.defaultStyle && product.defaultStyle.toLowerCase() === styleLower) ||
+          (product.styles && product.styles.some(s => s.toLowerCase() === styleLower));
         if (!matchesStyle) return false;
       }
 
-      // 5. Work / Craftsmanship Filter
+      // 5. Work / Craftsmanship Filter (For Abayas)
       if (selectedWorkFilter !== 'All') {
         const workLower = selectedWorkFilter.toLowerCase();
-        const matchesWork = product.defaultWork && product.defaultWork.toLowerCase() === workLower;
+        const matchesWork =
+          (product.defaultWork && product.defaultWork.toLowerCase() === workLower) ||
+          (product.works && product.works.some(w => w.toLowerCase() === workLower)) ||
+          ((workLower === 'plain/basic' || workLower === 'plain') && (product.defaultWork === 'plain' || product.defaultWork === 'Plain/Basic'));
         if (!matchesWork) return false;
       }
 
-      // 6. Shade Filter
+      // 6. Wholesale Type Filter
+      if (selectedWholesaleType !== 'All') {
+        const wtLower = selectedWholesaleType.toLowerCase();
+        const matchesWt =
+          (product.wholesaleType && product.wholesaleType.toLowerCase() === wtLower) ||
+          (product.name && product.name.toLowerCase().includes(wtLower));
+        if (!matchesWt) return false;
+      }
+
+      // 7. Subcategory Filter (For Hijab / Inner)
+      if (selectedSubcategory !== 'All') {
+        const subLower = selectedSubcategory.toLowerCase();
+        const matchesSub =
+          (product.subcategory && product.subcategory.toLowerCase() === subLower) ||
+          (product.name && product.name.toLowerCase().includes(subLower));
+        if (!matchesSub) return false;
+      }
+
+      // 8. Shade Filter
       if (selectedShade !== 'All') {
         const matchesShade = product.colors && product.colors.some(c =>
           c.name.toLowerCase().includes(selectedShade.toLowerCase())
@@ -206,7 +263,7 @@ export default function ShopPage() {
         if (!matchesShade) return false;
       }
 
-      // 7. Wishlist Filter
+      // 9. Wishlist Filter
       if (onlyWishlist && !wishlist.includes(product.id)) {
         return false;
       }
@@ -221,176 +278,121 @@ export default function ShopPage() {
   }, [
     PRODUCTS,
     searchQuery,
-    selectedTab,
+    selectedCategory,
     maxPrice,
     selectedStyleFilter,
     selectedWorkFilter,
+    selectedWholesaleType,
+    selectedSubcategory,
     selectedShade,
     onlyWishlist,
     wishlist,
     sortBy
   ]);
 
-  const handleTabChange = (tabId) => {
-    setSelectedTab(tabId);
-    setSelectedStyleFilter(tabId);
-    if (setContextStyleFilter) setContextStyleFilter(tabId);
-    setSelectedCategoryFilter(tabId);
+  const handleCategoryChange = (catId) => {
+    setSelectedCategory(catId);
+    if (setSelectedCategoryFilter) setSelectedCategoryFilter(catId);
+    setSelectedStyleFilter('All');
+    if (setContextStyleFilter) setContextStyleFilter('All');
     setSelectedWorkFilter('All');
     if (setContextWorkFilter) setContextWorkFilter('All');
+    setSelectedWholesaleType('All');
+    if (setContextWholesaleTypeFilter) setContextWholesaleTypeFilter('All');
+    setSelectedSubcategory('All');
+    if (setContextSubcategoryFilter) setContextSubcategoryFilter('All');
     setSelectedShade('All');
     if (setContextColorFilter) setContextColorFilter('All');
   };
 
   const resetFilters = () => {
     setSearchQuery('');
-    setSelectedTab('All');
-    setSelectedCategoryFilter('All');
+    setSelectedCategory('All');
+    if (setSelectedCategoryFilter) setSelectedCategoryFilter('All');
+    setSelectedStyleFilter('All');
     if (setContextStyleFilter) setContextStyleFilter('All');
+    setSelectedWorkFilter('All');
     if (setContextWorkFilter) setContextWorkFilter('All');
+    setSelectedWholesaleType('All');
+    if (setContextWholesaleTypeFilter) setContextWholesaleTypeFilter('All');
+    setSelectedSubcategory('All');
+    if (setContextSubcategoryFilter) setContextSubcategoryFilter('All');
+    setSelectedShade('All');
     if (setContextColorFilter) setContextColorFilter('All');
     setMaxPrice(maxPriceLimit);
-    setSelectedStyleFilter('All');
-    setSelectedWorkFilter('All');
-    setSelectedShade('All');
     setOnlyWishlist(false);
-    setSortBy('featured');
-    setMobileFilterOpen(false);
   };
 
   const isFiltered =
-    searchQuery.trim() !== '' ||
-    selectedTab !== 'All' ||
-    maxPrice < maxPriceLimit ||
+    selectedCategory !== 'All' ||
     selectedStyleFilter !== 'All' ||
     selectedWorkFilter !== 'All' ||
+    selectedWholesaleType !== 'All' ||
+    selectedSubcategory !== 'All' ||
     selectedShade !== 'All' ||
+    maxPrice < maxPriceLimit ||
     onlyWishlist ||
-    sortBy !== 'featured';
+    Boolean(searchQuery.trim());
 
   const secondaryFiltersActiveCount =
     (selectedStyleFilter !== 'All' ? 1 : 0) +
     (selectedWorkFilter !== 'All' ? 1 : 0) +
+    (selectedWholesaleType !== 'All' ? 1 : 0) +
+    (selectedSubcategory !== 'All' ? 1 : 0) +
     (selectedShade !== 'All' ? 1 : 0) +
+    (maxPrice < maxPriceLimit ? 1 : 0) +
     (onlyWishlist ? 1 : 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 sm:space-y-7 animate-fade-in pb-28 text-[#1E141B]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8 font-sans">
       
-      {/* 1. Header Section */}
-      <div className="space-y-1 pt-1 text-left">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
-          All Abayas & Collections
-        </h1>
-        <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed max-w-xl">
-          Discover our collections of premium bespoke abayas. Minimalist, modern modesty tailored to perfection.
-        </p>
-      </div>
-
-      {/* 2. Items Count & Sort Pill Row */}
-      <div className="flex items-center justify-between gap-3 pt-1 border-t border-stone-200">
-        {/* Item count in clean uppercase */}
-        <div className="text-[11px] font-bold tracking-widest text-stone-600 uppercase">
-          {filteredProducts.length} PRODUCTS
-        </div>
-
-        {/* Sort Pill Dropdown + Deep Filters Trigger */}
-        <div className="flex items-center gap-2">
-          {/* Deep Filters Button (Silhouettes & Craft) */}
-          <button
-            onClick={() => setMobileFilterOpen(true)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
-              secondaryFiltersActiveCount > 0
-                ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-sm'
-                : 'bg-white hover:bg-stone-50 text-[#1E141B] border-stone-300 font-semibold'
-            }`}
-            aria-label="Filter Silhouettes and Craft"
-          >
-            <Filter className="w-3.5 h-3.5" strokeWidth={1.8} />
-            <span>Filters</span>
-            {secondaryFiltersActiveCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-white text-[#7A0648] text-[10px] flex items-center justify-center font-bold">
-                {secondaryFiltersActiveCount}
-              </span>
-            )}
-          </button>
-
-          {/* Sort Dropdown */}
-          <div className="relative" ref={sortDropdownRef}>
-            <button
-              onClick={() => setIsSortOpen(!isSortOpen)}
-              className="bg-white hover:bg-stone-50 text-[#1E141B] border border-stone-300 rounded-none px-3 py-1.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
-              aria-expanded={isSortOpen}
-              aria-label="Sort products"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#7A0648]" strokeWidth={1.8} />
-              <span>{currentSortLabel}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform duration-200 ${isSortOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-            </button>
-
-            {/* Sort Popover Menu */}
-            {isSortOpen && (
-              <div className="absolute right-0 mt-1 w-48 bg-white text-[#1E141B] rounded-none shadow-xl border border-stone-200 py-1 z-30 animate-fade-in font-semibold">
-                {sortOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => {
-                      setSortBy(option.id);
-                      setIsSortOpen(false);
-                    }}
-                    className={`w-full text-left px-3.5 py-2 text-xs uppercase tracking-wide flex items-center justify-between transition-colors cursor-pointer ${
-                      sortBy === option.id
-                        ? 'bg-[#F5EAF1] text-[#7A0648] font-bold'
-                        : 'text-stone-700 hover:bg-stone-100 font-semibold'
-                    }`}
-                  >
-                    <span>{option.label}</span>
-                    {sortBy === option.id && <Check className="w-3.5 h-3.5 text-[#7A0648] shrink-0" strokeWidth={2} />}
-                  </button>
-                ))}
-              </div>
-            )}
+      {/* 1. Header Bar: Title, Count, and Search */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 pb-5">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase font-bold text-[#7A0648]">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>NOOR AL DHUHA ATELIER CATALOG</span>
           </div>
+          <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#1E141B] font-bold tracking-tight uppercase mt-1">
+            {selectedCategory === 'All' ? 'All Modest Collections' : selectedCategory}
+          </h1>
+          <p className="text-xs sm:text-sm text-stone-500 mt-1 font-medium">
+            Showing {filteredProducts.length} curated luxury pieces with bespoke sizing & global courier.
+          </p>
         </div>
-      </div>
 
-      {/* 3. Search Box */}
-      <div className="space-y-1">
-        <label className="block text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-stone-600">
-          SEARCH
-        </label>
-        <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" strokeWidth={1.5} />
+        {/* Search Input on Shop Page */}
+        <div className="relative w-full md:w-72">
+          <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Find an abaya style or fabric..."
-            className="w-full pl-10 pr-9 py-2.5 bg-white border border-stone-300 rounded-none text-xs sm:text-sm text-[#1E141B] placeholder-stone-400 focus:outline-none focus:border-[#7A0648] uppercase tracking-wide transition-all shadow-xs"
+            placeholder="Search catalog..."
+            className="w-full bg-stone-100 border border-stone-200 pl-9 pr-8 py-2 text-xs font-semibold uppercase tracking-wider text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#7A0648] focus:bg-white transition-all rounded-none"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1 cursor-pointer"
               title="Clear search"
-              aria-label="Clear search"
             >
-              <X className="w-3.5 h-3.5" strokeWidth={1.5} />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
       </div>
 
-      {/* 4. Horizontal Scrolling Category Navigation Tabs */}
-      <div className="border-b border-stone-200">
-        <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* 2. Primary Category Tabs (All 6 Categories) */}
+      <div className="border-b border-stone-200 bg-white">
+        <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
           {categoryTabs.map((tab) => {
-            const isActive = selectedTab === tab.id;
+            const isActive = selectedCategory === tab.id;
             return (
               <button
                 key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`relative pb-2.5 text-xs uppercase tracking-wider font-bold whitespace-nowrap transition-colors cursor-pointer ${
+                onClick={() => handleCategoryChange(tab.id)}
+                className={`relative pb-3 text-xs uppercase tracking-wider font-bold whitespace-nowrap transition-colors cursor-pointer ${
                   isActive
                     ? 'text-[#7A0648] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#7A0648]'
                     : 'text-stone-600 hover:text-[#1E141B]'
@@ -403,29 +405,269 @@ export default function ShopPage() {
         </div>
       </div>
 
-      {/* 5. MAX PRICE Slider Section */}
-      <div className="space-y-2 pt-1">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-stone-600">
-            MAX PRICE
-          </span>
-          <span className="text-xs sm:text-sm font-bold text-[#7A0648]">
-            {formatPrice(maxPrice)}
-          </span>
+      {/* 3. Contextual Sub-Filters Bar */}
+      {/* 3.A: For Abaya (or All) — By Category Style & By Work */}
+      {(selectedCategory === 'Abaya' || selectedCategory === 'All') && (
+        <div className="bg-[#FAF8F5] border border-stone-200/80 p-4 sm:p-5 space-y-3.5 animate-fade-in">
+          
+          {/* Row 1: By Category Style */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-stone-700 min-w-[130px] shrink-0">
+              By Category Style:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                onClick={() => {
+                  setSelectedStyleFilter('All');
+                  if (setContextStyleFilter) setContextStyleFilter('All');
+                }}
+                className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                  selectedStyleFilter === 'All'
+                    ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                    : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                }`}
+              >
+                All Styles
+              </button>
+              {ABAYA_STYLES.map((style) => (
+                <button
+                  key={style.id}
+                  onClick={() => {
+                    const next = selectedStyleFilter === style.name ? 'All' : style.name;
+                    setSelectedStyleFilter(next);
+                    if (setContextStyleFilter) setContextStyleFilter(next);
+                  }}
+                  className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                    selectedStyleFilter.toLowerCase() === style.name.toLowerCase()
+                      ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                      : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                  }`}
+                >
+                  {style.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 2: By Work */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 pt-2 border-t border-stone-200/60">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-stone-700 min-w-[130px] shrink-0">
+              By Work:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                onClick={() => {
+                  setSelectedWorkFilter('All');
+                  if (setContextWorkFilter) setContextWorkFilter('All');
+                }}
+                className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                  selectedWorkFilter === 'All'
+                    ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                    : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                }`}
+              >
+                All Works
+              </button>
+              {ABAYA_WORKS.map((work) => (
+                <button
+                  key={work.id}
+                  onClick={() => {
+                    const next = selectedWorkFilter === work.name ? 'All' : work.name;
+                    setSelectedWorkFilter(next);
+                    if (setContextWorkFilter) setContextWorkFilter(next);
+                  }}
+                  className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer capitalize ${
+                    selectedWorkFilter.toLowerCase() === work.name.toLowerCase()
+                      ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                      : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                  }`}
+                >
+                  {work.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
         </div>
-        <input
-          type="range"
-          min={minPriceLimit}
-          max={maxPriceLimit}
-          step="5"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(Number(e.target.value))}
-          className="luxury-slider w-full"
-          aria-label="Filter by maximum price"
-        />
+      )}
+
+      {/* 3.B: For Wholesale — Subtypes */}
+      {selectedCategory === 'Wholesale' && (
+        <div className="bg-[#FAF8F5] border border-[#FFD700]/40 p-4 sm:p-5 space-y-3 animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-2.5">
+            <div className="flex items-center gap-2">
+              <PackageCheck className="w-4 h-4 text-[#7A0648]" />
+              <span className="text-xs uppercase font-bold tracking-wider text-[#1E141B]">
+                B2B Factory Wholesale & Master Carton Hub
+              </span>
+            </div>
+            <button
+              onClick={() => openWhatsApp('Salam / Hello! I would like to inquire about NOOR AL DHUHA Wholesale Catalog & Pricing.')}
+              className="text-[11px] text-[#7A0648] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Inquire Custom Carton on WhatsApp</span>
+            </button>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-stone-700 min-w-[130px] shrink-0">
+              Wholesale Type:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                onClick={() => {
+                  setSelectedWholesaleType('All');
+                  if (setContextWholesaleTypeFilter) setContextWholesaleTypeFilter('All');
+                }}
+                className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                  selectedWholesaleType === 'All'
+                    ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                    : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                }`}
+              >
+                All Wholesale
+              </button>
+              {WHOLESALE_TYPES.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => {
+                    const next = selectedWholesaleType === type.name ? 'All' : type.name;
+                    setSelectedWholesaleType(next);
+                    if (setContextWholesaleTypeFilter) setContextWholesaleTypeFilter(next);
+                  }}
+                  className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                    selectedWholesaleType.toLowerCase() === type.name.toLowerCase()
+                      ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                      : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                  }`}
+                >
+                  {type.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3.C: For Hijab — Subtypes */}
+      {selectedCategory === 'Hijab' && (
+        <div className="bg-[#FAF8F5] border border-stone-200/80 p-4 sm:p-5 space-y-2.5 animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-stone-700 min-w-[130px] shrink-0">
+              Hijab & Modesty Type:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                onClick={() => {
+                  setSelectedSubcategory('All');
+                  if (setContextSubcategoryFilter) setContextSubcategoryFilter('All');
+                }}
+                className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                  selectedSubcategory === 'All'
+                    ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                    : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                }`}
+              >
+                All Hijab Items
+              </button>
+              {HIJAB_TYPES.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => {
+                    const next = selectedSubcategory === type.id ? 'All' : type.id;
+                    setSelectedSubcategory(next);
+                    if (setContextSubcategoryFilter) setContextSubcategoryFilter(next);
+                  }}
+                  className={`px-3 py-1 text-[11px] uppercase tracking-wider font-bold border transition-colors cursor-pointer ${
+                    selectedSubcategory.toLowerCase() === type.id.toLowerCase()
+                      ? 'bg-[#7A0648] text-white border-[#7A0648]'
+                      : 'bg-white text-stone-700 border-stone-300 hover:border-stone-400'
+                  }`}
+                >
+                  {type.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Controls Bar: Filter Drawer Trigger, Price Slider, Sort Dropdown & Grid Layout */}
+      <div className="flex items-center justify-between gap-4 py-2 border-b border-stone-200 text-xs">
+        
+        {/* Left: Mobile/Desktop Filter Drawer Button */}
+        <button
+          onClick={() => setMobileFilterOpen(true)}
+          className="flex items-center gap-2 px-3.5 py-2 bg-stone-100 hover:bg-stone-200 border border-stone-300 text-stone-900 font-bold uppercase tracking-wider cursor-pointer"
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          <span>Faceted Filters</span>
+          {secondaryFiltersActiveCount > 0 && (
+            <span className="w-4 h-4 rounded-full bg-[#7A0648] text-white text-[9px] flex items-center justify-center font-bold">
+              {secondaryFiltersActiveCount}
+            </span>
+          )}
+        </button>
+
+        {/* Right: Sort Dropdown & Grid View Toggle */}
+        <div className="flex items-center gap-3">
+          
+          {/* Sort Dropdown */}
+          <div className="relative" ref={sortDropdownRef}>
+            <button
+              onClick={() => setIsSortOpen(!isSortOpen)}
+              className="flex items-center gap-1.5 px-3 py-2 border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-bold uppercase tracking-wider cursor-pointer text-xs"
+            >
+              <span className="text-stone-500 font-normal">Sort:</span>
+              <span>{currentSortLabel}</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isSortOpen && (
+              <div className="absolute right-0 mt-1 w-44 bg-white border border-stone-200 shadow-xl py-1 z-30 animate-fade-in font-semibold">
+                {sortOptions.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => {
+                      setSortBy(opt.id);
+                      setIsSortOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 text-xs flex items-center justify-between cursor-pointer ${
+                      sortBy === opt.id ? 'bg-stone-100 text-[#7A0648] font-bold' : 'text-stone-700 hover:bg-stone-50'
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                    {sortBy === opt.id && <Check className="w-3.5 h-3.5 text-[#7A0648]" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Grid Layout Toggle for Mobile */}
+          <div className="sm:hidden flex items-center border border-stone-300">
+            <button
+              onClick={() => setMobileGridCols(1)}
+              className={`p-1.5 ${mobileGridCols === 1 ? 'bg-[#7A0648] text-white' : 'text-stone-600 bg-white'}`}
+              aria-label="Single column view"
+            >
+              <Square className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setMobileGridCols(2)}
+              className={`p-1.5 ${mobileGridCols === 2 ? 'bg-[#7A0648] text-white' : 'text-stone-600 bg-white'}`}
+              aria-label="Two column view"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+          </div>
+
+        </div>
+
       </div>
 
-      {/* 6. Active Filter Tags Bar (When any filter is active) */}
+      {/* 5. Active Filter Tags (if any active) */}
       {isFiltered && (
         <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-stone-200">
           <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500 mr-1">
@@ -435,41 +677,25 @@ export default function ShopPage() {
           {searchQuery && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-stone-300 text-[11px] text-[#7A0648] font-bold shadow-xs">
               "{searchQuery}"
-              <button onClick={() => setSearchQuery('')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove search filter">
+              <button onClick={() => setSearchQuery('')} className="hover:text-red-600 p-0.5 cursor-pointer">
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
 
-          {selectedTab !== 'All' && (
+          {selectedCategory !== 'All' && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-stone-300 text-[11px] text-[#7A0648] font-bold shadow-xs">
-              {categoryTabs.find(t => t.id === selectedTab)?.label || selectedTab}
-              <button onClick={() => handleTabChange('All')} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Clear collection filter">
+              Cat: {selectedCategory}
+              <button onClick={() => handleCategoryChange('All')} className="hover:text-red-600 p-0.5 cursor-pointer">
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
 
-          {maxPrice < maxPriceLimit && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-stone-300 text-[11px] text-[#7A0648] font-bold shadow-xs">
-              ≤ {formatPrice(maxPrice)}
-              <button onClick={() => setMaxPrice(maxPriceLimit)} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Reset max price">
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-
-          {selectedStyleFilter !== 'All' && selectedStyleFilter !== selectedTab && (
+          {selectedStyleFilter !== 'All' && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-stone-300 text-[11px] font-bold shadow-xs">
-              Cut: {selectedStyleFilter}
-              <button
-                onClick={() => {
-                  setSelectedStyleFilter('All');
-                  if (setContextStyleFilter) setContextStyleFilter('All');
-                }}
-                className="hover:text-red-600 p-0.5 cursor-pointer"
-                aria-label="Remove style filter"
-              >
+              Style: {selectedStyleFilter}
+              <button onClick={() => setSelectedStyleFilter('All')} className="hover:text-red-600 p-0.5 cursor-pointer">
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -477,15 +703,17 @@ export default function ShopPage() {
 
           {selectedWorkFilter !== 'All' && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-stone-300 text-[11px] font-bold shadow-xs capitalize">
-              Craft: {selectedWorkFilter}
-              <button
-                onClick={() => {
-                  setSelectedWorkFilter('All');
-                  if (setContextWorkFilter) setContextWorkFilter('All');
-                }}
-                className="hover:text-red-600 p-0.5 cursor-pointer"
-                aria-label="Remove craftsmanship filter"
-              >
+              Work: {selectedWorkFilter}
+              <button onClick={() => setSelectedWorkFilter('All')} className="hover:text-red-600 p-0.5 cursor-pointer">
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+
+          {selectedWholesaleType !== 'All' && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-stone-300 text-[11px] font-bold shadow-xs">
+              Wholesale: {selectedWholesaleType}
+              <button onClick={() => setSelectedWholesaleType('All')} className="hover:text-red-600 p-0.5 cursor-pointer">
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -494,24 +722,7 @@ export default function ShopPage() {
           {selectedShade !== 'All' && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-stone-300 text-[11px] text-[#7A0648] font-bold shadow-xs">
               Shade: {selectedShade}
-              <button
-                onClick={() => {
-                  setSelectedShade('All');
-                  if (setContextColorFilter) setContextColorFilter('All');
-                }}
-                className="hover:text-red-600 p-0.5 cursor-pointer"
-                aria-label="Remove shade filter"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-
-          {onlyWishlist && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white text-[#7A0648] border border-stone-300 text-[11px] font-bold shadow-xs">
-              <Heart className="w-3 h-3 fill-[#7A0648]" />
-              Wishlist
-              <button onClick={() => setOnlyWishlist(false)} className="hover:text-red-600 p-0.5 cursor-pointer" aria-label="Remove wishlist filter">
+              <button onClick={() => setSelectedShade('All')} className="hover:text-red-600 p-0.5 cursor-pointer">
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -519,109 +730,56 @@ export default function ShopPage() {
 
           <button
             onClick={resetFilters}
-            className="text-[11px] text-[#7A0648] hover:text-[#68043D] font-bold underline ml-1 cursor-pointer"
+            className="text-[11px] text-stone-500 hover:text-stone-900 underline font-bold ml-2 cursor-pointer"
           >
-            Clear all
+            Clear All
           </button>
         </div>
       )}
 
-      {/* 7. Product Grid Header / Layout Switcher */}
-      <div className="flex items-center justify-between text-xs text-[#1E141B] pt-1 font-semibold">
-        <span>
-          Showing <strong className="text-[#7A0648] font-bold">{filteredProducts.length}</strong> items
-        </span>
-
-        {/* Mobile View Toggle (Single vs Two Columns) */}
-        <div className="flex sm:hidden items-center bg-white border border-stone-300 rounded-none p-0.5 shadow-xs">
-          <button
-            onClick={() => setMobileGridCols(1)}
-            className={`p-1.5 transition-all cursor-pointer ${
-              mobileGridCols === 1 ? 'bg-[#7A0648] text-white shadow-xs' : 'text-stone-600 hover:text-[#1E141B]'
-            }`}
-            title="Single card view"
-            aria-label="1 column view"
-          >
-            <Square className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => setMobileGridCols(2)}
-            className={`p-1.5 transition-all cursor-pointer ${
-              mobileGridCols === 2 ? 'bg-[#7A0648] text-white shadow-xs' : 'text-stone-600 hover:text-[#1E141B]'
-            }`}
-            title="2-column grid view"
-            aria-label="2 column view"
-          >
-            <LayoutGrid className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-
-      {/* 8. Products Grid */}
-      {filteredProducts.length === 0 ? (
-        <div className="text-center py-16 sm:py-20 bg-white rounded-none border border-stone-200 p-6 sm:p-12 space-y-4 max-w-lg mx-auto shadow-md animate-fade-in text-[#1E141B] font-semibold">
-          <div className="w-14 h-14 mx-auto rounded-full bg-[#F5EAF1] flex items-center justify-center text-[#7A0648]">
-            <Filter className="w-6 h-6 stroke-[1.5]" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="font-serif text-xl sm:text-2xl text-[#1E141B] font-bold uppercase tracking-wider">
-              No abayas match your filters
-            </h3>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
-              We couldn't find any items matching your selected criteria. Try adjusting the price slider or clearing your search.
-            </p>
-          </div>
-          <div className="pt-2">
-            <button
-              onClick={resetFilters}
-              className="px-6 py-2.5 bg-[#7A0648] hover:bg-[#68043D] text-white text-xs uppercase tracking-widest font-bold rounded-none shadow-md active:scale-95 transition-all cursor-pointer border border-[#7A0648]"
-            >
-              Reset All Filters
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div
-          className={`grid gap-3 sm:gap-6 lg:gap-8 ${
-            mobileGridCols === 1 ? 'grid-cols-1' : 'grid-cols-2'
-          } sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
-        >
+      {/* 6. Products Grid Showcase */}
+      {filteredProducts.length > 0 ? (
+        <div className={`grid gap-4 sm:gap-6 lg:gap-8 ${
+          mobileGridCols === 1 ? 'grid-cols-1' : 'grid-cols-2'
+        } sm:grid-cols-3 lg:grid-cols-4`}>
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
+      ) : (
+        <div className="text-center py-20 bg-stone-50 border border-stone-200 p-8 space-y-4">
+          <p className="text-stone-600 font-serif text-lg uppercase tracking-wider">
+            No products matched your exact filter combination.
+          </p>
+          <button
+            onClick={resetFilters}
+            className="px-6 py-2.5 bg-[#7A0648] text-white text-xs uppercase font-bold tracking-wider hover:bg-[#68043D] transition-colors cursor-pointer"
+          >
+            Reset All Filters
+          </button>
+        </div>
       )}
 
-      {/* 9. Mobile Bottom Sheet Drawer for Deep Silhouette & Craft Filters */}
+      {/* 7. Faceted Filter Modal / Drawer */}
       {mobileFilterOpen && (
-        <div className="fixed inset-0 z-50 overflow-hidden animate-fade-in">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-50 flex">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileFilterOpen(false)}
           />
 
-          {/* Bottom Sheet Drawer */}
           <div className="fixed inset-x-0 bottom-0 max-h-[85vh] bg-white text-[#1E141B] rounded-t-3xl shadow-2xl flex flex-col z-10 animate-slide-in-up border-t border-stone-200 font-semibold">
             
-            {/* Grab Handle */}
             <div className="w-12 h-1.5 bg-stone-300 rounded-full mx-auto mt-3 mb-1" />
 
-            {/* Drawer Header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-stone-200 bg-[#7A0648] text-white">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-white" />
                 <h3 className="font-serif text-lg font-bold text-white uppercase tracking-wider">Atelier Filters</h3>
-                {secondaryFiltersActiveCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-white text-[#7A0648] text-[10px] flex items-center justify-center font-bold">
-                    {secondaryFiltersActiveCount}
-                  </span>
-                )}
               </div>
               <button
                 onClick={() => setMobileFilterOpen(false)}
                 className="p-1.5 rounded-full text-white hover:bg-white/15 transition-colors cursor-pointer"
-                aria-label="Close filters"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -630,8 +788,10 @@ export default function ShopPage() {
             {/* Filter Tabs in Drawer */}
             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar px-4 py-2 border-b border-stone-200 bg-[#FAF8F5]">
               {[
+                { id: 'category', label: 'Categories' },
                 { id: 'style', label: 'Silhouettes' },
                 { id: 'work', label: 'Craftsmanship' },
+                { id: 'wholesale', label: 'Wholesale' },
                 { id: 'shade', label: 'Colors' },
                 { id: 'wishlist', label: 'Wishlist' }
               ].map((tab) => (
@@ -652,208 +812,168 @@ export default function ShopPage() {
             {/* Drawer Body Content */}
             <div className="flex-1 overflow-y-auto p-5 space-y-4 text-[#1E141B]">
               
-              {/* Silhouette Cuts */}
+              {/* Category */}
+              {activeDrawerTab === 'category' && (
+                <div className="space-y-2.5 animate-fade-in">
+                  <div className="grid grid-cols-1 gap-2">
+                    {categoryTabs.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => handleCategoryChange(cat.id)}
+                        className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
+                          selectedCategory === cat.id
+                            ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] font-bold'
+                            : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
+                        }`}
+                      >
+                        <span>{cat.label}</span>
+                        {selectedCategory === cat.id && <Check className="w-4 h-4 text-[#7A0648]" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Styles */}
               {activeDrawerTab === 'style' && (
                 <div className="space-y-2.5 animate-fade-in">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                      Signature Silhouettes
-                    </label>
-                    <span className="text-[11px] text-stone-500">7 Cuts available</span>
-                  </div>
                   <div className="grid grid-cols-1 gap-2">
                     <button
-                      onClick={() => {
-                        setSelectedStyleFilter('All');
-                        setSelectedTab('All');
-                        if (setContextStyleFilter) setContextStyleFilter('All');
-                      }}
-                      className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
-                        selectedStyleFilter === 'All'
-                          ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] shadow-xs font-bold'
-                          : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
+                      onClick={() => setSelectedStyleFilter('All')}
+                      className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between cursor-pointer ${
+                        selectedStyleFilter === 'All' ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] font-bold' : 'bg-white'
                       }`}
                     >
-                      <div>
-                        <div className="font-bold text-sm">All Silhouettes</div>
-                        <div className={`text-[10px] ${selectedStyleFilter === 'All' ? 'text-[#7A0648]/80' : 'text-stone-500'}`}>
-                          View all 7 cuts and silhouettes
-                        </div>
-                      </div>
+                      <span>All Styles</span>
                       {selectedStyleFilter === 'All' && <Check className="w-4 h-4 text-[#7A0648]" />}
                     </button>
-
-                    {ABAYA_STYLES.map((style) => {
-                      const isSelected = selectedStyleFilter.toLowerCase() === style.name.toLowerCase();
-                      return (
-                        <button
-                          key={style.id}
-                          onClick={() => {
-                            setSelectedStyleFilter(style.name);
-                            setSelectedTab(style.name);
-                            if (setContextStyleFilter) setContextStyleFilter(style.name);
-                          }}
-                          className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] shadow-xs font-bold'
-                              : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
-                          }`}
-                        >
-                          <div>
-                            <div className="font-bold text-sm">{style.name}</div>
-                            <div className={`text-[10px] ${isSelected ? 'text-[#7A0648]/80' : 'text-stone-500'}`}>
-                              {style.description}
-                            </div>
-                          </div>
-                          {isSelected && <Check className="w-4 h-4 text-[#7A0648]" />}
-                        </button>
-                      );
-                    })}
+                    {ABAYA_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        onClick={() => setSelectedStyleFilter(style.name)}
+                        className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between cursor-pointer ${
+                          selectedStyleFilter.toLowerCase() === style.name.toLowerCase() ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] font-bold' : 'bg-white'
+                        }`}
+                      >
+                        <div>
+                          <div className="font-bold">{style.name}</div>
+                          <div className="text-[10px] text-stone-500">{style.description}</div>
+                        </div>
+                        {selectedStyleFilter.toLowerCase() === style.name.toLowerCase() && <Check className="w-4 h-4 text-[#7A0648]" />}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* Craftsmanship Works */}
+              {/* Works */}
               {activeDrawerTab === 'work' && (
                 <div className="space-y-2.5 animate-fade-in">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                      Artisanal Works & Embellishments
-                    </label>
-                    <span className="text-[11px] text-stone-500">7 Craft types</span>
-                  </div>
                   <div className="grid grid-cols-1 gap-2">
                     <button
-                      onClick={() => {
-                        setSelectedWorkFilter('All');
-                        if (setContextWorkFilter) setContextWorkFilter('All');
-                      }}
-                      className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all cursor-pointer ${
-                        selectedWorkFilter === 'All'
-                          ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] shadow-xs font-bold'
-                          : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
+                      onClick={() => setSelectedWorkFilter('All')}
+                      className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between cursor-pointer ${
+                        selectedWorkFilter === 'All' ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] font-bold' : 'bg-white'
                       }`}
                     >
-                      <div>
-                        <div className="font-bold text-sm">All Craftsmanship</div>
-                        <div className={`text-[10px] ${selectedWorkFilter === 'All' ? 'text-[#7A0648]/80' : 'text-stone-500'}`}>
-                          All artisan needlework & embellishments
-                        </div>
-                      </div>
+                      <span>All Works</span>
                       {selectedWorkFilter === 'All' && <Check className="w-4 h-4 text-[#7A0648]" />}
                     </button>
-
-                    {ABAYA_WORKS.map((work) => {
-                      const isSelected = selectedWorkFilter.toLowerCase() === work.name.toLowerCase();
-                      return (
-                        <button
-                          key={work.id}
-                          onClick={() => {
-                            setSelectedWorkFilter(work.name);
-                            if (setContextWorkFilter) setContextWorkFilter(work.name);
-                          }}
-                          className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between transition-all capitalize cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] shadow-xs font-bold'
-                              : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
-                          }`}
-                        >
-                          <div>
-                            <div className="font-bold text-sm capitalize">{work.name}</div>
-                            <div className={`text-[10px] ${isSelected ? 'text-[#7A0648]/80' : 'text-stone-500'}`}>
-                              {work.description}
-                            </div>
-                          </div>
-                          {isSelected && <Check className="w-4 h-4 text-[#7A0648]" />}
-                        </button>
-                      );
-                    })}
+                    {ABAYA_WORKS.map((work) => (
+                      <button
+                        key={work.id}
+                        onClick={() => setSelectedWorkFilter(work.name)}
+                        className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between cursor-pointer capitalize ${
+                          selectedWorkFilter.toLowerCase() === work.name.toLowerCase() ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] font-bold' : 'bg-white'
+                        }`}
+                      >
+                        <div>
+                          <div className="font-bold">{work.name}</div>
+                          <div className="text-[10px] text-stone-500">{work.description}</div>
+                        </div>
+                        {selectedWorkFilter.toLowerCase() === work.name.toLowerCase() && <Check className="w-4 h-4 text-[#7A0648]" />}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* Color Shade Palette */}
+              {/* Wholesale */}
+              {activeDrawerTab === 'wholesale' && (
+                <div className="space-y-2.5 animate-fade-in">
+                  <div className="grid grid-cols-1 gap-2">
+                    {WHOLESALE_TYPES.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => setSelectedWholesaleType(type.name)}
+                        className={`p-3 text-xs font-semibold rounded-none text-left border flex items-center justify-between cursor-pointer ${
+                          selectedWholesaleType === type.name ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] font-bold' : 'bg-white'
+                        }`}
+                      >
+                        <div>
+                          <div className="font-bold">Wholesale {type.name}</div>
+                          <div className="text-[10px] text-stone-500">{type.description}</div>
+                        </div>
+                        {selectedWholesaleType === type.name && <Check className="w-4 h-4 text-[#7A0648]" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Colors */}
               {activeDrawerTab === 'shade' && (
-                <div className="space-y-3 animate-fade-in">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                    Shade & Color Spectrum
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {shades.map((shade) => {
-                      const isSelected = selectedShade === shade.name;
-                      return (
-                        <button
-                          key={shade.name}
-                          onClick={() => {
-                            setSelectedShade(shade.name);
-                            if (setContextColorFilter) setContextColorFilter(shade.name);
-                          }}
-                          className={`p-3 rounded-none border flex items-center gap-2.5 transition-all text-xs font-bold cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648] shadow-xs font-bold'
-                              : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
-                          }`}
-                        >
-                          {shade.hex ? (
-                            <span
-                              className="w-4 h-4 rounded-full border border-black/15 shrink-0"
-                              style={{ backgroundColor: shade.hex }}
-                            />
-                          ) : (
-                            <span className="w-4 h-4 rounded-full bg-gradient-to-tr from-amber-200 via-rose-300 to-indigo-400 shrink-0" />
-                          )}
-                          <span className="truncate">{shade.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Wishlist Toggle */}
-              {activeDrawerTab === 'wishlist' && (
-                <div className="space-y-4 animate-fade-in p-2">
-                  <div className="p-4 rounded-none bg-stone-50 border border-stone-200 flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="font-bold text-sm text-[#1E141B] flex items-center gap-1.5">
-                        <Heart className="w-4 h-4 text-[#7A0648] fill-[#7A0648]" />
-                        <span>Saved Wishlist Only</span>
-                      </div>
-                      <p className="text-xs text-stone-500 font-medium">
-                        Show only products currently in your saved wishlist ({wishlist.length})
-                      </p>
-                    </div>
+                <div className="grid grid-cols-2 gap-2 animate-fade-in">
+                  {shades.map((shade) => (
                     <button
-                      onClick={() => setOnlyWishlist(!onlyWishlist)}
-                      className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
-                        onlyWishlist ? 'bg-[#7A0648]' : 'bg-stone-300'
+                      key={shade.name}
+                      onClick={() => setSelectedShade(shade.name)}
+                      className={`p-3 rounded-none border flex items-center gap-2.5 text-xs font-bold cursor-pointer ${
+                        selectedShade === shade.name ? 'bg-[#F5EAF1] text-[#7A0648] border-[#7A0648]' : 'bg-white'
                       }`}
                     >
-                      <span
-                        className={`block w-5 h-5 rounded-full bg-white shadow-md transform transition-transform ${
-                          onlyWishlist ? 'translate-x-6' : 'translate-x-0.5'
-                        }`}
-                      />
+                      {shade.hex ? (
+                        <span className="w-4 h-4 rounded-full border shrink-0" style={{ backgroundColor: shade.hex }} />
+                      ) : (
+                        <span className="w-4 h-4 rounded-full bg-gradient-to-tr from-amber-200 to-indigo-400 shrink-0" />
+                      )}
+                      <span>{shade.name}</span>
                     </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Wishlist */}
+              {activeDrawerTab === 'wishlist' && (
+                <div className="p-4 rounded-none bg-stone-50 border border-stone-200 flex items-center justify-between">
+                  <div className="font-bold text-sm text-[#1E141B] flex items-center gap-1.5">
+                    <Heart className="w-4 h-4 text-[#7A0648] fill-[#7A0648]" />
+                    <span>Saved Wishlist Only ({wishlist.length})</span>
                   </div>
+                  <button
+                    onClick={() => setOnlyWishlist(!onlyWishlist)}
+                    className={`w-12 h-6 rounded-full transition-colors relative ${onlyWishlist ? 'bg-[#7A0648]' : 'bg-stone-300'}`}
+                  >
+                    <span className={`block w-5 h-5 rounded-full bg-white shadow-md transform transition-transform ${onlyWishlist ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                  </button>
                 </div>
               )}
 
             </div>
 
-            {/* Drawer Footer Actions */}
+            {/* Footer */}
             <div className="p-4 border-t border-stone-200 bg-[#FAF8F5] flex items-center gap-3">
               <button
                 onClick={resetFilters}
-                className="flex-1 py-3 border border-stone-300 text-stone-700 text-xs uppercase tracking-wider font-bold rounded-none hover:bg-stone-100 active:scale-98 transition-all cursor-pointer"
+                className="flex-1 py-3 border border-stone-300 text-stone-700 text-xs uppercase tracking-wider font-bold rounded-none hover:bg-stone-100"
               >
                 Reset All
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="flex-[2] py-3 bg-[#7A0648] text-white text-xs uppercase tracking-wider font-bold rounded-none shadow-md hover:bg-[#68043D] active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer border border-[#7A0648]"
+                className="flex-[2] py-3 bg-[#7A0648] text-white text-xs uppercase tracking-wider font-bold rounded-none shadow-md hover:bg-[#68043D]"
               >
-                <span>View {filteredProducts.length} Abayas</span>
+                View {filteredProducts.length} Items
               </button>
             </div>
 

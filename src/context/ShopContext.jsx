@@ -30,6 +30,8 @@ export function ShopProvider({ children }) {
   const [selectedColorFilter, setSelectedColorFilter] = useState('All');
   const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');
   const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
+  const [selectedSubcategoryFilter, setSelectedSubcategoryFilter] = useState('All');
+  const [selectedWholesaleTypeFilter, setSelectedWholesaleTypeFilter] = useState('All');
   const [wishlistOnlyFilter, setWishlistOnlyFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -327,7 +329,7 @@ export function ShopProvider({ children }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView, selectedProductId]);
 
-  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null) => {
+  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null) => {
     console.log('[ShopContext] navigateTo called:', {
       view,
       productId,
@@ -337,7 +339,9 @@ export function ShopProvider({ children }) {
       style,
       work,
       wishlistOnly,
-      search
+      search,
+      subcategory,
+      wholesaleType
     });
 
     if (productId) {
@@ -346,18 +350,22 @@ export function ShopProvider({ children }) {
 
     if (view === 'shop' || view === 'collections') {
       const resolvedCategory = category || 'All';
-      const resolvedStyle = style || (category && category !== 'All' ? category : 'All');
+      const resolvedStyle = style || 'All';
       const resolvedWork = work || 'All';
       const resolvedColor = color || 'All';
+      const resolvedSubcategory = subcategory || 'All';
+      const resolvedWholesaleType = wholesaleType || 'All';
 
       setSelectedCategoryFilter(resolvedCategory);
       setSelectedStyleFilter(resolvedStyle);
       setSelectedWorkFilter(resolvedWork);
       setSelectedColorFilter(resolvedColor);
+      setSelectedSubcategoryFilter(resolvedSubcategory);
+      setSelectedWholesaleTypeFilter(resolvedWholesaleType);
 
       if (search !== null) {
         setSearchQuery(search);
-      } else if (!category && !style && !work && !color) {
+      } else if (!category && !style && !work && !color && !subcategory && !wholesaleType) {
         setSearchQuery('');
       }
     } else {
@@ -365,6 +373,8 @@ export function ShopProvider({ children }) {
       if (color) setSelectedColorFilter(color);
       if (style) setSelectedStyleFilter(style);
       if (work) setSelectedWorkFilter(work);
+      if (subcategory) setSelectedSubcategoryFilter(subcategory);
+      if (wholesaleType) setSelectedWholesaleTypeFilter(wholesaleType);
       if (search !== null) setSearchQuery(search);
     }
 
@@ -388,7 +398,7 @@ export function ShopProvider({ children }) {
     customMeasurements = null
   ) => {
     const resolvedStyle = style || product.defaultStyle || (product.styles && product.styles[0]) || 'Open abaya';
-    const resolvedWork = work || product.defaultWork || (product.works && product.works[0]) || 'plain';
+    const resolvedWork = work || product.defaultWork || (product.works && product.works[0]) || 'Plain/Basic';
     const resolvedColor = colorName || (product.colors && product.colors[0]?.name) || 'Midnight Espresso';
     const resolvedHex = hexCode || (product.colors && product.colors[0]?.hex) || '#2E1C1A';
     const resolvedSize = size || (product.sizes && product.sizes[0]) || 'Size 56 (Length 56")';
@@ -411,6 +421,8 @@ export function ShopProvider({ children }) {
           productId: product.id,
           name: product.name,
           price: product.price,
+          category: product.category,
+          wholesaleType: product.wholesaleType,
           color: resolvedColor,
           hex: resolvedHex,
           size: resolvedSize,
@@ -543,6 +555,10 @@ export function ShopProvider({ children }) {
         setSelectedStyleFilter,
         selectedWorkFilter,
         setSelectedWorkFilter,
+        selectedSubcategoryFilter,
+        setSelectedSubcategoryFilter,
+        selectedWholesaleTypeFilter,
+        setSelectedWholesaleTypeFilter,
         wishlistOnlyFilter,
         setWishlistOnlyFilter,
         searchQuery,

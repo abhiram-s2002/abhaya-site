@@ -117,6 +117,7 @@ export default function ProductDetailPage() {
   const [newReviewRating, setNewReviewRating] = useState(5);
 
   useEffect(() => {
+    const initialQty = product?.category === 'WHOLESALE' ? (product.wholesaleMinQty || 10) : 1;
     setSelectedLength('54');
     setHasButtons('No');
     setSizeType('Free size');
@@ -127,7 +128,7 @@ export default function ProductDetailPage() {
       setReviewsList(product.reviews);
     }
     setActiveImageIdx(0);
-    setQuantity(1);
+    setQuantity(initialQty);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [product]);
 
@@ -239,16 +240,24 @@ export default function ProductDetailPage() {
           Home
         </button>
         <span className="text-stone-300">/</span>
-        <button onClick={() => navigateTo('shop')} className="hover:text-[#7A0648] transition-colors shrink-0 cursor-pointer">
-          Abayas
-        </button>
-        <span className="text-stone-300">/</span>
         <button
-          onClick={() => navigateTo('shop', null, null, null, null, selectedStyle || product.defaultStyle)}
-          className="hover:text-[#7A0648] transition-colors text-stone-700 font-semibold shrink-0 cursor-pointer"
+          onClick={() => navigateTo('shop', null, null, null, null, null, product.category || 'ABAYA')}
+          className="hover:text-[#7A0648] transition-colors shrink-0 cursor-pointer font-semibold text-stone-700"
         >
-          {selectedStyle || product.defaultStyle || 'Abaya'}
+          {product.category || 'Abayas'}
         </button>
+        {product.subcategory && (
+          <>
+            <span className="text-stone-300">/</span>
+            <span className="text-stone-500 font-medium shrink-0">{product.subcategory}</span>
+          </>
+        )}
+        {product.wholesaleType && (
+          <>
+            <span className="text-stone-300">/</span>
+            <span className="text-amber-800 font-semibold shrink-0">{product.wholesaleType}</span>
+          </>
+        )}
         <span className="text-stone-300">/</span>
         <span className="text-[#7A0648] font-bold truncate max-w-[200px] sm:max-w-none">
           {product.name}
@@ -525,6 +534,25 @@ export default function ProductDetailPage() {
             )}
           </div>
 
+          {/* Wholesale B2B MOQ Callout Card */}
+          {product.category === 'WHOLESALE' && (
+            <div className="p-4 rounded-xl bg-amber-50 border border-amber-200/80 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                  <Award className="w-4 h-4 text-amber-700" />
+                  B2B Wholesale Lot
+                </span>
+                <span className="text-[11px] font-bold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-full border border-amber-300/60">
+                  MOQ: {product.wholesaleMinQty || 10} Pieces
+                </span>
+              </div>
+              <p className="text-xs text-amber-800 leading-relaxed font-medium">
+                {product.wholesaleType && <span className="font-bold block">Type: {product.wholesaleType}</span>}
+                Special bulk pricing applied. Custom branding and bespoke manufacturing available on WhatsApp inquiries.
+              </p>
+            </div>
+          )}
+
           {/* Social Proof Live Badge */}
           <div className="flex items-center gap-2 text-xs text-stone-600 py-1 font-medium">
             <Flame className="w-4 h-4 text-[#7A0648] fill-[#7A0648] animate-pulse" />
@@ -542,7 +570,7 @@ export default function ProductDetailPage() {
               {/* Quantity Counter */}
               <div className="flex items-center border border-stone-300 bg-white shrink-0">
                 <button
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  onClick={() => setQuantity((q) => Math.max(product.category === 'WHOLESALE' ? (product.wholesaleMinQty || 10) : 1, q - 1))}
                   className="w-10 h-12 flex items-center justify-center text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer text-base font-bold"
                   aria-label="Decrease quantity"
                 >

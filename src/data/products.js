@@ -1,3 +1,12 @@
+export const MAIN_CATEGORIES = [
+  { id: "Abaya", name: "Abaya", subtitle: "Dubai Haute Couture Silhouettes", path: "abaya" },
+  { id: "Shaila/Shawl", name: "Shaila / Shawl", subtitle: "Lustrous Mulberry Silk & Chiffon Wraps", path: "shaila-shawl" },
+  { id: "Hijab", name: "Hijab & Niqab", subtitle: "Premium Hijabs, Caps & Gentle Gloves", path: "hijab" },
+  { id: "Inner & Prayer dress", name: "Inner & Prayer Dress", subtitle: "Sleeveless Slips & Devotion Sets", path: "inner-prayer-dress" },
+  { id: "Kids abaya", name: "Kids Abaya", subtitle: "Graceful Modest Couture for Young Girls", path: "kids-abaya" },
+  { id: "Wholesale", name: "Wholesale (B2B)", subtitle: "Direct Factory Wholesale & Bulk Carton Export", path: "wholesale" }
+];
+
 export const ABAYA_STYLES = [
   {
     id: "open-abaya",
@@ -45,12 +54,6 @@ export const ABAYA_STYLES = [
 
 export const ABAYA_WORKS = [
   {
-    id: "plain",
-    name: "plain",
-    description: "Pure unembellished minimalist luxury focusing on fabric drape and clean cuts",
-    tag: "Minimalist"
-  },
-  {
     id: "embroidery-abaya",
     name: "Embroidery Abaya",
     description: "Intricate artisanal floral and geometric embroidery along cuffs, collar, and hem",
@@ -85,7 +88,34 @@ export const ABAYA_WORKS = [
     name: "Lace Work Abaya",
     description: "Delicate French and Chantilly lace trims along cuffs, lapels, and hemlines",
     tag: "Romantic Vintage"
+  },
+  {
+    id: "plain-basic",
+    name: "Plain/Basic",
+    description: "Pure unembellished minimalist luxury focusing on fabric drape and clean cuts",
+    tag: "Minimalist"
   }
+];
+
+export const WHOLESALE_TYPES = [
+  { id: "Abaya", name: "Abaya", description: "Full wholesale cartons of assorted luxury abayas" },
+  { id: "Simple/Basic", name: "Simple/Basic", description: "High-demand everyday minimalist abayas for retail shops" },
+  { id: "Embroidery", name: "Embroidery", description: "Bespoke embroidered abaya cartons for boutiques" },
+  { id: "Handwork", name: "Handwork", description: "Haute couture hand-beaded bridal & party abaya stock" },
+  { id: "Lace", name: "Lace", description: "French & Chantilly lace detailed abaya sets" },
+  { id: "Kids", name: "Kids", description: "Assorted girls and junior modest abaya carton packs" }
+];
+
+export const HIJAB_TYPES = [
+  { id: "Niqab", name: "Niqab", description: "Breathable single and multi-layer niqabs" },
+  { id: "Cap", name: "Cap / Undercap", description: "Non-slip satin and cotton undercaps" },
+  { id: "Glove", name: "Glove", description: "Touchscreen-friendly soft stretch modest gloves" },
+  { id: "Hijab", name: "Hijab", description: "Chiffon, jersey, and pure silk matching head wraps" }
+];
+
+export const INNER_PRAYER_TYPES = [
+  { id: "Inner Slip", name: "Inner Slip Dress", description: "Sleeveless breathable under-abaya slip dresses" },
+  { id: "Prayer dress", name: "Prayer Dress", description: "Attached-scarf all-in-one devotion gowns" }
 ];
 
 export const ABAYA_SIZES = [
@@ -128,6 +158,7 @@ export const ABAYA_SIZES = [
 ];
 
 export const PRODUCTS = [
+  // ── 1. ABAYA CATEGORY PRODUCTS ──
   {
     id: "midnight-espresso-silk",
     name: "Midnight Espresso Silk Abaya",
@@ -147,15 +178,13 @@ export const PRODUCTS = [
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw",
     gallery: [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCM9j8LFvsTmyHWo5yGhiGKS4opH62nBHZu4Lnul0WiG75kp7G1fV5dduJL4yYrG6_QYii5EqU5qDdmPAZiVayTHk_MHdZUS1PFH7Vmu_PQ9NkTiImB1yySXaGzznzAIt50MMuSleDfR4BGxIDRWpxTH8KdOc8n4QYbwkzpgvIpNykc3t2HhuojjULBjDgRwn0AHkSBSCprFC4hYTmO1dhYVgvdl_4PWcpnE9_BIc9Mbcupjf6jLWTvZA",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAxISzwQvkHUcmdG9OjTwQWp9sMFwGw1l_gUdNB4aopbMIay27OpPDYfn13IEY3TaUDoBysCqSpU86ZR5dX0QEr1wqRgT1qj0MyAuninpsod26knL6_n-QMhLy18NSPb6cvbE9jk_wdrdJEV_XwfXj2r-mzPlLcwRPl56pb4akK10bb26FIXvN-g15NxHRDwfzDSqcfetnxiLv159D8EI8Ht0zD_ZEnR7YYaf_RBNj4Gp2_Lj_sEtljfw",
-      "https://lh3.googleusercontent.com/aida/AP1WRLsubXpZRMs4d6TSe64m8hRKMNVRw9stfmWMvDkli7oN-lY_Gipn6QJJfseOnDq8v78qBS34fzGht3I_RWYHR6Rn2Gc5GyLq_R-E7_u91ZL5NT_bI47PcriXPRepRLeb7X-8JyWSrBE_CJfwLFvIJJZH-TaOdb7rOnsyAQMMvPHQy254UDgB9jnXEarMQJmmjhOPd32F-bNmCc-mKQIOGn08zc1VVBTFXMPrfiF7yez1KWpAzCZZjA-xoL-m"
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuCM9j8LFvsTmyHWo5yGhiGKS4opH62nBHZu4Lnul0WiG75kp7G1fV5dduJL4yYrG6_QYii5EqU5qDdmPAZiVayTHk_MHdZUS1PFH7Vmu_PQ9NkTiImB1yySXaGzznzAIt50MMuSleDfR4BGxIDRWpxTH8KdOc8n4QYbwkzpgvIpNykc3t2HhuojjULBjDgRwn0AHkSBSCprFC4hYTmO1dhYVgvdl_4PWcpnE9_BIc9Mbcupjf6jLWTvZA"
     ],
     colors: [
       { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 },
       { name: "Plum Noir", hex: "#260A22", imageIndex: 1 },
-      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 2 },
-      { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 3 }
+      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 0 },
+      { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 4,
@@ -182,13 +211,11 @@ export const PRODUCTS = [
     works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA",
     gallery: [
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g"
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA"
     ],
     colors: [
       { name: "Royal Violet", hex: "#982476", imageIndex: 0 },
-      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 1 },
-      { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 }
+      { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 7,
@@ -204,7 +231,7 @@ export const PRODUCTS = [
     price: 135,
     originalPrice: 170,
     category: "Abaya",
-    badge: "",
+    badge: "Trending",
     targetRegion: "india",
     rating: 4.8,
     reviewsCount: 84,
@@ -219,14 +246,13 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 },
-      { name: "Antique Blush", hex: "#E2C3C1", imageIndex: 0 },
-      { name: "Champagne", hex: "#EBD5C1", imageIndex: 0 }
+      { name: "Antique Blush", hex: "#E2C3C1", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 12,
     description: "Delicately sheer yet fully lined and opaque, our premium matte chiffon abaya provides breathable, floaty grace that stays put all day with seamless tailored lines.",
     fabricDetails: "100% Fine Microfiber Chiffon with soft matte pebble finish. High durability against snagging.",
-    stylingAdvice: "Choose Lace Work for wedding occasions or Plain for graceful minimalist everyday wear.",
+    stylingAdvice: "Choose Lace Work for wedding occasions or Plain/Basic for graceful minimalist everyday wear.",
     careInstructions: "Machine wash cold on delicate cycle inside laundry mesh bag. Hang dry."
   },
   {
@@ -251,8 +277,7 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Serene Sage", hex: "#7D8B79", imageIndex: 0 },
-      { name: "Warm Sand", hex: "#C8B89F", imageIndex: 0 },
-      { name: "Charcoal Slate", hex: "#3D3F43", imageIndex: 0 }
+      { name: "Warm Sand", hex: "#C8B89F", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 15,
@@ -283,8 +308,7 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
-      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 },
-      { name: "Oat Cream", hex: "#ECE2D4", imageIndex: 0 }
+      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 9,
@@ -315,8 +339,7 @@ export const PRODUCTS = [
     ],
     colors: [
       { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 0 },
-      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 },
-      { name: "Champagne Glow", hex: "#EBD5C1", imageIndex: 0 }
+      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 }
     ],
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 6,
@@ -338,7 +361,7 @@ export const PRODUCTS = [
     reviewsCount: 38,
     isVioletEdition: true,
     defaultStyle: "Closed cut",
-    defaultWork: "plain",
+    defaultWork: "Plain/Basic",
     styles: ABAYA_STYLES.map(s => s.name),
     works: ABAYA_WORKS.map(w => w.name),
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC62Pubod6uVtguy05UptSBB8reu4JabPY0PwbiPYPXlEDpfoyvWWm_LbQNVVa2vA_XcMhrFIIBFxe-w0OoW5jrkDOfsMuBpdvFb1KE8yOvQP3elB3A6xfTzLB8rTL6U3551DMCeA9q2oMYmOIJbZpUDr1DlrwerOph-ZxGnsRCoO8TEijtBJqZUIeWwRen9k_MtD_Br7xdakBcNQjnRMRcXfgOBFn60si3c_yt84p0f1dKFD9kqRq06g",
@@ -355,6 +378,319 @@ export const PRODUCTS = [
     fabricDetails: "100% Grade 6A Pure Mulberry Silk with artisanal finished edges.",
     stylingAdvice: "Perfect for daytime diplomacy and evening cocktail gatherings.",
     careInstructions: "Specialist silk hand wash only."
+  },
+
+  // ── 2. SHAILA / SHAWL CATEGORY PRODUCTS ──
+  {
+    id: "pure-silk-shaila-shawl",
+    name: "Pure Mulberry Silk Shaila Shawl",
+    subtitle: "Non-Slip Lightweight Weave | Hand-Finished Edges",
+    price: 45,
+    originalPrice: 65,
+    category: "Shaila/Shawl",
+    badge: "Essential Luxury",
+    targetRegion: "all",
+    rating: 4.9,
+    reviewsCount: 76,
+    isVioletEdition: true,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA"
+    ],
+    colors: [
+      { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 },
+      { name: "Royal Violet", hex: "#982476", imageIndex: 0 },
+      { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 }
+    ],
+    sizes: ["Standard (75 x 200 cm)", "Maxi (100 x 220 cm)"],
+    stockCount: 25,
+    description: "Exquisitely woven from 100% natural pure mulberry silk with micro-textured inner weave that stays firmly in place without constant readjustments. Fluid, breathable, and opulent.",
+    fabricDetails: "100% Grade 6A Pure Mulberry Silk (75cm x 200cm).",
+    stylingAdvice: "Drape loosely over shoulders or style as an elegant evening wrap.",
+    careInstructions: "Hand wash cold, air dry flat in shade."
+  },
+  {
+    id: "chantilly-lace-chiffon-shaila",
+    name: "Chantilly Lace Edge Chiffon Shaila",
+    subtitle: "French Floral Lace Trim | Featherlight Flow",
+    price: 38,
+    originalPrice: 50,
+    category: "Shaila/Shawl",
+    badge: "Atelier Classic",
+    targetRegion: "all",
+    rating: 4.9,
+    reviewsCount: 43,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAZVub0VhEbfZ42RjVHsOuVG7wBCgHLelkGY6dOel_gT0hCj9B2RVezHENmxJ_Y2puqMuVud0p4ezu2BAO-tDYec2p7u7R0BrlAnxqF8-sj5o6hzp952ZimvWdQMJ27T2bnI0izDnupYarV-4dSCuZNTV4ZI5LIGSBrB7x8UtRvKe2pzAHzOircRZsc5QdPR8BNHP9tTFY1_m7T5pjTpfYw7dLDbvqK7NRWpybaJqeALvz9q6tLOqfhTQ",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuAZVub0VhEbfZ42RjVHsOuVG7wBCgHLelkGY6dOel_gT0hCj9B2RVezHENmxJ_Y2puqMuVud0p4ezu2BAO-tDYec2p7u7R0BrlAnxqF8-sj5o6hzp952ZimvWdQMJ27T2bnI0izDnupYarV-4dSCuZNTV4ZI5LIGSBrB7x8UtRvKe2pzAHzOircRZsc5QdPR8BNHP9tTFY1_m7T5pjTpfYw7dLDbvqK7NRWpybaJqeALvz9q6tLOqfhTQ"
+    ],
+    colors: [
+      { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 },
+      { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
+      { name: "Charcoal Slate", hex: "#3D3F43", imageIndex: 0 }
+    ],
+    sizes: ["Standard (75 x 200 cm)"],
+    stockCount: 18,
+    description: "An airy chiffon shawl bordered with imported delicate French Chantilly lace for a touch of romantic elegance.",
+    fabricDetails: "Premium matte Korean chiffon with French lace borders.",
+    stylingAdvice: "Perfect pairing with formal and celebratory abayas.",
+    careInstructions: "Delicate hand wash cold."
+  },
+
+  // ── 3. HIJAB (NIQAB, CAP, GLOVE ETC) CATEGORY PRODUCTS ──
+  {
+    id: "breathable-chiffon-niqab",
+    name: "Aura Breathable Half & Full Niqab Set",
+    subtitle: "Ultra-Light Breathable Chiffon | Anti-Friction Ear Tie",
+    price: 25,
+    originalPrice: 35,
+    category: "Hijab",
+    subcategory: "Niqab",
+    badge: "Bestseller",
+    targetRegion: "arab",
+    rating: 5.0,
+    reviewsCount: 92,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw"
+    ],
+    colors: [
+      { name: "Pure Onyx Black", hex: "#111111", imageIndex: 0 },
+      { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 }
+    ],
+    sizes: ["One Size (Tie-Back Adjustable)"],
+    stockCount: 30,
+    description: "Designed for all-day breathability and modest comfort with premium microfiber chiffon and concealed soft tie cords.",
+    fabricDetails: "Double-layered breathable soft touch georgette chiffon.",
+    stylingAdvice: "Pairs seamlessly with any headscarf or abaya.",
+    careInstructions: "Machine wash cold in mesh bag."
+  },
+  {
+    id: "satin-lined-undercap-gloves-kit",
+    name: "Satin-Lined Undercap & Modest Touch Gloves Set",
+    subtitle: "Hair-Protecting Silk Satin | Touchscreen Modesty Gloves",
+    price: 30,
+    originalPrice: 42,
+    category: "Hijab",
+    subcategory: "Cap",
+    badge: "Hair Care Essential",
+    targetRegion: "all",
+    rating: 4.9,
+    reviewsCount: 51,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6VCCXcrsIQMHcP3Y2cwPwjMw26HSpdXZRpo1lY76HCdTo-vZ5b4M8do6PcZ7DqQvXu3-GlMe2pgswNgngMTx9SsTOZ72uI6VKzR9AO30LImVq-vABf8hOJGP7ROTu8ggWAFYVzo2IbWQV-aYchjycdwCWyhodCmGPBoTo_aAcIjMZuF8wfHjLz_fQt_sGTpPBO2Ddgqm5H07QGTDc4ZBfNS_nT9uyWZncjWeLoA1KPl20JxdlmW11w",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuD6VCCXcrsIQMHcP3Y2cwPwjMw26HSpdXZRpo1lY76HCdTo-vZ5b4M8do6PcZ7DqQvXu3-GlMe2pgswNgngMTx9SsTOZ72uI6VKzR9AO30LImVq-vABf8hOJGP7ROTu8ggWAFYVzo2IbWQV-aYchjycdwCWyhodCmGPBoTo_aAcIjMZuF8wfHjLz_fQt_sGTpPBO2Ddgqm5H07QGTDc4ZBfNS_nT9uyWZncjWeLoA1KPl20JxdlmW11w"
+    ],
+    colors: [
+      { name: "Onyx Black", hex: "#111111", imageIndex: 0 },
+      { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
+      { name: "Serene Sage", hex: "#7D8B79", imageIndex: 0 }
+    ],
+    sizes: ["One Size Stretch"],
+    stockCount: 40,
+    description: "Preserve your hair moisture with our 100% silk satin lined undercap, accompanied by ultra-soft stretch modest gloves with smartphone conductive fingertip embroidery.",
+    fabricDetails: "Bamboo Modal exterior with 100% Mulberry Silk interior lining.",
+    stylingAdvice: "Wear under all chiffon and silk hijabs for zero friction.",
+    careInstructions: "Hand wash cold."
+  },
+
+  // ── 4. INNER AND PRAYER DRESS CATEGORY PRODUCTS ──
+  {
+    id: "silk-touch-inner-slip",
+    name: "Silk-Touch Sleeveless Abaya Inner Slip Dress",
+    subtitle: "Opaque Foundation Layer | Anti-Static Cooling Finish",
+    price: 55,
+    originalPrice: 75,
+    category: "Inner & Prayer dress",
+    subcategory: "Inner Slip",
+    badge: "Foundation Staple",
+    targetRegion: "all",
+    rating: 4.9,
+    reviewsCount: 88,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCnqkoPTiUDviPUgD5wOYrSVBgUqgYocEhMRfjaPR0AEGQLNSU0reQ8ubR7uxH960qrPF_FqZly7nHa6M1eLYxa5g-5swQgYvy9Z47DR5Ph3pItsJjdCgLs1rkJOUsw_YtUrEPMsYWIosdqamteTBxBFcTP3dxNNOMXvIUzzwnK72cUnoROgWljIfcYMCZlhKDCFJZAJAexcU4FPc2ghiwZ4a4GWa-zXbuRhhx6hDiAwUFdTToqcj62cg",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuCnqkoPTiUDviPUgD5wOYrSVBgUqgYocEhMRfjaPR0AEGQLNSU0reQ8ubR7uxH960qrPF_FqZly7nHa6M1eLYxa5g-5swQgYvy9Z47DR5Ph3pItsJjdCgLs1rkJOUsw_YtUrEPMsYWIosdqamteTBxBFcTP3dxNNOMXvIUzzwnK72cUnoROgWljIfcYMCZlhKDCFJZAJAexcU4FPc2ghiwZ4a4GWa-zXbuRhhx6hDiAwUFdTToqcj62cg"
+    ],
+    colors: [
+      { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
+      { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 },
+      { name: "Oat Cream", hex: "#ECE2D4", imageIndex: 0 }
+    ],
+    sizes: ["Size 52", "Size 54", "Size 56", "Size 58", "Size 60"],
+    stockCount: 22,
+    description: "The ultimate foundational slip dress for open abayas and sheer fabrics. Tailored with a modest scoop neckline and cooling breathable micro-satin fabric.",
+    fabricDetails: "Breathable Cooling Viscose & Rayon Satin.",
+    stylingAdvice: "Essential base layer under open and lace abayas.",
+    careInstructions: "Machine wash cold on gentle cycle."
+  },
+  {
+    id: "ethereal-travel-prayer-dress",
+    name: "Ethereal 2-Piece Travel Prayer Dress Set with Pouch",
+    subtitle: "Attached Hijab & Full Skirt | Wrinkle-Resistant Modal",
+    price: 68,
+    originalPrice: 90,
+    category: "Inner & Prayer dress",
+    subcategory: "Prayer dress",
+    badge: "Travel Favorite",
+    targetRegion: "all",
+    rating: 5.0,
+    reviewsCount: 67,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA"
+    ],
+    colors: [
+      { name: "Serene Sage", hex: "#7D8B79", imageIndex: 0 },
+      { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 },
+      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 }
+    ],
+    sizes: ["Free Size (Full Length Coverage)"],
+    stockCount: 16,
+    description: "Complete modesty for prayer, travel, and spiritual tranquility. Includes an attached headpiece with flexible elastic and a matching portable travel drawstring pouch.",
+    fabricDetails: "Ultra-soft Modal Rayon blend.",
+    stylingAdvice: "Folds compactly into the travel pouch for handbag carrying.",
+    careInstructions: "Machine wash cold, hang to dry."
+  },
+
+  // ── 5. KIDS ABAYA CATEGORY PRODUCTS ──
+  {
+    id: "little-princess-farasha-kids",
+    name: "Little Princess Butterfly Farasha Kids Abaya",
+    subtitle: "Ages 4–14 | Matching Miniature Hijab Included",
+    price: 85,
+    originalPrice: 110,
+    category: "Kids abaya",
+    badge: "Princess Favorite",
+    targetRegion: "all",
+    rating: 5.0,
+    reviewsCount: 34,
+    isVioletEdition: true,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA"
+    ],
+    colors: [
+      { name: "Royal Violet", hex: "#982476", imageIndex: 0 },
+      { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 },
+      { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 }
+    ],
+    sizes: ["Size 36 (Age 4-6)", "Size 40 (Age 7-9)", "Size 44 (Age 10-12)", "Size 48 (Age 13-14)"],
+    stockCount: 14,
+    description: "Designed with love for young girls with whimsical sweeping butterfly sleeves, crystal accents, and comfortable lightweight fabrics that allow full freedom to play.",
+    fabricDetails: "Featherlight breathable chiffon with soft hypoallergenic lining.",
+    stylingAdvice: "Perfect for Eid celebrations, weddings, and Friday gatherings.",
+    careInstructions: "Hand wash cold, air dry."
+  },
+
+  // ── 6. WHOLESALE CATEGORY PRODUCTS ──
+  {
+    id: "wholesale-basic-abaya-carton",
+    name: "Wholesale Simple & Basic Abaya Master Carton",
+    subtitle: "Factory Bulk Export | Pack of 10 Assorted Sizes",
+    price: 490,
+    originalPrice: 850,
+    category: "Wholesale",
+    wholesaleType: "Simple/Basic",
+    wholesaleMinQty: 10,
+    badge: "B2B Bulk Export",
+    targetRegion: "all",
+    rating: 5.0,
+    reviewsCount: 19,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA"
+    ],
+    colors: [
+      { name: "Assorted Core Neutrals (Black, Espresso, Sage, Rose)", hex: "#111111", imageIndex: 0 }
+    ],
+    sizes: ["Assorted Master Pack (Sizes 52, 54, 56, 58)"],
+    stockCount: 100,
+    description: "Direct wholesale carton for retail boutiques, modest fashion shops, and commercial distributors. Includes 10 pieces of high-density Nida / Chiffon basic abayas with standard retail packaging.",
+    fabricDetails: "Export-grade premium Korean Nida fabric.",
+    stylingAdvice: "Ideal wholesale stock ready for retail display.",
+    careInstructions: "Bulk carton export with individual cellophane polybags."
+  },
+  {
+    id: "wholesale-embroidery-handwork-bundle",
+    name: "Wholesale Embroidery & Handwork Haute Boutique Pack",
+    subtitle: "Artisan Beaded & Embroidered Abayas | Pack of 10 Pieces",
+    price: 780,
+    originalPrice: 1200,
+    category: "Wholesale",
+    wholesaleType: "Handwork",
+    wholesaleMinQty: 10,
+    badge: "B2B Luxury Tier",
+    targetRegion: "arab",
+    rating: 5.0,
+    reviewsCount: 12,
+    isVioletEdition: true,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g"
+    ],
+    colors: [
+      { name: "Atelier Palette (Espresso, Violet, Amethyst, Ivory)", hex: "#982476", imageIndex: 0 }
+    ],
+    sizes: ["Assorted Sizes 52–58"],
+    stockCount: 50,
+    description: "Commercial wholesale bundle of premium artisan embroidered and hand-beaded abayas curated for high-end modest boutiques and bridal shops.",
+    fabricDetails: "Silk-feel crepe and georgette with genuine hand-worked embellishments.",
+    stylingAdvice: "Contact concierge on WhatsApp for custom bulk color selections.",
+    careInstructions: "Ships with protective hanging garment bags."
+  },
+  {
+    id: "wholesale-kids-assorted-pack",
+    name: "Wholesale Kids Abaya Boutique Assortment",
+    subtitle: "Ages 4 to 14 | Pack of 12 Pieces with Matching Shailas",
+    price: 420,
+    originalPrice: 650,
+    category: "Wholesale",
+    wholesaleType: "Kids",
+    wholesaleMinQty: 12,
+    badge: "B2B Kids Pack",
+    targetRegion: "all",
+    rating: 4.8,
+    reviewsCount: 15,
+    isVioletEdition: false,
+    styles: [],
+    works: [],
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA",
+    gallery: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBYEamtzjpK7ME6SNcwB_Dm777cIG9hjrlL-HktMD3xXRRagPMwnPzQ6iQe0viQ-TzLh4QmpxHcu3NVanxe3hDnC2QRxOeS2lYJYUCj57wjk6s6zQPxuGfRymUJvAtpdqSxQyOCVxYVVXZeKjX1PtHzUwTdxLxRFkQ-uy0Wkdt9PLVSix-WW_Yhj9Q-7vckCUPA1NjfPSGWo1RpBTx4655Eg32yHhxICDT7wKDiG-eqw4hPAEADpyQ5vA"
+    ],
+    colors: [
+      { name: "Pastel & Jewel Mix (Violet, Amethyst, Rose, Black)", hex: "#C76AA9", imageIndex: 0 }
+    ],
+    sizes: ["Assorted Ages 4, 6, 8, 10, 12, 14"],
+    stockCount: 80,
+    description: "Bespoke wholesale carton of 12 young girl farashas and modest cut abayas complete with mini headscarves.",
+    fabricDetails: "Comfort soft nida & chiffon.",
+    stylingAdvice: "Fast-selling seasonal stock for Eid and modest youth collections.",
+    careInstructions: "Individually polybagged."
   }
 ];
 

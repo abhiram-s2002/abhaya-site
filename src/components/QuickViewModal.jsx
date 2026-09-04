@@ -17,13 +17,15 @@ function QuickViewModalContent({ product, onClose }) {
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Size 54 (54")');
   const [customMeasurements, setCustomMeasurements] = useState({ height: '', bust: '', length: '' });
   const [activeImageIdx, setActiveImageIdx] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(product.category === 'WHOLESALE' ? (product.wholesaleMinQty || 10) : 1);
 
   const images = product.gallery && product.gallery.length > 0
     ? product.gallery
     : (product.image ? [product.image] : []);
 
   const wishlisted = isWishlisted(product.id);
+
+  const isAbayaCategory = !product.category || product.category === 'ABAYA' || product.category === 'Kids abaya';
 
   const handleAddToCart = () => {
     const isCustom = selectedSize.toLowerCase().includes('custom');
@@ -34,8 +36,8 @@ function QuickViewModalContent({ product, onClose }) {
       selectedSize,
       quantity,
       images[activeImageIdx],
-      selectedStyle,
-      selectedWork,
+      isAbayaCategory ? selectedStyle : null,
+      isAbayaCategory ? selectedWork : null,
       isCustom ? customMeasurements : null
     );
     onClose();
@@ -114,7 +116,7 @@ function QuickViewModalContent({ product, onClose }) {
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] font-bold text-stone-500">
-                    {product.category || 'Abaya'} • {selectedStyle}
+                    {product.category || 'Abaya'} {product.subcategory ? `• ${product.subcategory}` : product.wholesaleType ? `• ${product.wholesaleType}` : isAbayaCategory && selectedStyle ? `• ${selectedStyle}` : ''}
                   </span>
                   <div className="flex items-center gap-1 text-[#FFD700] text-xs">
                     <Star className="w-3.5 h-3.5 fill-[#FFD700] text-[#FFD700]" strokeWidth={1} />
@@ -138,51 +140,66 @@ function QuickViewModalContent({ product, onClose }) {
                 </div>
               </div>
 
-              {/* 1. Category Style Selector */}
-              <div className="space-y-1.5 pt-2 border-t border-stone-200">
-                <div className="flex justify-between text-xs uppercase tracking-wider">
-                  <span className="font-bold text-stone-600">1. Style:</span>
-                  <span className="font-bold text-[#1E141B]">{selectedStyle}</span>
+              {/* Wholesale MOQ Card */}
+              {product.category === 'WHOLESALE' && (
+                <div className="p-3 bg-amber-50 rounded border border-amber-200 text-xs text-amber-900 space-y-1">
+                  <div className="flex justify-between font-bold">
+                    <span>Wholesale Bulk Lot</span>
+                    <span>MOQ: {product.wholesaleMinQty || 10} pcs</span>
+                  </div>
+                  {product.wholesaleType && <div className="text-amber-800">Sub-type: {product.wholesaleType}</div>}
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                  {ABAYA_STYLES.map((s) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setSelectedStyle(s.name)}
-                      className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-bold rounded-none text-left transition-all border leading-tight cursor-pointer ${
-                        selectedStyle.toLowerCase() === s.name.toLowerCase()
-                          ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
-                          : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
-                      }`}
-                    >
-                      {s.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
 
-              {/* 2. Work Selector */}
-              <div className="space-y-1.5 pt-2 border-t border-stone-200">
-                <div className="flex justify-between text-xs uppercase tracking-wider">
-                  <span className="font-bold text-stone-600">2. Work:</span>
-                  <span className="font-bold text-[#1E141B]">{selectedWork}</span>
+              {/* 1. Category Style Selector (Only for Abayas) */}
+              {isAbayaCategory && (
+                <div className="space-y-1.5 pt-2 border-t border-stone-200">
+                  <div className="flex justify-between text-xs uppercase tracking-wider">
+                    <span className="font-bold text-stone-600">1. Style:</span>
+                    <span className="font-bold text-[#1E141B]">{selectedStyle}</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                    {ABAYA_STYLES.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setSelectedStyle(s.name)}
+                        className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-bold rounded-none text-left transition-all border leading-tight cursor-pointer ${
+                          selectedStyle.toLowerCase() === s.name.toLowerCase()
+                            ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
+                            : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
+                        }`}
+                      >
+                        {s.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                  {ABAYA_WORKS.map((w) => (
-                    <button
-                      key={w.id}
-                      onClick={() => setSelectedWork(w.name)}
-                      className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-bold rounded-none text-left transition-all border leading-tight capitalize cursor-pointer ${
-                        selectedWork.toLowerCase() === w.name.toLowerCase()
-                          ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
-                          : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
-                      }`}
-                    >
-                      {w.name}
-                    </button>
-                  ))}
+              )}
+
+              {/* 2. Work Selector (Only for Abayas) */}
+              {isAbayaCategory && (
+                <div className="space-y-1.5 pt-2 border-t border-stone-200">
+                  <div className="flex justify-between text-xs uppercase tracking-wider">
+                    <span className="font-bold text-stone-600">2. Work:</span>
+                    <span className="font-bold text-[#1E141B]">{selectedWork}</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                    {ABAYA_WORKS.map((w) => (
+                      <button
+                        key={w.id}
+                        onClick={() => setSelectedWork(w.name)}
+                        className={`px-2.5 py-2 text-[11px] uppercase tracking-wide font-bold rounded-none text-left transition-all border leading-tight capitalize cursor-pointer ${
+                          selectedWork.toLowerCase() === w.name.toLowerCase()
+                            ? 'bg-[#7A0648] text-white border-[#7A0648] shadow-xs'
+                            : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
+                        }`}
+                      >
+                        {w.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* 3. Abaya Length & Sizing */}
               <div className="space-y-1.5 pt-2 border-t border-stone-200">

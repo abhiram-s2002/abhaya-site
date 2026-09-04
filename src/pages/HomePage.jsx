@@ -1,24 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles, PackageCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import EditableSection from '../components/cms/EditableSection';
+import { ABAYA_STYLES, ABAYA_WORKS, MAIN_CATEGORIES } from '../data/products';
 
-/* ──────────────────────────────────────────────
-   Image maps for Style & Work collection cards
-   (re-using existing product / collection images)
-   ────────────────────────────────────────────── */
 const baseUrl = import.meta.env.BASE_URL || './';
 const getAssetUrl = (path) => `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${path.replace(/^\//, '')}`;
 
-const STYLE_IMAGES = {
-  'Open abaya':              getAssetUrl('collection-images/style_open_abaya.jpg'),
-  'Closed cut':              getAssetUrl('collection-images/style_closed_cut.jpg'),
-  'Kimono or kaftan':        getAssetUrl('collection-images/style_kimono_kaftan.jpg'),
-  'Butterfly or farasha':    getAssetUrl('collection-images/style_butterfly_farasha.jpg'),
-  'umbrella cut or Flare':   getAssetUrl('collection-images/style_umbrella_flare.jpg'),
-  '2 piece abaya (with inner)': getAssetUrl('collection-images/style_two_piece.jpg'),
-  'Coat abaya':              getAssetUrl('collection-images/style_coat_abaya.jpg'),
-};
+const CATEGORY_CARDS = [
+  {
+    id: 'Abaya',
+    title: 'Abaya',
+    subtitle: 'Dubai Haute Couture',
+    image: getAssetUrl('collection-images/style_butterfly_farasha.jpg'),
+    badge: 'Signature Atelier'
+  },
+  {
+    id: 'Shaila/Shawl',
+    title: 'Shaila / Shawl',
+    subtitle: 'Pure Silk & Chiffon Wraps',
+    image: getAssetUrl('collection-images/style_open_abaya.jpg'),
+    badge: 'Pure Mulberry Silk'
+  },
+  {
+    id: 'Hijab',
+    title: 'Hijab & Niqab',
+    subtitle: 'Niqabs, Caps & Gentle Gloves',
+    image: getAssetUrl('collection-images/style_closed_cut.jpg'),
+    badge: 'Modest Essentials'
+  },
+  {
+    id: 'Inner & Prayer dress',
+    title: 'Inner & Prayer Dress',
+    subtitle: 'Slip Dresses & Devotion Sets',
+    image: getAssetUrl('collection-images/style_two_piece.jpg'),
+    badge: 'Foundation Slips'
+  },
+  {
+    id: 'Kids abaya',
+    title: 'Kids Abaya',
+    subtitle: 'Girls Farashas & Sets',
+    image: getAssetUrl('collection-images/style_umbrella_flare.jpg'),
+    badge: 'Little Princess'
+  },
+  {
+    id: 'Wholesale',
+    title: 'Wholesale (B2B)',
+    subtitle: 'Factory Carton Export',
+    image: getAssetUrl('collection-images/style_coat_abaya.jpg'),
+    badge: 'Bulk Export ★'
+  }
+];
 
 const WORK_IMAGES = {
   'Embroidery Abaya':        getAssetUrl('collection-images/work_embroidery.jpg'),
@@ -27,18 +59,8 @@ const WORK_IMAGES = {
   'Threadwork Abaya':        getAssetUrl('collection-images/work_threadwork.jpg'),
   'Printed Abaya':           getAssetUrl('collection-images/work_printed.jpg'),
   'Lace Work Abaya':         getAssetUrl('collection-images/work_lacework.jpg'),
-  'plain':                   getAssetUrl('collection-images/work_plain.jpg'),
+  'Plain/Basic':             getAssetUrl('collection-images/work_plain.jpg'),
 };
-
-const STYLES_LIST = [
-  'Open abaya',
-  'Closed cut',
-  'Kimono or kaftan',
-  'Butterfly or farasha',
-  'umbrella cut or Flare',
-  '2 piece abaya (with inner)',
-  'Coat abaya',
-];
 
 const WORKS_LIST = [
   'Embroidery Abaya',
@@ -47,7 +69,7 @@ const WORKS_LIST = [
   'Threadwork Abaya',
   'Printed Abaya',
   'Lace Work Abaya',
-  'plain',
+  'Plain/Basic',
 ];
 
 export default function HomePage() {
@@ -97,7 +119,7 @@ export default function HomePage() {
                   {/* Dark gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
 
-                  {/* Content over image — bottom-left */}
+                  {/* Content over image */}
                   <div className="absolute inset-0 flex flex-col justify-end p-6 pb-24 sm:p-10 md:p-16 lg:p-20 max-w-2xl">
                     {slide.badge && (
                       <span className="inline-block w-fit text-[10px] sm:text-xs tracking-[0.25em] font-bold text-[#FFF0A0] uppercase mb-2 drop-shadow-sm">
@@ -144,42 +166,54 @@ export default function HomePage() {
 
 
       {/* ═══════════════════════════════════════════════
-          SECTION 2 — SHOP BY CATEGORY
+          SECTION 2 — SHOP BY CATEGORY (6 Core Pillars)
           ═══════════════════════════════════════════════ */}
       <section id="shop-by-category" className="py-14 sm:py-20 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
+            <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-2">
+              Bespoke Modest Architecture
+            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
               Shop by Category
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            {STYLES_LIST.map((styleName) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+            {CATEGORY_CARDS.map((cat) => (
               <div
-                key={styleName}
+                key={cat.id}
                 onClick={() => {
-                  console.log('[HomePage] Selected Shop by Category:', styleName);
-                  navigateTo('shop', null, null, null, null, styleName);
+                  console.log('[HomePage] Selected Shop by Category:', cat.id);
+                  navigateTo('shop', null, cat.id);
                 }}
-                className="group cursor-pointer"
+                className="group cursor-pointer flex flex-col"
               >
                 {/* Card Image */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-2.5 shadow-sm border border-stone-200/80">
                   <img
-                    src={STYLE_IMAGES[styleName]}
-                    alt={styleName}
+                    src={cat.image}
+                    alt={cat.title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
+                  
+                  {cat.badge && (
+                    <div className="absolute top-2 left-2 bg-[#7A0648]/90 text-white text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 shadow-xs">
+                      {cat.badge}
+                    </div>
+                  )}
                 </div>
                 {/* Card Label */}
                 <h4 className="text-xs sm:text-[13px] font-bold text-[#1E141B] uppercase tracking-wider text-center group-hover:text-[#7A0648] transition-colors duration-200">
-                  {styleName}
+                  {cat.title}
                 </h4>
+                <p className="text-[10px] text-stone-500 text-center truncate font-medium">
+                  {cat.subtitle}
+                </p>
               </div>
             ))}
           </div>
@@ -189,32 +223,35 @@ export default function HomePage() {
 
 
       {/* ═══════════════════════════════════════════════
-          SECTION 3 — SHOP BY WORK
+          SECTION 3 — SHOP BY WORK (7 Craftsmanship Types)
           ═══════════════════════════════════════════════ */}
-      <section id="shop-by-work" className="py-14 sm:py-20 bg-[#FAF8F5]">
+      <section id="shop-by-work" className="py-14 sm:py-20 bg-white border-t border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Centered Section Title */}
           <div className="text-center mb-10 sm:mb-14">
+            <div className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A0648] mb-2">
+              Haute Couture Embellishments
+            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#1E141B] font-bold uppercase tracking-[0.06em]">
               Shop by Work
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
             {WORKS_LIST.map((workName) => (
               <div
                 key={workName}
                 onClick={() => {
                   console.log('[HomePage] Selected Shop by Work:', workName);
-                  navigateTo('shop', null, null, null, null, null, workName);
+                  navigateTo('shop', null, 'Abaya', null, null, null, workName);
                 }}
                 className="group cursor-pointer"
               >
                 {/* Card Image */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-2.5 shadow-sm border border-stone-200/80">
                   <img
-                    src={WORK_IMAGES[workName]}
+                    src={WORK_IMAGES[workName] || WORK_IMAGES['Plain/Basic']}
                     alt={workName}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
@@ -222,7 +259,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
                 {/* Card Label */}
-                <h4 className="text-xs sm:text-[13px] font-bold text-[#1E141B] uppercase tracking-wider text-center group-hover:text-[#7A0648] transition-colors duration-200 capitalize">
+                <h4 className="text-xs font-bold text-[#1E141B] uppercase tracking-wider text-center group-hover:text-[#7A0648] transition-colors duration-200 capitalize">
                   {workName}
                 </h4>
               </div>

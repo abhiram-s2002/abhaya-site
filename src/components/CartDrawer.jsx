@@ -169,6 +169,26 @@ export default function CartDrawer() {
                           <span className="bg-[#F5EAF1] text-[#7A0648] px-1.5 py-0.5 rounded-none font-bold truncate max-w-[200px] border border-[#7A0648]/20">
                             {item.size}
                           </span>
+                          {item.style && (
+                            <span className="bg-stone-100 text-stone-700 px-1.5 py-0.5 rounded-none font-medium">
+                              {item.style}
+                            </span>
+                          )}
+                          {item.work && (
+                            <span className="bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded-none font-medium">
+                              {item.work}
+                            </span>
+                          )}
+                          {item.product?.wholesaleType && (
+                            <span className="bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded-none font-bold">
+                              Wholesale: {item.product.wholesaleType}
+                            </span>
+                          )}
+                          {item.product?.subcategory && (
+                            <span className="bg-purple-50 text-purple-800 px-1.5 py-0.5 rounded-none font-medium">
+                              {item.product.subcategory}
+                            </span>
+                          )}
                         </div>
                       </div>
 

@@ -14,7 +14,15 @@ import {
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import ProductCard from '../components/ProductCard';
-import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../data/products';
+import {
+  MAIN_CATEGORIES,
+  ABAYA_STYLES,
+  ABAYA_WORKS,
+  ABAYA_SIZES,
+  WHOLESALE_TYPES,
+  HIJAB_TYPES,
+  INNER_PRAYER_TYPES
+} from '../data/products';
 
 // Comprehensive color swatches matching BasicAbaya
 const COLOR_SWATCHES = [
@@ -49,6 +57,10 @@ export default function CollectionsPage() {
     PRODUCTS,
     selectedCategoryFilter,
     setSelectedCategoryFilter,
+    selectedSubcategoryFilter,
+    setSelectedSubcategoryFilter,
+    selectedWholesaleTypeFilter,
+    setSelectedWholesaleTypeFilter,
     selectedColorFilter,
     setSelectedColorFilter,
     selectedStyleFilter,
@@ -68,8 +80,11 @@ export default function CollectionsPage() {
   const [sortBy, setSortBy] = useState('featured'); // 'featured' | 'price-low' | 'price-high' | 'latest' | 'alpha-az' | 'alpha-za'
   
   // Selected Filters
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedStyles, setSelectedStyles] = useState([]);
   const [selectedWorks, setSelectedWorks] = useState([]);
+  const [selectedWholesaleTypes, setSelectedWholesaleTypes] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedFabrics, setSelectedFabrics] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -90,9 +105,12 @@ export default function CollectionsPage() {
 
   // Accordion Open States inside Filter Drawer
   const [openAccordions, setOpenAccordions] = useState({
-    color: true,
+    category: true,
     style: true,
     work: true,
+    wholesaleType: true,
+    subcategory: true,
+    color: false,
     size: false,
     price: false
   });
@@ -105,41 +123,49 @@ export default function CollectionsPage() {
 
   // Sync external filters from context cleanly without race condition overrides
   useEffect(() => {
-    console.log('[CollectionsPage] Syncing filters from context:', {
-      selectedStyleFilter,
-      selectedCategoryFilter,
-      selectedWorkFilter,
-      selectedColorFilter
-    });
+    if (selectedCategoryFilter && selectedCategoryFilter !== 'All') {
+      setSelectedCategories([selectedCategoryFilter]);
+    } else {
+      setSelectedCategories([]);
+    }
 
-    const activeStyle =
-      (selectedStyleFilter && selectedStyleFilter !== 'All')
-        ? selectedStyleFilter
-        : (selectedCategoryFilter && selectedCategoryFilter !== 'All')
-        ? selectedCategoryFilter
-        : null;
-
-    if (activeStyle) {
-      console.log('[CollectionsPage] Applying active style filter:', activeStyle);
-      setSelectedStyles([activeStyle]);
+    if (selectedStyleFilter && selectedStyleFilter !== 'All') {
+      setSelectedStyles([selectedStyleFilter]);
     } else {
       setSelectedStyles([]);
     }
 
     if (selectedWorkFilter && selectedWorkFilter !== 'All') {
-      console.log('[CollectionsPage] Applying active work filter:', selectedWorkFilter);
       setSelectedWorks([selectedWorkFilter]);
     } else {
       setSelectedWorks([]);
     }
 
+    if (selectedWholesaleTypeFilter && selectedWholesaleTypeFilter !== 'All') {
+      setSelectedWholesaleTypes([selectedWholesaleTypeFilter]);
+    } else {
+      setSelectedWholesaleTypes([]);
+    }
+
+    if (selectedSubcategoryFilter && selectedSubcategoryFilter !== 'All') {
+      setSelectedSubcategories([selectedSubcategoryFilter]);
+    } else {
+      setSelectedSubcategories([]);
+    }
+
     if (selectedColorFilter && selectedColorFilter !== 'All') {
-      console.log('[CollectionsPage] Applying active color filter:', selectedColorFilter);
       setSelectedColors([selectedColorFilter]);
     } else {
       setSelectedColors([]);
     }
-  }, [selectedStyleFilter, selectedCategoryFilter, selectedWorkFilter, selectedColorFilter]);
+  }, [
+    selectedCategoryFilter,
+    selectedStyleFilter,
+    selectedWorkFilter,
+    selectedWholesaleTypeFilter,
+    selectedSubcategoryFilter,
+    selectedColorFilter
+  ]);
 
   // Dynamic Page Title
   const pageTitle = useMemo(() => {
@@ -209,13 +235,18 @@ export default function CollectionsPage() {
   };
 
   const clearAllFilters = () => {
+    setSelectedCategories([]);
     setSelectedStyles([]);
     setSelectedWorks([]);
+    setSelectedWholesaleTypes([]);
+    setSelectedSubcategories([]);
     setSelectedColors([]);
     setSelectedSizes([]);
     setPriceRange(maxPriceLimit);
     if (typeof setSearchQuery === 'function') setSearchQuery('');
     if (typeof setSelectedCategoryFilter === 'function') setSelectedCategoryFilter('All');
+    if (typeof setSelectedSubcategoryFilter === 'function') setSelectedSubcategoryFilter('All');
+    if (typeof setSelectedWholesaleTypeFilter === 'function') setSelectedWholesaleTypeFilter('All');
     if (typeof setSelectedColorFilter === 'function') setSelectedColorFilter('All');
     if (typeof setSelectedStyleFilter === 'function') setSelectedStyleFilter('All');
     if (typeof setSelectedWorkFilter === 'function') setSelectedWorkFilter('All');
@@ -224,8 +255,11 @@ export default function CollectionsPage() {
 
   // Active filters count
   const activeFiltersCount =
+    selectedCategories.length +
     selectedStyles.length +
     selectedWorks.length +
+    selectedWholesaleTypes.length +
+    selectedSubcategories.length +
     selectedColors.length +
     selectedSizes.length +
     (priceRange < maxPriceLimit ? 1 : 0) +
@@ -233,48 +267,68 @@ export default function CollectionsPage() {
 
   // Filtered & Sorted Products
   const filteredProducts = useMemo(() => {
-    console.log('[CollectionsPage] Filtering products with active filters:', {
-      selectedStyles,
-      selectedWorks,
-      selectedColors,
-      selectedSizes,
-      priceRange,
-      searchQuery,
-      sortBy
-    });
-
     const result = PRODUCTS.filter((product) => {
       // 1. Search Query
       if (searchQuery && searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = product.name.toLowerCase().includes(q);
         const matchesCat = product.category ? product.category.toLowerCase().includes(q) : false;
-        if (!matchesName && !matchesCat) return false;
+        const matchesSubcat = product.subcategory ? product.subcategory.toLowerCase().includes(q) : false;
+        const matchesWholesale = product.wholesaleType ? product.wholesaleType.toLowerCase().includes(q) : false;
+        if (!matchesName && !matchesCat && !matchesSubcat && !matchesWholesale) return false;
       }
 
-      // 2. Silhouette / Styles Filter
+      // 2. Category Filter
+      if (selectedCategories.length > 0) {
+        const matchesCat = selectedCategories.some(cat => {
+          if (!product.category) return false;
+          return product.category.toLowerCase() === cat.toLowerCase();
+        });
+        if (!matchesCat) return false;
+      }
+
+      // 3. Silhouette / Styles Filter (Abayas)
       if (selectedStyles.length > 0) {
         const hasMatch = selectedStyles.some(sel => {
           const sLower = sel.toLowerCase();
           return (
             (product.defaultStyle && product.defaultStyle.toLowerCase() === sLower) ||
             (product.name && product.name.toLowerCase().includes(sLower)) ||
-            (product.category && product.category.toLowerCase() === sLower)
+            (Array.isArray(product.styles) && product.styles.some(s => s.toLowerCase() === sLower))
           );
         });
         if (!hasMatch) return false;
       }
 
-      // 3. Work / Craftsmanship Filter
+      // 4. Work / Craftsmanship Filter
       if (selectedWorks.length > 0) {
         const hasMatch = selectedWorks.some(sel => {
           const wLower = sel.toLowerCase();
-          return product.defaultWork && product.defaultWork.toLowerCase() === wLower;
+          return (
+            (product.defaultWork && product.defaultWork.toLowerCase() === wLower) ||
+            (Array.isArray(product.works) && product.works.some(w => w.toLowerCase() === wLower))
+          );
         });
         if (!hasMatch) return false;
       }
 
-      // 5. Color Filter
+      // 5. Wholesale Type Filter
+      if (selectedWholesaleTypes.length > 0) {
+        const hasMatch = selectedWholesaleTypes.some(wt => {
+          return product.wholesaleType && product.wholesaleType.toLowerCase() === wt.toLowerCase();
+        });
+        if (!hasMatch) return false;
+      }
+
+      // 6. Subcategory Filter
+      if (selectedSubcategories.length > 0) {
+        const hasMatch = selectedSubcategories.some(sub => {
+          return product.subcategory && product.subcategory.toLowerCase() === sub.toLowerCase();
+        });
+        if (!hasMatch) return false;
+      }
+
+      // 7. Color Filter
       if (selectedColors.length > 0) {
         const productColors = (product.colors || []).map(c => c.name.toLowerCase());
         const hasMatch = selectedColors.some(sel =>
@@ -283,7 +337,7 @@ export default function CollectionsPage() {
         if (!hasMatch) return false;
       }
 
-      // 6. Size Filter
+      // 8. Size Filter
       if (selectedSizes.length > 0) {
         const productSizes = product.sizes || [];
         const hasMatch = selectedSizes.some(sel =>
@@ -292,7 +346,7 @@ export default function CollectionsPage() {
         if (!hasMatch) return false;
       }
 
-      // 7. Price Range
+      // 9. Price Range
       if (product.price > priceRange) {
         return false;
       }
@@ -317,13 +371,15 @@ export default function CollectionsPage() {
       }
     });
 
-    console.log(`[CollectionsPage] Filtered results: ${result.length} of ${PRODUCTS.length} products match`);
     return result;
   }, [
     PRODUCTS,
     searchQuery,
+    selectedCategories,
     selectedStyles,
     selectedWorks,
+    selectedWholesaleTypes,
+    selectedSubcategories,
     selectedColors,
     selectedSizes,
     priceRange,
@@ -556,6 +612,109 @@ export default function CollectionsPage() {
           {/* Drawer Scrollable Content */}
           <div className="flex-1 overflow-y-auto divide-y divide-stone-200">
             
+            {/* Category Accordion */}
+            <div className="p-6">
+              <button
+                onClick={() => toggleAccordion('category')}
+                className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-800 cursor-pointer"
+              >
+                <span>Category {selectedCategories.length > 0 && `(${selectedCategories.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.category ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+              </button>
+
+              {openAccordions.category && (
+                <div className="pt-3 space-y-2.5">
+                  {MAIN_CATEGORIES.map((cat) => {
+                    const isChecked = selectedCategories.includes(cat.name);
+                    return (
+                      <label
+                        key={cat.id}
+                        className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
+                      >
+                        <span className="group-hover:translate-x-0.5 transition-transform">{cat.name}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleItem(selectedCategories, setSelectedCategories, cat.name)}
+                          className="w-4 h-4 accent-[#7A0648] cursor-pointer"
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Wholesale Types Accordion (if Wholesale selected or no specific category) */}
+            {(selectedCategories.length === 0 || selectedCategories.includes('WHOLESALE')) && (
+              <div className="p-6 bg-amber-50/40">
+                <button
+                  onClick={() => toggleAccordion('wholesaleType')}
+                  className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-amber-900 cursor-pointer"
+                >
+                  <span>Wholesale Type {selectedWholesaleTypes.length > 0 && `(${selectedWholesaleTypes.length})`}</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.wholesaleType ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+                </button>
+
+                {openAccordions.wholesaleType && (
+                  <div className="pt-3 space-y-2.5">
+                    {WHOLESALE_TYPES.map((wt) => {
+                      const isChecked = selectedWholesaleTypes.includes(wt);
+                      return (
+                        <label
+                          key={wt}
+                          className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-amber-800 group font-semibold"
+                        >
+                          <span className="group-hover:translate-x-0.5 transition-transform">{wt}</span>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleItem(selectedWholesaleTypes, setSelectedWholesaleTypes, wt)}
+                            className="w-4 h-4 accent-amber-700 cursor-pointer"
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Subcategory Accordion (for Hijab or Inner/Prayer) */}
+            {(selectedCategories.includes('Hijaab') || selectedCategories.includes('Inner and Prayer dress')) && (
+              <div className="p-6 bg-purple-50/40">
+                <button
+                  onClick={() => toggleAccordion('subcategory')}
+                  className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-purple-900 cursor-pointer"
+                >
+                  <span>Subcategory {selectedSubcategories.length > 0 && `(${selectedSubcategories.length})`}</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.subcategory ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+                </button>
+
+                {openAccordions.subcategory && (
+                  <div className="pt-3 space-y-2.5">
+                    {(selectedCategories.includes('Hijaab') ? HIJAB_TYPES : INNER_PRAYER_TYPES).map((sub) => {
+                      const isChecked = selectedSubcategories.includes(sub);
+                      return (
+                        <label
+                          key={sub}
+                          className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
+                        >
+                          <span className="group-hover:translate-x-0.5 transition-transform">{sub}</span>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleItem(selectedSubcategories, setSelectedSubcategories, sub)}
+                            className="w-4 h-4 accent-[#7A0648] cursor-pointer"
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Color Accordion */}
             <div className="p-6">
               <button
