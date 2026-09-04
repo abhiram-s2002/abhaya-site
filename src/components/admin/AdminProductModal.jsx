@@ -163,11 +163,13 @@ export default function AdminProductModal({
   // Handle Main Hero Image Upload
   const handleMainImageUpload = async (e) => {
     const file = e.target.files?.[0];
+    console.log('[AdminProductModal] handleMainImageUpload triggered:', file?.name);
     if (!file) return;
     setIsUploadingImage(true);
     setErrorMessage('');
     try {
       const { url, error } = await uploadProductImage(file, 'hero');
+      console.log('[AdminProductModal] Main image upload result:', { url, error });
       if (error && !url) {
         setErrorMessage(`Image upload warning: ${error}`);
       }
@@ -178,6 +180,7 @@ export default function AdminProductModal({
         }
       }
     } catch (err) {
+      console.error('[AdminProductModal] Exception uploading main image:', err);
       setErrorMessage('Failed to upload image.');
     } finally {
       setIsUploadingImage(false);
@@ -187,16 +190,19 @@ export default function AdminProductModal({
   // Handle Additional Gallery Image Upload
   const handleGalleryUpload = async (e) => {
     const files = Array.from(e.target.files || []);
+    console.log('[AdminProductModal] handleGalleryUpload triggered with files:', files.map(f => f.name));
     if (files.length === 0) return;
     setIsUploadingGallery(true);
     try {
-      for (const file of files) {
-        const { url } = await uploadProductImage(file, 'gallery');
+      for (const file) of files {
+        const { url, error } = await uploadProductImage(file, 'gallery');
+        console.log('[AdminProductModal] Gallery upload result for', file.name, '=>', { url, error });
         if (url) {
           setGallery(prev => [...prev, url]);
         }
       }
     } catch (err) {
+      console.error('[AdminProductModal] Exception uploading gallery images:', err);
       setErrorMessage('Some gallery images could not be uploaded.');
     } finally {
       setIsUploadingGallery(false);

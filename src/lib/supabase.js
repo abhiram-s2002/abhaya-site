@@ -1,8 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { PRODUCTS as DEFAULT_PRODUCTS } from '../data/products.js';
 
-const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || '';
-const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || '';
+const DEFAULT_SUPABASE_URL = 'https://gbqusurpixzwhqrpnity.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdicXVzdXJwaXh6d2hxcnBuaXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2Njk2MTQsImV4cCI6MjEwMzI0NTYxNH0.8-wjpH4d4I4L48dlTcPkCBtAq-sao74U_wpYcRpkEco';
+
+const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || DEFAULT_SUPABASE_URL;
+const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || DEFAULT_SUPABASE_ANON_KEY;
 
 // Check if valid credentials are provided
 export const isSupabaseConfigured = Boolean(
@@ -21,6 +24,8 @@ export const supabase = isSupabaseConfigured
       }
     })
   : null;
+
+console.log('[Supabase Init] isSupabaseConfigured:', isSupabaseConfigured, 'URL:', supabaseUrl);
 
 const STORAGE_BUCKET = 'product-images';
 const LOCAL_STORAGE_PRODUCTS_KEY = 'noor_admin_products';
@@ -233,13 +238,23 @@ export async function deleteProductFromSupabase(productId) {
  * Upload an image to Supabase Storage (or convert to base64 data URL for preview/fallback)
  */
 export async function uploadProductImage(file, subFolder = 'general') {
+  console.log('[Supabase Storage] uploadProductImage called:', {
+    name: file?.name,
+    type: file?.type,
+    sizeBytes: file?.size,
+    subFolder,
+    isSupabaseConfigured
+  });
+
   if (!file) return { url: null, error: 'No file provided' };
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const fileExt = file.name.split('.').pop() || 'jpg';
+      const fileExt = file.name ? file.name.split('.').pop() : 'jpg';
       const cleanFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
       const filePath = `products/${subFolder}/${cleanFileName}`;
+
+      console.log(`[Supabase Storage] Uploading to bucket '${STORAGE_BUCKET}', path: '${filePath}'...`);
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from(STORAGE_BUCKET)
@@ -249,22 +264,25 @@ export async function uploadProductImage(file, subFolder = 'general') {
         });
 
       if (uploadError) {
-        console.warn('Supabase storage upload failed, using local blob/data URL:', uploadError.message);
+        console.error('[Supabase Storage ERROR] Upload rejected by Supabase:', uploadError.message, uploadError);
       } else {
+        console.log('[Supabase Storage SUCCESS] Upload response:', uploadData);
         const { data: publicUrlData } = supabase.storage
           .from(STORAGE_BUCKET)
           .getPublicUrl(filePath);
 
         if (publicUrlData && publicUrlData.publicUrl) {
+          console.log('[Supabase Storage SUCCESS] Generated public URL:', publicUrlData.publicUrl);
           return { url: publicUrlData.publicUrl, error: null };
         }
       }
     } catch (err) {
-      console.warn('Error during storage upload:', err);
+      console.error('[Supabase Storage CATCH] Exception during storage upload:', err);
     }
   }
 
   // Fallback to local data URL reader
+  console.warn('[Supabase Storage FALLBACK] Falling back to local Base64 FileReader...');
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => resolve({ url: reader.result, error: null });

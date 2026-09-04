@@ -171,12 +171,15 @@ export default function AdminProductEditor({
 
   const handleImagesUpload = async (e) => {
     const files = Array.from(e.target.files || []);
+    console.log('[AdminProductEditor] handleImagesUpload triggered with files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
     if (files.length === 0) return;
     setIsUploadingGallery(true);
     setErrorMessage('');
     try {
       for (const file of files) {
+        console.log('[AdminProductEditor] Uploading file:', file.name);
         const { url, error } = await uploadProductImage(file, 'product');
+        console.log('[AdminProductEditor] Upload result for', file.name, '=> url:', url, 'error:', error);
         if (url) {
           setGallery(prev => {
             const next = [...prev, url];
@@ -184,10 +187,12 @@ export default function AdminProductEditor({
           });
           setImage(prev => prev || url);
         } else if (error) {
+          console.error('[AdminProductEditor] Upload error:', error);
           setErrorMessage(`Upload error: ${error}`);
         }
       }
     } catch (err) {
+      console.error('[AdminProductEditor] Exception during images upload:', err);
       setErrorMessage('Failed to upload some photos.');
     } finally {
       setIsUploadingGallery(false);
@@ -378,9 +383,12 @@ export default function AdminProductEditor({
       careInstructions: careInstructions.trim()
     };
 
+    console.log('[AdminProductEditor] Submitting productPayload to onSave:', productPayload);
     try {
       await onSave(productPayload);
+      console.log('[AdminProductEditor] onSave completed successfully!');
     } catch (err) {
+      console.error('[AdminProductEditor] Error during onSave:', err);
       setErrorMessage(err.message || 'Failed to save product listing.');
       setIsSaving(false);
     }
