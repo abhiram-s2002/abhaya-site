@@ -1,7 +1,8 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 
-const baseUrl = import.meta.env.BASE_URL || './';
-export const getAssetUrl = (path) => `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${path.replace(/^\//, '')}`;
+// ─────────────────────────────────────────────────────────────────────────────
+// DEFAULT CONTENT — used if Supabase/localStorage are empty so site never breaks
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const DEFAULT_CONTENT = {
   announcement: {
@@ -19,7 +20,7 @@ export const DEFAULT_CONTENT = {
       badge: 'NEW ARRIVAL',
       title: 'Midnight Espresso Silk',
       description: 'Iridescent 100% Grade 6A mulberry silk, a whisper of pure haute couture on your skin.',
-      image: getAssetUrl('hero-images/hero_midnight_espresso_silk.jpg'),
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBwpGHDV5eQMWi71D4mWI7voUd6mXcXo_PTliCl6CQhvIaRrMlarXpn-r-525bSjOEkrsbyu3U7zZ3JfTBvpB1PziSsHKFHFWb1xFFEQtM58gz89WscIgS3NH2jdY_eFZxTxxxrRFRGKiDDZH_8lWjYSE3li5ix01zdBOA6n6y2CzPMacxyx_52_efpx2AoC7zECpL3lIaGkhpz1fdqaUX_xVKePZtVBnB94cljTFvCuTw-g707mRks_g',
       cta: 'SHOP NOW',
       productId: 'midnight-espresso-silk',
     },
@@ -28,7 +29,7 @@ export const DEFAULT_CONTENT = {
       badge: 'AUTUMN / WINTER EDITION',
       title: 'Royal Amethyst Chiffon',
       description: 'Bold, regal tones woven from Japanese pebble georgette for effortless everyday luxury.',
-      image: getAssetUrl('hero-images/hero_royal_amethyst_chiffon.jpg'),
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD-Sf1dgvSxQEdIcuInSxcRUwW6B-nBrZnNrAlOjxmNSTXEgqHvgbTWfGWkg5QYKVY0d9lsnGmuQwBuPf3yXH71nFMwMaVjxwvCixfo4u7HOgAOx-Z-drovy_YH-5MOgACvt0Pwe1icr3mK9M_bxXtmzzaUPFW_vyPfmx1GGDVrW_F2AgYUY40fBuNWPQElc5LbqXQuB_wLdkClmmrvrK6lHW6RI2zefAzNng6DUsYCen2Ggb06fdIVoA',
       cta: 'EXPLORE COLLECTION',
       productId: 'royal-violet-silk',
     },
@@ -37,7 +38,7 @@ export const DEFAULT_CONTENT = {
       badge: 'SIGNATURE BESPOKE',
       title: 'Austrian Modal Jersey',
       description: 'Cloud-soft micro-modal weave that stays flawlessly in place without undercaps or pins.',
-      image: getAssetUrl('hero-images/hero_austrian_modal_jersey.jpg'),
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkdZL0iJiKpH_RGkCIR3KLu-FRwu0VNrwd0AKjbEC4LKeHX81c_gdKTa-2u50NIw6c-dk9UQ8TRmm6yQbZjQgiuwIUEEBUp9SCT7pU4TIddCWVvd0w4wOIz4ajtmoc3h3NpKqeI5t9diUWGGVfWCntFu7hYs6yRdpT2QuyTJlISHeDi11u6Nxth4Z0XBlgtoUTQyhGy2lgNyNAECYG-szSx1NYT-9CsllGhOybxhSgFYV5PtfVnL0aWA',
       cta: 'DISCOVER MODAL',
       productId: 'sage-haven-modal',
     },
@@ -357,22 +358,9 @@ function mergeWithDefaults(fetched) {
     if (fetched[key] !== undefined) {
       // For arrays, prefer fetched if non-empty
       if (Array.isArray(DEFAULT_CONTENT[key])) {
-        let items = Array.isArray(fetched[key]) && fetched[key].length > 0
+        result[key] = Array.isArray(fetched[key]) && fetched[key].length > 0
           ? fetched[key]
           : DEFAULT_CONTENT[key];
-
-        // Auto-upgrade legacy googleusercontent placeholders to new HD images
-        if (key === 'hero_slides') {
-          items = items.map((slide, idx) => {
-            if (!slide.image || slide.image.includes('googleusercontent.com')) {
-              const defaultSlide = DEFAULT_CONTENT.hero_slides[idx] || DEFAULT_CONTENT.hero_slides[0];
-              return { ...slide, image: defaultSlide.image };
-            }
-            return slide;
-          });
-        }
-
-        result[key] = items;
       } else {
         result[key] = { ...DEFAULT_CONTENT[key], ...fetched[key] };
       }
