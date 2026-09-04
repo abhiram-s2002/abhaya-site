@@ -30,11 +30,7 @@ import {
   ABAYA_STYLES,
   ABAYA_WORKS,
   ABAYA_SIZES,
-  WHOLESALE_TYPES,
-  SHAILA_TYPES,
-  HIJAB_TYPES,
-  INNER_PRAYER_TYPES,
-  KIDS_ABAYA_TYPES
+  WHOLESALE_TYPES
 } from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
 import { useShop } from '../../context/ShopContext';
@@ -632,78 +628,6 @@ export default function AdminProductEditor({
                     placeholder="10"
                   />
                 </div>
-              </div>
-            )}
-
-            {category === 'Shaila/Shawl' && (
-              <div className="space-y-1.5 pt-2 p-4 bg-stone-50 border border-stone-200 rounded-2xl animate-fade-in">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Shaila Sub-type / Fabric
-                </label>
-                <select
-                  value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                >
-                  <option value="">Select Shaila Sub-type</option>
-                  {SHAILA_TYPES.map(s => (
-                    <option key={s.id} value={s.name}>{s.name} — {s.description}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {category === 'Hijab' && (
-              <div className="space-y-1.5 pt-2 p-4 bg-stone-50 border border-stone-200 rounded-2xl animate-fade-in">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Hijab Subcategory / Type
-                </label>
-                <select
-                  value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                >
-                  <option value="">Select Hijab Sub-type</option>
-                  {HIJAB_TYPES.map(h => (
-                    <option key={h.id} value={h.name}>{h.name} — {h.description}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {category === 'Inner & Prayer dress' && (
-              <div className="space-y-1.5 pt-2 p-4 bg-stone-50 border border-stone-200 rounded-2xl animate-fade-in">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Inner / Prayer Dress Subtype
-                </label>
-                <select
-                  value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                >
-                  <option value="">Select Inner/Prayer Sub-type</option>
-                  {INNER_PRAYER_TYPES.map(ip => (
-                    <option key={ip.id} value={ip.name}>{ip.name} — {ip.description}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {category === 'Kids abaya' && (
-              <div className="space-y-1.5 pt-2 p-4 bg-stone-50 border border-stone-200 rounded-2xl animate-fade-in">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Kids Abaya Sub-type / Silhouette
-                </label>
-                <select
-                  value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                >
-                  <option value="">Select Kids Sub-type</option>
-                  {KIDS_ABAYA_TYPES.map(k => (
-                    <option key={k.id} value={k.name}>{k.name} — {k.description}</option>
-                  ))}
-                </select>
               </div>
             )}
 

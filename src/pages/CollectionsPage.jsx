@@ -19,11 +19,7 @@ import {
   ABAYA_STYLES,
   ABAYA_WORKS,
   ABAYA_SIZES,
-  WHOLESALE_TYPES,
-  HIJAB_TYPES,
-  INNER_PRAYER_TYPES,
-  SHAILA_TYPES,
-  KIDS_ABAYA_TYPES
+  WHOLESALE_TYPES
 } from '../data/products';
 
 // Comprehensive color swatches matching BasicAbaya
@@ -99,33 +95,6 @@ export default function CollectionsPage() {
   const minPriceLimit = 0;
 
   const [priceRange, setPriceRange] = useState(maxPriceLimit);
-
-  // Available Subcategories based on selected Category filter
-  const availableSubcategories = useMemo(() => {
-    let list = [];
-    if (selectedCategories.length === 0) {
-      list = [
-        ...SHAILA_TYPES.map(t => t.name),
-        ...HIJAB_TYPES.map(t => t.name),
-        ...INNER_PRAYER_TYPES.map(t => t.name),
-        ...KIDS_ABAYA_TYPES.map(t => t.name)
-      ];
-    } else {
-      if (selectedCategories.some(c => c.toLowerCase().includes('shaila') || c.toLowerCase().includes('shawl'))) {
-        list.push(...SHAILA_TYPES.map(t => t.name));
-      }
-      if (selectedCategories.some(c => c.toLowerCase().includes('hijab') || c.toLowerCase().includes('hijaab'))) {
-        list.push(...HIJAB_TYPES.map(t => t.name));
-      }
-      if (selectedCategories.some(c => c.toLowerCase().includes('inner') || c.toLowerCase().includes('prayer'))) {
-        list.push(...INNER_PRAYER_TYPES.map(t => t.name));
-      }
-      if (selectedCategories.some(c => c.toLowerCase().includes('kids'))) {
-        list.push(...KIDS_ABAYA_TYPES.map(t => t.name));
-      }
-    }
-    return list;
-  }, [selectedCategories]);
 
   // Grid layout switcher:
   // Mobile: 1 or 2 cols (default 2)
@@ -710,40 +679,7 @@ export default function CollectionsPage() {
               </div>
             )}
 
-            {/* Subcategory Accordion */}
-            {availableSubcategories.length > 0 && (
-              <div className="p-6 bg-purple-50/40">
-                <button
-                  onClick={() => toggleAccordion('subcategory')}
-                  className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-purple-900 cursor-pointer"
-                >
-                  <span>Subcategory {selectedSubcategories.length > 0 && `(${selectedSubcategories.length})`}</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openAccordions.subcategory ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-                </button>
 
-                {openAccordions.subcategory && (
-                  <div className="pt-3 space-y-2.5">
-                    {availableSubcategories.map((sub) => {
-                      const isChecked = selectedSubcategories.includes(sub);
-                      return (
-                        <label
-                          key={sub}
-                          className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
-                        >
-                          <span className="group-hover:translate-x-0.5 transition-transform">{sub}</span>
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => toggleItem(selectedSubcategories, setSelectedSubcategories, sub)}
-                            className="w-4 h-4 accent-[#7A0648] cursor-pointer"
-                          />
-                        </label>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* Color Accordion */}
             <div className="p-6">
