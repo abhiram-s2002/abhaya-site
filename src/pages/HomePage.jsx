@@ -50,8 +50,84 @@ const WORKS_LIST = [
   'plain',
 ];
 
+/* ──────────────────────────────────────────────
+   Sequential Card Image Component
+   Loads images one by one instead of all at once
+   ────────────────────────────────────────────── */
+function SequentialCardImage({
+  src,
+  alt,
+  index,
+  allowedIndex,
+  onLoadedNext,
+  className = 'w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const isAllowed = index <= allowedIndex;
+
+  useEffect(() => {
+    if (!isAllowed) return;
+
+    // Safety fallback timer: advance queue if an image takes longer than 300ms
+    const timer = setTimeout(() => {
+      onLoadedNext(index + 1);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [isAllowed, index, onLoadedNext]);
+
+  const handleLoad = () => {
+    setIsLoaded(true);
+    // Slight stagger so the next image starts cleanly
+    setTimeout(() => {
+      onLoadedNext(index + 1);
+    }, 40);
+  };
+
+  const handleError = () => {
+    onLoadedNext(index + 1);
+  };
+
+  return (
+    <div className="relative w-full h-full bg-stone-100 overflow-hidden">
+      {/* Luxury skeleton placeholder while loading */}
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-gradient-to-tr from-stone-200 via-stone-100 to-stone-200 animate-pulse flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-300/60 border-t-[#7A0648] animate-spin opacity-30" />
+        </div>
+      )}
+
+      {isAllowed && (
+        <img
+          src={src}
+          alt={alt}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`${className} ${
+            isLoaded
+              ? 'opacity-100 scale-100 transition-all duration-600 ease-out'
+              : 'opacity-0 scale-95'
+          }`}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const { PRODUCTS, navigateTo, formatPrice, siteContent } = useShop();
+
+  // ── Sequential Loading Queues ──
+  const [allowedStyleIndex, setAllowedStyleIndex] = useState(0);
+  const [allowedWorkIndex, setAllowedWorkIndex] = useState(0);
+
+  const advanceStyleQueue = (nextIndex) => {
+    setAllowedStyleIndex((prev) => Math.max(prev, nextIndex));
+  };
+
+  const advanceWorkQueue = (nextIndex) => {
+    setAllowedWorkIndex((prev) => Math.max(prev, nextIndex));
+  };
 
   // ── Hero Carousel ──
   const heroSlides = siteContent?.hero_slides || [];
@@ -157,7 +233,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            {STYLES_LIST.map((styleName) => (
+            {STYLES_LIST.map((styleName, idx) => (
               <div
                 key={styleName}
                 onClick={() => {
@@ -166,15 +242,17 @@ export default function HomePage() {
                 }}
                 className="group cursor-pointer"
               >
-                {/* Card Image */}
+                {/* Card Image with Sequential Loading */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-2.5 shadow-sm border border-stone-200/80">
-                  <img
+                  <SequentialCardImage
                     src={STYLE_IMAGES[styleName]}
                     alt={styleName}
+                    index={idx}
+                    allowedIndex={allowedStyleIndex}
+                    onLoadedNext={advanceStyleQueue}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
                 </div>
                 {/* Card Label */}
                 <h4 className="text-xs sm:text-[13px] font-bold text-[#1E141B] uppercase tracking-wider text-center group-hover:text-[#7A0648] transition-colors duration-200">
@@ -202,7 +280,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            {WORKS_LIST.map((workName) => (
+            {WORKS_LIST.map((workName, idx) => (
               <div
                 key={workName}
                 onClick={() => {
@@ -211,15 +289,17 @@ export default function HomePage() {
                 }}
                 className="group cursor-pointer"
               >
-                {/* Card Image */}
+                {/* Card Image with Sequential Loading */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-2.5 shadow-sm border border-stone-200/80">
-                  <img
+                  <SequentialCardImage
                     src={WORK_IMAGES[workName]}
                     alt={workName}
+                    index={idx}
+                    allowedIndex={allowedWorkIndex}
+                    onLoadedNext={advanceWorkQueue}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
                 </div>
                 {/* Card Label */}
                 <h4 className="text-xs sm:text-[13px] font-bold text-[#1E141B] uppercase tracking-wider text-center group-hover:text-[#7A0648] transition-colors duration-200 capitalize">
