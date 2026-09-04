@@ -7,24 +7,27 @@ import EditableSection from '../components/cms/EditableSection';
    Image maps for Style & Work collection cards
    (re-using existing product / collection images)
    ────────────────────────────────────────────── */
+const baseUrl = import.meta.env.BASE_URL || './';
+const getAssetUrl = (path) => `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${path.replace(/^\//, '')}`;
+
 const STYLE_IMAGES = {
-  'Open abaya':              '/collection-images/style_open_abaya.jpg',
-  'Closed cut':              '/collection-images/style_closed_cut.jpg',
-  'Kimono or kaftan':        '/collection-images/style_kimono_kaftan.jpg',
-  'Butterfly or farasha':    '/collection-images/style_butterfly_farasha.jpg',
-  'umbrella cut or Flare':   '/collection-images/style_umbrella_flare.jpg',
-  '2 piece abaya (with inner)': '/collection-images/style_two_piece.jpg',
-  'Coat abaya':              '/collection-images/style_coat_abaya.jpg',
+  'Open abaya':              getAssetUrl('collection-images/style_open_abaya.jpg'),
+  'Closed cut':              getAssetUrl('collection-images/style_closed_cut.jpg'),
+  'Kimono or kaftan':        getAssetUrl('collection-images/style_kimono_kaftan.jpg'),
+  'Butterfly or farasha':    getAssetUrl('collection-images/style_butterfly_farasha.jpg'),
+  'umbrella cut or Flare':   getAssetUrl('collection-images/style_umbrella_flare.jpg'),
+  '2 piece abaya (with inner)': getAssetUrl('collection-images/style_two_piece.jpg'),
+  'Coat abaya':              getAssetUrl('collection-images/style_coat_abaya.jpg'),
 };
 
 const WORK_IMAGES = {
-  'Embroidery Abaya':        '/collection-images/work_embroidery.jpg',
-  'Handwork Abaya':          '/collection-images/work_handwork.jpg',
-  'Stonework Abaya':         '/collection-images/work_stonework.jpg',
-  'Threadwork Abaya':        '/collection-images/work_threadwork.jpg',
-  'Printed Abaya':           '/collection-images/work_printed.jpg',
-  'Lace Work Abaya':         '/collection-images/work_lacework.jpg',
-  'plain':                   '/collection-images/work_plain.jpg',
+  'Embroidery Abaya':        getAssetUrl('collection-images/work_embroidery.jpg'),
+  'Handwork Abaya':          getAssetUrl('collection-images/work_handwork.jpg'),
+  'Stonework Abaya':         getAssetUrl('collection-images/work_stonework.jpg'),
+  'Threadwork Abaya':        getAssetUrl('collection-images/work_threadwork.jpg'),
+  'Printed Abaya':           getAssetUrl('collection-images/work_printed.jpg'),
+  'Lace Work Abaya':         getAssetUrl('collection-images/work_lacework.jpg'),
+  'plain':                   getAssetUrl('collection-images/work_plain.jpg'),
 };
 
 const STYLES_LIST = [
