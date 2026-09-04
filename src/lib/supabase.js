@@ -112,55 +112,84 @@ export function formatProductForDB(product) {
  * Fetch all products from Supabase (or fallback to local cache/defaults)
  */
 export async function fetchProductsFromSupabase() {
-  console.log('[Supabase DB] fetchProductsFromSupabase called. isSupabaseConfigured:', isSupabaseConfigured);
+  const timestamp = new Date().toISOString();
+  console.group(`[Supabase DB] 🔍 fetchProductsFromSupabase @ ${timestamp}`);
+  console.log('[Supabase DB] Config status:', { isSupabaseConfigured, hasClient: Boolean(supabase) });
+
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase
+      console.log('[Supabase DB] Executing query: supabase.from("products").select("*").order("created_at", { ascending: false })...');
+      const { data, error, status, statusText } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
+      console.log(`[Supabase DB] Query response status: ${status} ${statusText || ''}`);
+
       if (error) {
-        console.error('[Supabase DB ERROR] fetchProductsFromSupabase error:', error.message, error);
-      } else if (data && data.length > 0) {
-        console.log(`[Supabase DB SUCCESS] Loaded ${data.length} products from Supabase table 'products':`, data);
+        console.error('[Supabase DB ERROR] Query failed:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+      } else if (Array.isArray(data)) {
+        console.log(`[Supabase DB SUCCESS] Fetched ${data.length} rows from 'products' table:`, data);
         const formatted = data.map(formatProductFromDB);
+        console.log(`[Supabase DB] Formatted ${formatted.length} UI product objects:`, formatted);
+
         // Cache to localStorage for fast initial reloads
         try {
           localStorage.setItem(LOCAL_STORAGE_PRODUCTS_KEY, JSON.stringify(formatted));
-        } catch (_) {}
+          console.log('[Supabase DB] Updated local cache with', formatted.length, 'products');
+        } catch (storageErr) {
+          console.warn('[Supabase DB] Failed to write to localStorage cache:', storageErr);
+        }
+        console.groupEnd();
         return { data: formatted, source: 'supabase', error: null };
-      } else {
-        console.warn('[Supabase DB] Table products is empty (0 rows).');
       }
     } catch (err) {
-      console.error('[Supabase DB CATCH] Network or fetch error:', err);
+      console.error('[Supabase DB CATCH] Uncaught exception during fetch:', err);
     }
   }
 
-  // Fallback to local storage or bundled curated items
-  try {
-    const saved = localStorage.getItem(LOCAL_STORAGE_PRODUCTS_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        console.log(`[Supabase DB FALLBACK] Loaded ${parsed.length} products from localStorage:`, parsed);
-        return { data: parsed, source: 'localStorage', error: null };
+  // Fallback to local storage or bundled curated items ONLY when Supabase is not configured
+  if (!isSupabaseConfigured) {
+    console.warn('[Supabase DB] Supabase is NOT configured. Checking localStorage fallback...');
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_PRODUCTS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          console.log(`[Supabase DB FALLBACK] Loaded ${parsed.length} products from localStorage cache:`, parsed);
+          console.groupEnd();
+          return { data: parsed, source: 'localStorage', error: null };
+        }
       }
+    } catch (storageErr) {
+      console.warn('[Supabase DB] Error reading local cache:', storageErr);
     }
-  } catch (_) {}
 
-  console.log('[Supabase DB FALLBACK] Loaded default static products:', DEFAULT_PRODUCTS);
-  return { data: DEFAULT_PRODUCTS, source: 'default', error: null };
+    console.log('[Supabase DB FALLBACK] Using DEFAULT_PRODUCTS (17 demo items):', DEFAULT_PRODUCTS);
+    console.groupEnd();
+    return { data: DEFAULT_PRODUCTS, source: 'default', error: null };
+  }
+
+  console.warn('[Supabase DB] Returning empty array due to fetch failure.');
+  console.groupEnd();
+  return { data: [], source: 'supabase', error: 'Failed to fetch from Supabase' };
 }
 
 /**
  * Insert or Update a product in Supabase with auto-retry for missing schema columns
  */
 export async function upsertProductToSupabase(product) {
-  console.log('[Supabase DB] Starting upsertProductToSupabase for product ID:', product?.id, product);
+  const timestamp = new Date().toISOString();
+  console.group(`[Supabase DB] 💾 upsertProductToSupabase @ ${timestamp}`);
+  console.log('[Supabase DB] Product input:', { id: product?.id, name: product?.name, category: product?.category, image: product?.image });
+
   let dbPayload = formatProductForDB(product);
-  console.log('[Supabase DB] Formatted DB payload to write:', dbPayload);
+  console.log('[Supabase DB] Formatted database payload:', dbPayload);
 
   if (isSupabaseConfigured && supabase) {
     let attempts = 0;
@@ -168,49 +197,56 @@ export async function upsertProductToSupabase(product) {
 
     while (attempts < maxAttempts) {
       attempts++;
+      console.log(`[Supabase DB] Attempt ${attempts}/${maxAttempts} saving product ID '${dbPayload.id}'...`);
       try {
-        const { data, error } = await supabase
+        const { data, error, status } = await supabase
           .from('products')
           .upsert(dbPayload, { onConflict: 'id' })
           .select();
 
         if (error) {
+          console.warn(`[Supabase DB] Attempt ${attempts} returned error:`, {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint
+          });
+
           // If a column is missing in the database table (PGRST204), extract column name and retry without it
           if (error.code === 'PGRST204' || (error.message && error.message.includes("Could not find the '"))) {
             const match = error.message.match(/Could not find the '([^']+)' column/);
             const missingCol = match ? match[1] : null;
 
             if (missingCol && dbPayload[missingCol] !== undefined) {
-              console.warn(`[Supabase DB RECOVERY] Column '${missingCol}' not found in database schema. Stripping and retrying save...`);
+              console.warn(`[Supabase DB RECOVERY] Schema column '${missingCol}' not found in 'products' table. Stripping '${missingCol}' and retrying...`);
               delete dbPayload[missingCol];
               continue; // retry loop
             }
           }
 
-          console.error('[Supabase DB ERROR] Failed to save product to Supabase table:', {
-            message: error.message,
-            details: error.details,
-            hint: error.hint,
-            code: error.code
-          });
+          console.error('[Supabase DB ERROR] Failed to upsert product:', error);
           throw error;
         }
 
-        console.log('[Supabase DB SUCCESS] Product successfully saved/updated in Supabase:', data);
+        console.log('[Supabase DB SUCCESS] Product successfully saved to Supabase (Status: ' + status + '):', data);
         const returnedItem = Array.isArray(data) ? data[0] : data;
         saveProductLocally(product);
+        console.groupEnd();
         return { data: formatProductFromDB(returnedItem) || product, error: null };
       } catch (err) {
-        console.error('[Supabase DB CATCH] Exception during product save:', err);
-        // Update local storage as fallback
-        saveProductLocally(product);
-        return { data: product, error: err.message };
+        console.error(`[Supabase DB CATCH] Attempt ${attempts} exception:`, err);
+        if (attempts >= maxAttempts) {
+          saveProductLocally(product);
+          console.groupEnd();
+          return { data: product, error: err.message };
+        }
       }
     }
   }
 
-  console.warn('[Supabase DB WARN] Supabase is not configured. Saved to localStorage only.');
+  console.warn('[Supabase DB WARN] Supabase not active. Saved to localStorage only.');
   saveProductLocally(product);
+  console.groupEnd();
   return { data: product, error: null };
 }
 
@@ -218,10 +254,13 @@ export async function upsertProductToSupabase(product) {
  * Delete a product from Supabase
  */
 export async function deleteProductFromSupabase(productId) {
-  console.log('[Supabase DB] deleteProductFromSupabase called for ID:', productId);
+  const timestamp = new Date().toISOString();
+  console.group(`[Supabase DB] 🗑️ deleteProductFromSupabase @ ${timestamp}`);
+  console.log('[Supabase DB] Deleting product ID:', productId);
+
   if (isSupabaseConfigured && supabase) {
     try {
-      const { error } = await supabase
+      const { data, error, status } = await supabase
         .from('products')
         .delete()
         .eq('id', productId);
@@ -230,13 +269,15 @@ export async function deleteProductFromSupabase(productId) {
         console.error('[Supabase DB ERROR] Failed to delete product from Supabase:', error);
         throw error;
       }
-      console.log('[Supabase DB SUCCESS] Product deleted from Supabase:', productId);
+      console.log(`[Supabase DB SUCCESS] Deleted product '${productId}' from Supabase (Status: ${status}):`, data);
     } catch (err) {
-      console.error('[Supabase DB CATCH] Exception during delete:', err);
+      console.error('[Supabase DB CATCH] Exception during product delete:', err);
     }
   }
 
   deleteProductLocally(productId);
+  console.log('[Supabase DB] Removed from local cache.');
+  console.groupEnd();
   return { success: true };
 }
 
@@ -244,18 +285,27 @@ export async function deleteProductFromSupabase(productId) {
  * Upload an image to Supabase Storage
  */
 export async function uploadProductImage(file, subFolder = 'general') {
-  console.log('[Supabase Storage] uploadProductImage called:', {
+  const timestamp = new Date().toISOString();
+  console.group(`[Supabase Storage] 📤 uploadProductImage @ ${timestamp}`);
+  console.log('[Supabase Storage] File details:', {
     name: file?.name,
     type: file?.type,
     sizeBytes: file?.size,
+    sizeKB: file?.size ? Math.round(file.size / 1024) + ' KB' : 'N/A',
     subFolder,
-    isSupabaseConfigured
+    targetBucket: STORAGE_BUCKET,
+    isConfigured: isSupabaseConfigured
   });
 
-  if (!file) return { url: null, error: 'No file provided' };
+  if (!file) {
+    console.error('[Supabase Storage ERROR] No file provided.');
+    console.groupEnd();
+    return { url: null, error: 'No file provided' };
+  }
 
   if (!isSupabaseConfigured || !supabase) {
-    console.error('[Supabase Storage] Supabase is not configured.');
+    console.error('[Supabase Storage ERROR] Supabase is not configured.');
+    console.groupEnd();
     return {
       url: null,
       error: 'Supabase storage is not configured. Please verify your Supabase environment variables.'
@@ -267,7 +317,7 @@ export async function uploadProductImage(file, subFolder = 'general') {
     const cleanFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
     const filePath = `products/${subFolder}/${cleanFileName}`;
 
-    console.log(`[Supabase Storage] Uploading to bucket '${STORAGE_BUCKET}', path: '${filePath}'...`);
+    console.log(`[Supabase Storage] Uploading to bucket '${STORAGE_BUCKET}' at path '${filePath}'...`);
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from(STORAGE_BUCKET)
@@ -277,23 +327,32 @@ export async function uploadProductImage(file, subFolder = 'general') {
       });
 
     if (uploadError) {
-      console.error('[Supabase Storage ERROR] Upload rejected by Supabase:', uploadError.message, uploadError);
+      console.error('[Supabase Storage ERROR] Upload rejected:', {
+        message: uploadError.message,
+        statusCode: uploadError.statusCode,
+        error: uploadError
+      });
+      console.groupEnd();
       return { url: null, error: uploadError.message };
     }
 
-    console.log('[Supabase Storage SUCCESS] Upload response:', uploadData);
+    console.log('[Supabase Storage SUCCESS] Upload response received:', uploadData);
     const { data: publicUrlData } = supabase.storage
       .from(STORAGE_BUCKET)
       .getPublicUrl(filePath);
 
     if (publicUrlData && publicUrlData.publicUrl) {
-      console.log('[Supabase Storage SUCCESS] Generated public URL:', publicUrlData.publicUrl);
+      console.log('[Supabase Storage SUCCESS] Public CDN URL generated:', publicUrlData.publicUrl);
+      console.groupEnd();
       return { url: publicUrlData.publicUrl, error: null };
     }
 
+    console.error('[Supabase Storage ERROR] Failed to obtain public URL.');
+    console.groupEnd();
     return { url: null, error: 'Could not generate public URL for uploaded file.' };
   } catch (err) {
     console.error('[Supabase Storage CATCH] Exception during storage upload:', err);
+    console.groupEnd();
     return { url: null, error: err.message || 'Error uploading image to Supabase' };
   }
 }

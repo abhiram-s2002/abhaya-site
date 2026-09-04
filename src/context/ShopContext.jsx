@@ -39,12 +39,12 @@ export function ShopProvider({ children }) {
   const [products, setProducts] = useState(() => {
     try {
       const cached = localStorage.getItem('noor_admin_products');
-      if (cached) {
+      if (cached !== null) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (_) {}
-    return STATIC_PRODUCTS;
+    return isSupabaseConfigured ? [] : STATIC_PRODUCTS;
   });
 
   // CMS Site Content State
@@ -188,13 +188,15 @@ export function ShopProvider({ children }) {
   // Fetch Products from Supabase on mount
   const refreshProducts = useCallback(async () => {
     setIsProductsLoading(true);
+    console.log('[ShopContext] 🔄 refreshProducts triggered...');
     try {
-      const { data } = await fetchProductsFromSupabase();
-      if (data && data.length > 0) {
+      const { data, source, error } = await fetchProductsFromSupabase();
+      console.log('[ShopContext] 📦 refreshProducts finished => count:', data?.length ?? 0, 'source:', source, 'error:', error);
+      if (Array.isArray(data)) {
         setProducts(data);
       }
     } catch (err) {
-      console.warn('Failed to load products:', err);
+      console.error('[ShopContext ERROR] Failed to load products:', err);
     } finally {
       setIsProductsLoading(false);
     }
@@ -246,22 +248,25 @@ export function ShopProvider({ children }) {
 
   // Product CRUD Handlers
   const createProduct = async (newProduct) => {
-    console.log('[ShopContext] createProduct called:', newProduct);
+    console.group(`[ShopContext] ➕ createProduct: ${newProduct?.name} (ID: ${newProduct?.id})`);
+    console.log('[ShopContext] Product model:', newProduct);
     // Optimistic local update
     setProducts(prev => [newProduct, ...prev]);
     const result = await upsertProductToSupabase(newProduct);
-    console.log('[ShopContext] createProduct result from Supabase:', result);
+    console.log('[ShopContext] Supabase upsert result:', result);
     if (result.data) {
       setProducts(prev => {
         const filtered = prev.filter(p => p.id !== newProduct.id);
         return [result.data, ...filtered];
       });
     }
+    console.groupEnd();
     return result;
   };
 
   const updateProduct = async (id, updatedFields) => {
-    console.log('[ShopContext] updateProduct called for ID:', id, 'updatedFields:', updatedFields);
+    console.group(`[ShopContext] ✏️ updateProduct ID: ${id}`);
+    console.log('[ShopContext] Updated fields:', updatedFields);
     let merged = null;
     setProducts(prev =>
       prev.map(p => {
@@ -273,21 +278,27 @@ export function ShopProvider({ children }) {
       })
     );
     if (merged) {
-      console.log('[ShopContext] Merged product data to save to Supabase:', merged);
+      console.log('[ShopContext] Saving merged product to Supabase:', merged);
       const res = await upsertProductToSupabase(merged);
-      console.log('[ShopContext] updateProduct result from Supabase:', res);
+      console.log('[ShopContext] Update result from Supabase:', res);
+      console.groupEnd();
       return res;
     }
+    console.groupEnd();
   };
 
   const deleteProduct = async (id) => {
-    console.log('[ShopContext] deleteProduct called for ID:', id);
+    console.group(`[ShopContext] 🗑️ deleteProduct ID: ${id}`);
     setProducts(prev => prev.filter(p => p.id !== id));
-    await deleteProductFromSupabase(id);
+    const res = await deleteProductFromSupabase(id);
+    console.log('[ShopContext] Delete result:', res);
+    console.groupEnd();
   };
 
   const seedCatalog = async () => {
+    console.log('[ShopContext] 🌱 seedCatalog triggered');
     const result = await seedInitialProductsToSupabase();
+    console.log('[ShopContext] Seed result:', result);
     if (result.success) {
       await refreshProducts();
     }
