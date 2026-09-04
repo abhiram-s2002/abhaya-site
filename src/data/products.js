@@ -106,16 +106,29 @@ export const WHOLESALE_TYPES = [
   { id: "Kids", name: "Kids", description: "Assorted girls and junior modest abaya carton packs" }
 ];
 
+export const SHAILA_TYPES = [
+  { id: "Pure Silk Shawl", name: "Pure Silk Shawl", description: "100% natural Mulberry silk with radiant liquid sheen and fluid drape" },
+  { id: "Microfiber Chiffon Shaila", name: "Microfiber Chiffon Shaila", description: "Ultra-breathable lightweight textured chiffon for effortless all-day styling" },
+  { id: "Laser-Cut Luxe Shaila", name: "Laser-Cut Luxe Shaila", description: "Intricate laser-cut scalloped borders with haute couture detailing" }
+];
+
 export const HIJAB_TYPES = [
-  { id: "Niqab", name: "Niqab", description: "Breathable single and multi-layer niqabs" },
-  { id: "Cap", name: "Cap / Undercap", description: "Non-slip satin and cotton undercaps" },
-  { id: "Glove", name: "Glove", description: "Touchscreen-friendly soft stretch modest gloves" },
-  { id: "Hijab", name: "Hijab", description: "Chiffon, jersey, and pure silk matching head wraps" }
+  { id: "Niqab", name: "Niqab", description: "Breathable single and multi-layer niqabs with concealed soft ties" },
+  { id: "Undercap / Cap", name: "Undercap / Cap", description: "Non-slip satin-lined and organic cotton undercaps for hair care" },
+  { id: "Gloves", name: "Gloves", description: "Touchscreen-compatible soft stretch modest gloves" },
+  { id: "Hijab / Wrap", name: "Hijab / Wrap", description: "Signature everyday luxury jersey, modal, and georgette wraps" }
 ];
 
 export const INNER_PRAYER_TYPES = [
-  { id: "Inner Slip", name: "Inner Slip Dress", description: "Sleeveless breathable under-abaya slip dresses" },
-  { id: "Prayer dress", name: "Prayer Dress", description: "Attached-scarf all-in-one devotion gowns" }
+  { id: "Inner Slip Dress", name: "Inner Slip Dress", description: "Sleeveless breathable under-abaya slip dresses for layered looks" },
+  { id: "1-Piece Prayer Dress", name: "1-Piece Prayer Dress", description: "All-in-one devotion gown with integrated head covering" },
+  { id: "2-Piece Prayer Set", name: "2-Piece Prayer Set", description: "Matching devotion khimar cape and elasticated maxi skirt set" }
+];
+
+export const KIDS_ABAYA_TYPES = [
+  { id: "Little Farasha", name: "Little Farasha", description: "Comfortable winged butterfly cuts tailored for young girls" },
+  { id: "Floral Embroidered Kids", name: "Floral Embroidered Kids", description: "Sweet delicate needlework along neckline and sleeves" },
+  { id: "Occasion Kids Abaya", name: "Occasion Kids Abaya", description: "Festive Eid and celebration abayas with subtle glimmer" }
 ];
 
 export const ABAYA_SIZES = [
@@ -388,6 +401,7 @@ export const PRODUCTS = [
     price: 45,
     originalPrice: 65,
     category: "Shaila/Shawl",
+    subcategory: "Pure Silk Shawl",
     badge: "Essential Luxury",
     targetRegion: "all",
     rating: 4.9,
@@ -418,6 +432,7 @@ export const PRODUCTS = [
     price: 38,
     originalPrice: 50,
     category: "Shaila/Shawl",
+    subcategory: "Microfiber Chiffon Shaila",
     badge: "Atelier Classic",
     targetRegion: "all",
     rating: 4.9,
@@ -480,7 +495,7 @@ export const PRODUCTS = [
     price: 30,
     originalPrice: 42,
     category: "Hijab",
-    subcategory: "Cap",
+    subcategory: "Undercap / Cap",
     badge: "Hair Care Essential",
     targetRegion: "all",
     rating: 4.9,
@@ -513,7 +528,7 @@ export const PRODUCTS = [
     price: 55,
     originalPrice: 75,
     category: "Inner & Prayer dress",
-    subcategory: "Inner Slip",
+    subcategory: "Inner Slip Dress",
     badge: "Foundation Staple",
     targetRegion: "all",
     rating: 4.9,
@@ -544,7 +559,7 @@ export const PRODUCTS = [
     price: 68,
     originalPrice: 90,
     category: "Inner & Prayer dress",
-    subcategory: "Prayer dress",
+    subcategory: "2-Piece Prayer Set",
     badge: "Travel Favorite",
     targetRegion: "all",
     rating: 5.0,
@@ -577,6 +592,7 @@ export const PRODUCTS = [
     price: 85,
     originalPrice: 110,
     category: "Kids abaya",
+    subcategory: "Little Farasha",
     badge: "Princess Favorite",
     targetRegion: "all",
     rating: 5.0,

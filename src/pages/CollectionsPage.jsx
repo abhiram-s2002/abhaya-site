@@ -21,7 +21,9 @@ import {
   ABAYA_SIZES,
   WHOLESALE_TYPES,
   HIJAB_TYPES,
-  INNER_PRAYER_TYPES
+  INNER_PRAYER_TYPES,
+  SHAILA_TYPES,
+  KIDS_ABAYA_TYPES
 } from '../data/products';
 
 // Comprehensive color swatches matching BasicAbaya
@@ -97,6 +99,33 @@ export default function CollectionsPage() {
   const minPriceLimit = 0;
 
   const [priceRange, setPriceRange] = useState(maxPriceLimit);
+
+  // Available Subcategories based on selected Category filter
+  const availableSubcategories = useMemo(() => {
+    let list = [];
+    if (selectedCategories.length === 0) {
+      list = [
+        ...SHAILA_TYPES.map(t => t.name),
+        ...HIJAB_TYPES.map(t => t.name),
+        ...INNER_PRAYER_TYPES.map(t => t.name),
+        ...KIDS_ABAYA_TYPES.map(t => t.name)
+      ];
+    } else {
+      if (selectedCategories.some(c => c.toLowerCase().includes('shaila') || c.toLowerCase().includes('shawl'))) {
+        list.push(...SHAILA_TYPES.map(t => t.name));
+      }
+      if (selectedCategories.some(c => c.toLowerCase().includes('hijab') || c.toLowerCase().includes('hijaab'))) {
+        list.push(...HIJAB_TYPES.map(t => t.name));
+      }
+      if (selectedCategories.some(c => c.toLowerCase().includes('inner') || c.toLowerCase().includes('prayer'))) {
+        list.push(...INNER_PRAYER_TYPES.map(t => t.name));
+      }
+      if (selectedCategories.some(c => c.toLowerCase().includes('kids'))) {
+        list.push(...KIDS_ABAYA_TYPES.map(t => t.name));
+      }
+    }
+    return list;
+  }, [selectedCategories]);
 
   // Grid layout switcher:
   // Mobile: 1 or 2 cols (default 2)
@@ -646,7 +675,7 @@ export default function CollectionsPage() {
             </div>
 
             {/* Wholesale Types Accordion (if Wholesale selected or no specific category) */}
-            {(selectedCategories.length === 0 || selectedCategories.includes('WHOLESALE')) && (
+            {(selectedCategories.length === 0 || selectedCategories.some(c => c.toLowerCase() === 'wholesale')) && (
               <div className="p-6 bg-amber-50/40">
                 <button
                   onClick={() => toggleAccordion('wholesaleType')}
@@ -659,17 +688,18 @@ export default function CollectionsPage() {
                 {openAccordions.wholesaleType && (
                   <div className="pt-3 space-y-2.5">
                     {WHOLESALE_TYPES.map((wt) => {
-                      const isChecked = selectedWholesaleTypes.includes(wt);
+                      const name = wt.name || wt;
+                      const isChecked = selectedWholesaleTypes.includes(name);
                       return (
                         <label
-                          key={wt}
+                          key={wt.id || name}
                           className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-amber-800 group font-semibold"
                         >
-                          <span className="group-hover:translate-x-0.5 transition-transform">{wt}</span>
+                          <span className="group-hover:translate-x-0.5 transition-transform">{name}</span>
                           <input
                             type="checkbox"
                             checked={isChecked}
-                            onChange={() => toggleItem(selectedWholesaleTypes, setSelectedWholesaleTypes, wt)}
+                            onChange={() => toggleItem(selectedWholesaleTypes, setSelectedWholesaleTypes, name)}
                             className="w-4 h-4 accent-amber-700 cursor-pointer"
                           />
                         </label>
@@ -680,8 +710,8 @@ export default function CollectionsPage() {
               </div>
             )}
 
-            {/* Subcategory Accordion (for Hijab or Inner/Prayer) */}
-            {(selectedCategories.includes('Hijaab') || selectedCategories.includes('Inner and Prayer dress')) && (
+            {/* Subcategory Accordion */}
+            {availableSubcategories.length > 0 && (
               <div className="p-6 bg-purple-50/40">
                 <button
                   onClick={() => toggleAccordion('subcategory')}
@@ -693,7 +723,7 @@ export default function CollectionsPage() {
 
                 {openAccordions.subcategory && (
                   <div className="pt-3 space-y-2.5">
-                    {(selectedCategories.includes('Hijaab') ? HIJAB_TYPES : INNER_PRAYER_TYPES).map((sub) => {
+                    {availableSubcategories.map((sub) => {
                       const isChecked = selectedSubcategories.includes(sub);
                       return (
                         <label

@@ -24,7 +24,7 @@ import {
 import { useShop } from '../context/ShopContext';
 import { openWhatsApp, WHATSAPP_PHONE_DISPLAY } from '../utils/whatsapp';
 import brandLogo from '../assets/logo.png';
-import { MAIN_CATEGORIES, ABAYA_STYLES, ABAYA_WORKS, WHOLESALE_TYPES, HIJAB_TYPES } from '../data/products';
+import { MAIN_CATEGORIES, ABAYA_STYLES, ABAYA_WORKS, WHOLESALE_TYPES, HIJAB_TYPES, SHAILA_TYPES, INNER_PRAYER_TYPES, KIDS_ABAYA_TYPES } from '../data/products';
 
 export default function Navbar() {
   const {
@@ -54,6 +54,10 @@ export default function Navbar() {
     category: true,
     abayaStyle: false,
     abayaWork: false,
+    shaila: false,
+    hijab: false,
+    innerPrayer: false,
+    kidsAbaya: false,
     wholesale: false,
     help: false
   });
@@ -576,42 +580,146 @@ export default function Navbar() {
 
                 {/* 2. Shaila / Shawl */}
                 <div className="border-b border-white/10 pb-2">
-                  <button
-                    onClick={() => handleNav('shop', 'Shaila/Shawl')}
-                    className="block w-full text-left text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] py-1"
-                  >
-                    2. Shaila / Shawl
-                  </button>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => handleNav('shop', 'Shaila/Shawl')}
+                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                    >
+                      2. Shaila / Shawl
+                    </button>
+                    <button
+                      onClick={() => toggleAccordion('shaila')}
+                      className="p-1 hover:bg-white/10 rounded-xs"
+                      aria-label="Toggle Shaila Subcategories"
+                    >
+                      {openAccordions.shaila ? (
+                        <Minus className="w-3.5 h-3.5 text-white/80" />
+                      ) : (
+                        <Plus className="w-3.5 h-3.5 text-white/80" />
+                      )}
+                    </button>
+                  </div>
+                  {openAccordions.shaila && (
+                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
+                      {SHAILA_TYPES.map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => handleNav('shop', 'Shaila/Shawl', null, null, null, null, false, null, type.name)}
+                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
+                        >
+                          • {type.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* 3. Hijab */}
                 <div className="border-b border-white/10 pb-2">
-                  <button
-                    onClick={() => handleNav('shop', 'Hijab')}
-                    className="block w-full text-left text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] py-1"
-                  >
-                    3. Hijab (Niqab, Cap, Glove, etc.)
-                  </button>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => handleNav('shop', 'Hijab')}
+                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                    >
+                      3. Hijab (Niqab, Cap, Glove, etc.)
+                    </button>
+                    <button
+                      onClick={() => toggleAccordion('hijab')}
+                      className="p-1 hover:bg-white/10 rounded-xs"
+                      aria-label="Toggle Hijab Subcategories"
+                    >
+                      {openAccordions.hijab ? (
+                        <Minus className="w-3.5 h-3.5 text-white/80" />
+                      ) : (
+                        <Plus className="w-3.5 h-3.5 text-white/80" />
+                      )}
+                    </button>
+                  </div>
+                  {openAccordions.hijab && (
+                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
+                      {HIJAB_TYPES.map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => handleNav('shop', 'Hijab', null, null, null, null, false, null, type.name)}
+                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
+                        >
+                          • {type.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* 4. Inner and Prayer dress */}
                 <div className="border-b border-white/10 pb-2">
-                  <button
-                    onClick={() => handleNav('shop', 'Inner & Prayer dress')}
-                    className="block w-full text-left text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] py-1"
-                  >
-                    4. Inner & Prayer Dress
-                  </button>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => handleNav('shop', 'Inner & Prayer dress')}
+                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                    >
+                      4. Inner & Prayer Dress
+                    </button>
+                    <button
+                      onClick={() => toggleAccordion('innerPrayer')}
+                      className="p-1 hover:bg-white/10 rounded-xs"
+                      aria-label="Toggle Inner and Prayer Dress Subcategories"
+                    >
+                      {openAccordions.innerPrayer ? (
+                        <Minus className="w-3.5 h-3.5 text-white/80" />
+                      ) : (
+                        <Plus className="w-3.5 h-3.5 text-white/80" />
+                      )}
+                    </button>
+                  </div>
+                  {openAccordions.innerPrayer && (
+                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
+                      {INNER_PRAYER_TYPES.map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => handleNav('shop', 'Inner & Prayer dress', null, null, null, null, false, null, type.name)}
+                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
+                        >
+                          • {type.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* 5. Kids Abaya */}
                 <div className="border-b border-white/10 pb-2">
-                  <button
-                    onClick={() => handleNav('shop', 'Kids abaya')}
-                    className="block w-full text-left text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] py-1"
-                  >
-                    5. Kids Abaya
-                  </button>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => handleNav('shop', 'Kids abaya')}
+                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                    >
+                      5. Kids Abaya
+                    </button>
+                    <button
+                      onClick={() => toggleAccordion('kidsAbaya')}
+                      className="p-1 hover:bg-white/10 rounded-xs"
+                      aria-label="Toggle Kids Abaya Subcategories"
+                    >
+                      {openAccordions.kidsAbaya ? (
+                        <Minus className="w-3.5 h-3.5 text-white/80" />
+                      ) : (
+                        <Plus className="w-3.5 h-3.5 text-white/80" />
+                      )}
+                    </button>
+                  </div>
+                  {openAccordions.kidsAbaya && (
+                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
+                      {KIDS_ABAYA_TYPES.map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => handleNav('shop', 'Kids abaya', null, null, null, null, false, null, type.name)}
+                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
+                        >
+                          • {type.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* 6. WHOLESALE */}
