@@ -88,7 +88,7 @@ export default function HomePage() {
                 {/* Full-width image */}
                 <div className="relative w-full h-[75vh] sm:h-[82vh] md:h-[88vh] min-h-[480px] overflow-hidden">
                   <img
-                    src={slide.image}
+                    src={slide.image?.startsWith('http') || slide.image?.startsWith('data:') || slide.image?.startsWith('blob:') ? slide.image : getAssetUrl(slide.image || '')}
                     alt={slide.title}
                     className="w-full h-full object-cover object-top"
                     loading={i === 0 ? 'eager' : 'lazy'}
