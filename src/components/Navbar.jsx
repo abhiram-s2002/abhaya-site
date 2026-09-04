@@ -52,8 +52,7 @@ export default function Navbar() {
   const shopMenuRef = useRef(null);
   const [openAccordions, setOpenAccordions] = useState({
     category: true,
-    abayaStyle: false,
-    abayaWork: false,
+    work: false,
     shaila: false,
     hijab: false,
     innerPrayer: false,
@@ -193,37 +192,37 @@ export default function Navbar() {
                             onClick={() => handleNav('shop', 'Abaya')}
                             className="block w-full text-left py-1 text-white/90 hover:text-[#FFD700] hover:translate-x-1 transition-all cursor-pointer font-bold"
                           >
-                            1. Abaya (Haute Couture)
+                            Abaya
                           </button>
                           <button
                             onClick={() => handleNav('shop', 'Shaila/Shawl')}
                             className="block w-full text-left py-1 text-white/90 hover:text-[#FFD700] hover:translate-x-1 transition-all cursor-pointer font-bold"
                           >
-                            2. Shaila / Shawl
+                            Shaila / Shawl
                           </button>
                           <button
                             onClick={() => handleNav('shop', 'Hijab')}
                             className="block w-full text-left py-1 text-white/90 hover:text-[#FFD700] hover:translate-x-1 transition-all cursor-pointer font-bold"
                           >
-                            3. Hijab, Niqab & Gloves
+                            Hijab, Niqab & Gloves
                           </button>
                           <button
                             onClick={() => handleNav('shop', 'Inner & Prayer dress')}
                             className="block w-full text-left py-1 text-white/90 hover:text-[#FFD700] hover:translate-x-1 transition-all cursor-pointer font-bold"
                           >
-                            4. Inner & Prayer Dress
+                            Inner & Prayer Dress
                           </button>
                           <button
                             onClick={() => handleNav('shop', 'Kids abaya')}
                             className="block w-full text-left py-1 text-white/90 hover:text-[#FFD700] hover:translate-x-1 transition-all cursor-pointer font-bold"
                           >
-                            5. Kids Abaya
+                            Kids Abaya
                           </button>
                           <button
                             onClick={() => handleNav('shop', 'Wholesale')}
                             className="block w-full text-left py-1.5 px-2 bg-white/10 text-[#FFD700] hover:bg-white/20 transition-colors font-bold rounded-xs cursor-pointer"
                           >
-                            6. Wholesale (B2B Bulk Hub) ★
+                            Wholesale (B2B Bulk Hub) ★
                           </button>
                         </div>
                       </div>
@@ -516,249 +515,249 @@ export default function Navbar() {
             {/* Scrollable Navigation Body */}
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5 divide-y divide-white/20 text-sm">
               
-              {/* Accordion: SHOP BY CATEGORY */}
-              <div className="pt-1 space-y-2">
-                <div className="text-[11px] uppercase tracking-wider font-bold text-[#FFD700] pb-1">
-                  Shop by Category
-                </div>
+              {/* Accordion: SHOP BY CATEGORY (Abaya Silhouettes) */}
+              <div className="pt-1">
+                <button
+                  onClick={() => toggleAccordion('category')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Shop by Category</span>
+                  {openAccordions.category ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  )}
+                </button>
 
-                {/* 1. Abaya */}
-                <div className="border-b border-white/10 pb-2">
-                  <div className="flex items-center justify-between">
+                {openAccordions.category && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {ABAYA_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        onClick={() => handleNav('shop', 'Abaya', null, null, style.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        {style.name}
+                      </button>
+                    ))}
                     <button
                       onClick={() => handleNav('shop', 'Abaya')}
-                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      1. Abaya
-                    </button>
-                    <button
-                      onClick={() => toggleAccordion('abayaStyle')}
-                      className="p-1 hover:bg-white/10 rounded-xs"
-                      aria-label="Toggle Abaya Subcategories"
-                    >
-                      {openAccordions.abayaStyle ? (
-                        <Minus className="w-3.5 h-3.5 text-white/80" />
-                      ) : (
-                        <Plus className="w-3.5 h-3.5 text-white/80" />
-                      )}
+                      View All Abayas
                     </button>
                   </div>
+                )}
+              </div>
 
-                  {openAccordions.abayaStyle && (
-                    <div className="mt-2 pl-3 space-y-3 border-l border-white/20 text-xs animate-fade-in">
-                      <div>
-                        <div className="text-[10px] uppercase font-bold text-white/60 tracking-wider mb-1">By Category Style</div>
-                        <div className="space-y-1">
-                          {ABAYA_STYLES.map((style) => (
-                            <button
-                              key={style.id}
-                              onClick={() => handleNav('shop', 'Abaya', null, null, style.name)}
-                              className="block w-full text-left py-0.5 text-white/85 hover:text-white text-[11px]"
-                            >
-                              • {style.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] uppercase font-bold text-white/60 tracking-wider mb-1">By Work</div>
-                        <div className="space-y-1">
-                          {ABAYA_WORKS.map((work) => (
-                            <button
-                              key={work.id}
-                              onClick={() => handleNav('shop', 'Abaya', null, null, null, work.name)}
-                              className="block w-full text-left py-0.5 text-white/85 hover:text-white text-[11px]"
-                            >
-                              • {work.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+              {/* Accordion: SHOP BY WORK */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('work')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Shop by Work</span>
+                  {openAccordions.work ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
                   )}
-                </div>
+                </button>
 
-                {/* 2. Shaila / Shawl */}
-                <div className="border-b border-white/10 pb-2">
-                  <div className="flex items-center justify-between">
+                {openAccordions.work && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {ABAYA_WORKS.map((work) => (
+                      <button
+                        key={work.id}
+                        onClick={() => handleNav('shop', 'Abaya', null, null, null, work.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        {work.name}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handleNav('collections')}
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
+                    >
+                      View All Work Styles
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion: SHAILA / SHAWL */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('shaila')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Shaila / Shawl</span>
+                  {openAccordions.shaila ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  )}
+                </button>
+
+                {openAccordions.shaila && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {SHAILA_TYPES.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => handleNav('shop', 'Shaila/Shawl', null, null, null, null, false, null, type.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        {type.name}
+                      </button>
+                    ))}
                     <button
                       onClick={() => handleNav('shop', 'Shaila/Shawl')}
-                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      2. Shaila / Shawl
-                    </button>
-                    <button
-                      onClick={() => toggleAccordion('shaila')}
-                      className="p-1 hover:bg-white/10 rounded-xs"
-                      aria-label="Toggle Shaila Subcategories"
-                    >
-                      {openAccordions.shaila ? (
-                        <Minus className="w-3.5 h-3.5 text-white/80" />
-                      ) : (
-                        <Plus className="w-3.5 h-3.5 text-white/80" />
-                      )}
+                      View All Shaila & Shawls
                     </button>
                   </div>
-                  {openAccordions.shaila && (
-                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
-                      {SHAILA_TYPES.map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => handleNav('shop', 'Shaila/Shawl', null, null, null, null, false, null, type.name)}
-                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
-                        >
-                          • {type.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
+              </div>
 
-                {/* 3. Hijab */}
-                <div className="border-b border-white/10 pb-2">
-                  <div className="flex items-center justify-between">
+              {/* Accordion: HIJAB */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('hijab')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Hijab & Accessories</span>
+                  {openAccordions.hijab ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  )}
+                </button>
+
+                {openAccordions.hijab && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {HIJAB_TYPES.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => handleNav('shop', 'Hijab', null, null, null, null, false, null, type.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        {type.name}
+                      </button>
+                    ))}
                     <button
                       onClick={() => handleNav('shop', 'Hijab')}
-                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      3. Hijab (Niqab, Cap, Glove, etc.)
-                    </button>
-                    <button
-                      onClick={() => toggleAccordion('hijab')}
-                      className="p-1 hover:bg-white/10 rounded-xs"
-                      aria-label="Toggle Hijab Subcategories"
-                    >
-                      {openAccordions.hijab ? (
-                        <Minus className="w-3.5 h-3.5 text-white/80" />
-                      ) : (
-                        <Plus className="w-3.5 h-3.5 text-white/80" />
-                      )}
+                      View All Hijabs & Accessories
                     </button>
                   </div>
-                  {openAccordions.hijab && (
-                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
-                      {HIJAB_TYPES.map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => handleNav('shop', 'Hijab', null, null, null, null, false, null, type.name)}
-                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
-                        >
-                          • {type.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
+              </div>
 
-                {/* 4. Inner and Prayer dress */}
-                <div className="border-b border-white/10 pb-2">
-                  <div className="flex items-center justify-between">
+              {/* Accordion: INNER & PRAYER DRESS */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('innerPrayer')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Inner & Prayer Dress</span>
+                  {openAccordions.innerPrayer ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  )}
+                </button>
+
+                {openAccordions.innerPrayer && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {INNER_PRAYER_TYPES.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => handleNav('shop', 'Inner & Prayer dress', null, null, null, null, false, null, type.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        {type.name}
+                      </button>
+                    ))}
                     <button
                       onClick={() => handleNav('shop', 'Inner & Prayer dress')}
-                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      4. Inner & Prayer Dress
-                    </button>
-                    <button
-                      onClick={() => toggleAccordion('innerPrayer')}
-                      className="p-1 hover:bg-white/10 rounded-xs"
-                      aria-label="Toggle Inner and Prayer Dress Subcategories"
-                    >
-                      {openAccordions.innerPrayer ? (
-                        <Minus className="w-3.5 h-3.5 text-white/80" />
-                      ) : (
-                        <Plus className="w-3.5 h-3.5 text-white/80" />
-                      )}
+                      View All Inner & Prayer Dresses
                     </button>
                   </div>
-                  {openAccordions.innerPrayer && (
-                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
-                      {INNER_PRAYER_TYPES.map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => handleNav('shop', 'Inner & Prayer dress', null, null, null, null, false, null, type.name)}
-                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
-                        >
-                          • {type.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
+              </div>
 
-                {/* 5. Kids Abaya */}
-                <div className="border-b border-white/10 pb-2">
-                  <div className="flex items-center justify-between">
+              {/* Accordion: KIDS ABAYA */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('kidsAbaya')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Kids Abaya</span>
+                  {openAccordions.kidsAbaya ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  )}
+                </button>
+
+                {openAccordions.kidsAbaya && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {KIDS_ABAYA_TYPES.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => handleNav('shop', 'Kids abaya', null, null, null, null, false, null, type.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        {type.name}
+                      </button>
+                    ))}
                     <button
                       onClick={() => handleNav('shop', 'Kids abaya')}
-                      className="text-xs uppercase tracking-wide font-bold text-white hover:text-[#FFD700] text-left py-1"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      5. Kids Abaya
-                    </button>
-                    <button
-                      onClick={() => toggleAccordion('kidsAbaya')}
-                      className="p-1 hover:bg-white/10 rounded-xs"
-                      aria-label="Toggle Kids Abaya Subcategories"
-                    >
-                      {openAccordions.kidsAbaya ? (
-                        <Minus className="w-3.5 h-3.5 text-white/80" />
-                      ) : (
-                        <Plus className="w-3.5 h-3.5 text-white/80" />
-                      )}
+                      View All Kids Abayas
                     </button>
                   </div>
-                  {openAccordions.kidsAbaya && (
-                    <div className="mt-1.5 pl-3 space-y-1 border-l border-white/20 text-xs animate-fade-in">
-                      {KIDS_ABAYA_TYPES.map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => handleNav('shop', 'Kids abaya', null, null, null, null, false, null, type.name)}
-                          className="block w-full text-left py-0.5 text-white/85 hover:text-[#FFD700] text-[11px]"
-                        >
-                          • {type.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
+              </div>
 
-                {/* 6. WHOLESALE */}
-                <div className="pb-1">
-                  <div className="flex items-center justify-between">
+              {/* Accordion: WHOLESALE */}
+              <div className="pt-4">
+                <button
+                  onClick={() => toggleAccordion('wholesale')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Wholesale (B2B Hub)</span>
+                  {openAccordions.wholesale ? (
+                    <Minus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  ) : (
+                    <Plus className="w-4 h-4 text-white" strokeWidth={1.5} />
+                  )}
+                </button>
+
+                {openAccordions.wholesale && (
+                  <div className="mt-2.5 pl-3 space-y-2 border-l border-white/30 animate-fade-in">
+                    {WHOLESALE_TYPES.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => handleNav('shop', 'Wholesale', null, null, null, null, false, null, null, type.name)}
+                        className="block w-full text-left py-1 text-xs text-white/85 hover:text-white transition-colors uppercase tracking-wide cursor-pointer"
+                      >
+                        Wholesale {type.name}
+                      </button>
+                    ))}
                     <button
                       onClick={() => handleNav('shop', 'Wholesale')}
-                      className="text-xs uppercase tracking-wide font-bold text-[#FFD700] hover:underline text-left py-1"
+                      className="block w-full text-left py-1 text-xs text-white font-bold hover:text-white/80 transition-colors uppercase tracking-wide cursor-pointer"
                     >
-                      6. WHOLESALE (B2B Bulk Hub) ★
-                    </button>
-                    <button
-                      onClick={() => toggleAccordion('wholesale')}
-                      className="p-1 hover:bg-white/10 rounded-xs"
-                      aria-label="Toggle Wholesale Subcategories"
-                    >
-                      {openAccordions.wholesale ? (
-                        <Minus className="w-3.5 h-3.5 text-white/80" />
-                      ) : (
-                        <Plus className="w-3.5 h-3.5 text-white/80" />
-                      )}
+                      Explore Full Wholesale Hub
                     </button>
                   </div>
-
-                  {openAccordions.wholesale && (
-                    <div className="mt-1.5 pl-3 space-y-1 border-l border-[#FFD700]/40 text-xs animate-fade-in">
-                      {WHOLESALE_TYPES.map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => handleNav('shop', 'Wholesale', null, null, null, null, false, null, null, type.name)}
-                          className="block w-full text-left py-0.5 text-white/90 hover:text-[#FFD700] text-[11px]"
-                        >
-                          • Wholesale {type.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
+                )}
               </div>
 
               {/* OUR STORY */}
