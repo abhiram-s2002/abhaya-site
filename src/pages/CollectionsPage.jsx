@@ -289,11 +289,11 @@ export default function CollectionsPage() {
       if (selectedStyles.length > 0) {
         const hasMatch = selectedStyles.some(sel => {
           const sLower = sel.toLowerCase();
-          return (
-            (product.defaultStyle && product.defaultStyle.toLowerCase() === sLower) ||
-            (product.name && product.name.toLowerCase().includes(sLower)) ||
-            (Array.isArray(product.styles) && product.styles.some(s => s.toLowerCase() === sLower))
-          );
+          const primaryStyle = (product.defaultStyle || '').toLowerCase();
+          if (primaryStyle) {
+            return primaryStyle === sLower;
+          }
+          return Array.isArray(product.styles) && product.styles.some(s => s.toLowerCase() === sLower);
         });
         if (!hasMatch) return false;
       }
@@ -302,10 +302,15 @@ export default function CollectionsPage() {
       if (selectedWorks.length > 0) {
         const hasMatch = selectedWorks.some(sel => {
           const wLower = sel.toLowerCase();
-          return (
-            (product.defaultWork && product.defaultWork.toLowerCase() === wLower) ||
-            (Array.isArray(product.works) && product.works.some(w => w.toLowerCase() === wLower))
-          );
+          const primaryWork = (product.defaultWork || '').toLowerCase();
+          const isPlainFilter = wLower === 'plain/basic' || wLower === 'plain' || wLower === 'basic';
+          if (primaryWork) {
+            return primaryWork === wLower || (isPlainFilter && (primaryWork === 'plain' || primaryWork === 'plain/basic' || primaryWork === 'basic'));
+          }
+          return Array.isArray(product.works) && product.works.some(w => {
+            const wItemLower = w.toLowerCase();
+            return wItemLower === wLower || (isPlainFilter && (wItemLower === 'plain' || wItemLower === 'plain/basic' || wItemLower === 'basic'));
+          });
         });
         if (!hasMatch) return false;
       }

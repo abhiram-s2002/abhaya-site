@@ -78,11 +78,11 @@ export default function AdminProductModal({
   ]);
 
   // Silhouettes / Styles State
-  const [styles, setStyles] = useState(ABAYA_STYLES.map(s => s.name));
+  const [styles, setStyles] = useState(['Open abaya']);
   const [defaultStyle, setDefaultStyle] = useState(ABAYA_STYLES[0].name);
 
   // Works / Craftsmanship State
-  const [works, setWorks] = useState(ABAYA_WORKS.map(w => w.name));
+  const [works, setWorks] = useState(['Plain/Basic']);
   const [defaultWork, setDefaultWork] = useState('Plain/Basic');
 
   // Sizes State
@@ -125,9 +125,9 @@ export default function AdminProductModal({
       setImage(product.image || '');
       setGallery(Array.isArray(product.gallery) && product.gallery.length > 0 ? product.gallery : (product.image ? [product.image] : []));
       setColors(Array.isArray(product.colors) && product.colors.length > 0 ? product.colors : [{ name: 'Midnight Espresso', hex: '#2E1C1A', imageIndex: 0 }]);
-      setStyles(Array.isArray(product.styles) && product.styles.length > 0 ? product.styles : ABAYA_STYLES.map(s => s.name));
+      setStyles(Array.isArray(product.styles) && product.styles.length > 0 ? product.styles : [product.defaultStyle || ABAYA_STYLES[0].name]);
       setDefaultStyle(product.defaultStyle || ABAYA_STYLES[0].name);
-      setWorks(Array.isArray(product.works) && product.works.length > 0 ? product.works : ABAYA_WORKS.map(w => w.name));
+      setWorks(Array.isArray(product.works) && product.works.length > 0 ? product.works : [product.defaultWork || ABAYA_WORKS[0].name]);
       setDefaultWork(product.defaultWork || ABAYA_WORKS[0].name);
       setSizes(Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : ABAYA_SIZES.map(s => s.label));
       setDescription(product.description || '');
@@ -154,9 +154,9 @@ export default function AdminProductModal({
       setImage('');
       setGallery([]);
       setColors([]);
-      setStyles(ABAYA_STYLES.map(s => s.name));
+      setStyles(['Open abaya']);
       setDefaultStyle('Open abaya');
-      setWorks(ABAYA_WORKS.map(w => w.name));
+      setWorks(['Plain/Basic']);
       setDefaultWork('Plain/Basic');
       setSizes(ABAYA_SIZES.map(s => s.label));
       setDescription('');
@@ -321,8 +321,8 @@ export default function AdminProductModal({
       isVioletEdition,
       defaultStyle: finalCategory === 'Abaya' ? defaultStyle : null,
       defaultWork: finalCategory === 'Abaya' ? defaultWork : null,
-      styles: finalCategory === 'Abaya' ? styles : [],
-      works: finalCategory === 'Abaya' ? works : [],
+      styles: finalCategory === 'Abaya' ? (styles.length > 0 ? styles : [defaultStyle]) : [],
+      works: finalCategory === 'Abaya' ? (works.length > 0 ? works : [defaultWork]) : [],
       image,
       gallery: gallery.length > 0 ? gallery : [image],
       colors,

@@ -84,11 +84,11 @@ export default function AdminProductEditor({
   const [isUploadingGallery, setIsUploadingGallery] = useState(false);
 
   // Silhouettes / Styles State
-  const [styles, setStyles] = useState(ABAYA_STYLES.map(s => s.name));
+  const [styles, setStyles] = useState(['Open abaya']);
   const [defaultStyle, setDefaultStyle] = useState('Open abaya');
 
   // Works / Craftsmanship State
-  const [works, setWorks] = useState(ABAYA_WORKS.map(w => w.name));
+  const [works, setWorks] = useState(['Plain/Basic']);
   const [defaultWork, setDefaultWork] = useState('Plain/Basic');
 
   // Sizes State
@@ -140,9 +140,9 @@ export default function AdminProductEditor({
       setReviewsCount(product.reviewsCount !== undefined ? String(product.reviewsCount) : '0');
       setImage(product.image || '');
       setGallery(Array.isArray(product.gallery) && product.gallery.length > 0 ? product.gallery : (product.image ? [product.image] : []));
-      setStyles(Array.isArray(product.styles) && product.styles.length > 0 ? product.styles : ABAYA_STYLES.map(s => s.name));
+      setStyles(Array.isArray(product.styles) && product.styles.length > 0 ? product.styles : [product.defaultStyle || ABAYA_STYLES[0].name]);
       setDefaultStyle(product.defaultStyle || ABAYA_STYLES[0].name);
-      setWorks(Array.isArray(product.works) && product.works.length > 0 ? product.works : ABAYA_WORKS.map(w => w.name));
+      setWorks(Array.isArray(product.works) && product.works.length > 0 ? product.works : [product.defaultWork || ABAYA_WORKS[0].name]);
       setDefaultWork(product.defaultWork || ABAYA_WORKS[0].name);
       setSizes(Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : ABAYA_SIZES.map(s => s.label));
       setDescription(product.description || '');
@@ -383,10 +383,10 @@ export default function AdminProductEditor({
       rating: reviews.length > 0
         ? Number((reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / reviews.length).toFixed(1))
         : (Number(rating) || 5.0),
-      defaultStyle,
-      defaultWork,
-      styles: styles.length > 0 ? styles : [defaultStyle],
-      works: works.length > 0 ? works : [defaultWork],
+      defaultStyle: category === 'Abaya' ? defaultStyle : null,
+      defaultWork: category === 'Abaya' ? defaultWork : null,
+      styles: category === 'Abaya' ? (styles.length > 0 ? styles : [defaultStyle]) : [],
+      works: category === 'Abaya' ? (works.length > 0 ? works : [defaultWork]) : [],
       image,
       gallery: gallery.length > 0 ? gallery : [image],
       sizes,

@@ -207,19 +207,36 @@ export default function ShopPage() {
       // 4. Style Filter (For Abayas)
       if (selectedStyleFilter !== 'All') {
         const styleLower = selectedStyleFilter.toLowerCase();
-        const matchesStyle =
-          (product.defaultStyle && product.defaultStyle.toLowerCase() === styleLower) ||
-          (product.styles && product.styles.some(s => s.toLowerCase() === styleLower));
+        const primaryStyle = (product.defaultStyle || '').toLowerCase();
+        let matchesStyle = false;
+
+        if (primaryStyle) {
+          matchesStyle = primaryStyle === styleLower;
+        } else if (Array.isArray(product.styles) && product.styles.length > 0) {
+          matchesStyle = product.styles.some(s => s.toLowerCase() === styleLower);
+        }
+
         if (!matchesStyle) return false;
       }
 
       // 5. Work / Craftsmanship Filter (For Abayas)
       if (selectedWorkFilter !== 'All') {
         const workLower = selectedWorkFilter.toLowerCase();
-        const matchesWork =
-          (product.defaultWork && product.defaultWork.toLowerCase() === workLower) ||
-          (product.works && product.works.some(w => w.toLowerCase() === workLower)) ||
-          ((workLower === 'plain/basic' || workLower === 'plain') && (product.defaultWork === 'plain' || product.defaultWork === 'Plain/Basic'));
+        const primaryWork = (product.defaultWork || '').toLowerCase();
+        const isPlainFilter = workLower === 'plain/basic' || workLower === 'plain' || workLower === 'basic';
+        let matchesWork = false;
+
+        if (primaryWork) {
+          matchesWork = primaryWork === workLower ||
+            (isPlainFilter && (primaryWork === 'plain' || primaryWork === 'plain/basic' || primaryWork === 'basic'));
+        } else if (Array.isArray(product.works) && product.works.length > 0) {
+          matchesWork = product.works.some(w => {
+            const wLower = w.toLowerCase();
+            return wLower === workLower ||
+              (isPlainFilter && (wLower === 'plain' || wLower === 'plain/basic' || wLower === 'basic'));
+          });
+        }
+
         if (!matchesWork) return false;
       }
 
