@@ -241,7 +241,7 @@ export async function deleteProductFromSupabase(productId) {
 }
 
 /**
- * Upload an image to Supabase Storage (or convert to base64 data URL for preview/fallback)
+ * Upload an image to Supabase Storage
  */
 export async function uploadProductImage(file, subFolder = 'general') {
   console.log('[Supabase Storage] uploadProductImage called:', {
@@ -254,47 +254,48 @@ export async function uploadProductImage(file, subFolder = 'general') {
 
   if (!file) return { url: null, error: 'No file provided' };
 
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const fileExt = file.name ? file.name.split('.').pop() : 'jpg';
-      const cleanFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-      const filePath = `products/${subFolder}/${cleanFileName}`;
-
-      console.log(`[Supabase Storage] Uploading to bucket '${STORAGE_BUCKET}', path: '${filePath}'...`);
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from(STORAGE_BUCKET)
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
-
-      if (uploadError) {
-        console.error('[Supabase Storage ERROR] Upload rejected by Supabase:', uploadError.message, uploadError);
-      } else {
-        console.log('[Supabase Storage SUCCESS] Upload response:', uploadData);
-        const { data: publicUrlData } = supabase.storage
-          .from(STORAGE_BUCKET)
-          .getPublicUrl(filePath);
-
-        if (publicUrlData && publicUrlData.publicUrl) {
-          console.log('[Supabase Storage SUCCESS] Generated public URL:', publicUrlData.publicUrl);
-          return { url: publicUrlData.publicUrl, error: null };
-        }
-      }
-    } catch (err) {
-      console.error('[Supabase Storage CATCH] Exception during storage upload:', err);
-    }
+  if (!isSupabaseConfigured || !supabase) {
+    console.error('[Supabase Storage] Supabase is not configured.');
+    return {
+      url: null,
+      error: 'Supabase storage is not configured. Please verify your Supabase environment variables.'
+    };
   }
 
-  // Fallback to local data URL reader
-  console.warn('[Supabase Storage FALLBACK] Falling back to local Base64 FileReader...');
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve({ url: reader.result, error: null });
-    reader.onerror = (err) => resolve({ url: null, error: err });
-    reader.readAsDataURL(file);
-  });
+  try {
+    const fileExt = file.name ? file.name.split('.').pop() : 'jpg';
+    const cleanFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+    const filePath = `products/${subFolder}/${cleanFileName}`;
+
+    console.log(`[Supabase Storage] Uploading to bucket '${STORAGE_BUCKET}', path: '${filePath}'...`);
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: true
+      });
+
+    if (uploadError) {
+      console.error('[Supabase Storage ERROR] Upload rejected by Supabase:', uploadError.message, uploadError);
+      return { url: null, error: uploadError.message };
+    }
+
+    console.log('[Supabase Storage SUCCESS] Upload response:', uploadData);
+    const { data: publicUrlData } = supabase.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(filePath);
+
+    if (publicUrlData && publicUrlData.publicUrl) {
+      console.log('[Supabase Storage SUCCESS] Generated public URL:', publicUrlData.publicUrl);
+      return { url: publicUrlData.publicUrl, error: null };
+    }
+
+    return { url: null, error: 'Could not generate public URL for uploaded file.' };
+  } catch (err) {
+    console.error('[Supabase Storage CATCH] Exception during storage upload:', err);
+    return { url: null, error: err.message || 'Error uploading image to Supabase' };
+  }
 }
 
 /**

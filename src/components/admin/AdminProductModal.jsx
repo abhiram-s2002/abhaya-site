@@ -138,7 +138,7 @@ export default function AdminProductModal({
       // Reset to pristine defaults
       setName('');
       setSubtitle('');
-      setPrice('180');
+      setPrice('');
       setOriginalPrice('');
       setCategory('Abaya');
       setSubcategory('');
@@ -150,24 +150,19 @@ export default function AdminProductModal({
       setRating('5.0');
       setReviewsCount('0');
       setIsVioletEdition(false);
-      setStockCount(12);
-      setImage('https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
-      setGallery([
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw'
-      ]);
-      setColors([
-        { name: 'Midnight Espresso', hex: '#2E1C1A', imageIndex: 0 },
-        { name: 'Royal Violet', hex: '#982476', imageIndex: 0 }
-      ]);
+      setStockCount(10);
+      setImage('');
+      setGallery([]);
+      setColors([]);
       setStyles(ABAYA_STYLES.map(s => s.name));
       setDefaultStyle('Open abaya');
       setWorks(ABAYA_WORKS.map(w => w.name));
-      setDefaultWork('plain');
+      setDefaultWork('Plain/Basic');
       setSizes(ABAYA_SIZES.map(s => s.label));
-      setDescription('Handcrafted from fine luxury grade fabric with master tailoring and quiet elegance.');
-      setFabricDetails('100% Grade 6A Pure Mulberry Silk. Non-slip internal weave.');
-      setStylingAdvice('Pairs gracefully with coordinating luxury slips and silk wraps.');
-      setCareInstructions('Dry clean or delicate cold hand wash with neutral detergent.');
+      setDescription('');
+      setFabricDetails('');
+      setStylingAdvice('');
+      setCareInstructions('');
     }
     setActiveTab('basic');
     setErrorMessage('');
@@ -185,8 +180,8 @@ export default function AdminProductModal({
     try {
       const { url, error } = await uploadProductImage(file, 'hero');
       console.log('[AdminProductModal] Main image upload result:', { url, error });
-      if (error && !url) {
-        setErrorMessage(`Image upload warning: ${error}`);
+      if (error || !url) {
+        setErrorMessage(`Image upload failed: ${error || 'Unknown error'}`);
       }
       if (url) {
         setImage(url);
@@ -196,7 +191,7 @@ export default function AdminProductModal({
       }
     } catch (err) {
       console.error('[AdminProductModal] Exception uploading main image:', err);
-      setErrorMessage('Failed to upload image.');
+      setErrorMessage(`Failed to upload image: ${err.message || 'Unknown error'}`);
     } finally {
       setIsUploadingImage(false);
     }
@@ -208,17 +203,20 @@ export default function AdminProductModal({
     console.log('[AdminProductModal] handleGalleryUpload triggered with files:', files.map(f => f.name));
     if (files.length === 0) return;
     setIsUploadingGallery(true);
+    setErrorMessage('');
     try {
-      for (const file) of files {
+      for (const file of files) {
         const { url, error } = await uploadProductImage(file, 'gallery');
         console.log('[AdminProductModal] Gallery upload result for', file.name, '=>', { url, error });
         if (url) {
           setGallery(prev => [...prev, url]);
+        } else if (error) {
+          setErrorMessage(`Gallery upload error: ${error}`);
         }
       }
     } catch (err) {
       console.error('[AdminProductModal] Exception uploading gallery images:', err);
-      setErrorMessage('Some gallery images could not be uploaded.');
+      setErrorMessage(`Some gallery images could not be uploaded: ${err.message || 'Unknown error'}`);
     } finally {
       setIsUploadingGallery(false);
     }

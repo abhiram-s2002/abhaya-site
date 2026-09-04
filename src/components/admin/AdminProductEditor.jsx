@@ -154,7 +154,7 @@ export default function AdminProductEditor({
       // Pristine defaults for new product
       setName('');
       setSubtitle('');
-      setPrice('180');
+      setPrice('');
       setOriginalPrice('');
       setCategory('Abaya');
       setSubcategory('');
@@ -165,19 +165,17 @@ export default function AdminProductEditor({
       setTargetRegion('all');
       setRating('5.0');
       setReviewsCount('0');
-      setImage('https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
-      setGallery([
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw'
-      ]);
+      setImage('');
+      setGallery([]);
       setStyles(ABAYA_STYLES.map(s => s.name));
       setDefaultStyle('Open abaya');
       setWorks(ABAYA_WORKS.map(w => w.name));
       setDefaultWork('Plain/Basic');
       setSizes(ABAYA_SIZES.map(s => s.label));
-      setDescription('Handcrafted from fine luxury grade fabric with master tailoring and quiet elegance.');
-      setFabricDetails('100% Grade 6A Pure Mulberry Silk. Non-slip internal weave.');
-      setStylingAdvice('Pairs gracefully with coordinating luxury slips and silk wraps.');
-      setCareInstructions('Dry clean or delicate cold hand wash with neutral detergent.');
+      setDescription('');
+      setFabricDetails('');
+      setStylingAdvice('');
+      setCareInstructions('');
     }
   }, [product]);
 
