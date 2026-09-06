@@ -15,8 +15,8 @@ import { detectUserLocation } from '../utils/geo';
 const ShopContext = createContext();
 
 const CURRENCIES = {
-  INR: { symbol: "₹", rate: 83.5, name: "India (₹ INR)", flag: "🇮🇳", region: "india" },
-  AED: { symbol: "AED ", rate: 3.67, name: "UAE / Arab (AED د.إ)", flag: "🇦🇪", region: "arab" },
+  AED: { symbol: "AED ", rate: 1.0, name: "UAE / Arab (AED د.إ)", flag: "🇦🇪", region: "arab" },
+  INR: { symbol: "₹", rate: 22.75, name: "India (₹ INR)", flag: "🇮🇳", region: "india" },
 };
 
 const DEFAULT_ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
@@ -509,9 +509,9 @@ export function ShopProvider({ children }) {
   }, [products, currency, activeRegion]);
 
   // Price formatting helper with currency conversion & clean locale formatting
-  const formatPrice = (usdPrice) => {
-    const info = CURRENCIES[currency] || CURRENCIES.INR;
-    const num = Math.round(Number(usdPrice || 0) * info.rate);
+  const formatPrice = (basePrice) => {
+    const info = CURRENCIES[currency] || CURRENCIES.AED;
+    const num = Math.round(Number(basePrice || 0) * info.rate);
     const formatted = currency === 'INR' 
       ? num.toLocaleString('en-IN') 
       : num.toLocaleString('en-US');
