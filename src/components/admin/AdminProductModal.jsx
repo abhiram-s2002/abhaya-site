@@ -544,7 +544,6 @@ export default function AdminProductModal({
                     {PRESET_CATEGORIES.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
                     ))}
-                    <option value="Other">Other / Custom</option>
                   </select>
                 </div>
 
@@ -576,21 +575,6 @@ export default function AdminProductModal({
                         className="w-full px-3 py-2 rounded-lg border border-secondary/30 bg-white text-xs font-bold"
                       />
                     </div>
-                  </div>
-                )}
-
-                {category === 'Other' && (
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                      Custom Category Name
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Velvet Jacquard"
-                      value={customCategory}
-                      onChange={(e) => setCustomCategory(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm"
-                    />
                   </div>
                 )}
 

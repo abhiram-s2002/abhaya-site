@@ -538,35 +538,22 @@ export default function AdminProductEditor({
               />
             </div>
 
-            {/* 1. Primary Category Selector */}
+            {/* 1. Primary Category Selector (Fixed Select Dropdown) */}
             <div className="space-y-1.5 pt-1">
               <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
                 Primary Category
               </label>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="text"
-                  placeholder="Enter custom category (e.g. Abaya, Shaila/Shawl, Hijab, Wholesale...)"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
-                />
-                <select
-                  value={PRESET_CATEGORIES.includes(category) ? category : 'Custom'}
-                  onChange={(e) => {
-                    if (e.target.value !== 'Custom') setCategory(e.target.value);
-                  }}
-                  className="px-3 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs font-bold text-stone-800 cursor-pointer shrink-0"
-                >
-                  <option value="" disabled>-- Presets --</option>
-                  {PRESET_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                  <option value="Custom">Custom / Other</option>
-                </select>
-              </div>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer shadow-xs"
+              >
+                {PRESET_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* 2. Sub-Classifications / Styles / Craftsmanship (Only shown when Category is Abaya) */}
@@ -577,37 +564,21 @@ export default function AdminProductEditor({
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
                     Category Style (Silhouette)
                   </label>
-                  <div className="space-y-1.5">
-                    <input
-                      type="text"
-                      placeholder="Enter or select style (e.g. Open abaya, Butterfly, Kimono...)"
-                      value={defaultStyle}
-                      onChange={(e) => {
-                        const newStyle = e.target.value;
-                        setDefaultStyle(newStyle);
-                        setStyles([newStyle]);
-                      }}
-                      className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
-                    />
-                    <select
-                      value={ABAYA_STYLES.some(s => s.name.toLowerCase() === (defaultStyle || '').toLowerCase()) ? defaultStyle : ''}
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          const newStyle = e.target.value;
-                          setDefaultStyle(newStyle);
-                          setStyles([newStyle]);
-                        }
-                      }}
-                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
-                    >
-                      <option value="">-- Quick Select Preset Style --</option>
-                      {ABAYA_STYLES.map(style => (
-                        <option key={style.id} value={style.name}>
-                          {style.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <select
+                    value={defaultStyle || 'Open abaya'}
+                    onChange={(e) => {
+                      const newStyle = e.target.value;
+                      setDefaultStyle(newStyle);
+                      setStyles([newStyle]);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer shadow-xs"
+                  >
+                    {ABAYA_STYLES.map(style => (
+                      <option key={style.id} value={style.name}>
+                        {style.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Craftsmanship / Work */}
@@ -615,37 +586,21 @@ export default function AdminProductEditor({
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
                     Craftsmanship / Work
                   </label>
-                  <div className="space-y-1.5">
-                    <input
-                      type="text"
-                      placeholder="Enter or select work (e.g. Plain/Basic, Embroidery, Handwork...)"
-                      value={defaultWork}
-                      onChange={(e) => {
-                        const newWork = e.target.value;
-                        setDefaultWork(newWork);
-                        setWorks([newWork]);
-                      }}
-                      className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
-                    />
-                    <select
-                      value={ABAYA_WORKS.some(w => w.name.toLowerCase() === (defaultWork || '').toLowerCase()) ? defaultWork : ''}
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          const newWork = e.target.value;
-                          setDefaultWork(newWork);
-                          setWorks([newWork]);
-                        }
-                      }}
-                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
-                    >
-                      <option value="">-- Quick Select Preset Work --</option>
-                      {ABAYA_WORKS.map(work => (
-                        <option key={work.id} value={work.name}>
-                          {work.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <select
+                    value={defaultWork || 'Plain/Basic'}
+                    onChange={(e) => {
+                      const newWork = e.target.value;
+                      setDefaultWork(newWork);
+                      setWorks([newWork]);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer shadow-xs"
+                  >
+                    {ABAYA_WORKS.map(work => (
+                      <option key={work.id} value={work.name}>
+                        {work.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             )}
@@ -656,27 +611,15 @@ export default function AdminProductEditor({
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-900">
                     Wholesale Sub-Type
                   </label>
-                  <div className="space-y-1.5">
-                    <input
-                      type="text"
-                      placeholder="Enter wholesale sub-type (e.g. Simple/Basic, Handwork...)"
-                      value={wholesaleType}
-                      onChange={(e) => setWholesaleType(e.target.value)}
-                      className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900"
-                    />
-                    <select
-                      value={WHOLESALE_TYPES.some(t => t.name === wholesaleType) ? wholesaleType : ''}
-                      onChange={(e) => {
-                        if (e.target.value) setWholesaleType(e.target.value);
-                      }}
-                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
-                    >
-                      <option value="">-- Quick Select Wholesale Type --</option>
-                      {WHOLESALE_TYPES.map(t => (
-                        <option key={t.id} value={t.name}>{t.name}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <select
+                    value={wholesaleType || WHOLESALE_TYPES[0]?.name || 'Simple/Basic'}
+                    onChange={(e) => setWholesaleType(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer shadow-xs"
+                  >
+                    {WHOLESALE_TYPES.map(t => (
+                      <option key={t.id} value={t.name}>{t.name}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="space-y-1.5">
