@@ -510,16 +510,11 @@ export function ShopProvider({ children }) {
   // Active Region mapping ('india' vs 'arab')
   const activeRegion = currency === 'AED' ? 'arab' : 'india';
 
-  // Visible products filtered by active region for store views
+  // Visible products: All products in catalog are accessible across storefront pages
   const visibleProducts = useMemo(() => {
-    const list = products.filter((p) => {
-      if (!p.targetRegion || p.targetRegion === 'all' || p.targetRegion === 'global' || !String(p.targetRegion).trim()) return true;
-      const prodRegion = String(p.targetRegion).toLowerCase().trim();
-      return prodRegion === activeRegion || prodRegion === 'all' || prodRegion === 'global';
-    });
-    console.log(`[ShopContext] visibleProducts computed: ${list.length} products visible out of ${products.length} total (activeRegion: ${activeRegion})`);
-    return list;
-  }, [products, activeRegion]);
+    console.log(`[ShopContext] visibleProducts: ${products.length} products available across store views (Currency: ${currency}, Active Region: ${activeRegion})`);
+    return products;
+  }, [products, currency, activeRegion]);
 
   // Price formatting helper with currency conversion & clean locale formatting
   const formatPrice = (usdPrice) => {
