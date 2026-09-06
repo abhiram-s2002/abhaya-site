@@ -658,30 +658,15 @@ export default function ProductDetailPage() {
                     <p className="text-stone-600">Handcrafted bespoke artisan piece from the NOOR AL DHUHA collection.</p>
                   )}
 
-                  {/* Specifications Box: Only display if at least one attribute is saved in database */}
+                  {/* Specifications Box: Only display customer-facing attributes if saved in database */}
                   {(Boolean(product.color?.trim()) ||
-                    Boolean(product.category?.trim()) ||
-                    Boolean(product.defaultStyle?.trim()) ||
-                    Boolean(product.defaultWork?.trim()) ||
-                    Boolean(product.wholesaleType?.trim()) ||
                     Boolean((product.fabricDetails || product.fabric)?.trim()) ||
                     Boolean(product.careInstructions?.trim()) ||
-                    Boolean(product.stylingAdvice?.trim())) && (
+                    Boolean(product.stylingAdvice?.trim()) ||
+                    Boolean(product.wholesaleType?.trim())) && (
                     <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
                       {Boolean(product.color?.trim()) && (
                         <p><strong>Color:</strong> {product.color.trim()}</p>
-                      )}
-                      {Boolean(product.category?.trim()) && (
-                        <p><strong>Category:</strong> {product.category.trim()}</p>
-                      )}
-                      {Boolean(product.defaultStyle?.trim()) && (
-                        <p><strong>Style / Cut:</strong> {product.defaultStyle.trim()}</p>
-                      )}
-                      {Boolean(product.defaultWork?.trim()) && (
-                        <p><strong>Craftsmanship:</strong> {product.defaultWork.trim()}</p>
-                      )}
-                      {Boolean(product.wholesaleType?.trim()) && (
-                        <p><strong>Wholesale Sub-Type:</strong> {product.wholesaleType.trim()}</p>
                       )}
                       {Boolean((product.fabricDetails || product.fabric)?.trim()) && (
                         <p><strong>Fabric / Material:</strong> {(product.fabricDetails || product.fabric).trim()}</p>
@@ -691,6 +676,9 @@ export default function ProductDetailPage() {
                       )}
                       {Boolean(product.stylingAdvice?.trim()) && (
                         <p><strong>Styling Advice:</strong> {product.stylingAdvice.trim()}</p>
+                      )}
+                      {Boolean(product.wholesaleType?.trim()) && (
+                        <p><strong>Wholesale Lot:</strong> {product.wholesaleType.trim()}</p>
                       )}
                     </div>
                   )}
