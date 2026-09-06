@@ -556,8 +556,8 @@ export default function AdminProductEditor({
               </select>
             </div>
 
-            {/* 2. Sub-Classifications / Styles / Craftsmanship (Only shown when Category is Abaya) */}
-            {(category.trim().toLowerCase() === 'abaya' || category.trim().toLowerCase().includes('abaya')) && (
+            {/* 2. Sub-Classifications / Styles / Craftsmanship (Only shown when Category is strictly Abaya) */}
+            {category.trim().toLowerCase() === 'abaya' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-stone-50/70 border border-stone-200 rounded-2xl animate-fade-in">
                 {/* Category Style (Silhouette) */}
                 <div className="space-y-1.5">
