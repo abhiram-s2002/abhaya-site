@@ -27,7 +27,7 @@ function QuickViewModalContent({ product, onClose }) {
     const isCustom = selectedSize.toLowerCase().includes('custom');
     addToCart(
       product,
-      'Standard',
+      product.color || 'Standard',
       '#1c1c1c',
       selectedSize,
       quantity,
@@ -144,6 +144,20 @@ function QuickViewModalContent({ product, onClose }) {
                     <span>MOQ: {product.wholesaleMinQty || 10} pcs</span>
                   </div>
                   {product.wholesaleType && <div className="text-amber-800">Sub-type: {product.wholesaleType}</div>}
+                </div>
+              )}
+
+              {/* Color Section */}
+              {(product.color || (product.colors && product.colors.length > 0)) && (
+                <div className="space-y-1.5 pt-2 border-t border-stone-200">
+                  <div className="flex justify-between text-xs uppercase tracking-wider">
+                    <span className="font-bold text-stone-600">Color:</span>
+                    <span className="font-bold text-[#1E141B]">{product.color || (product.colors && product.colors[0]?.name)}</span>
+                  </div>
+                  <div className="px-3 py-2 bg-stone-50 border border-stone-200 text-xs font-bold text-[#1E141B] flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full border border-stone-300 bg-[#7A0648] shrink-0" />
+                    <span>{product.color || (product.colors && product.colors[0]?.name)}</span>
+                  </div>
                 </div>
               )}
 

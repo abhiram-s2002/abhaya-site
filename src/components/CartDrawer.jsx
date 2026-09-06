@@ -169,6 +169,11 @@ export default function CartDrawer() {
                           <span className="bg-[#F5EAF1] text-[#7A0648] px-1.5 py-0.5 rounded-none font-bold truncate max-w-[200px] border border-[#7A0648]/20">
                             {item.size}
                           </span>
+                          {item.color && (
+                            <span className="bg-stone-100 text-stone-800 px-1.5 py-0.5 rounded-none font-semibold">
+                              {item.color}
+                            </span>
+                          )}
                           {item.style && (
                             <span className="bg-stone-100 text-stone-700 px-1.5 py-0.5 rounded-none font-medium">
                               {item.style}

@@ -611,6 +611,11 @@ export default function AdminPage() {
                                 {p.subcategory}
                               </div>
                             ) : null}
+                            {p.color && (
+                              <div className="text-[10px] text-stone-600 font-medium pt-0.5">
+                                Color: <span className="font-semibold text-stone-800">{p.color}</span>
+                              </div>
+                            )}
                           </div>
                         </td>
 
@@ -754,9 +759,16 @@ export default function AdminPage() {
                     </div>
 
                     <div className="pt-3 border-t border-surface-container-highest flex items-center justify-between">
-                      <span className="text-[11px] font-semibold text-royal-violet">
-                        {p.defaultStyle || 'Abaya'}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[11px] font-semibold text-royal-violet">
+                          {p.defaultStyle || 'Abaya'}
+                        </span>
+                        {p.color && (
+                          <span className="inline-block px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 text-[10px] font-semibold border border-stone-200">
+                            {p.color}
+                          </span>
+                        )}
+                      </div>
                       
                       <div className="flex items-center gap-1">
                         <button

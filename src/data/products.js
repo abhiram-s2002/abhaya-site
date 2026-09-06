@@ -174,6 +174,7 @@ export const PRODUCTS = [
       { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 0 },
       { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 0 }
     ],
+    color: "Midnight Espresso",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 4,
     description: "An ode to quiet luxury. Handcrafted from luminous 19-momme pure mulberry silk with masterfully tailored cuts, offering an ethereal drape that stays flawlessly in place for both everyday refinement and gala evenings.",
@@ -205,6 +206,7 @@ export const PRODUCTS = [
       { name: "Royal Violet", hex: "#982476", imageIndex: 0 },
       { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 0 }
     ],
+    color: "Royal Violet",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 7,
     description: "Dyed in bespoke artisanal small-batches, this Royal Violet silk abaya captures ambient light like liquid amethyst. Richly saturated, featherlight, and available in all bespoke cuts and embroidery works.",
@@ -236,6 +238,7 @@ export const PRODUCTS = [
       { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 },
       { name: "Antique Blush", hex: "#E2C3C1", imageIndex: 0 }
     ],
+    color: "Dusty Rose",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 12,
     description: "Delicately sheer yet fully lined and opaque, our premium matte chiffon abaya provides breathable, floaty grace that stays put all day with seamless tailored lines.",
@@ -267,6 +270,7 @@ export const PRODUCTS = [
       { name: "Serene Sage", hex: "#7D8B79", imageIndex: 0 },
       { name: "Warm Sand", hex: "#C8B89F", imageIndex: 0 }
     ],
+    color: "Serene Sage",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 15,
     description: "Crafted from Austrian beechwood modal yarn, this jersey abaya offers butter-soft touch, four-way mechanical stretch, and unparalleled everyday comfort.",
@@ -298,6 +302,7 @@ export const PRODUCTS = [
       { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
       { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 }
     ],
+    color: "Ivory Pearl",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 9,
     description: "Designed for special celebrations, Nikah ceremonies, and gala banquets. Features a crisp pebbled texture that sculpts sharply while cascading in romantic, structured ripples.",
@@ -329,6 +334,7 @@ export const PRODUCTS = [
       { name: "Lavender Mist", hex: "#D4C5DD", imageIndex: 0 },
       { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 }
     ],
+    color: "Lavender Mist",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 6,
     description: "Soft ambient lilac undertones meet pure mulberry silk. Glides effortlessly with a subtle radiant luster under both candlelight and sunlight.",
@@ -360,6 +366,7 @@ export const PRODUCTS = [
       { name: "Amethyst Soft", hex: "#C76AA9", imageIndex: 0 },
       { name: "Royal Violet", hex: "#982476", imageIndex: 0 }
     ],
+    color: "Amethyst Soft",
     sizes: ABAYA_SIZES.map(s => s.label),
     stockCount: 5,
     description: "An understated jewel-toned masterpiece. The Soft Amethyst silk creates a dreamy contour that frames the silhouette with warmth, modesty, and distinction.",
@@ -392,6 +399,7 @@ export const PRODUCTS = [
       { name: "Royal Violet", hex: "#982476", imageIndex: 0 },
       { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 }
     ],
+    color: "Midnight Espresso",
     sizes: ["Standard (75 x 200 cm)", "Maxi (100 x 220 cm)"],
     stockCount: 25,
     description: "Exquisitely woven from 100% natural pure mulberry silk with micro-textured inner weave that stays firmly in place without constant readjustments. Fluid, breathable, and opulent.",
@@ -422,6 +430,7 @@ export const PRODUCTS = [
       { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
       { name: "Charcoal Slate", hex: "#3D3F43", imageIndex: 0 }
     ],
+    color: "Dusty Rose",
     sizes: ["Standard (75 x 200 cm)"],
     stockCount: 18,
     description: "An airy chiffon shawl bordered with imported delicate French Chantilly lace for a touch of romantic elegance.",
@@ -453,6 +462,7 @@ export const PRODUCTS = [
       { name: "Pure Onyx Black", hex: "#111111", imageIndex: 0 },
       { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 }
     ],
+    color: "Pure Onyx Black",
     sizes: ["One Size (Tie-Back Adjustable)"],
     stockCount: 30,
     description: "Designed for all-day breathability and modest comfort with premium microfiber chiffon and concealed soft tie cords.",
@@ -483,6 +493,7 @@ export const PRODUCTS = [
       { name: "Ivory Pearl", hex: "#FBF6EE", imageIndex: 0 },
       { name: "Serene Sage", hex: "#7D8B79", imageIndex: 0 }
     ],
+    color: "Onyx Black",
     sizes: ["One Size Stretch"],
     stockCount: 40,
     description: "Preserve your hair moisture with our 100% silk satin lined undercap, accompanied by ultra-soft stretch modest gloves with smartphone conductive fingertip embroidery.",
@@ -515,6 +526,7 @@ export const PRODUCTS = [
       { name: "Midnight Espresso", hex: "#2E1C1A", imageIndex: 0 },
       { name: "Oat Cream", hex: "#ECE2D4", imageIndex: 0 }
     ],
+    color: "Ivory Pearl",
     sizes: ["Size 52", "Size 54", "Size 56", "Size 58", "Size 60"],
     stockCount: 22,
     description: "The ultimate foundational slip dress for open abayas and sheer fabrics. Tailored with a modest scoop neckline and cooling breathable micro-satin fabric.",
@@ -545,6 +557,7 @@ export const PRODUCTS = [
       { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 },
       { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 }
     ],
+    color: "Serene Sage",
     sizes: ["Free Size (Full Length Coverage)"],
     stockCount: 16,
     description: "Complete modesty for prayer, travel, and spiritual tranquility. Includes an attached headpiece with flexible elastic and a matching portable travel drawstring pouch.",
@@ -577,6 +590,7 @@ export const PRODUCTS = [
       { name: "Soft Amethyst", hex: "#C76AA9", imageIndex: 0 },
       { name: "Dusty Rose", hex: "#C49A99", imageIndex: 0 }
     ],
+    color: "Royal Violet",
     sizes: ["Size 36 (Age 4-6)", "Size 40 (Age 7-9)", "Size 44 (Age 10-12)", "Size 48 (Age 13-14)"],
     stockCount: 14,
     description: "Designed with love for young girls with whimsical sweeping butterfly sleeves, crystal accents, and comfortable lightweight fabrics that allow full freedom to play.",
@@ -609,6 +623,7 @@ export const PRODUCTS = [
     colors: [
       { name: "Assorted Core Neutrals (Black, Espresso, Sage, Rose)", hex: "#111111", imageIndex: 0 }
     ],
+    color: "Assorted Core Neutrals",
     sizes: ["Assorted Master Pack (Sizes 52, 54, 56, 58)"],
     stockCount: 100,
     description: "Direct wholesale carton for retail boutiques, modest fashion shops, and commercial distributors. Includes 10 pieces of high-density Nida / Chiffon basic abayas with standard retail packaging.",
@@ -639,6 +654,7 @@ export const PRODUCTS = [
     colors: [
       { name: "Atelier Palette (Espresso, Violet, Amethyst, Ivory)", hex: "#982476", imageIndex: 0 }
     ],
+    color: "Atelier Palette",
     sizes: ["Assorted Sizes 52–58"],
     stockCount: 50,
     description: "Commercial wholesale bundle of premium artisan embroidered and hand-beaded abayas curated for high-end modest boutiques and bridal shops.",
@@ -669,6 +685,7 @@ export const PRODUCTS = [
     colors: [
       { name: "Pastel & Jewel Mix (Violet, Amethyst, Rose, Black)", hex: "#C76AA9", imageIndex: 0 }
     ],
+    color: "Pastel & Jewel Mix",
     sizes: ["Assorted Ages 4, 6, 8, 10, 12, 14"],
     stockCount: 80,
     description: "Bespoke wholesale carton of 12 young girl farashas and modest cut abayas complete with mini headscarves.",

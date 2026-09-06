@@ -73,6 +73,7 @@ export default function AdminProductModal({
   const [isUploadingGallery, setIsUploadingGallery] = useState(false);
 
   // Colors State
+  const [color, setColor] = useState('');
   const [colors, setColors] = useState([
     { name: 'Midnight Espresso', hex: '#2E1C1A', imageIndex: 0 }
   ]);
@@ -124,6 +125,7 @@ export default function AdminProductModal({
       setStockCount(product.stockCount ?? 10);
       setImage(product.image || '');
       setGallery(Array.isArray(product.gallery) && product.gallery.length > 0 ? product.gallery : (product.image ? [product.image] : []));
+      setColor(product.color || (Array.isArray(product.colors) && product.colors[0]?.name) || (typeof product.colors === 'string' ? product.colors : '') || '');
       setColors(Array.isArray(product.colors) && product.colors.length > 0 ? product.colors : [{ name: 'Midnight Espresso', hex: '#2E1C1A', imageIndex: 0 }]);
       setStyles(Array.isArray(product.styles) && product.styles.length > 0 ? product.styles : [product.defaultStyle || ABAYA_STYLES[0].name]);
       setDefaultStyle(product.defaultStyle || ABAYA_STYLES[0].name);
@@ -140,6 +142,7 @@ export default function AdminProductModal({
       setSubtitle('');
       setPrice('');
       setOriginalPrice('');
+      setColor('');
       setCategory('Abaya');
       setSubcategory('');
       setWholesaleType('Simple/Basic');
@@ -286,17 +289,14 @@ export default function AdminProductModal({
       setActiveTab('basic');
       return;
     }
-    if (!image) {
-      setErrorMessage('Please upload or provide a primary product image.');
-      setActiveTab('media');
-      return;
-    }
 
     setIsSaving(true);
     setErrorMessage('');
 
+    const fallbackImage = image.trim() || (gallery.length > 0 ? gallery[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
+
     // Generate unique slug id if new
-    const finalCategory = category === 'Other' ? (customCategory.trim() || 'Silk') : category;
+    const finalCategory = category === 'Other' ? (customCategory.trim() || 'Abaya') : (category || 'Abaya');
     const slugId = isEditing
       ? product.id
       : name
@@ -312,19 +312,20 @@ export default function AdminProductModal({
       originalPrice: originalPrice ? Number(originalPrice) : null,
       category: finalCategory,
       subcategory: subcategory ? subcategory.trim() : null,
-      wholesaleType: finalCategory === 'Wholesale' ? wholesaleType : null,
+      wholesaleType: finalCategory === 'Wholesale' ? (wholesaleType ? wholesaleType.trim() : null) : null,
       wholesaleMinQty: finalCategory === 'Wholesale' ? Number(wholesaleMinQty) || 1 : 1,
       badge: badge.trim(),
       targetRegion: targetRegion || 'all',
       rating: Number(rating) || 5.0,
       reviewsCount: Number(reviewsCount) || 0,
       isVioletEdition,
-      defaultStyle: finalCategory === 'Abaya' ? defaultStyle : null,
-      defaultWork: finalCategory === 'Abaya' ? defaultWork : null,
-      styles: finalCategory === 'Abaya' ? (styles.length > 0 ? styles : [defaultStyle]) : [],
-      works: finalCategory === 'Abaya' ? (works.length > 0 ? works : [defaultWork]) : [],
-      image,
-      gallery: gallery.length > 0 ? gallery : [image],
+      defaultStyle: defaultStyle ? defaultStyle.trim() : null,
+      defaultWork: defaultWork ? defaultWork.trim() : null,
+      styles: defaultStyle ? [defaultStyle.trim()] : (styles.length > 0 ? styles : []),
+      works: defaultWork ? [defaultWork.trim()] : (works.length > 0 ? works : []),
+      image: fallbackImage,
+      gallery: gallery.length > 0 ? gallery : [fallbackImage],
+      color: color.trim(),
       colors,
       sizes,
       stockCount: Number(stockCount) || 10,
@@ -433,6 +434,19 @@ export default function AdminProductModal({
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                    Product Color (Manually Entered)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Midnight Espresso, Royal Violet, Pure Black..."
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
                     Price (AED د.إ) *
                   </label>
                   <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
@@ -520,7 +534,7 @@ export default function AdminProductModal({
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                    Primary Category *
+                    Primary Category
                   </label>
                   <select
                     value={category}

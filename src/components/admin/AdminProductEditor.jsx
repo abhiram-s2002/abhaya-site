@@ -67,6 +67,7 @@ export default function AdminProductEditor({
   const [price, setPrice] = useState('180');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('Abaya');
+  const [color, setColor] = useState('');
   const [subcategory, setSubcategory] = useState('');
   const [wholesaleType, setWholesaleType] = useState('Simple/Basic');
   const [wholesaleMinQty, setWholesaleMinQty] = useState(10);
@@ -130,6 +131,7 @@ export default function AdminProductEditor({
       setPrice(product.price !== undefined ? String(product.price) : '');
       setOriginalPrice(product.originalPrice ? String(product.originalPrice) : '');
       setCategory(product.category || 'Abaya');
+      setColor(product.color || (Array.isArray(product.colors) && product.colors[0]?.name) || (typeof product.colors === 'string' ? product.colors : '') || '');
       setSubcategory(product.subcategory || '');
       setWholesaleType(product.wholesaleType || 'Simple/Basic');
       setWholesaleMinQty(product.wholesaleMinQty !== undefined ? Number(product.wholesaleMinQty) : 10);
@@ -157,6 +159,7 @@ export default function AdminProductEditor({
       setPrice('');
       setOriginalPrice('');
       setCategory('Abaya');
+      setColor('');
       setSubcategory('');
       setWholesaleType('Simple/Basic');
       setWholesaleMinQty(10);
@@ -343,24 +346,11 @@ export default function AdminProductEditor({
       scrollToSection('pricing');
       return;
     }
-    if (!image) {
-      setErrorMessage('Please provide or upload a primary hero image.');
-      scrollToSection('media');
-      return;
-    }
-    if (!defaultStyle) {
-      setErrorMessage('Please select a Category Style for the abaya.');
-      scrollToSection('identity');
-      return;
-    }
-    if (!defaultWork) {
-      setErrorMessage('Please select a Craftsmanship Work for the abaya.');
-      scrollToSection('identity');
-      return;
-    }
 
     setIsSaving(true);
     setErrorMessage('');
+
+    const fallbackImage = image.trim() || (gallery.length > 0 ? gallery[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1pd9NiCkfaDXafhb_-Uh3AA4XfN_AwnHEOOx0x2g2ngtcqCTGLjvTaBkKb-K-NzQCG24IEz1UecYCkOoBZQCz8Noq1fcMtAEZXyLpJZs8oZaOU9p5FhAShjG20FoGotY7Q5RtZ_fkUFk2HiRAkqY7a_y5R8pdolKPAtOtdjB3HFdhHKgY2Vfkv8U7Mfjej74-_slJxvP0a9gXoTwEPOLi7mSF52g0Nz5NZjvjyQzAgbD45y67GOUWkw');
 
     const slugId = isEditing
       ? product.id
@@ -376,6 +366,7 @@ export default function AdminProductEditor({
       price: Number(price),
       originalPrice: originalPrice ? Number(originalPrice) : null,
       category: category.trim() || 'Abaya',
+      color: color.trim(),
       badge: badge.trim(),
       targetRegion: targetRegion || 'all',
       reviews: reviews,
@@ -383,13 +374,15 @@ export default function AdminProductEditor({
       rating: reviews.length > 0
         ? Number((reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / reviews.length).toFixed(1))
         : (Number(rating) || 5.0),
-      defaultStyle: category === 'Abaya' ? defaultStyle : null,
-      defaultWork: category === 'Abaya' ? defaultWork : null,
-      styles: category === 'Abaya' ? (styles.length > 0 ? styles : [defaultStyle]) : [],
-      works: category === 'Abaya' ? (works.length > 0 ? works : [defaultWork]) : [],
-      image,
-      gallery: gallery.length > 0 ? gallery : [image],
-      sizes,
+      defaultStyle: defaultStyle ? defaultStyle.trim() : null,
+      defaultWork: defaultWork ? defaultWork.trim() : null,
+      styles: defaultStyle ? [defaultStyle.trim()] : (styles.length > 0 ? styles : []),
+      works: defaultWork ? [defaultWork.trim()] : (works.length > 0 ? works : []),
+      wholesaleType: category === 'Wholesale' ? (wholesaleType ? wholesaleType.trim() : null) : null,
+      wholesaleMinQty: category === 'Wholesale' ? Number(wholesaleMinQty) || 1 : 1,
+      image: fallbackImage,
+      gallery: gallery.length > 0 ? gallery : [fallbackImage],
+      sizes: sizes.length > 0 ? sizes : [],
       description: description.trim(),
       fabricDetails: fabricDetails.trim(),
       stylingAdvice: stylingAdvice.trim(),
@@ -528,41 +521,85 @@ export default function AdminProductEditor({
               />
             </div>
 
+            {/* Product Color (Manually Entered) */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                  Product Color (Manually Entered)
+                </label>
+                <span className="text-[11px] text-stone-400 font-medium">Shown as a section on product page</span>
+              </div>
+              <input
+                type="text"
+                placeholder="e.g. Midnight Espresso, Royal Violet, Onyx Black, Dusty Rose..."
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800 font-medium"
+              />
+            </div>
+
             {/* 1. Primary Category Selector */}
             <div className="space-y-1.5 pt-1">
               <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                Primary Category *
+                Primary Category
               </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-              >
-                {PRESET_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter custom category (e.g. Abaya, Shaila/Shawl, Hijab, Wholesale...)"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
+                />
+                <select
+                  value={PRESET_CATEGORIES.includes(category) ? category : 'Custom'}
+                  onChange={(e) => {
+                    if (e.target.value !== 'Custom') setCategory(e.target.value);
+                  }}
+                  className="px-3 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs font-bold text-stone-800 cursor-pointer shrink-0"
+                >
+                  <option value="" disabled>-- Presets --</option>
+                  {PRESET_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                  <option value="Custom">Custom / Other</option>
+                </select>
+              </div>
             </div>
 
-            {/* 2. Conditional Sub-Classifications based on Category */}
-            {category === 'Abaya' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-stone-50/70 border border-stone-200 rounded-2xl animate-fade-in">
-                {/* Category Style (Silhouette) */}
+            {/* 2. Sub-Classifications / Styles / Craftsmanship (Always accessible & manually enterable) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-stone-50/70 border border-stone-200 rounded-2xl animate-fade-in">
+              {/* Category Style (Silhouette) */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                  Category Style (Silhouette)
+                </label>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                    Category Style *
-                  </label>
-                  <select
+                  <input
+                    type="text"
+                    placeholder="Enter or select style (e.g. Open abaya, Butterfly, Kimono...)"
                     value={defaultStyle}
                     onChange={(e) => {
                       const newStyle = e.target.value;
                       setDefaultStyle(newStyle);
                       setStyles([newStyle]);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
+                  />
+                  <select
+                    value={ABAYA_STYLES.some(s => s.name.toLowerCase() === (defaultStyle || '').toLowerCase()) ? defaultStyle : ''}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const newStyle = e.target.value;
+                        setDefaultStyle(newStyle);
+                        setStyles([newStyle]);
+                      }
+                    }}
+                    className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
                   >
+                    <option value="">-- Quick Select Preset Style --</option>
                     {ABAYA_STYLES.map(style => (
                       <option key={style.id} value={style.name}>
                         {style.name}
@@ -570,21 +607,37 @@ export default function AdminProductEditor({
                     ))}
                   </select>
                 </div>
+              </div>
 
-                {/* Craftsmanship / Work */}
+              {/* Craftsmanship / Work */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                  Craftsmanship / Work
+                </label>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                    Craftsmanship / Work *
-                  </label>
-                  <select
+                  <input
+                    type="text"
+                    placeholder="Enter or select work (e.g. Plain/Basic, Embroidery, Handwork...)"
                     value={defaultWork}
                     onChange={(e) => {
                       const newWork = e.target.value;
                       setDefaultWork(newWork);
                       setWorks([newWork]);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
+                    className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
+                  />
+                  <select
+                    value={ABAYA_WORKS.some(w => w.name.toLowerCase() === (defaultWork || '').toLowerCase()) ? defaultWork : ''}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const newWork = e.target.value;
+                        setDefaultWork(newWork);
+                        setWorks([newWork]);
+                      }
+                    }}
+                    className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
                   >
+                    <option value="">-- Quick Select Preset Work --</option>
                     {ABAYA_WORKS.map(work => (
                       <option key={work.id} value={work.name}>
                         {work.name}
@@ -593,23 +646,35 @@ export default function AdminProductEditor({
                   </select>
                 </div>
               </div>
-            )}
+            </div>
 
             {category === 'Wholesale' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-[#FFD700]/10 border border-[#FFD700]/40 rounded-2xl animate-fade-in">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-900">
-                    Wholesale Sub-Type *
+                    Wholesale Sub-Type
                   </label>
-                  <select
-                    value={wholesaleType}
-                    onChange={(e) => setWholesaleType(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900 cursor-pointer"
-                  >
-                    {WHOLESALE_TYPES.map(t => (
-                      <option key={t.id} value={t.name}>{t.name}</option>
-                    ))}
-                  </select>
+                  <div className="space-y-1.5">
+                    <input
+                      type="text"
+                      placeholder="Enter wholesale sub-type (e.g. Simple/Basic, Handwork...)"
+                      value={wholesaleType}
+                      onChange={(e) => setWholesaleType(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white text-xs sm:text-sm font-bold text-stone-900"
+                    />
+                    <select
+                      value={WHOLESALE_TYPES.some(t => t.name === wholesaleType) ? wholesaleType : ''}
+                      onChange={(e) => {
+                        if (e.target.value) setWholesaleType(e.target.value);
+                      }}
+                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
+                    >
+                      <option value="">-- Quick Select Wholesale Type --</option>
+                      {WHOLESALE_TYPES.map(t => (
+                        <option key={t.id} value={t.name}>{t.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
@@ -634,15 +699,27 @@ export default function AdminProductEditor({
                 <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
                   Editorial Badge
                 </label>
-                <select
-                  value={badge}
-                  onChange={(e) => setBadge(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800"
-                >
-                  {PRESET_BADGES.map(b => (
-                    <option key={b} value={b}>{b ? b : 'None (No badge)'}</option>
-                  ))}
-                </select>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter custom badge (e.g. Signature Bestseller, Limited Edition...)"
+                    value={badge}
+                    onChange={(e) => setBadge(e.target.value)}
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-semibold text-stone-800"
+                  />
+                  <select
+                    value={PRESET_BADGES.includes(badge) ? badge : ''}
+                    onChange={(e) => {
+                      if (e.target.value !== undefined) setBadge(e.target.value);
+                    }}
+                    className="px-3 py-2.5 rounded-xl border border-secondary/30 bg-white text-xs font-semibold text-stone-700 cursor-pointer shrink-0"
+                  >
+                    <option value="">No Badge / Preset</option>
+                    {PRESET_BADGES.filter(b => b).map(b => (
+                      <option key={b} value={b}>{b}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -724,7 +801,7 @@ export default function AdminProductEditor({
             {/* Target Audience Selector */}
             <div className="space-y-2 pt-2">
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
-                Target Audience / Regional Display Rule *
+                Target Audience / Regional Display Rule
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -911,28 +988,93 @@ export default function AdminProductEditor({
             <h2 className="font-serif text-lg font-bold text-stone-900">Abaya Lengths & Sizing</h2>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
-              Select Available Sizes ({sizes.length} active)
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {ABAYA_SIZES.map((size) => {
-                const isSelected = sizes.includes(size.label);
-                return (
-                  <button
-                    key={size.size}
-                    type="button"
-                    onClick={() => toggleSize(size.label)}
-                    className={`px-3.5 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${isSelected
-                        ? 'bg-primary text-white border-primary shadow-xs'
-                        : 'bg-white text-stone-700 border-surface-container hover:bg-stone-50'
-                      }`}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
+                Available Sizes ({sizes.length} active)
+              </label>
+              <span className="text-[11px] text-stone-400 font-medium">Click presets or enter custom sizes</span>
+            </div>
+
+            {/* Manual Custom Size Entry */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Enter custom size (e.g. Size 54, Size 52 (52&quot;), Custom Fit)..."
+                value={customSizeInput}
+                onChange={(e) => setCustomSizeInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (customSizeInput.trim() && !sizes.includes(customSizeInput.trim())) {
+                      setSizes([...sizes, customSizeInput.trim()]);
+                      setCustomSizeInput('');
+                    }
+                  }
+                }}
+                className="flex-1 px-4 py-2 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs font-semibold text-stone-800"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (customSizeInput.trim() && !sizes.includes(customSizeInput.trim())) {
+                    setSizes([...sizes, customSizeInput.trim()]);
+                    setCustomSizeInput('');
+                  }
+                }}
+                className="px-4 py-2 rounded-xl bg-royal-violet hover:bg-royal-violet/90 text-white text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
+              >
+                + Add Size
+              </button>
+            </div>
+
+            {/* Selected Size Chips */}
+            {sizes.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {sizes.map((s) => (
+                  <span
+                    key={s}
+                    className="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
                   >
-                    <span>{size.label}</span>
-                    {isSelected && <Check className="w-3.5 h-3.5 text-white/90 ml-0.5" />}
-                  </button>
-                );
-              })}
+                    <span>{s}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSizes(sizes.filter(item => item !== s))}
+                      className="hover:text-red-300 p-0.5 cursor-pointer text-sm font-bold leading-none"
+                      title="Remove size"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Quick Standard Presets Toggle */}
+            <div className="pt-2">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block mb-1.5">
+                Quick Toggle Standard Presets:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {ABAYA_SIZES.map((size) => {
+                  const isSelected = sizes.includes(size.label);
+                  return (
+                    <button
+                      key={size.size}
+                      type="button"
+                      onClick={() => toggleSize(size.label)}
+                      className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                        isSelected
+                          ? 'bg-stone-200 text-stone-900 border-stone-300'
+                          : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                      }`}
+                    >
+                      <span>{size.label}</span>
+                      {isSelected ? '✓' : '+'}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

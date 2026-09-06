@@ -410,7 +410,7 @@ export function ShopProvider({ children }) {
   ) => {
     const resolvedStyle = style || product.defaultStyle || (product.styles && product.styles[0]) || 'Open abaya';
     const resolvedWork = work || product.defaultWork || (product.works && product.works[0]) || 'Plain/Basic';
-    const resolvedColor = colorName || (product.colors && product.colors[0]?.name) || 'Midnight Espresso';
+    const resolvedColor = colorName || product.color || (product.colors && product.colors[0]?.name) || 'Midnight Espresso';
     const resolvedHex = hexCode || (product.colors && product.colors[0]?.hex) || '#2E1C1A';
     const resolvedSize = size || (product.sizes && product.sizes[0]) || 'Size 56 (Length 56")';
     const customTag = customMeasurements ? `-${customMeasurements.height || ''}-${customMeasurements.bust || ''}-${customMeasurements.length || ''}` : '';

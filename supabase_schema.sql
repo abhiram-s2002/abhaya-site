@@ -31,6 +31,7 @@ create table if not exists public.products (
   image text not null,
   gallery jsonb default '[]'::jsonb,
   sizes jsonb default '["Size 52 (52\")", "Size 54 (54\")", "Size 56 (56\")", "Size 58 (58\")", "Size 60 (60\")", "Custom Tailored Fit"]'::jsonb,
+  color text,
   description text,
   fabric_details text,
   styling_advice text,
@@ -47,6 +48,7 @@ create table if not exists public.products (
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS subcategory text;
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS wholesale_type text;
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS wholesale_min_qty integer DEFAULT 1;
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS color text;
 
 
 -- 3. CREATE ORDERS & TRACKING TABLE

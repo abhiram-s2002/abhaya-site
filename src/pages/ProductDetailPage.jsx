@@ -141,7 +141,8 @@ export default function ProductDetailPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const currentColor = product.colors?.[0] || { name: 'Standard', hex: '#1C1C1C' };
+  const productColor = product.color || product.colors?.[0]?.name || 'Standard';
+  const currentColor = product.colors?.[0] || { name: productColor, hex: '#1C1C1C' };
   const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
@@ -169,7 +170,7 @@ export default function ProductDetailPage() {
     
     addToCart(
       product,
-      currentColor.name,
+      product.color || currentColor.name,
       currentColor.hex,
       chosenSizeFormatted,
       quantity,
@@ -188,7 +189,7 @@ export default function ProductDetailPage() {
     const chosenSizeFormatted = `${sizeType} (Length: ${selectedLength}", Buttons: ${hasButtons})`;
     const msg = formatSingleProductWhatsAppMessage({
       product,
-      colorName: currentColor.name,
+      colorName: product.color || currentColor.name,
       size: chosenSizeFormatted,
       style: selectedStyle,
       work: selectedWork,
@@ -411,6 +412,26 @@ export default function ProductDetailPage() {
           </div>
 
           {/* ========================================================================= */}
+          {/* OPTION: COLOR SECTION                                                     */}
+          {/* ========================================================================= */}
+          {(product.color || (product.colors && product.colors.length > 0)) && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs uppercase tracking-wider">
+                <span className="text-stone-600 font-medium">
+                  Color: <strong className="text-[#1E141B] font-bold">{product.color || currentColor.name}</strong>
+                </span>
+              </div>
+              <div className="flex items-center justify-between px-3.5 py-2.5 bg-stone-50 border border-stone-200 text-xs font-bold uppercase tracking-wider text-[#1E141B]">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3.5 h-3.5 rounded-full border border-stone-300 bg-[#7A0648] shrink-0" />
+                  <span>{product.color || currentColor.name}</span>
+                </div>
+                <span className="text-[10px] text-stone-500 font-medium tracking-normal lowercase first-letter:uppercase">atelier piece shade</span>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
           {/* OPTION 1: LENGTH (INCHES) SELECTOR (basicabaya.com Grid)                  */}
           {/* ========================================================================= */}
           <div className="space-y-2">
@@ -623,7 +644,10 @@ export default function ProductDetailPage() {
                 <div className="pt-3 pb-2 space-y-3 text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
                   <p>{product.description}</p>
                   <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
-                    <p><strong>Fabric:</strong> {product.fabric || 'Tafetta & Candy Crepe'}</p>
+                    {(product.color || currentColor.name) && (
+                      <p><strong>Color:</strong> {product.color || currentColor.name}</p>
+                    )}
+                    <p><strong>Fabric:</strong> {product.fabric || product.fabricDetails || 'Tafetta & Candy Crepe'}</p>
                     <p><strong>Garment Care:</strong> Dry Clean recommended</p>
                     <p className="text-stone-500 italic">
                       <strong>Note:</strong> Shaila exact color shade might differ slightly from displayed studio lighting.
