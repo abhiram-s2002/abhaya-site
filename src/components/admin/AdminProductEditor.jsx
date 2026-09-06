@@ -569,84 +569,86 @@ export default function AdminProductEditor({
               </div>
             </div>
 
-            {/* 2. Sub-Classifications / Styles / Craftsmanship (Always accessible & manually enterable) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-stone-50/70 border border-stone-200 rounded-2xl animate-fade-in">
-              {/* Category Style (Silhouette) */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Category Style (Silhouette)
-                </label>
+            {/* 2. Sub-Classifications / Styles / Craftsmanship (Only shown when Category is Abaya) */}
+            {(category.trim().toLowerCase() === 'abaya' || category.trim().toLowerCase().includes('abaya')) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-stone-50/70 border border-stone-200 rounded-2xl animate-fade-in">
+                {/* Category Style (Silhouette) */}
                 <div className="space-y-1.5">
-                  <input
-                    type="text"
-                    placeholder="Enter or select style (e.g. Open abaya, Butterfly, Kimono...)"
-                    value={defaultStyle}
-                    onChange={(e) => {
-                      const newStyle = e.target.value;
-                      setDefaultStyle(newStyle);
-                      setStyles([newStyle]);
-                    }}
-                    className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
-                  />
-                  <select
-                    value={ABAYA_STYLES.some(s => s.name.toLowerCase() === (defaultStyle || '').toLowerCase()) ? defaultStyle : ''}
-                    onChange={(e) => {
-                      if (e.target.value) {
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                    Category Style (Silhouette)
+                  </label>
+                  <div className="space-y-1.5">
+                    <input
+                      type="text"
+                      placeholder="Enter or select style (e.g. Open abaya, Butterfly, Kimono...)"
+                      value={defaultStyle}
+                      onChange={(e) => {
                         const newStyle = e.target.value;
                         setDefaultStyle(newStyle);
                         setStyles([newStyle]);
-                      }
-                    }}
-                    className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
-                  >
-                    <option value="">-- Quick Select Preset Style --</option>
-                    {ABAYA_STYLES.map(style => (
-                      <option key={style.id} value={style.name}>
-                        {style.name}
-                      </option>
-                    ))}
-                  </select>
+                      }}
+                      className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
+                    />
+                    <select
+                      value={ABAYA_STYLES.some(s => s.name.toLowerCase() === (defaultStyle || '').toLowerCase()) ? defaultStyle : ''}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          const newStyle = e.target.value;
+                          setDefaultStyle(newStyle);
+                          setStyles([newStyle]);
+                        }
+                      }}
+                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
+                    >
+                      <option value="">-- Quick Select Preset Style --</option>
+                      {ABAYA_STYLES.map(style => (
+                        <option key={style.id} value={style.name}>
+                          {style.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
 
-              {/* Craftsmanship / Work */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
-                  Craftsmanship / Work
-                </label>
+                {/* Craftsmanship / Work */}
                 <div className="space-y-1.5">
-                  <input
-                    type="text"
-                    placeholder="Enter or select work (e.g. Plain/Basic, Embroidery, Handwork...)"
-                    value={defaultWork}
-                    onChange={(e) => {
-                      const newWork = e.target.value;
-                      setDefaultWork(newWork);
-                      setWorks([newWork]);
-                    }}
-                    className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
-                  />
-                  <select
-                    value={ABAYA_WORKS.some(w => w.name.toLowerCase() === (defaultWork || '').toLowerCase()) ? defaultWork : ''}
-                    onChange={(e) => {
-                      if (e.target.value) {
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                    Craftsmanship / Work
+                  </label>
+                  <div className="space-y-1.5">
+                    <input
+                      type="text"
+                      placeholder="Enter or select work (e.g. Plain/Basic, Embroidery, Handwork...)"
+                      value={defaultWork}
+                      onChange={(e) => {
                         const newWork = e.target.value;
                         setDefaultWork(newWork);
                         setWorks([newWork]);
-                      }
-                    }}
-                    className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
-                  >
-                    <option value="">-- Quick Select Preset Work --</option>
-                    {ABAYA_WORKS.map(work => (
-                      <option key={work.id} value={work.name}>
-                        {work.name}
-                      </option>
-                    ))}
-                  </select>
+                      }}
+                      className="w-full px-3.5 py-2 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm font-bold text-stone-900"
+                    />
+                    <select
+                      value={ABAYA_WORKS.some(w => w.name.toLowerCase() === (defaultWork || '').toLowerCase()) ? defaultWork : ''}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          const newWork = e.target.value;
+                          setDefaultWork(newWork);
+                          setWorks([newWork]);
+                        }
+                      }}
+                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-100/80 text-[11px] font-medium text-stone-700 cursor-pointer"
+                    >
+                      <option value="">-- Quick Select Preset Work --</option>
+                      {ABAYA_WORKS.map(work => (
+                        <option key={work.id} value={work.name}>
+                          {work.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {category === 'Wholesale' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 p-4 bg-[#FFD700]/10 border border-[#FFD700]/40 rounded-2xl animate-fade-in">
