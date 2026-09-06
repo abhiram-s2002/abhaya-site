@@ -1,6 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+
+function ProductTitle({ name, onClick, isHovered }) {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  const [overflow, setOverflow] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (containerRef.current && textRef.current) {
+        const diff = textRef.current.scrollWidth - containerRef.current.clientWidth;
+        setOverflow(diff > 4 ? diff : 0);
+      }
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [name]);
+
+  const durationSec = Math.max(3.5, (overflow * 0.05) + 2.5);
+
+  return (
+    <div
+      ref={containerRef}
+      onClick={onClick}
+      className="w-full max-w-full overflow-hidden whitespace-nowrap text-center cursor-pointer px-1 relative select-none"
+      title={name}
+    >
+      <span
+        ref={textRef}
+        style={{
+          '--marquee-overflow': `-${overflow + 8}px`,
+          '--marquee-duration': `${durationSec}s`
+        }}
+        className={`text-[12px] sm:text-[13px] md:text-[14px] font-bold text-[#1E141B] uppercase tracking-[0.04em] hover:text-[#7A0648] transition-colors leading-snug ${
+          overflow > 0
+            ? isHovered
+              ? 'title-marquee-ticker font-bold'
+              : 'inline-block truncate max-w-full'
+            : 'inline-block'
+        }`}
+      >
+        {name}
+      </span>
+    </div>
+  );
+}
 
 export default function ProductCard({ product }) {
   const {
@@ -63,15 +109,14 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Product Card Details (Centered) */}
-      <div className="pt-3 pb-2 px-1 flex flex-col items-center justify-center space-y-1 bg-transparent">
+      <div className="pt-3 pb-2 px-1 flex flex-col items-center justify-center space-y-1 bg-transparent w-full overflow-hidden">
         
-        {/* Title */}
-        <h3
-          className="text-[12px] sm:text-[13px] md:text-[14px] font-bold text-[#1E141B] uppercase tracking-[0.04em] hover:text-[#7A0648] transition-colors cursor-pointer line-clamp-1 leading-snug px-1 text-center"
+        {/* Rotating / Marquee Title */}
+        <ProductTitle
+          name={product.name}
           onClick={handleCardClick}
-        >
-          {product.name}
-        </h3>
+          isHovered={isHovered}
+        />
 
         {/* Price display: From AED 300.00 */}
         <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px]">
@@ -102,5 +147,6 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
+
 
 

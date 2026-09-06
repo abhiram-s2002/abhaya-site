@@ -206,3 +206,20 @@ input[type="range"].luxury-slider::-moz-range-thumb {
 .animate-pulse-glow {
   animation: pulseGlow 4s infinite ease-in-out;
 }
+
+/* Luxury Product Title Marquee Ticker */
+@keyframes titleTicker {
+  0%, 18% {
+    transform: translateX(0);
+  }
+  82%, 100% {
+    transform: translateX(var(--marquee-overflow, -35%));
+  }
+}
+
+.title-marquee-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  animation: titleTicker var(--marquee-duration, 5s) cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
