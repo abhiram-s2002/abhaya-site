@@ -89,12 +89,94 @@ export default function CollectionsPage() {
 
   // Price calculations
   const maxPriceLimit = useMemo(() => {
-    return Math.max(...PRODUCTS.map(p => p.price), 300);
+    return Math.max(...PRODUCTS.map(p => Number(p.price) || 0), 300);
   }, [PRODUCTS]);
 
   const minPriceLimit = 0;
 
   const [priceRange, setPriceRange] = useState(maxPriceLimit);
+
+  // Sync priceRange when catalog updates with higher prices
+  useEffect(() => {
+    setPriceRange(prev => Math.max(prev, maxPriceLimit));
+  }, [maxPriceLimit]);
+
+  // Dynamic filter collections extracted from active catalog
+  const dynamicCategories = useMemo(() => {
+    const list = [...MAIN_CATEGORIES.map(c => c.name)];
+    PRODUCTS.forEach(p => {
+      if (p.category && !list.some(c => c.toLowerCase() === p.category.toLowerCase())) {
+        list.push(p.category);
+      }
+    });
+    return list;
+  }, [PRODUCTS]);
+
+  const dynamicStyles = useMemo(() => {
+    const list = [...ABAYA_STYLES.map(s => s.name)];
+    PRODUCTS.forEach(p => {
+      if (p.defaultStyle && !list.some(s => s.toLowerCase() === p.defaultStyle.toLowerCase())) {
+        list.push(p.defaultStyle);
+      }
+      if (Array.isArray(p.styles)) {
+        p.styles.forEach(s => {
+          if (s && !list.some(item => item.toLowerCase() === s.toLowerCase())) {
+            list.push(s);
+          }
+        });
+      }
+    });
+    return list;
+  }, [PRODUCTS]);
+
+  const dynamicWorks = useMemo(() => {
+    const list = [...ABAYA_WORKS.map(w => w.name)];
+    PRODUCTS.forEach(p => {
+      if (p.defaultWork && !list.some(w => w.toLowerCase() === p.defaultWork.toLowerCase())) {
+        list.push(p.defaultWork);
+      }
+      if (Array.isArray(p.works)) {
+        p.works.forEach(w => {
+          if (w && !list.some(item => item.toLowerCase() === w.toLowerCase())) {
+            list.push(w);
+          }
+        });
+      }
+    });
+    return list;
+  }, [PRODUCTS]);
+
+  const dynamicWholesaleTypes = useMemo(() => {
+    const list = [...WHOLESALE_TYPES.map(wt => wt.name || wt)];
+    PRODUCTS.forEach(p => {
+      if (p.wholesaleType && !list.some(wt => wt.toLowerCase() === p.wholesaleType.toLowerCase())) {
+        list.push(p.wholesaleType);
+      }
+    });
+    return list;
+  }, [PRODUCTS]);
+
+  const dynamicColorSwatches = useMemo(() => {
+    const swatches = [...COLOR_SWATCHES];
+    PRODUCTS.forEach(p => {
+      if (p.color && p.color.trim()) {
+        const cTrim = p.color.trim();
+        if (!swatches.some(s => s.name.toLowerCase() === cTrim.toLowerCase())) {
+          swatches.push({ name: cTrim, hex: '#4A3B32', border: false });
+        }
+      }
+      if (Array.isArray(p.colors)) {
+        p.colors.forEach(c => {
+          const cName = typeof c === 'string' ? c : c?.name;
+          const cHex = typeof c === 'object' && c?.hex ? c.hex : '#4A3B32';
+          if (cName && !swatches.some(s => s.name.toLowerCase() === cName.toLowerCase())) {
+            swatches.push({ name: cName, hex: cHex, border: false });
+          }
+        });
+      }
+    });
+    return swatches;
+  }, [PRODUCTS]);
 
   // Grid layout switcher:
   // Mobile: 1 or 2 cols (default 2)
@@ -269,18 +351,31 @@ export default function CollectionsPage() {
       // 1. Search Query
       if (searchQuery && searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
-        const matchesName = product.name.toLowerCase().includes(q);
+        const matchesName = product.name ? product.name.toLowerCase().includes(q) : false;
         const matchesCat = product.category ? product.category.toLowerCase().includes(q) : false;
         const matchesSubcat = product.subcategory ? product.subcategory.toLowerCase().includes(q) : false;
         const matchesWholesale = product.wholesaleType ? product.wholesaleType.toLowerCase().includes(q) : false;
-        if (!matchesName && !matchesCat && !matchesSubcat && !matchesWholesale) return false;
+        const matchesColor = (product.color && product.color.toLowerCase().includes(q)) ||
+          (Array.isArray(product.colors) && product.colors.some(c => (typeof c === 'string' ? c : c?.name || '').toLowerCase().includes(q)));
+        const matchesStyle = (product.defaultStyle && product.defaultStyle.toLowerCase().includes(q)) ||
+          (Array.isArray(product.styles) && product.styles.some(s => s.toLowerCase().includes(q)));
+        const matchesWork = (product.defaultWork && product.defaultWork.toLowerCase().includes(q)) ||
+          (Array.isArray(product.works) && product.works.some(w => w.toLowerCase().includes(q)));
+        const matchesBadge = product.badge ? product.badge.toLowerCase().includes(q) : false;
+        const matchesDesc = product.description ? product.description.toLowerCase().includes(q) : false;
+
+        if (!matchesName && !matchesCat && !matchesSubcat && !matchesWholesale && !matchesColor && !matchesStyle && !matchesWork && !matchesBadge && !matchesDesc) {
+          return false;
+        }
       }
 
       // 2. Category Filter
       if (selectedCategories.length > 0) {
         const matchesCat = selectedCategories.some(cat => {
           if (!product.category) return false;
-          return product.category.toLowerCase() === cat.toLowerCase();
+          const catLower = cat.toLowerCase();
+          const pCatLower = product.category.toLowerCase();
+          return pCatLower === catLower || pCatLower.includes(catLower) || catLower.includes(pCatLower);
         });
         if (!matchesCat) return false;
       }
@@ -290,10 +385,13 @@ export default function CollectionsPage() {
         const hasMatch = selectedStyles.some(sel => {
           const sLower = sel.toLowerCase();
           const primaryStyle = (product.defaultStyle || '').toLowerCase();
-          if (primaryStyle) {
-            return primaryStyle === sLower;
+          if (primaryStyle && (primaryStyle === sLower || primaryStyle.includes(sLower) || sLower.includes(primaryStyle))) {
+            return true;
           }
-          return Array.isArray(product.styles) && product.styles.some(s => s.toLowerCase() === sLower);
+          return Array.isArray(product.styles) && product.styles.some(s => {
+            const sl = s.toLowerCase();
+            return sl === sLower || sl.includes(sLower) || sLower.includes(sl);
+          });
         });
         if (!hasMatch) return false;
       }
@@ -305,7 +403,7 @@ export default function CollectionsPage() {
           const primaryWork = (product.defaultWork || '').toLowerCase();
           const isPlainFilter = wLower === 'plain/basic' || wLower === 'plain' || wLower === 'basic';
           if (primaryWork) {
-            return primaryWork === wLower || (isPlainFilter && (primaryWork === 'plain' || primaryWork === 'plain/basic' || primaryWork === 'basic'));
+            if (primaryWork === wLower || (isPlainFilter && (primaryWork === 'plain' || primaryWork === 'plain/basic' || primaryWork === 'basic'))) return true;
           }
           return Array.isArray(product.works) && product.works.some(w => {
             const wItemLower = w.toLowerCase();
@@ -318,7 +416,8 @@ export default function CollectionsPage() {
       // 5. Wholesale Type Filter
       if (selectedWholesaleTypes.length > 0) {
         const hasMatch = selectedWholesaleTypes.some(wt => {
-          return product.wholesaleType && product.wholesaleType.toLowerCase() === wt.toLowerCase();
+          const wtLower = wt.toLowerCase();
+          return product.wholesaleType && product.wholesaleType.toLowerCase().includes(wtLower);
         });
         if (!hasMatch) return false;
       }
@@ -326,17 +425,22 @@ export default function CollectionsPage() {
       // 6. Subcategory Filter
       if (selectedSubcategories.length > 0) {
         const hasMatch = selectedSubcategories.some(sub => {
-          return product.subcategory && product.subcategory.toLowerCase() === sub.toLowerCase();
+          const subLower = sub.toLowerCase();
+          return product.subcategory && product.subcategory.toLowerCase().includes(subLower);
         });
         if (!hasMatch) return false;
       }
 
       // 7. Color Filter
       if (selectedColors.length > 0) {
-        const productColors = (product.colors || []).map(c => c.name.toLowerCase());
-        const hasMatch = selectedColors.some(sel =>
-          productColors.some(pc => pc.includes(sel.toLowerCase()) || sel.toLowerCase().includes(pc))
-        );
+        const productColors = [
+          ...(product.color ? [product.color.toLowerCase()] : []),
+          ...(Array.isArray(product.colors) ? product.colors.map(c => (typeof c === 'string' ? c : c?.name || '').toLowerCase()) : [])
+        ];
+        const hasMatch = selectedColors.some(sel => {
+          const sLower = sel.toLowerCase();
+          return productColors.some(pc => pc.includes(sLower) || sLower.includes(pc));
+        });
         if (!hasMatch) return false;
       }
 
@@ -372,6 +476,16 @@ export default function CollectionsPage() {
         default:
           return 0;
       }
+    });
+
+    console.log(`[CollectionsPage] Filtered products: ${result.length} shown of ${PRODUCTS.length} total in catalog. Active filters:`, {
+      searchQuery,
+      selectedCategories,
+      selectedStyles,
+      selectedWorks,
+      selectedColors,
+      selectedSizes,
+      priceRange
     });
 
     return result;
@@ -627,18 +741,18 @@ export default function CollectionsPage() {
 
               {openAccordions.category && (
                 <div className="pt-3 space-y-2.5">
-                  {MAIN_CATEGORIES.map((cat) => {
-                    const isChecked = selectedCategories.includes(cat.name);
+                  {dynamicCategories.map((catName) => {
+                    const isChecked = selectedCategories.includes(catName);
                     return (
                       <label
-                        key={cat.id}
+                        key={catName}
                         className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
                       >
-                        <span className="group-hover:translate-x-0.5 transition-transform">{cat.name}</span>
+                        <span className="group-hover:translate-x-0.5 transition-transform">{catName}</span>
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => toggleItem(selectedCategories, setSelectedCategories, cat.name)}
+                          onChange={() => toggleItem(selectedCategories, setSelectedCategories, catName)}
                           className="w-4 h-4 accent-[#7A0648] cursor-pointer"
                         />
                       </label>
@@ -661,12 +775,11 @@ export default function CollectionsPage() {
 
                 {openAccordions.wholesaleType && (
                   <div className="pt-3 space-y-2.5">
-                    {WHOLESALE_TYPES.map((wt) => {
-                      const name = wt.name || wt;
+                    {dynamicWholesaleTypes.map((name) => {
                       const isChecked = selectedWholesaleTypes.includes(name);
                       return (
                         <label
-                          key={wt.id || name}
+                          key={name}
                           className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-amber-800 group font-semibold"
                         >
                           <span className="group-hover:translate-x-0.5 transition-transform">{name}</span>
@@ -698,7 +811,7 @@ export default function CollectionsPage() {
 
               {openAccordions.color && (
                 <div className="pt-4 flex flex-wrap gap-2.5">
-                  {COLOR_SWATCHES.map((swatch) => {
+                  {dynamicColorSwatches.map((swatch) => {
                     const isSelected = selectedColors.includes(swatch.name);
                     return (
                       <button
@@ -738,18 +851,18 @@ export default function CollectionsPage() {
 
               {openAccordions.style && (
                 <div className="pt-3 space-y-2.5">
-                  {ABAYA_STYLES.map((style) => {
-                    const isChecked = selectedStyles.includes(style.name);
+                  {dynamicStyles.map((styleName) => {
+                    const isChecked = selectedStyles.includes(styleName);
                     return (
                       <label
-                        key={style.id}
+                        key={styleName}
                         className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
                       >
-                        <span className="group-hover:translate-x-0.5 transition-transform">{style.name}</span>
+                        <span className="group-hover:translate-x-0.5 transition-transform">{styleName}</span>
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => toggleItem(selectedStyles, setSelectedStyles, style.name)}
+                          onChange={() => toggleItem(selectedStyles, setSelectedStyles, styleName)}
                           className="w-4 h-4 accent-[#7A0648] cursor-pointer"
                         />
                       </label>
@@ -771,18 +884,18 @@ export default function CollectionsPage() {
 
               {openAccordions.work && (
                 <div className="pt-3 space-y-2.5">
-                  {ABAYA_WORKS.map((work) => {
-                    const isChecked = selectedWorks.includes(work.name);
+                  {dynamicWorks.map((workName) => {
+                    const isChecked = selectedWorks.includes(workName);
                     return (
                       <label
-                        key={work.id}
+                        key={workName}
                         className="flex items-center justify-between text-xs text-stone-700 cursor-pointer py-1 hover:text-[#7A0648] group font-semibold"
                       >
-                        <span className="capitalize group-hover:translate-x-0.5 transition-transform">{work.name}</span>
+                        <span className="capitalize group-hover:translate-x-0.5 transition-transform">{workName}</span>
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => toggleItem(selectedWorks, setSelectedWorks, work.name)}
+                          onChange={() => toggleItem(selectedWorks, setSelectedWorks, workName)}
                           className="w-4 h-4 accent-[#7A0648] cursor-pointer"
                         />
                       </label>

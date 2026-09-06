@@ -251,13 +251,23 @@ export function ShopProvider({ children }) {
     console.group(`[ShopContext] ➕ createProduct: ${newProduct?.name} (ID: ${newProduct?.id})`);
     console.log('[ShopContext] Product model:', newProduct);
     // Optimistic local update
-    setProducts(prev => [newProduct, ...prev]);
+    setProducts(prev => {
+      const next = [newProduct, ...prev];
+      try {
+        localStorage.setItem('noor_admin_products', JSON.stringify(next));
+      } catch (_) {}
+      return next;
+    });
     const result = await upsertProductToSupabase(newProduct);
     console.log('[ShopContext] Supabase upsert result:', result);
     if (result.data) {
       setProducts(prev => {
         const filtered = prev.filter(p => p.id !== newProduct.id);
-        return [result.data, ...filtered];
+        const next = [result.data, ...filtered];
+        try {
+          localStorage.setItem('noor_admin_products', JSON.stringify(next));
+        } catch (_) {}
+        return next;
       });
     }
     console.groupEnd();
@@ -268,15 +278,19 @@ export function ShopProvider({ children }) {
     console.group(`[ShopContext] ✏️ updateProduct ID: ${id}`);
     console.log('[ShopContext] Updated fields:', updatedFields);
     let merged = null;
-    setProducts(prev =>
-      prev.map(p => {
+    setProducts(prev => {
+      const next = prev.map(p => {
         if (p.id === id) {
           merged = { ...p, ...updatedFields };
           return merged;
         }
         return p;
-      })
-    );
+      });
+      try {
+        localStorage.setItem('noor_admin_products', JSON.stringify(next));
+      } catch (_) {}
+      return next;
+    });
     if (merged) {
       console.log('[ShopContext] Saving merged product to Supabase:', merged);
       const res = await upsertProductToSupabase(merged);
@@ -289,7 +303,13 @@ export function ShopProvider({ children }) {
 
   const deleteProduct = async (id) => {
     console.group(`[ShopContext] 🗑️ deleteProduct ID: ${id}`);
-    setProducts(prev => prev.filter(p => p.id !== id));
+    setProducts(prev => {
+      const next = prev.filter(p => p.id !== id);
+      try {
+        localStorage.setItem('noor_admin_products', JSON.stringify(next));
+      } catch (_) {}
+      return next;
+    });
     const res = await deleteProductFromSupabase(id);
     console.log('[ShopContext] Delete result:', res);
     console.groupEnd();
@@ -492,10 +512,13 @@ export function ShopProvider({ children }) {
 
   // Visible products filtered by active region for store views
   const visibleProducts = useMemo(() => {
-    return products.filter((p) => {
-      if (!p.targetRegion || p.targetRegion === 'all') return true;
-      return p.targetRegion === activeRegion;
+    const list = products.filter((p) => {
+      if (!p.targetRegion || p.targetRegion === 'all' || p.targetRegion === 'global' || !String(p.targetRegion).trim()) return true;
+      const prodRegion = String(p.targetRegion).toLowerCase().trim();
+      return prodRegion === activeRegion || prodRegion === 'all' || prodRegion === 'global';
     });
+    console.log(`[ShopContext] visibleProducts computed: ${list.length} products visible out of ${products.length} total (activeRegion: ${activeRegion})`);
+    return list;
   }, [products, activeRegion]);
 
   // Price formatting helper with currency conversion & clean locale formatting

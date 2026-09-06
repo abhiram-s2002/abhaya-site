@@ -45,7 +45,7 @@ export default function ShopPage() {
 
   // Price calculations
   const maxPriceLimit = useMemo(() => {
-    return Math.max(...PRODUCTS.map(p => p.price), 850);
+    return Math.max(...PRODUCTS.map(p => Number(p.price) || 0), 850);
   }, [PRODUCTS]);
 
   const minPriceLimit = 0;
@@ -68,6 +68,11 @@ export default function ShopPage() {
   const [activeDrawerTab, setActiveDrawerTab] = useState('category'); // 'category' | 'style' | 'work' | 'wholesale' | 'shade'
 
   const sortDropdownRef = useRef(null);
+
+  // Sync maxPrice when catalog changes
+  useEffect(() => {
+    setMaxPrice(prev => Math.max(prev, maxPriceLimit));
+  }, [maxPriceLimit]);
 
   // Sync external filters from context
   useEffect(() => {
@@ -130,26 +135,55 @@ export default function ShopPage() {
     };
   }, [mobileFilterOpen]);
 
-  // Main Category Tabs (aligned with Navbar Menu)
-  const categoryTabs = [
-    { id: 'All', label: 'All Collections' },
-    { id: 'Abaya', label: 'Abaya' },
-    { id: 'Shaila/Shawl', label: 'Shaila / Shawl' },
-    { id: 'Hijab', label: 'Hijaab' },
-    { id: 'Inner & Prayer dress', label: 'Inner & Prayer Dress' },
-    { id: 'Kids abaya', label: 'Kids Abaya' },
-    { id: 'Wholesale', label: 'Wholesale' }
-  ];
+  // Main Category Tabs (dynamically includes any custom category from products)
+  const categoryTabs = useMemo(() => {
+    const baseTabs = [
+      { id: 'All', label: 'All Collections' },
+      { id: 'Abaya', label: 'Abaya' },
+      { id: 'Shaila/Shawl', label: 'Shaila / Shawl' },
+      { id: 'Hijab', label: 'Hijaab' },
+      { id: 'Inner & Prayer dress', label: 'Inner & Prayer Dress' },
+      { id: 'Kids abaya', label: 'Kids Abaya' },
+      { id: 'Wholesale', label: 'Wholesale' }
+    ];
+    PRODUCTS.forEach(p => {
+      if (p.category && !baseTabs.some(t => t.id.toLowerCase() === p.category.toLowerCase())) {
+        baseTabs.push({ id: p.category, label: p.category });
+      }
+    });
+    return baseTabs;
+  }, [PRODUCTS]);
 
-  const shades = [
-    { name: 'All', hex: null },
-    { name: 'Espresso', hex: '#2E1C1A' },
-    { name: 'Violet', hex: '#982476' },
-    { name: 'Amethyst', hex: '#C76AA9' },
-    { name: 'Rose', hex: '#C49A99' },
-    { name: 'Sage', hex: '#7D8B79' },
-    { name: 'Ivory', hex: '#FBF6EE' }
-  ];
+  // Dynamic Shades Palette
+  const shades = useMemo(() => {
+    const baseShades = [
+      { name: 'All', hex: null },
+      { name: 'Espresso', hex: '#2E1C1A' },
+      { name: 'Violet', hex: '#982476' },
+      { name: 'Amethyst', hex: '#C76AA9' },
+      { name: 'Rose', hex: '#C49A99' },
+      { name: 'Sage', hex: '#7D8B79' },
+      { name: 'Ivory', hex: '#FBF6EE' }
+    ];
+    PRODUCTS.forEach(p => {
+      if (p.color && p.color.trim()) {
+        const cTrim = p.color.trim();
+        if (!baseShades.some(s => s.name.toLowerCase() === cTrim.toLowerCase())) {
+          baseShades.push({ name: cTrim, hex: '#4A3B32' });
+        }
+      }
+      if (Array.isArray(p.colors)) {
+        p.colors.forEach(c => {
+          const cName = typeof c === 'string' ? c : c?.name;
+          const cHex = typeof c === 'object' && c?.hex ? c.hex : '#4A3B32';
+          if (cName && !baseShades.some(s => s.name.toLowerCase() === cName.toLowerCase())) {
+            baseShades.push({ name: cName, hex: cHex });
+          }
+        });
+      }
+    });
+    return baseShades;
+  }, [PRODUCTS]);
 
   const sortOptions = [
     { id: 'featured', label: 'Featured' },
@@ -162,24 +196,27 @@ export default function ShopPage() {
 
   // Filter products algorithm
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    const result = PRODUCTS.filter((product) => {
       // 1. Search Query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
-        const matchesName = product.name.toLowerCase().includes(q);
+        const matchesName = product.name ? product.name.toLowerCase().includes(q) : false;
         const matchesCategory = product.category ? product.category.toLowerCase().includes(q) : false;
         const matchesSubtitle = product.subtitle ? product.subtitle.toLowerCase().includes(q) : false;
         const matchesStyle =
           (product.defaultStyle && product.defaultStyle.toLowerCase().includes(q)) ||
-          (product.styles && product.styles.some(s => s.toLowerCase().includes(q)));
+          (Array.isArray(product.styles) && product.styles.some(s => s.toLowerCase().includes(q)));
         const matchesWork =
           (product.defaultWork && product.defaultWork.toLowerCase().includes(q)) ||
-          (product.works && product.works.some(w => w.toLowerCase().includes(q)));
+          (Array.isArray(product.works) && product.works.some(w => w.toLowerCase().includes(q)));
         const matchesWholesale = product.wholesaleType ? product.wholesaleType.toLowerCase().includes(q) : false;
         const matchesSubcategory = product.subcategory ? product.subcategory.toLowerCase().includes(q) : false;
-        const matchesColor = product.colors && product.colors.some(c => c.name.toLowerCase().includes(q));
+        const matchesColor = (product.color && product.color.toLowerCase().includes(q)) ||
+          (Array.isArray(product.colors) && product.colors.some(c => (typeof c === 'string' ? c : c?.name || '').toLowerCase().includes(q)));
+        const matchesBadge = product.badge ? product.badge.toLowerCase().includes(q) : false;
+        const matchesDesc = product.description ? product.description.toLowerCase().includes(q) : false;
 
-        if (!matchesName && !matchesCategory && !matchesSubtitle && !matchesStyle && !matchesWork && !matchesWholesale && !matchesSubcategory && !matchesColor) {
+        if (!matchesName && !matchesCategory && !matchesSubtitle && !matchesStyle && !matchesWork && !matchesWholesale && !matchesSubcategory && !matchesColor && !matchesBadge && !matchesDesc) {
           return false;
         }
       }
@@ -191,6 +228,8 @@ export default function ShopPage() {
         
         // Exact match or sub-token match for compound labels
         const matchesCat = prodCatLower === catLower ||
+          prodCatLower.includes(catLower) ||
+          catLower.includes(prodCatLower) ||
           (catLower === 'hijab' && prodCatLower.includes('hijab')) ||
           (catLower === 'inner & prayer dress' && (prodCatLower.includes('inner') || prodCatLower.includes('prayer'))) ||
           (catLower === 'kids abaya' && prodCatLower.includes('kids')) ||
@@ -211,9 +250,13 @@ export default function ShopPage() {
         let matchesStyle = false;
 
         if (primaryStyle) {
-          matchesStyle = primaryStyle === styleLower;
-        } else if (Array.isArray(product.styles) && product.styles.length > 0) {
-          matchesStyle = product.styles.some(s => s.toLowerCase() === styleLower);
+          matchesStyle = primaryStyle === styleLower || primaryStyle.includes(styleLower) || styleLower.includes(primaryStyle);
+        }
+        if (!matchesStyle && Array.isArray(product.styles) && product.styles.length > 0) {
+          matchesStyle = product.styles.some(s => {
+            const sl = s.toLowerCase();
+            return sl === styleLower || sl.includes(styleLower) || styleLower.includes(sl);
+          });
         }
 
         if (!matchesStyle) return false;
@@ -229,7 +272,8 @@ export default function ShopPage() {
         if (primaryWork) {
           matchesWork = primaryWork === workLower ||
             (isPlainFilter && (primaryWork === 'plain' || primaryWork === 'plain/basic' || primaryWork === 'basic'));
-        } else if (Array.isArray(product.works) && product.works.length > 0) {
+        }
+        if (!matchesWork && Array.isArray(product.works) && product.works.length > 0) {
           matchesWork = product.works.some(w => {
             const wLower = w.toLowerCase();
             return wLower === workLower ||
@@ -258,21 +302,35 @@ export default function ShopPage() {
         if (!matchesSub) return false;
       }
 
-      // 8. Shade Filter
+      // 8. Shade / Color Filter
       if (selectedShade !== 'All') {
-        const matchesShade = product.colors && product.colors.some(c =>
-          c.name.toLowerCase().includes(selectedShade.toLowerCase())
-        );
-        if (!matchesShade) return false;
+        const sLower = selectedShade.toLowerCase();
+        const matchesDirectColor = product.color && (product.color.toLowerCase() === sLower || product.color.toLowerCase().includes(sLower) || sLower.includes(product.color.toLowerCase()));
+        const matchesColorsArray = Array.isArray(product.colors) && product.colors.some(c => {
+          const cName = (typeof c === 'string' ? c : c?.name || '').toLowerCase();
+          return cName === sLower || cName.includes(sLower) || sLower.includes(cName);
+        });
+        if (!matchesDirectColor && !matchesColorsArray) return false;
       }
 
       return true;
     }).sort((a, b) => {
       if (sortBy === 'price-low') return a.price - b.price;
       if (sortBy === 'price-high') return b.price - a.price;
-      if (sortBy === 'rating') return b.rating - a.rating;
+      if (sortBy === 'rating') return (b.rating || 5) - (a.rating || 5);
       return 0; // featured default
     });
+
+    console.log(`[ShopPage] Filtered products: ${result.length} shown of ${PRODUCTS.length} total in catalog. Active filters:`, {
+      selectedCategory,
+      selectedStyleFilter,
+      selectedWorkFilter,
+      selectedShade,
+      searchQuery,
+      maxPrice
+    });
+
+    return result;
   }, [
     PRODUCTS,
     searchQuery,
