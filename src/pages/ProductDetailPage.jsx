@@ -141,8 +141,8 @@ export default function ProductDetailPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const productColor = product.color || product.colors?.[0]?.name || 'Standard';
-  const currentColor = product.colors?.[0] || { name: productColor, hex: '#1C1C1C' };
+  const productColor = product.color?.trim() || product.colors?.[0]?.name || '';
+  const currentColor = product.colors?.[0] || (productColor ? { name: productColor, hex: '#1C1C1C' } : null);
   const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
@@ -421,17 +421,17 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           {/* OPTION: COLOR SECTION                                                     */}
           {/* ========================================================================= */}
-          {(product.color || (product.colors && product.colors.length > 0)) && (
+          {Boolean(product.color?.trim() || (product.colors && product.colors.length > 0)) && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs uppercase tracking-wider">
                 <span className="text-stone-600 font-medium">
-                  Color: <strong className="text-[#1E141B] font-bold">{product.color || currentColor.name}</strong>
+                  Color: <strong className="text-[#1E141B] font-bold">{product.color?.trim() || (currentColor && currentColor.name)}</strong>
                 </span>
               </div>
               <div className="flex items-center justify-between px-3.5 py-2.5 bg-stone-50 border border-stone-200 text-xs font-bold uppercase tracking-wider text-[#1E141B]">
                 <div className="flex items-center gap-2.5">
                   <span className="w-3.5 h-3.5 rounded-full border border-stone-300 bg-[#7A0648] shrink-0" />
-                  <span>{product.color || currentColor.name}</span>
+                  <span>{product.color?.trim() || (currentColor && currentColor.name)}</span>
                 </div>
                 <span className="text-[10px] text-stone-500 font-medium tracking-normal lowercase first-letter:uppercase">atelier piece shade</span>
               </div>
@@ -658,28 +658,42 @@ export default function ProductDetailPage() {
                     <p className="text-stone-600">Handcrafted bespoke artisan piece from the NOOR AL DHUHA collection.</p>
                   )}
 
-                  {/* Specifications Box */}
-                  <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
-                    {(product.color || currentColor?.name) && (
-                      <p><strong>Color:</strong> {product.color || currentColor.name}</p>
-                    )}
-                    {product.category && (
-                      <p><strong>Category:</strong> {product.category}</p>
-                    )}
-                    {(selectedStyle || product.defaultStyle) && (
-                      <p><strong>Style / Cut:</strong> {selectedStyle || product.defaultStyle}</p>
-                    )}
-                    {(selectedWork || product.defaultWork) && (
-                      <p><strong>Craftsmanship:</strong> {selectedWork || product.defaultWork}</p>
-                    )}
-                    {(product.fabricDetails || product.fabric) && (
-                      <p><strong>Fabric / Material:</strong> {product.fabricDetails || product.fabric}</p>
-                    )}
-                    <p><strong>Garment Care:</strong> {product.careInstructions || 'Dry Clean or gentle steam recommended'}</p>
-                    {product.stylingAdvice && (
-                      <p><strong>Styling Advice:</strong> {product.stylingAdvice}</p>
-                    )}
-                  </div>
+                  {/* Specifications Box: Only display if at least one attribute is saved in database */}
+                  {(Boolean(product.color?.trim()) ||
+                    Boolean(product.category?.trim()) ||
+                    Boolean(product.defaultStyle?.trim()) ||
+                    Boolean(product.defaultWork?.trim()) ||
+                    Boolean(product.wholesaleType?.trim()) ||
+                    Boolean((product.fabricDetails || product.fabric)?.trim()) ||
+                    Boolean(product.careInstructions?.trim()) ||
+                    Boolean(product.stylingAdvice?.trim())) && (
+                    <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
+                      {Boolean(product.color?.trim()) && (
+                        <p><strong>Color:</strong> {product.color.trim()}</p>
+                      )}
+                      {Boolean(product.category?.trim()) && (
+                        <p><strong>Category:</strong> {product.category.trim()}</p>
+                      )}
+                      {Boolean(product.defaultStyle?.trim()) && (
+                        <p><strong>Style / Cut:</strong> {product.defaultStyle.trim()}</p>
+                      )}
+                      {Boolean(product.defaultWork?.trim()) && (
+                        <p><strong>Craftsmanship:</strong> {product.defaultWork.trim()}</p>
+                      )}
+                      {Boolean(product.wholesaleType?.trim()) && (
+                        <p><strong>Wholesale Sub-Type:</strong> {product.wholesaleType.trim()}</p>
+                      )}
+                      {Boolean((product.fabricDetails || product.fabric)?.trim()) && (
+                        <p><strong>Fabric / Material:</strong> {(product.fabricDetails || product.fabric).trim()}</p>
+                      )}
+                      {Boolean(product.careInstructions?.trim()) && (
+                        <p><strong>Garment Care:</strong> {product.careInstructions.trim()}</p>
+                      )}
+                      {Boolean(product.stylingAdvice?.trim()) && (
+                        <p><strong>Styling Advice:</strong> {product.stylingAdvice.trim()}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
