@@ -118,9 +118,8 @@ export default function ProductCard({ product }) {
           isHovered={isHovered}
         />
 
-        {/* Price display: From AED 300.00 */}
+        {/* Price display */}
         <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px]">
-          <span className="text-stone-500 text-[11px] font-medium">From</span>
           {product.originalPrice && product.originalPrice > product.price && (
             <span className="text-stone-400 line-through tabular-nums text-[11px]">
               {formatPrice(product.originalPrice)}
