@@ -398,6 +398,13 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
+            {/* Product Subtitle / Tagline */}
+            {product.subtitle && (
+              <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed pt-0.5">
+                {product.subtitle}
+              </p>
+            )}
+
             {/* Price Row */}
             <div className="flex items-baseline gap-3 pt-1">
               <span className="text-xl sm:text-2xl text-[#7A0648] font-bold tabular-nums tracking-tight">
@@ -637,21 +644,41 @@ export default function ProductDetailPage() {
                 onClick={() => toggleAccordion('description')}
                 className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-[#1E141B] py-1 cursor-pointer hover:text-[#7A0648] transition-colors"
               >
-                <span>Description & Fabric</span>
+                <span>Description & Product Details</span>
                 {openAccordions.description ? <ChevronUp className="w-4 h-4 text-[#7A0648]" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
               </button>
               {openAccordions.description && (
                 <div className="pt-3 pb-2 space-y-3 text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
-                  <p>{product.description}</p>
+                  {/* Main Description */}
+                  {product.description ? (
+                    <p className="whitespace-pre-line text-stone-700 leading-relaxed">{product.description}</p>
+                  ) : product.subtitle ? (
+                    <p className="text-stone-700 leading-relaxed">{product.subtitle}</p>
+                  ) : (
+                    <p className="text-stone-600">Handcrafted bespoke artisan piece from the NOOR AL DHUHA collection.</p>
+                  )}
+
+                  {/* Specifications Box */}
                   <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
-                    {(product.color || currentColor.name) && (
+                    {(product.color || currentColor?.name) && (
                       <p><strong>Color:</strong> {product.color || currentColor.name}</p>
                     )}
-                    <p><strong>Fabric:</strong> {product.fabric || product.fabricDetails || 'Tafetta & Candy Crepe'}</p>
-                    <p><strong>Garment Care:</strong> Dry Clean recommended</p>
-                    <p className="text-stone-500 italic">
-                      <strong>Note:</strong> Shaila exact color shade might differ slightly from displayed studio lighting.
-                    </p>
+                    {product.category && (
+                      <p><strong>Category:</strong> {product.category}</p>
+                    )}
+                    {(selectedStyle || product.defaultStyle) && (
+                      <p><strong>Style / Cut:</strong> {selectedStyle || product.defaultStyle}</p>
+                    )}
+                    {(selectedWork || product.defaultWork) && (
+                      <p><strong>Craftsmanship:</strong> {selectedWork || product.defaultWork}</p>
+                    )}
+                    {(product.fabricDetails || product.fabric) && (
+                      <p><strong>Fabric / Material:</strong> {product.fabricDetails || product.fabric}</p>
+                    )}
+                    <p><strong>Garment Care:</strong> {product.careInstructions || 'Dry Clean or gentle steam recommended'}</p>
+                    {product.stylingAdvice && (
+                      <p><strong>Styling Advice:</strong> {product.stylingAdvice}</p>
+                    )}
                   </div>
                 </div>
               )}

@@ -6,7 +6,6 @@ import CartDrawer from './components/CartDrawer';
 import QuickViewModal from './components/QuickViewModal';
 import SearchModal from './components/SearchModal';
 import MobileBottomNav from './components/MobileBottomNav';
-import Toast from './components/Toast';
 import AdminFloatingDock from './components/AdminFloatingDock';
 import CMSEditDrawer from './components/cms/CMSEditDrawer';
 
@@ -81,7 +80,6 @@ function AppContent() {
       <CartDrawer />
       <QuickViewModal />
       <SearchModal />
-      <Toast />
 
       {/* Admin On-Page Visual Editor */}
       <AdminFloatingDock />

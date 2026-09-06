@@ -173,17 +173,9 @@ export function ShopProvider({ children }) {
     }
   });
 
-  // Toast Notifications
+  // Toast Notifications disabled
   const [toasts, setToasts] = useState([]);
-
-  // Toast Helper
-  const showToast = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 3500);
-  }, []);
+  const showToast = useCallback(() => {}, []);
 
   // Fetch Products from Supabase on mount
   const refreshProducts = useCallback(async () => {
