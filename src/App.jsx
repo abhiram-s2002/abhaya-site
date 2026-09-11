@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { ShopProvider, useShop } from './context/ShopContext';
+import { Outlet, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { ShopProvider } from './context/ShopContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
@@ -9,10 +10,9 @@ import MobileBottomNav from './components/MobileBottomNav';
 import AdminFloatingDock from './components/AdminFloatingDock';
 import FloatingRegionSelector from './components/FloatingRegionSelector';
 import CMSEditDrawer from './components/cms/CMSEditDrawer';
+import { shouldRedirectLegacyAdmin } from './lib/routing';
 
-// Pages
 import HomePage from './pages/HomePage';
-import ShopPage from './pages/ShopPage';
 import CollectionsPage from './pages/CollectionsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import StoryPage from './pages/StoryPage';
@@ -22,70 +22,31 @@ import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
 import AdminPage from './pages/AdminPage';
 
-function AppContent() {
-  const { currentView, setCurrentView } = useShop();
+function AppLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Listen for hash or query parameters on initial load (e.g. /#admin or ?view=admin)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const viewParam = params.get('view');
-    const hash = window.location.hash.replace('#', '');
-    
-    if (viewParam === 'admin' || hash === 'admin') {
-      setCurrentView('admin');
+    if (location.pathname === '/admin') return;
+    if (shouldRedirectLegacyAdmin(location.search, location.hash)) {
+      navigate('/admin', { replace: true });
     }
-  }, [setCurrentView]);
-
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case 'admin':
-        return <AdminPage />;
-      case 'shop':
-      case 'collections':
-        return <CollectionsPage />;
-      case 'product-detail':
-        return <ProductDetailPage />;
-      case 'story':
-        return <StoryPage />;
-      case 'contact':
-        return <ContactPage />;
-      case 'offers':
-        return <OffersPage />;
-      case 'refund-policy':
-        return <RefundPolicyPage />;
-      case 'terms':
-        return <TermsPage />;
-      case 'home':
-      default:
-        return <HomePage />;
-    }
-  };
+  }, [location.pathname, location.search, location.hash, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#1E141B] font-medium">
-      {/* Main Sticky Luxury Navbar */}
       <Navbar />
 
-      {/* Dynamic Main View */}
       <main className="flex-1">
-        {renderCurrentView()}
+        <Outlet />
       </main>
 
-      {/* Luxury Footer */}
       <Footer />
-
-      {/* Mobile Sticky Bottom Navigation Bar (Thumb Friendly) */}
       <MobileBottomNav />
-
-      {/* Floating region / currency selector */}
       <FloatingRegionSelector />
-
-      {/* Overlays, Drawers & Modals */}
       <CartDrawer />
       <QuickViewModal />
       <SearchModal />
-
-      {/* Admin On-Page Visual Editor */}
       <AdminFloatingDock />
       <CMSEditDrawer />
     </div>
@@ -95,7 +56,21 @@ function AppContent() {
 export default function App() {
   return (
     <ShopProvider>
-      <AppContent />
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/shop" element={<CollectionsPage />} />
+          <Route path="/collections" element={<CollectionsPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/story" element={<StoryPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/offers" element={<OffersPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
     </ShopProvider>
   );
 }

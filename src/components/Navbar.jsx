@@ -123,7 +123,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 w-full z-50 bg-[#7A0648]/95 backdrop-blur-md border-b border-white/20 transition-all duration-300 text-white font-semibold">
+      <header className="sticky top-0 w-full z-[60] bg-[#7A0648]/95 backdrop-blur-md border-b border-white/20 transition-all duration-300 text-white font-semibold">
         <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3.5 md:py-4 max-w-7xl mx-auto relative">
           
           {/* Left: Desktop Navigation Links + Mobile Menu Trigger */}

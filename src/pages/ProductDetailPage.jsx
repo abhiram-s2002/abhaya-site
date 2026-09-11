@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Star,
   ShoppingBag,
@@ -121,7 +122,18 @@ function ProductDetailsSummary({ product, excludeSubtitle = false }) {
   );
 }
 
+const EMPTY_PRODUCT = {
+  id: '',
+  name: '',
+  gallery: [],
+  colors: [],
+  styles: [],
+  works: [],
+  sizes: [],
+};
+
 export default function ProductDetailPage() {
+  const { id: routeProductId } = useParams();
   const {
     PRODUCTS,
     selectedProductId,
@@ -129,6 +141,7 @@ export default function ProductDetailPage() {
     getProductPrice,
     addToCart,
     navigateTo,
+    isProductsLoading,
     showToast,
     currency,
     freeShippingThreshold,
@@ -136,15 +149,17 @@ export default function ProductDetailPage() {
     activeRegion
   } = useShop();
 
-  const product = PRODUCTS.find((p) => p.id === selectedProductId) || PRODUCTS[0];
+  const productId = routeProductId || selectedProductId;
+  const product = PRODUCTS.find((p) => p.id === productId) || PRODUCTS[0] || EMPTY_PRODUCT;
 
   useEffect(() => {
-    const isVisible = PRODUCTS.some((p) => p.id === selectedProductId);
+    if (isProductsLoading) return;
+    const isVisible = PRODUCTS.some((p) => p.id === productId);
     if (!isVisible && PRODUCTS.length > 0) {
       showToast('This product is not available in your selected market.');
       navigateTo('shop');
     }
-  }, [selectedProductId, PRODUCTS, navigateTo, showToast]);
+  }, [productId, PRODUCTS, isProductsLoading, navigateTo, showToast]);
 
   // Options state
   const [selectedSize, setSelectedSize] = useState(DEFAULT_ABAYA_SIZE);

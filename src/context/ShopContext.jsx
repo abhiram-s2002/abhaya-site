@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PRODUCTS as STATIC_PRODUCTS, DEFAULT_ABAYA_SIZE } from '../data/products';
+import {
+  DEFAULT_FILTERS,
+  parseLocation,
+  parseFilterParams,
+  buildFilterSearch,
+  pathForView,
+} from '../lib/routing';
 import {
   fetchProductsFromSupabase,
   upsertProductToSupabase,
@@ -40,18 +48,112 @@ function getProductPriceForCurrency(product, curr) {
 const DEFAULT_ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
 
 export function ShopProvider({ children }) {
-  // Navigation & Page State
-  const [currentView, setCurrentView] = useState('home'); // 'home' | 'shop' | 'collections' | 'product-detail' | 'violet-edition' | 'story' | 'contact' | 'admin'
-  const [selectedProductId, setSelectedProductId] = useState('midnight-espresso-silk');
-  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('All');
-  const [selectedCollectionsTab, setSelectedCollectionsTab] = useState('silhouette');
-  const [selectedColorFilter, setSelectedColorFilter] = useState('All');
-  const [selectedStyleFilter, setSelectedStyleFilter] = useState('All');
-  const [selectedWorkFilter, setSelectedWorkFilter] = useState('All');
-  const [selectedSubcategoryFilter, setSelectedSubcategoryFilter] = useState('All');
-  const [selectedWholesaleTypeFilter, setSelectedWholesaleTypeFilter] = useState('All');
-  const [wishlistOnlyFilter, setWishlistOnlyFilter] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const parsedLocation = useMemo(
+    () => parseLocation(location.pathname, location.search),
+    [location.pathname, location.search]
+  );
+  const currentView = parsedLocation.view;
+  const selectedProductId = parsedLocation.productId;
+
+  const [selectedCategoryFilter, setSelectedCategoryFilterState] = useState(DEFAULT_FILTERS.category);
+  const [selectedCollectionsTab, setSelectedCollectionsTabState] = useState(DEFAULT_FILTERS.tab);
+  const [selectedColorFilter, setSelectedColorFilterState] = useState(DEFAULT_FILTERS.color);
+  const [selectedStyleFilter, setSelectedStyleFilterState] = useState(DEFAULT_FILTERS.style);
+  const [selectedWorkFilter, setSelectedWorkFilterState] = useState(DEFAULT_FILTERS.work);
+  const [selectedSubcategoryFilter, setSelectedSubcategoryFilterState] = useState(DEFAULT_FILTERS.subcategory);
+  const [selectedWholesaleTypeFilter, setSelectedWholesaleTypeFilterState] = useState(DEFAULT_FILTERS.wholesale);
+  const [wishlistOnlyFilter, setWishlistOnlyFilterState] = useState(DEFAULT_FILTERS.wishlist);
+  const [searchQuery, setSearchQueryState] = useState(DEFAULT_FILTERS.q);
+
+  const filtersRef = useRef({
+    category: DEFAULT_FILTERS.category,
+    style: DEFAULT_FILTERS.style,
+    work: DEFAULT_FILTERS.work,
+    color: DEFAULT_FILTERS.color,
+    subcategory: DEFAULT_FILTERS.subcategory,
+    wholesale: DEFAULT_FILTERS.wholesale,
+    tab: DEFAULT_FILTERS.tab,
+    wishlist: DEFAULT_FILTERS.wishlist,
+    q: DEFAULT_FILTERS.q,
+  });
+
+  const applyFiltersToState = useCallback((filters) => {
+    filtersRef.current = { ...filtersRef.current, ...filters };
+    if (filters.category !== undefined) setSelectedCategoryFilterState(filters.category || 'All');
+    if (filters.style !== undefined) setSelectedStyleFilterState(filters.style || 'All');
+    if (filters.work !== undefined) setSelectedWorkFilterState(filters.work || 'All');
+    if (filters.color !== undefined) setSelectedColorFilterState(filters.color || 'All');
+    if (filters.subcategory !== undefined) setSelectedSubcategoryFilterState(filters.subcategory || 'All');
+    if (filters.wholesale !== undefined) setSelectedWholesaleTypeFilterState(filters.wholesale || 'All');
+    if (filters.tab !== undefined) setSelectedCollectionsTabState(filters.tab || DEFAULT_FILTERS.tab);
+    if (filters.wishlist !== undefined) setWishlistOnlyFilterState(Boolean(filters.wishlist));
+    if (filters.q !== undefined) setSearchQueryState(filters.q || '');
+  }, []);
+
+  useEffect(() => {
+    if (currentView === 'shop' || currentView === 'collections') {
+      applyFiltersToState(parseFilterParams(location.search));
+    }
+  }, [currentView, location.search, applyFiltersToState]);
+
+  const writeCatalogUrl = useCallback((nextFilters, { pathname, replace = false } = {}) => {
+    const merged = { ...filtersRef.current, ...nextFilters };
+    filtersRef.current = merged;
+    applyFiltersToState(merged);
+    const isCatalog = currentView === 'shop' || currentView === 'collections';
+    const targetPath = pathname || (isCatalog ? location.pathname : '/shop');
+    const nextUrl = `${targetPath}${buildFilterSearch(merged)}`;
+    const currentUrl = `${location.pathname}${location.search}`;
+    if (nextUrl !== currentUrl) {
+      navigate(nextUrl, { replace });
+    }
+  }, [applyFiltersToState, currentView, location.pathname, location.search, navigate]);
+
+  const setSelectedCategoryFilter = useCallback((value) => {
+    writeCatalogUrl({ category: value });
+  }, [writeCatalogUrl]);
+  const setSelectedStyleFilter = useCallback((value) => {
+    writeCatalogUrl({ style: value });
+  }, [writeCatalogUrl]);
+  const setSelectedWorkFilter = useCallback((value) => {
+    writeCatalogUrl({ work: value });
+  }, [writeCatalogUrl]);
+  const setSelectedColorFilter = useCallback((value) => {
+    writeCatalogUrl({ color: value });
+  }, [writeCatalogUrl]);
+  const setSelectedSubcategoryFilter = useCallback((value) => {
+    writeCatalogUrl({ subcategory: value });
+  }, [writeCatalogUrl]);
+  const setSelectedWholesaleTypeFilter = useCallback((value) => {
+    writeCatalogUrl({ wholesale: value });
+  }, [writeCatalogUrl]);
+  const setSelectedCollectionsTab = useCallback((value) => {
+    writeCatalogUrl({ tab: value });
+  }, [writeCatalogUrl]);
+  const setWishlistOnlyFilter = useCallback((value) => {
+    writeCatalogUrl({ wishlist: Boolean(value) });
+  }, [writeCatalogUrl]);
+  const setSearchQuery = useCallback((value) => {
+    if (currentView === 'shop' || currentView === 'collections') {
+      writeCatalogUrl({ q: value || '' });
+    } else {
+      applyFiltersToState({ q: value || '' });
+    }
+  }, [applyFiltersToState, currentView, writeCatalogUrl]);
+  const setSelectedProductId = useCallback((productId) => {
+    if (productId) {
+      navigate(pathForView('product-detail', productId));
+    }
+  }, [navigate]);
+  const setCurrentView = useCallback((view) => {
+    if (view === 'shop' || view === 'collections') {
+      writeCatalogUrl({}, { pathname: pathForView(view) });
+    } else {
+      navigate(pathForView(view, selectedProductId));
+    }
+  }, [navigate, selectedProductId, writeCatalogUrl]);
   
   // Dynamic Products State
   const [products, setProducts] = useState(() => {
@@ -437,62 +539,44 @@ export function ShopProvider({ children }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView, selectedProductId]);
 
-  const navigateTo = (view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null) => {
-    console.log('[ShopContext] navigateTo called:', {
-      view,
-      productId,
-      category,
-      collectionsTab,
-      color,
-      style,
-      work,
-      wishlistOnly,
-      search,
-      subcategory,
-      wholesaleType
-    });
+  const navigateTo = useCallback((view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null) => {
+    setIsSearchOpen(false);
 
-    if (productId) {
-      setSelectedProductId(productId);
+    if (view === 'product-detail' || (productId && view !== 'shop' && view !== 'collections')) {
+      if (productId) {
+        navigate(pathForView('product-detail', productId));
+        return;
+      }
     }
 
     if (view === 'shop' || view === 'collections') {
-      const resolvedCategory = category || 'All';
-      const resolvedStyle = style || 'All';
-      const resolvedWork = work || 'All';
-      const resolvedColor = color || 'All';
-      const resolvedSubcategory = subcategory || 'All';
-      const resolvedWholesaleType = wholesaleType || 'All';
-
-      setSelectedCategoryFilter(resolvedCategory);
-      setSelectedStyleFilter(resolvedStyle);
-      setSelectedWorkFilter(resolvedWork);
-      setSelectedColorFilter(resolvedColor);
-      setSelectedSubcategoryFilter(resolvedSubcategory);
-      setSelectedWholesaleTypeFilter(resolvedWholesaleType);
-
-      if (search !== null) {
-        setSearchQuery(search);
-      } else if (!category && !style && !work && !color && !subcategory && !wholesaleType) {
-        setSearchQuery('');
-      }
-    } else {
-      if (category) setSelectedCategoryFilter(category);
-      if (color) setSelectedColorFilter(color);
-      if (style) setSelectedStyleFilter(style);
-      if (work) setSelectedWorkFilter(work);
-      if (subcategory) setSelectedSubcategoryFilter(subcategory);
-      if (wholesaleType) setSelectedWholesaleTypeFilter(wholesaleType);
-      if (search !== null) setSearchQuery(search);
+      const resetSearch = search === null && !category && !style && !work && !color && !subcategory && !wholesaleType;
+      writeCatalogUrl({
+        category: category || 'All',
+        style: style || 'All',
+        work: work || 'All',
+        color: color || 'All',
+        subcategory: subcategory || 'All',
+        wholesale: wholesaleType || 'All',
+        tab: collectionsTab || filtersRef.current.tab,
+        wishlist: Boolean(wishlistOnly),
+        q: search !== null ? search : (resetSearch ? '' : filtersRef.current.q),
+      }, { pathname: pathForView(view) });
+      return;
     }
 
-    if (collectionsTab) {
-      setSelectedCollectionsTab(collectionsTab);
-    }
-    setWishlistOnlyFilter(wishlistOnly);
-    setCurrentView(view);
-    setIsSearchOpen(false);
-  };
+    if (category) applyFiltersToState({ category });
+    if (color) applyFiltersToState({ color });
+    if (style) applyFiltersToState({ style });
+    if (work) applyFiltersToState({ work });
+    if (subcategory) applyFiltersToState({ subcategory });
+    if (wholesaleType) applyFiltersToState({ wholesale: wholesaleType });
+    if (collectionsTab) applyFiltersToState({ tab: collectionsTab });
+    if (search !== null) applyFiltersToState({ q: search });
+    applyFiltersToState({ wishlist: Boolean(wishlistOnly) });
+
+    navigate(pathForView(view, productId));
+  }, [applyFiltersToState, navigate, writeCatalogUrl]);
 
   const addToCart = (
     product,

@@ -133,7 +133,11 @@ export default function HomePage() {
                       {slide.description}
                     </p>
                     <button
-                      onClick={() => navigateTo('shop', slide.productId)}
+                      onClick={() => (
+                        slide.productId
+                          ? navigateTo('product-detail', slide.productId)
+                          : navigateTo('shop')
+                      )}
                       className="inline-flex items-center justify-center w-fit bg-white text-[#7A0648] hover:bg-white/90 uppercase tracking-[0.18em] font-bold text-xs py-3.5 px-8 shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer rounded-none border border-white"
                     >
                       Shop Now

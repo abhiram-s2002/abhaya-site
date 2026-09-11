@@ -54,23 +54,15 @@ export default function CollectionsPage() {
   const {
     PRODUCTS,
     selectedCategoryFilter,
-    setSelectedCategoryFilter,
     selectedSubcategoryFilter,
-    setSelectedSubcategoryFilter,
     selectedWholesaleTypeFilter,
-    setSelectedWholesaleTypeFilter,
     selectedColorFilter,
-    setSelectedColorFilter,
     selectedStyleFilter,
-    setSelectedStyleFilter,
     selectedWorkFilter,
-    setSelectedWorkFilter,
-    setWishlistOnlyFilter,
     navigateTo,
     formatPrice,
     getProductPrice,
-    searchQuery,
-    setSearchQuery
+    searchQuery
   } = useShop();
 
   // Filter States
@@ -324,14 +316,7 @@ export default function CollectionsPage() {
     setSelectedColors([]);
     setSelectedSizes([]);
     setPriceRange(maxPriceLimit);
-    if (typeof setSearchQuery === 'function') setSearchQuery('');
-    if (typeof setSelectedCategoryFilter === 'function') setSelectedCategoryFilter('All');
-    if (typeof setSelectedSubcategoryFilter === 'function') setSelectedSubcategoryFilter('All');
-    if (typeof setSelectedWholesaleTypeFilter === 'function') setSelectedWholesaleTypeFilter('All');
-    if (typeof setSelectedColorFilter === 'function') setSelectedColorFilter('All');
-    if (typeof setSelectedStyleFilter === 'function') setSelectedStyleFilter('All');
-    if (typeof setSelectedWorkFilter === 'function') setSelectedWorkFilter('All');
-    if (typeof setWishlistOnlyFilter === 'function') setWishlistOnlyFilter(false);
+    navigateTo('shop');
   };
 
   // Active filters count

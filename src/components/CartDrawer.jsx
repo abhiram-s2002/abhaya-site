@@ -78,15 +78,15 @@ export default function CartDrawer() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
+    <div className="fixed inset-x-0 top-14 bottom-0 z-[55] overflow-hidden lg:top-16">
+      {/* Backdrop — below navbar, not full screen */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
         onClick={() => setIsCartOpen(false)}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex">
-        <div className="w-screen max-w-full sm:max-w-md bg-white text-[#1E141B] shadow-2xl flex flex-col justify-between animate-slide-in-right border-l border-stone-200 pb-safe font-semibold">
+      <div className="fixed inset-y-0 top-14 right-0 bottom-0 max-w-full flex lg:top-16">
+        <div className="w-full max-w-[min(100vw,28rem)] bg-white text-[#1E141B] shadow-2xl flex flex-col justify-between animate-slide-in-right border-l border-stone-200 pb-safe font-semibold h-full">
           
           {/* Drawer Header (Solid Luxury Violet Accent) */}
           <div className="p-4 sm:p-5 border-b border-stone-200 flex items-center justify-between bg-[#7A0648] text-white">
