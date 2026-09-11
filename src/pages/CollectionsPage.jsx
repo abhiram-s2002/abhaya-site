@@ -68,6 +68,7 @@ export default function CollectionsPage() {
     setWishlistOnlyFilter,
     navigateTo,
     formatPrice,
+    getProductPrice,
     searchQuery,
     setSearchQuery
   } = useShop();
@@ -89,8 +90,8 @@ export default function CollectionsPage() {
 
   // Price calculations
   const maxPriceLimit = useMemo(() => {
-    return Math.max(...PRODUCTS.map(p => Number(p.price) || 0), 300);
-  }, [PRODUCTS]);
+    return Math.max(...PRODUCTS.map(p => getProductPrice(p) || 0), 300);
+  }, [PRODUCTS, getProductPrice]);
 
   const minPriceLimit = 0;
 
@@ -454,7 +455,7 @@ export default function CollectionsPage() {
       }
 
       // 9. Price Range
-      if (product.price > priceRange) {
+      if (getProductPrice(product) > priceRange) {
         return false;
       }
 
@@ -462,9 +463,9 @@ export default function CollectionsPage() {
     }).sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
-          return a.price - b.price;
+          return getProductPrice(a) - getProductPrice(b);
         case 'price-high':
-          return b.price - a.price;
+          return getProductPrice(b) - getProductPrice(a);
         case 'latest':
         case 'date-new':
           return 0;
@@ -500,7 +501,8 @@ export default function CollectionsPage() {
     selectedColors,
     selectedSizes,
     priceRange,
-    sortBy
+    sortBy,
+    getProductPrice
   ]);
 
   return (
@@ -916,20 +918,24 @@ export default function CollectionsPage() {
               </button>
 
               {openAccordions.size && (
-                <div className="pt-3 grid grid-cols-3 gap-2">
-                  {['50', '52', '54', '56', '58', '60', 'Custom'].map((size) => {
-                    const isSelected = selectedSizes.includes(size);
+                <div className="pt-3 grid grid-cols-2 gap-2">
+                  {ABAYA_SIZES.map((sizeOption) => {
+                    const filterKey = sizeOption.size === 'Custom' ? 'Custom' : sizeOption.size;
+                    const filterLabel = sizeOption.size === 'Custom'
+                      ? 'Custom'
+                      : `${sizeOption.name} ${sizeOption.size}`;
+                    const isSelected = selectedSizes.includes(filterKey);
                     return (
                       <button
-                        key={size}
-                        onClick={() => toggleItem(selectedSizes, setSelectedSizes, size)}
+                        key={filterKey}
+                        onClick={() => toggleItem(selectedSizes, setSelectedSizes, filterKey)}
                         className={`py-2 text-xs font-bold uppercase tracking-wider border transition-colors cursor-pointer ${
                           isSelected
                             ? 'bg-[#7A0648] text-white border-[#7A0648] font-bold'
                             : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                         }`}
                       >
-                        {size}
+                        {filterLabel}
                       </button>
                     );
                   })}

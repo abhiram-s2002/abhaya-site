@@ -14,6 +14,8 @@ export default function CartDrawer() {
     formatPrice,
     rawCartSubtotal,
     cartSubtotal,
+    shippingFee,
+    cartTotal,
     freeShippingThreshold,
     freeShippingProgress,
     freeShippingDifference,
@@ -45,7 +47,7 @@ export default function CartDrawer() {
       cart,
       rawCartSubtotal,
       cartSubtotal,
-      freeShippingThreshold,
+      shippingFee,
       formatPrice,
       userLocation
     });
@@ -60,10 +62,8 @@ export default function CartDrawer() {
     const message = formatCartWhatsAppMessage({
       cart,
       rawCartSubtotal,
-      appliedDiscount,
-      discountCodeName,
       cartSubtotal,
-      freeShippingThreshold,
+      shippingFee,
       formatPrice,
       userLocation
     });
@@ -256,14 +256,29 @@ export default function CartDrawer() {
                       )}
                     </span>
                     <span className="font-bold text-[#1E141B]">
-                      {formatPrice(15)}
+                      {shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}
                     </span>
                   </div>
+
+                  {shippingFee > 0 && freeShippingDifference > 0 && (
+                    <div className="pt-1">
+                      <div className="flex justify-between text-[10px] text-stone-500 mb-1">
+                        <span>Free delivery progress</span>
+                        <span>{freeShippingProgress}%</span>
+                      </div>
+                      <div className="h-1.5 bg-stone-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-[#7A0648] transition-all duration-300"
+                          style={{ width: `${freeShippingProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="flex justify-between text-sm font-bold text-[#7A0648] pt-2 border-t border-stone-200 tabular-nums">
                     <span>Estimated Total</span>
                     <span>
-                      {formatPrice(cartSubtotal + 15)}
+                      {formatPrice(cartTotal)}
                     </span>
                   </div>
                 </div>

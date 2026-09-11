@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Sparkles,
   Plus,
@@ -55,6 +55,8 @@ export default function AdminPage() {
     setIsAdminEditMode,
     adminEnabled,
     setAdminEnabledRemote,
+    deliverySettings,
+    setDeliverySettingsRemote,
   } = useShop();
 
   const baseProducts = allProducts && allProducts.length > 0 ? allProducts : products;
@@ -67,6 +69,12 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('products'); // 'products' | 'cms' | 'settings'
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'cards'
   const [isTogglingAdmin, setIsTogglingAdmin] = useState(false);
+  const [deliveryForm, setDeliveryForm] = useState(deliverySettings);
+  const [isSavingDelivery, setIsSavingDelivery] = useState(false);
+
+  useEffect(() => {
+    setDeliveryForm(deliverySettings);
+  }, [deliverySettings]);
 
   // Product Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -646,10 +654,19 @@ export default function AdminPage() {
 
                         {/* Price */}
                         <td className="py-3.5 px-4 font-medium">
-                          <div className="font-sans text-sm font-bold text-primary tabular-nums">{formatPrice(p.price)}</div>
-                          {p.originalPrice && (
+                          {(p.targetRegion === 'arab' || p.targetRegion === 'all') && (
+                            <div className="font-sans text-sm font-bold text-primary tabular-nums">
+                              AED {Number(p.price || 0).toLocaleString('en-US')}
+                            </div>
+                          )}
+                          {(p.targetRegion === 'india' || p.targetRegion === 'all') && p.priceInr != null && (
+                            <div className="font-sans text-sm font-bold text-emerald-800 tabular-nums">
+                              ₹{Number(p.priceInr).toLocaleString('en-IN')}
+                            </div>
+                          )}
+                          {p.originalPrice && p.targetRegion !== 'india' && (
                             <div className="text-[10px] text-stone-400 line-through font-sans tabular-nums">
-                              {formatPrice(p.originalPrice)}
+                              AED {Number(p.originalPrice).toLocaleString('en-US')}
                             </div>
                           )}
                         </td>
@@ -738,8 +755,13 @@ export default function AdminPage() {
                         <span className="text-[11px] text-stone-500 font-medium truncate max-w-[180px]">
                           {p.subtitle || p.category || 'Luxury Abaya'}
                         </span>
-                        <span className="font-serif font-bold text-sm text-primary">
-                          {formatPrice(p.price)}
+                        <span className="font-serif font-bold text-sm text-primary text-right">
+                          {(p.targetRegion === 'arab' || p.targetRegion === 'all') && (
+                            <span className="block">AED {Number(p.price || 0).toLocaleString('en-US')}</span>
+                          )}
+                          {(p.targetRegion === 'india' || p.targetRegion === 'all') && p.priceInr != null && (
+                            <span className="block text-emerald-800">₹{Number(p.priceInr).toLocaleString('en-IN')}</span>
+                          )}
                         </span>
                       </div>
 
@@ -955,6 +977,105 @@ export default function AdminPage() {
             <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 text-xs text-stone-600 space-y-1">
               <p>📌 <strong>Note:</strong> Turning admin OFF only hides the navbar button — this settings page remains accessible to already-logged-in admins.</p>
               <p>🔒 The Supabase <code className="font-mono bg-stone-100 px-1 rounded">app_settings</code> table stores this flag. Run the SQL snippet in your Supabase dashboard if the table does not yet exist.</p>
+            </div>
+          </div>
+
+          {/* Pricing & Regional Market */}
+          <div className="bg-white border border-secondary/20 rounded-2xl p-6 shadow-subtle space-y-6">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Package className="w-4 h-4 text-royal-violet" />
+                <h3 className="font-serif text-base font-semibold text-stone-800">Pricing &amp; Regional Market</h3>
+              </div>
+              <p className="text-xs text-stone-500 max-w-2xl">
+                Set free-delivery thresholds and delivery fees per market. Orders at or above the threshold get free delivery; below it, the flat fee applies.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4 p-4 border border-stone-200 rounded-xl bg-stone-50/50">
+                <h4 className="text-sm font-semibold text-stone-800 flex items-center gap-2">
+                  <span>🇦🇪</span> UAE / Arab (AED)
+                </h4>
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-stone-600">Free delivery threshold (AED)</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={deliveryForm.arab.freeDeliveryThreshold}
+                    onChange={(e) => setDeliveryForm(prev => ({
+                      ...prev,
+                      arab: { ...prev.arab, freeDeliveryThreshold: Number(e.target.value) }
+                    }))}
+                    className="w-full px-3 py-2 text-sm border border-stone-200 rounded-lg bg-white"
+                  />
+                </label>
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-stone-600">Delivery fee below threshold (AED)</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={deliveryForm.arab.deliveryFee}
+                    onChange={(e) => setDeliveryForm(prev => ({
+                      ...prev,
+                      arab: { ...prev.arab, deliveryFee: Number(e.target.value) }
+                    }))}
+                    className="w-full px-3 py-2 text-sm border border-stone-200 rounded-lg bg-white"
+                  />
+                </label>
+              </div>
+
+              <div className="space-y-4 p-4 border border-stone-200 rounded-xl bg-stone-50/50">
+                <h4 className="text-sm font-semibold text-stone-800 flex items-center gap-2">
+                  <span>🇮🇳</span> India (INR)
+                </h4>
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-stone-600">Free delivery threshold (INR)</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={deliveryForm.india.freeDeliveryThreshold}
+                    onChange={(e) => setDeliveryForm(prev => ({
+                      ...prev,
+                      india: { ...prev.india, freeDeliveryThreshold: Number(e.target.value) }
+                    }))}
+                    className="w-full px-3 py-2 text-sm border border-stone-200 rounded-lg bg-white"
+                  />
+                </label>
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-stone-600">Delivery fee below threshold (INR)</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={deliveryForm.india.deliveryFee}
+                    onChange={(e) => setDeliveryForm(prev => ({
+                      ...prev,
+                      india: { ...prev.india, deliveryFee: Number(e.target.value) }
+                    }))}
+                    className="w-full px-3 py-2 text-sm border border-stone-200 rounded-lg bg-white"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 pt-2 border-t border-stone-100">
+              <p className="text-xs text-stone-500">
+                UAE example: orders ≥ {deliveryForm.arab.freeDeliveryThreshold} AED ship free; below that, {deliveryForm.arab.deliveryFee} AED fee.
+              </p>
+              <button
+                onClick={async () => {
+                  setIsSavingDelivery(true);
+                  await setDeliverySettingsRemote(deliveryForm);
+                  showToast('Delivery settings saved.', 'success');
+                  setIsSavingDelivery(false);
+                }}
+                disabled={isSavingDelivery}
+                className={`px-5 py-2.5 rounded-xl bg-royal-violet text-white text-sm font-semibold transition-all ${
+                  isSavingDelivery ? 'opacity-60 cursor-not-allowed' : 'hover:bg-royal-violet/90 cursor-pointer'
+                }`}
+              >
+                {isSavingDelivery ? 'Saving…' : 'Save Delivery Settings'}
+              </button>
             </div>
           </div>
 

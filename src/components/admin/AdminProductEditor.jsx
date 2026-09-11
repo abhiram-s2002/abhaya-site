@@ -30,6 +30,7 @@ import {
   ABAYA_STYLES,
   ABAYA_WORKS,
   ABAYA_SIZES,
+  ABAYA_SIZE_LABELS,
   WHOLESALE_TYPES
 } from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
@@ -65,6 +66,7 @@ export default function AdminProductEditor({
   const [name, setName] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [price, setPrice] = useState('180');
+  const [priceInr, setPriceInr] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('Abaya');
   const [color, setColor] = useState('');
@@ -92,11 +94,9 @@ export default function AdminProductEditor({
   const [works, setWorks] = useState(['Plain/Basic']);
   const [defaultWork, setDefaultWork] = useState('Plain/Basic');
 
-  // Sizes State
-  const [sizes, setSizes] = useState(ABAYA_SIZES.map(s => s.label));
+  // Sizes are fixed to the standard abaya chart
 
-  // Descriptions State
-  const [description, setDescription] = useState('');
+  // Editorial fields (subtitle + fabric / styling / care)
   const [fabricDetails, setFabricDetails] = useState('');
   const [stylingAdvice, setStylingAdvice] = useState('');
   const [careInstructions, setCareInstructions] = useState('');
@@ -129,6 +129,7 @@ export default function AdminProductEditor({
       setName(product.name || '');
       setSubtitle(product.subtitle || '');
       setPrice(product.price !== undefined ? String(product.price) : '');
+      setPriceInr(product.priceInr != null ? String(product.priceInr) : '');
       setOriginalPrice(product.originalPrice ? String(product.originalPrice) : '');
       setCategory(product.category || 'Abaya');
       setColor(product.color || (Array.isArray(product.colors) && product.colors[0]?.name) || (typeof product.colors === 'string' ? product.colors : '') || '');
@@ -146,8 +147,6 @@ export default function AdminProductEditor({
       setDefaultStyle(product.defaultStyle || ABAYA_STYLES[0].name);
       setWorks(Array.isArray(product.works) && product.works.length > 0 ? product.works : [product.defaultWork || ABAYA_WORKS[0].name]);
       setDefaultWork(product.defaultWork || ABAYA_WORKS[0].name);
-      setSizes(Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : ABAYA_SIZES.map(s => s.label));
-      setDescription(product.description || '');
       setFabricDetails(product.fabricDetails || '');
       setStylingAdvice(product.stylingAdvice || '');
       setCareInstructions(product.careInstructions || '');
@@ -157,6 +156,7 @@ export default function AdminProductEditor({
       setName('');
       setSubtitle('');
       setPrice('');
+      setPriceInr('');
       setOriginalPrice('');
       setCategory('Abaya');
       setColor('');
@@ -174,7 +174,6 @@ export default function AdminProductEditor({
       setDefaultStyle('Open abaya');
       setWorks(ABAYA_WORKS.map(w => w.name));
       setDefaultWork('Plain/Basic');
-      setSizes(ABAYA_SIZES.map(s => s.label));
       setDescription('');
       setFabricDetails('');
       setStylingAdvice('');
@@ -295,44 +294,6 @@ export default function AdminProductEditor({
     setReviews(prev => prev.filter((_, idx) => idx !== index));
   };
 
-
-
-  // Size Toggle
-  const toggleSize = (sizeLabel) => {
-    if (sizes.includes(sizeLabel)) {
-      if (sizes.length > 1) {
-        setSizes(sizes.filter(s => s !== sizeLabel));
-      }
-    } else {
-      setSizes([...sizes, sizeLabel]);
-    }
-  };
-
-  // Custom Size Handlers
-  const [customSizeInput, setCustomSizeInput] = useState('');
-  const [showCustomSizeManager, setShowCustomSizeManager] = useState(false);
-
-  const handleAddCustomSize = (e) => {
-    if (e) e.preventDefault();
-    const trimmed = customSizeInput.trim();
-    if (!trimmed) return;
-    if (!sizes.includes(trimmed)) {
-      setSizes(prev => [...prev, trimmed]);
-    }
-    setCustomSizeInput('');
-  };
-
-  const handleAddPresetCustomSize = (customLabel) => {
-    if (!sizes.includes(customLabel)) {
-      setSizes(prev => [...prev, customLabel]);
-    }
-  };
-
-  const removeSize = (sizeToRemove) => {
-    if (sizes.length <= 1) return;
-    setSizes(prev => prev.filter(s => s !== sizeToRemove));
-  };
-
   // Save Submission
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -341,8 +302,15 @@ export default function AdminProductEditor({
       scrollToSection('identity');
       return;
     }
-    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
-      setErrorMessage('Please enter a valid base price.');
+    const needsAed = targetRegion === 'arab' || targetRegion === 'all';
+    const needsInr = targetRegion === 'india' || targetRegion === 'all';
+    if (needsAed && (!price || isNaN(Number(price)) || Number(price) <= 0)) {
+      setErrorMessage('Please enter a valid AED price.');
+      scrollToSection('pricing');
+      return;
+    }
+    if (needsInr && (!priceInr || isNaN(Number(priceInr)) || Number(priceInr) <= 0)) {
+      setErrorMessage('Please enter a valid INR price.');
       scrollToSection('pricing');
       return;
     }
@@ -363,7 +331,8 @@ export default function AdminProductEditor({
       id: slugId,
       name: name.trim(),
       subtitle: subtitle.trim(),
-      price: Number(price),
+      price: needsAed ? Number(price) : 0,
+      priceInr: needsInr ? Number(priceInr) : null,
       originalPrice: originalPrice ? Number(originalPrice) : null,
       category: category.trim() || 'Abaya',
       color: color.trim(),
@@ -382,8 +351,8 @@ export default function AdminProductEditor({
       wholesaleMinQty: category === 'Wholesale' ? Number(wholesaleMinQty) || 1 : 1,
       image: fallbackImage,
       gallery: gallery.length > 0 ? gallery : [fallbackImage],
-      sizes: sizes.length > 0 ? sizes : [],
-      description: description.trim(),
+      sizes: ABAYA_SIZE_LABELS,
+      description: '',
       fabricDetails: fabricDetails.trim(),
       stylingAdvice: stylingAdvice.trim(),
       careInstructions: careInstructions.trim()
@@ -410,11 +379,8 @@ export default function AdminProductEditor({
     }
   };
 
-  // Calculate preview prices
-  const numPrice = Number(price) || 0;
-  const numOrigPrice = Number(originalPrice) || 0;
-  const inrPrice = Math.round(numPrice * 22.75);
-  const inrOrig = numOrigPrice ? Math.round(numOrigPrice * 22.75) : null;
+  const showAedPrice = targetRegion === 'arab' || targetRegion === 'all';
+  const showInrPrice = targetRegion === 'india' || targetRegion === 'all';
 
   return (
     <div className="min-h-screen bg-[#fff7fc] pb-24 animate-fade-in text-on-background">
@@ -512,12 +478,15 @@ export default function AdminProductEditor({
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
                 Subtitle / Tagline
               </label>
-              <input
-                type="text"
-                placeholder="e.g. 100% Pure Mulberry Silk | Hand-Rolled Hems"
+              <p className="text-[11px] text-stone-400 font-medium">
+                Short line under the title, or a longer intro shown in &quot;About This Piece&quot;. Pair with Fabric &amp; Styling fields below.
+              </p>
+              <textarea
+                rows={3}
+                placeholder="e.g. Premium Korean Nidha · Thread & Stone Work — or a brief product intro"
                 value={subtitle}
                 onChange={(e) => setSubtitle(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800"
+                className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm text-stone-800 leading-relaxed"
               />
             </div>
 
@@ -711,36 +680,52 @@ export default function AdminProductEditor({
           </div>
 
           <div className="space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                  Retail Price (AED د.إ) *
-                </label>
-                <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
-                  <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
-                    AED
-                  </span>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    step="1"
-                    placeholder="650"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
-                  />
+            <div className={`grid grid-cols-1 ${showAedPrice && showInrPrice ? 'sm:grid-cols-2' : ''} gap-4`}>
+              {showAedPrice && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                    Retail Price (AED د.إ) *
+                  </label>
+                  <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
+                    <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
+                      AED
+                    </span>
+                    <input
+                      type="number"
+                      required={showAedPrice}
+                      min="1"
+                      step="1"
+                      placeholder="650"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                  Price in INR (₹)
-                </label>
-                <div className="flex items-center px-4 py-2.5 rounded-xl border border-secondary/30 bg-stone-50 text-sm font-bold text-stone-900 h-[42px]">
-                  <span>₹{inrPrice > 0 ? inrPrice.toLocaleString() : '0'}</span>
+              {showInrPrice && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                    Retail Price (INR ₹) *
+                  </label>
+                  <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
+                    <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
+                      ₹
+                    </span>
+                    <input
+                      type="number"
+                      required={showInrPrice}
+                      min="1"
+                      step="1"
+                      placeholder="4200"
+                      value={priceInr}
+                      onChange={(e) => setPriceInr(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Target Audience Selector */}
@@ -936,90 +921,39 @@ export default function AdminProductEditor({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
-                Available Sizes ({sizes.length} active)
+                Standard Abaya Sizes (Fixed)
               </label>
-              <span className="text-[11px] text-stone-400 font-medium">Click presets or enter custom sizes</span>
+              <span className="text-[11px] text-stone-400 font-medium">All products use the Noor al dhuha size chart</span>
             </div>
 
-            {/* Manual Custom Size Entry */}
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Enter custom size (e.g. Size 54, Size 52 (52&quot;), Custom Fit)..."
-                value={customSizeInput}
-                onChange={(e) => setCustomSizeInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (customSizeInput.trim() && !sizes.includes(customSizeInput.trim())) {
-                      setSizes([...sizes, customSizeInput.trim()]);
-                      setCustomSizeInput('');
-                    }
-                  }
-                }}
-                className="flex-1 px-4 py-2 rounded-xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs font-semibold text-stone-800"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if (customSizeInput.trim() && !sizes.includes(customSizeInput.trim())) {
-                    setSizes([...sizes, customSizeInput.trim()]);
-                    setCustomSizeInput('');
-                  }
-                }}
-                className="px-4 py-2 rounded-xl bg-royal-violet hover:bg-royal-violet/90 text-white text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
-              >
-                + Add Size
-              </button>
+            <div className="overflow-x-auto rounded-xl border border-secondary/20">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-stone-700 font-bold">
+                  <tr>
+                    <th className="p-2.5 border-b border-stone-200">Size &amp; (No)</th>
+                    <th className="p-2.5 border-b border-stone-200">Height</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-200">
+                  {ABAYA_SIZES.filter((size) => size.size !== 'Custom').map((size) => (
+                    <tr key={size.size}>
+                      <td className="p-2.5 font-bold text-primary">{size.name} {size.size}</td>
+                      <td className="p-2.5 text-stone-600">{size.height}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
-            {/* Selected Size Chips */}
-            {sizes.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-1">
-                {sizes.map((s) => (
-                  <span
-                    key={s}
-                    className="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
-                  >
-                    <span>{s}</span>
-                    <button
-                      type="button"
-                      onClick={() => setSizes(sizes.filter(item => item !== s))}
-                      className="hover:text-red-300 p-0.5 cursor-pointer text-sm font-bold leading-none"
-                      title="Remove size"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Quick Standard Presets Toggle */}
-            <div className="pt-2">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block mb-1.5">
-                Quick Toggle Standard Presets:
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {ABAYA_SIZES.map((size) => {
-                  const isSelected = sizes.includes(size.label);
-                  return (
-                    <button
-                      key={size.size}
-                      type="button"
-                      onClick={() => toggleSize(size.label)}
-                      className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                        isSelected
-                          ? 'bg-stone-200 text-stone-900 border-stone-300'
-                          : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
-                      }`}
-                    >
-                      <span>{size.label}</span>
-                      {isSelected ? '✓' : '+'}
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {ABAYA_SIZE_LABELS.map((label) => (
+                <span
+                  key={label}
+                  className="px-3 py-1.5 rounded-xl bg-primary/10 text-primary border border-primary/20 text-xs font-bold"
+                >
+                  {label}
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -1033,26 +967,16 @@ export default function AdminProductEditor({
           <div className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                Product Narrative & Description
-              </label>
-              <textarea
-                rows={3}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="An ode to quiet luxury. Handcrafted from luminous pure mulberry silk with masterfully tailored cuts..."
-                className="w-full px-4 py-3 rounded-2xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm leading-relaxed text-stone-800"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
                 Fabric Details & Density
               </label>
+              <p className="text-[11px] text-stone-400 font-medium">
+                Shown as Fabric in &quot;About This Piece&quot; (e.g. Premium Korean Nidha).
+              </p>
               <textarea
                 rows={2}
                 value={fabricDetails}
                 onChange={(e) => setFabricDetails(e.target.value)}
-                placeholder="100% Grade 6A Organic Mulberry Silk. 19 Momme density for high opacity..."
+                placeholder="Premium Korean Nidha"
                 className="w-full px-4 py-2.5 rounded-2xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm leading-relaxed text-stone-800"
               />
             </div>
@@ -1061,11 +985,14 @@ export default function AdminProductEditor({
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
                 Styling & Atelier Advice
               </label>
+              <p className="text-[11px] text-stone-400 font-medium">
+                Design, Fit, Style, Occasion lines — shown in &quot;About This Piece&quot;.
+              </p>
               <textarea
-                rows={2}
+                rows={4}
                 value={stylingAdvice}
                 onChange={(e) => setStylingAdvice(e.target.value)}
-                placeholder="Pairs Users with tailored inner slips, silk wraps, and pearl jewelry..."
+                placeholder={`Design: Elegant back detailing with delicate embellishments\nFit: Flowing, graceful and modest\nStyle: Sophisticated, luxurious & effortlessly elegant\nOccasion: Perfect for everyday elegance, gatherings & special events`}
                 className="w-full px-4 py-2.5 rounded-2xl border border-secondary/30 bg-[#fff9fd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/40 text-xs sm:text-sm leading-relaxed text-stone-800"
               />
             </div>

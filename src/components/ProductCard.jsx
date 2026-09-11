@@ -51,6 +51,7 @@ function ProductTitle({ name, onClick, isHovered }) {
 export default function ProductCard({ product }) {
   const {
     formatPrice,
+    currency,
     navigateTo
   } = useShop();
 
@@ -120,13 +121,13 @@ export default function ProductCard({ product }) {
 
         {/* Price display */}
         <div className="flex items-center justify-center gap-1.5 text-[12px] sm:text-[13px]">
-          {product.originalPrice && product.originalPrice > product.price && (
+          {currency === 'AED' && product.originalPrice && product.originalPrice > product.price && (
             <span className="text-stone-400 line-through tabular-nums text-[11px]">
               {formatPrice(product.originalPrice)}
             </span>
           )}
           <span className="font-bold tabular-nums tracking-tight text-[#7A0648]">
-            {formatPrice(product.price)}
+            {formatPrice(product)}
           </span>
         </div>
 

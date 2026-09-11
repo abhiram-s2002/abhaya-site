@@ -8,11 +8,12 @@ export function formatCartWhatsAppMessage({
   cart,
   rawCartSubtotal,
   cartSubtotal,
+  shippingFee = 0,
   formatPrice,
   userLocation = null
 }) {
-  const shippingCostText = formatPrice(15);
-  const totalPayable = formatPrice(cartSubtotal + 15);
+  const shippingCostText = shippingFee === 0 ? 'Free' : formatPrice(shippingFee);
+  const totalPayable = formatPrice(cartSubtotal + shippingFee);
   const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const lines = [
@@ -33,6 +34,9 @@ export function formatCartWhatsAppMessage({
       `   • Abaya Size: ${item.size}`
     ];
     if (item.customMeasurements) {
+      if (item.customMeasurements.customDetails) {
+        itemSpecLines.push(`     - Custom Notes: ${item.customMeasurements.customDetails}`);
+      }
       if (item.customMeasurements.height) itemSpecLines.push(`     - Height: ${item.customMeasurements.height}`);
       if (item.customMeasurements.bust) itemSpecLines.push(`     - Bust: ${item.customMeasurements.bust}`);
       if (item.customMeasurements.length) itemSpecLines.push(`     - Custom Length: ${item.customMeasurements.length}`);
@@ -78,9 +82,11 @@ export function formatSingleProductWhatsAppMessage({
   work,
   quantity = 1,
   customMeasurements = null,
-  formatPrice
+  formatPrice,
+  unitPrice
 }) {
-  const totalPrice = formatPrice(product.price * quantity);
+  const priceEach = unitPrice ?? product.price;
+  const totalPrice = formatPrice(priceEach * quantity);
   const selectedStyle = style || product.defaultStyle || (product.styles && product.styles[0]) || 'Open abaya';
   const selectedWork = work || product.defaultWork || (product.works && product.works[0]) || 'plain';
 
@@ -92,10 +98,11 @@ export function formatSingleProductWhatsAppMessage({
     `*Style / Silhouette:* ${selectedStyle}`,
     `*Work / Craftsmanship:* ${selectedWork}`,
     `*Color:* ${colorName || (product.colors && product.colors[0]?.name)}`,
-    `*Abaya Length / Size:* ${size || (product.sizes && product.sizes[0])}`
+    `*Abaya Size:* ${size || (product.sizes && product.sizes[0])}`
   ];
 
   if (customMeasurements) {
+    if (customMeasurements.customDetails) lines.push(`*Custom Measurements:* ${customMeasurements.customDetails}`);
     if (customMeasurements.height) lines.push(`*Height / Stature:* ${customMeasurements.height}`);
     if (customMeasurements.bust) lines.push(`*Bust Measurement:* ${customMeasurements.bust}`);
     if (customMeasurements.length) lines.push(`*Desired Garment Length:* ${customMeasurements.length}`);
@@ -103,7 +110,7 @@ export function formatSingleProductWhatsAppMessage({
 
   lines.push(
     `*Quantity:* ${quantity}`,
-    `*Total:* ${totalPrice} (${formatPrice(product.price)} each)`,
+    `*Total:* ${totalPrice} (${formatPrice(priceEach)} each)`,
     '━━━━━━━━━━━━━━━━━━━━',
     '\nPlease confirm piece availability, dispatch timeline, and share payment details. Thank you! 🌿'
   );

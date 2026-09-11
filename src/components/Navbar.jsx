@@ -15,7 +15,6 @@ import {
   Phone,
   HelpCircle,
   Info,
-  Check,
   User,
   ShieldCheck,
   Truck
@@ -36,10 +35,6 @@ export default function Navbar() {
     setIsSearchOpen,
     searchQuery,
     setSearchQuery,
-    currency,
-    setCurrency,
-    CURRENCIES,
-    showToast,
     adminEnabled
   } = useShop();
 
@@ -55,9 +50,6 @@ export default function Navbar() {
     wholesale: false,
     help: false
   });
-  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
-  const currencyMenuRef = useRef(null);
-
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   // Sync search input when opened and autofocus
@@ -107,9 +99,6 @@ export default function Navbar() {
   // Close dropdowns on outside click
   useEffect(() => {
     const handleOutside = (e) => {
-      if (currencyMenuRef.current && !currencyMenuRef.current.contains(e.target)) {
-        setCurrencyDropdownOpen(false);
-      }
       if (shopMenuRef.current && !shopMenuRef.current.contains(e.target)) {
         setShopDropdownOpen(false);
       }
@@ -131,8 +120,6 @@ export default function Navbar() {
     setMobileMenuOpen(false);
     setShopDropdownOpen(false);
   };
-
-  const currentCurrencyData = CURRENCIES[currency] || CURRENCIES.INR;
 
   return (
     <>
@@ -315,46 +302,6 @@ export default function Navbar() {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-2 sm:gap-3.5 text-white z-10 shrink-0">
-            {/* Currency Selector (Desktop) */}
-            <div className="relative hidden sm:block" ref={currencyMenuRef}>
-              <button
-                onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-none border border-white/40 hover:border-white text-[11px] font-medium text-white transition-colors cursor-pointer uppercase"
-                aria-label="Select Currency & Market"
-              >
-                <span>{currentCurrencyData.flag}</span>
-                <span className="font-semibold">{currency}</span>
-                <ChevronDown className={`w-3 h-3 transition-transform ${currencyDropdownOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-              </button>
-
-              {currencyDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-44 bg-[#68043D] text-white rounded-none shadow-2xl border border-white/20 py-1 z-50 animate-fade-in font-semibold">
-                  <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-white/70 border-b border-white/15 mb-1">
-                    Select Region & Currency
-                  </div>
-                  {Object.entries(CURRENCIES).map(([code, item]) => (
-                    <button
-                      key={code}
-                      onClick={() => {
-                        setCurrency(code);
-                        setCurrencyDropdownOpen(false);
-                        showToast(`Region updated to ${item.name}`);
-                      }}
-                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors cursor-pointer ${
-                        currency === code ? 'bg-white/20 font-bold text-white' : 'text-white/90 hover:bg-white/10 font-semibold'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-base leading-none">{item.flag}</span>
-                        <span className="font-semibold leading-tight">{item.name}</span>
-                      </span>
-                      {currency === code && <Check className="w-3.5 h-3.5 text-[#FFD700] shrink-0" strokeWidth={1.5} />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
             {/* Search Icon */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -738,27 +685,6 @@ export default function Navbar() {
                     <span>Admin</span>
                   </button>
                 )}
-              </div>
-
-              {/* Currency Selector */}
-              <div className="pt-2 border-t border-white/20 flex items-center justify-between">
-                <div className="relative w-full">
-                  <select
-                    value={currency}
-                    onChange={(e) => {
-                      setCurrency(e.target.value);
-                      showToast(`Region updated to ${CURRENCIES[e.target.value]?.name}`);
-                    }}
-                    className="w-full appearance-none bg-[#68043D] border border-white/30 rounded-none px-3.5 py-2 text-xs font-bold text-white focus:outline-none focus:border-white shadow-xs cursor-pointer"
-                  >
-                    {Object.entries(CURRENCIES).map(([code, item]) => (
-                      <option key={code} value={code} className="bg-[#68043D] text-white font-semibold">
-                        {item.flag} {item.name}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-white absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
               </div>
 
               <div className="text-[10px] text-white/80 text-center font-light leading-snug">

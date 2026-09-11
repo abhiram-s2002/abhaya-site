@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { X, Star, ShoppingBag, Sparkles, Check, ArrowRight, Scissors } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import { ABAYA_STYLES, ABAYA_WORKS } from '../data/products';
+import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZE_LABELS, DEFAULT_ABAYA_SIZE } from '../data/products';
 
 function QuickViewModalContent({ product, onClose }) {
   const {
     formatPrice,
+    getProductPrice,
+    currency,
     addToCart,
     navigateTo
   } = useShop();
 
   const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
   const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Size 54 (54")');
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_ABAYA_SIZE);
   const [customMeasurements, setCustomMeasurements] = useState({ height: '', bust: '', length: '' });
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(product.category === 'WHOLESALE' ? (product.wholesaleMinQty || 10) : 1);
@@ -23,8 +25,14 @@ function QuickViewModalContent({ product, onClose }) {
 
   const isAbayaCategory = !product.category || product.category === 'ABAYA' || product.category === 'Kids abaya';
 
+  const sizeOptions = isAbayaCategory ? ABAYA_SIZE_LABELS : (product.sizes || ABAYA_SIZE_LABELS);
+
+  useEffect(() => {
+    setSelectedSize(isAbayaCategory ? DEFAULT_ABAYA_SIZE : (product.sizes?.[0] || DEFAULT_ABAYA_SIZE));
+  }, [product, isAbayaCategory]);
+
   const handleAddToCart = () => {
-    const isCustom = selectedSize.toLowerCase().includes('custom');
+    const isCustom = selectedSize === 'Custom';
     addToCart(
       product,
       product.color || 'Standard',
@@ -126,9 +134,9 @@ function QuickViewModalContent({ product, onClose }) {
 
                 <div className="flex items-baseline gap-2.5 pt-0.5">
                   <span className="text-lg sm:text-xl font-bold text-[#7A0648] tabular-nums tracking-tight">
-                    {formatPrice(product.price)}
+                    {formatPrice(product)}
                   </span>
-                  {product.originalPrice && (
+                  {currency === 'AED' && product.originalPrice && (
                     <span className="text-xs sm:text-sm text-stone-400 line-through tabular-nums font-medium">
                       {formatPrice(product.originalPrice)}
                     </span>
@@ -219,7 +227,7 @@ function QuickViewModalContent({ product, onClose }) {
                   onChange={(e) => setSelectedSize(e.target.value)}
                   className="w-full text-xs py-2 px-2.5 bg-white border border-stone-300 rounded-none font-bold focus:outline-none focus:border-[#7A0648] uppercase text-[#1E141B] cursor-pointer"
                 >
-                  {(product.sizes || []).map((s) => (
+                  {(sizeOptions).map((s) => (
                     <option key={s} value={s} className="bg-white text-[#1E141B] font-semibold">
                       {s}
                     </option>
@@ -227,7 +235,7 @@ function QuickViewModalContent({ product, onClose }) {
                 </select>
               </div>
 
-              {selectedSize.toLowerCase().includes('custom') && (
+              {selectedSize === 'Custom' && (
                 <div className="p-2.5 bg-stone-50 rounded-none border border-stone-200 space-y-1.5 animate-fade-in text-[11px]">
                   <div className="flex items-center gap-1 font-bold uppercase tracking-wider text-[#1E141B]">
                     <Scissors className="w-3 h-3 text-[#7A0648]" strokeWidth={1.5} />
@@ -269,7 +277,7 @@ function QuickViewModalContent({ product, onClose }) {
                   className="w-full py-3.5 bg-[#7A0648] hover:bg-[#68043D] text-white text-xs uppercase tracking-[0.14em] font-bold transition-colors flex items-center justify-center gap-2 border border-[#7A0648] shadow-md cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4 text-white" strokeWidth={1.5} />
-                  <span>Add to Bag • {formatPrice(product.price * quantity)}</span>
+                  <span>Add to Bag • {formatPrice(getProductPrice(product) * quantity)}</span>
                 </button>
               </div>
 

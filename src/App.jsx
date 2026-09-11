@@ -7,6 +7,7 @@ import QuickViewModal from './components/QuickViewModal';
 import SearchModal from './components/SearchModal';
 import MobileBottomNav from './components/MobileBottomNav';
 import AdminFloatingDock from './components/AdminFloatingDock';
+import FloatingRegionSelector from './components/FloatingRegionSelector';
 import CMSEditDrawer from './components/cms/CMSEditDrawer';
 
 // Pages
@@ -75,6 +76,9 @@ function AppContent() {
 
       {/* Mobile Sticky Bottom Navigation Bar (Thumb Friendly) */}
       <MobileBottomNav />
+
+      {/* Floating region / currency selector */}
+      <FloatingRegionSelector />
 
       {/* Overlays, Drawers & Modals */}
       <CartDrawer />

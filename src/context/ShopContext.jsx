@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import { PRODUCTS as STATIC_PRODUCTS } from '../data/products';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { PRODUCTS as STATIC_PRODUCTS, DEFAULT_ABAYA_SIZE } from '../data/products';
 import {
   fetchProductsFromSupabase,
   upsertProductToSupabase,
@@ -10,14 +10,32 @@ import {
 
 import { fetchAllSiteContent, upsertSiteContent, DEFAULT_CONTENT } from '../lib/cms';
 import { fetchAdminEnabled, setAdminEnabledRemote as _setAdminEnabledRemote } from '../lib/adminSettings';
+import {
+  fetchDeliverySettings,
+  setDeliverySettingsRemote as _setDeliverySettingsRemote,
+  DEFAULT_DELIVERY_SETTINGS,
+  computeShippingFee,
+  getRegionSubtotal,
+} from '../lib/deliverySettings';
 import { detectUserLocation } from '../utils/geo';
 
 const ShopContext = createContext();
 
 const CURRENCIES = {
-  AED: { symbol: "AED ", rate: 1.0, name: "UAE / Arab (AED د.إ)", flag: "🇦🇪", region: "arab" },
-  INR: { symbol: "₹", rate: 22.75, name: "India (₹ INR)", flag: "🇮🇳", region: "india" },
+  AED: { symbol: "AED ", name: "UAE / Arab (AED د.إ)", flag: "🇦🇪", region: "arab" },
+  INR: { symbol: "₹", name: "India (₹ INR)", flag: "🇮🇳", region: "india" },
 };
+
+function isProductVisibleForRegion(product, region) {
+  if (!product) return false;
+  if (product.targetRegion === 'all') return true;
+  return product.targetRegion === region;
+}
+
+function getProductPriceForCurrency(product, curr) {
+  if (!product) return 0;
+  return curr === 'INR' ? (product.priceInr ?? product.price ?? 0) : (product.price ?? 0);
+}
 
 const DEFAULT_ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
 
@@ -71,6 +89,15 @@ export function ShopProvider({ children }) {
     return true; // default ON
   });
 
+  // Delivery settings (per-region thresholds and fees)
+  const [deliverySettings, setDeliverySettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('noor_delivery_settings');
+      if (saved !== null) return JSON.parse(saved);
+    } catch (_) {}
+    return { ...DEFAULT_DELIVERY_SETTINGS };
+  });
+
   // Admin Auth State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
     try {
@@ -98,38 +125,76 @@ export function ShopProvider({ children }) {
   });
   const [isLocationLoading, setIsLocationLoading] = useState(true);
 
-  // Currency (checks saved preference or defaults to detected country)
+  const CURRENCY_PREF_KEY = 'noor_currency_pref';
+  const CURRENCY_MANUAL_KEY = 'noor_currency_manual';
+
+  const hasManualCurrencyPref = () => {
+    try {
+      return localStorage.getItem(CURRENCY_MANUAL_KEY) === '1';
+    } catch (_) {
+      return false;
+    }
+  };
+
+  // Currency: manual choice persists; otherwise geo picks market on each visit
   const [currency, setCurrencyState] = useState(() => {
     try {
-      const saved = localStorage.getItem('noor_currency_pref');
-      if (saved && CURRENCIES[saved]) return saved;
+      if (hasManualCurrencyPref()) {
+        const saved = localStorage.getItem(CURRENCY_PREF_KEY);
+        if (saved && CURRENCIES[saved]) return saved;
+      }
     } catch (_) {}
     return 'INR';
   });
 
-  const setCurrency = (newCurr) => {
-    if (CURRENCIES[newCurr]) {
-      setCurrencyState(newCurr);
-      try {
-        localStorage.setItem('noor_currency_pref', newCurr);
-      } catch (_) {}
-    }
-  };
+  const applyCurrency = useCallback((newCurr, { manual = false } = {}) => {
+    if (!CURRENCIES[newCurr]) return;
+    const newRegion = newCurr === 'AED' ? 'arab' : 'india';
+    setCurrencyState(newCurr);
 
-  // Detect Country & Auto-select Currency on startup
+    try {
+      if (manual) {
+        localStorage.setItem(CURRENCY_PREF_KEY, newCurr);
+        localStorage.setItem(CURRENCY_MANUAL_KEY, '1');
+      } else {
+        localStorage.removeItem(CURRENCY_PREF_KEY);
+        localStorage.removeItem(CURRENCY_MANUAL_KEY);
+      }
+    } catch (_) {}
+
+    setCart((prev) => {
+      return prev
+        .filter((item) => {
+          const product = products.find((p) => p.id === item.productId);
+          return isProductVisibleForRegion(product, newRegion);
+        })
+        .map((item) => {
+          const product = products.find((p) => p.id === item.productId);
+          return { ...item, price: getProductPriceForCurrency(product, newCurr) };
+        });
+    });
+  }, [products]);
+
+  const setCurrency = useCallback((newCurr) => {
+    applyCurrency(newCurr, { manual: true });
+  }, [applyCurrency]);
+
+  const applyCurrencyRef = useRef(applyCurrency);
+  applyCurrencyRef.current = applyCurrency;
+
+  // Detect country and auto-select market (India -> INR, UAE -> AED)
   useEffect(() => {
     let isMounted = true;
     async function initGeo() {
       try {
         const geo = await detectUserLocation();
-        if (isMounted) {
-          setUserLocation(geo);
-          setIsLocationLoading(false);
-          // If the user hasn't explicitly set a custom currency override in localStorage, set to suggested currency
-          const hasCustomPref = localStorage.getItem('noor_currency_pref');
-          if (!hasCustomPref && geo.suggestedCurrency && CURRENCIES[geo.suggestedCurrency]) {
-            setCurrencyState(geo.suggestedCurrency);
-          }
+        if (!isMounted) return;
+
+        setUserLocation(geo);
+        setIsLocationLoading(false);
+
+        if (!hasManualCurrencyPref() && geo.suggestedCurrency && CURRENCIES[geo.suggestedCurrency]) {
+          applyCurrencyRef.current(geo.suggestedCurrency, { manual: false });
         }
       } catch (err) {
         if (isMounted) setIsLocationLoading(false);
@@ -145,13 +210,13 @@ export function ShopProvider({ children }) {
       const saved = localStorage.getItem('noor_cart') || localStorage.getItem('hayat_cart');
       return saved ? JSON.parse(saved) : [
         {
-          id: 'midnight-espresso-silk-Midnight Espresso-Size 56 (Length 56")-Open abaya-Handwork Abaya',
+          id: 'midnight-espresso-silk-Midnight Espresso-Large (56)-Open abaya-Handwork Abaya',
           productId: 'midnight-espresso-silk',
           name: 'Midnight Espresso Silk Abaya',
           price: 185,
           color: 'Midnight Espresso',
           hex: '#2E1C1A',
-          size: 'Size 56 (Length 56")',
+          size: 'Large (56)',
           style: 'Open abaya',
           work: 'Handwork Abaya',
           image: STATIC_PRODUCTS[0].image,
@@ -232,10 +297,30 @@ export function ShopProvider({ children }) {
     return () => { isMounted = false; };
   }, []);
 
+  // Fetch delivery settings from Supabase on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDeliverySettings() {
+      try {
+        const val = await fetchDeliverySettings();
+        if (isMounted) setDeliverySettings(val);
+      } catch (_) {}
+    }
+    loadDeliverySettings();
+    return () => { isMounted = false; };
+  }, []);
+
   // Toggle admin visibility and persist to Supabase
   const setAdminEnabledRemote = useCallback(async (val) => {
     setAdminEnabled(val);
     await _setAdminEnabledRemote(val);
+  }, []);
+
+  // Update delivery settings and persist to Supabase
+  const setDeliverySettingsRemote = useCallback(async (val) => {
+    const normalized = await _setDeliverySettingsRemote(val);
+    setDeliverySettings(normalized);
+    return normalized;
   }, []);
 
   // Product CRUD Handlers
@@ -424,7 +509,7 @@ export function ShopProvider({ children }) {
     const resolvedWork = work || product.defaultWork || (product.works && product.works[0]) || 'Plain/Basic';
     const resolvedColor = colorName || product.color || (product.colors && product.colors[0]?.name) || 'Midnight Espresso';
     const resolvedHex = hexCode || (product.colors && product.colors[0]?.hex) || '#2E1C1A';
-    const resolvedSize = size || (product.sizes && product.sizes[0]) || 'Size 56 (Length 56")';
+    const resolvedSize = size || (product.sizes && product.sizes[0]) || DEFAULT_ABAYA_SIZE;
     const customTag = customMeasurements ? `-${customMeasurements.height || ''}-${customMeasurements.bust || ''}-${customMeasurements.length || ''}` : '';
 
     const cartItemId = `${product.id}-${resolvedColor}-${resolvedSize}-${resolvedStyle}-${resolvedWork}${customTag}`;
@@ -443,7 +528,7 @@ export function ShopProvider({ children }) {
           id: cartItemId,
           productId: product.id,
           name: product.name,
-          price: product.price,
+          price: getProductPriceForCurrency(product, currency),
           category: product.category,
           wholesaleType: product.wholesaleType,
           color: resolvedColor,
@@ -502,27 +587,38 @@ export function ShopProvider({ children }) {
   // Active Region mapping ('india' vs 'arab')
   const activeRegion = currency === 'AED' ? 'arab' : 'india';
 
-  // Visible products: All products in catalog are accessible across storefront pages
   const visibleProducts = useMemo(() => {
-    console.log(`[ShopContext] visibleProducts: ${products.length} products available across store views (Currency: ${currency}, Active Region: ${activeRegion})`);
-    return products;
-  }, [products, currency, activeRegion]);
+    return products.filter((p) => isProductVisibleForRegion(p, activeRegion));
+  }, [products, activeRegion]);
 
-  // Price formatting helper with currency conversion & clean locale formatting
-  const formatPrice = (basePrice) => {
+  const getProductPrice = useCallback(
+    (product) => getProductPriceForCurrency(product, currency),
+    [currency]
+  );
+
+  const formatPrice = useCallback((amountOrProduct) => {
     const info = CURRENCIES[currency] || CURRENCIES.AED;
-    const num = Math.round(Number(basePrice || 0) * info.rate);
-    const formatted = currency === 'INR' 
-      ? num.toLocaleString('en-IN') 
+    const amount = typeof amountOrProduct === 'object' && amountOrProduct !== null
+      ? getProductPriceForCurrency(amountOrProduct, currency)
+      : Number(amountOrProduct || 0);
+    const num = Math.round(amount);
+    const formatted = currency === 'INR'
+      ? num.toLocaleString('en-IN')
       : num.toLocaleString('en-US');
     return `${info.symbol}${formatted}`;
-  };
+  }, [currency]);
 
   const rawCartSubtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const cartSubtotal = rawCartSubtotal;
-  const freeShippingThreshold = 150;
-  const freeShippingProgress = Math.min(100, Math.round((rawCartSubtotal / freeShippingThreshold) * 100));
-  const freeShippingDifference = Math.max(0, freeShippingThreshold - rawCartSubtotal);
+  const regionSettings = deliverySettings[activeRegion] || DEFAULT_DELIVERY_SETTINGS[activeRegion];
+  const freeShippingThreshold = regionSettings.freeDeliveryThreshold;
+  const regionSubtotal = getRegionSubtotal(rawCartSubtotal);
+  const shippingFee = computeShippingFee(rawCartSubtotal, activeRegion, deliverySettings);
+  const cartTotal = cartSubtotal + shippingFee;
+  const freeShippingProgress = freeShippingThreshold > 0
+    ? Math.min(100, Math.round((regionSubtotal / freeShippingThreshold) * 100))
+    : 100;
+  const freeShippingDifference = Math.max(0, freeShippingThreshold - regionSubtotal);
 
   return (
     <ShopContext.Provider
@@ -554,6 +650,10 @@ export function ShopProvider({ children }) {
         // Admin Visibility Toggle
         adminEnabled,
         setAdminEnabledRemote,
+
+        // Delivery Settings
+        deliverySettings,
+        setDeliverySettingsRemote,
 
         // Admin Auth
         isAdminLoggedIn,
@@ -601,6 +701,7 @@ export function ShopProvider({ children }) {
         currency,
         setCurrency,
         CURRENCIES,
+        getProductPrice,
         formatPrice,
 
         // Cart
@@ -611,6 +712,8 @@ export function ShopProvider({ children }) {
         clearCart,
         rawCartSubtotal,
         cartSubtotal,
+        shippingFee,
+        cartTotal,
         freeShippingThreshold,
         freeShippingProgress,
         freeShippingDifference,

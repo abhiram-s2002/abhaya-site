@@ -13,6 +13,7 @@ create table if not exists public.products (
   name text not null,
   subtitle text,
   price numeric not null,
+  price_inr numeric,
   original_price numeric,
   category text not null,
   badge text,
@@ -30,7 +31,7 @@ create table if not exists public.products (
   wholesale_min_qty integer default 1,
   image text not null,
   gallery jsonb default '[]'::jsonb,
-  sizes jsonb default '["Size 52 (52\")", "Size 54 (54\")", "Size 56 (56\")", "Size 58 (58\")", "Size 60 (60\")", "Custom Tailored Fit"]'::jsonb,
+  sizes jsonb default '["Small (52)", "Medium (54)", "Large (56)", "XL (58)", "2 XL (60)", "Custom"]'::jsonb,
   color text,
   description text,
   fabric_details text,
@@ -44,6 +45,8 @@ create table if not exists public.products (
 -- MIGRATION SCRIPT (Run this in Supabase SQL Editor for existing databases)
 -- ==============================================================================
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS target_region text DEFAULT 'all';
+-- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS price_inr numeric;
+-- UPDATE public.products SET price_inr = ROUND(price * 22.75) WHERE price_inr IS NULL;
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS reviews jsonb DEFAULT '[]'::jsonb;
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS subcategory text;
 -- ALTER TABLE public.products ADD COLUMN IF NOT EXISTS wholesale_type text;
@@ -212,4 +215,15 @@ create policy "Enable update for app_settings"
 -- Insert default: admin_enabled = true
 insert into public.app_settings (key, value)
 values ('admin_enabled', '{"enabled": true}')
+on conflict (key) do nothing;
+
+-- Insert default: delivery_settings (per-region free delivery thresholds and fees)
+insert into public.app_settings (key, value)
+values (
+  'delivery_settings',
+  '{
+    "arab": { "freeDeliveryThreshold": 150, "deliveryFee": 17 },
+    "india": { "freeDeliveryThreshold": 3500, "deliveryFee": 400 }
+  }'::jsonb
+)
 on conflict (key) do nothing;

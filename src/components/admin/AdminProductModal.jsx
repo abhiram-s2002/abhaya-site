@@ -19,6 +19,7 @@ import {
   ABAYA_STYLES,
   ABAYA_WORKS,
   ABAYA_SIZES,
+  ABAYA_SIZE_LABELS,
   WHOLESALE_TYPES
 } from '../../data/products';
 import { uploadProductImage } from '../../lib/supabase';
@@ -53,6 +54,7 @@ export default function AdminProductModal({
   const [name, setName] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [price, setPrice] = useState('');
+  const [priceInr, setPriceInr] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('Abaya');
   const [subcategory, setSubcategory] = useState('');
@@ -86,11 +88,9 @@ export default function AdminProductModal({
   const [works, setWorks] = useState(['Plain/Basic']);
   const [defaultWork, setDefaultWork] = useState('Plain/Basic');
 
-  // Sizes State
-  const [sizes, setSizes] = useState(ABAYA_SIZES.map(s => s.label));
+  // Sizes are fixed to the standard abaya chart
 
-  // Descriptions State
-  const [description, setDescription] = useState('');
+  // Editorial fields
   const [fabricDetails, setFabricDetails] = useState('');
   const [stylingAdvice, setStylingAdvice] = useState('');
   const [careInstructions, setCareInstructions] = useState('');
@@ -106,6 +106,7 @@ export default function AdminProductModal({
       setName(product.name || '');
       setSubtitle(product.subtitle || '');
       setPrice(product.price !== undefined ? String(product.price) : '');
+      setPriceInr(product.priceInr != null ? String(product.priceInr) : '');
       setOriginalPrice(product.originalPrice ? String(product.originalPrice) : '');
       if (PRESET_CATEGORIES.includes(product.category)) {
         setCategory(product.category);
@@ -131,8 +132,6 @@ export default function AdminProductModal({
       setDefaultStyle(product.defaultStyle || ABAYA_STYLES[0].name);
       setWorks(Array.isArray(product.works) && product.works.length > 0 ? product.works : [product.defaultWork || ABAYA_WORKS[0].name]);
       setDefaultWork(product.defaultWork || ABAYA_WORKS[0].name);
-      setSizes(Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : ABAYA_SIZES.map(s => s.label));
-      setDescription(product.description || '');
       setFabricDetails(product.fabricDetails || '');
       setStylingAdvice(product.stylingAdvice || '');
       setCareInstructions(product.careInstructions || '');
@@ -161,7 +160,6 @@ export default function AdminProductModal({
       setDefaultStyle('Open abaya');
       setWorks(['Plain/Basic']);
       setDefaultWork('Plain/Basic');
-      setSizes(ABAYA_SIZES.map(s => s.label));
       setDescription('');
       setFabricDetails('');
       setStylingAdvice('');
@@ -265,17 +263,6 @@ export default function AdminProductModal({
     }
   };
 
-  // Size Toggle
-  const toggleSize = (sizeLabel) => {
-    if (sizes.includes(sizeLabel)) {
-      if (sizes.length > 1) {
-        setSizes(sizes.filter(s => s !== sizeLabel));
-      }
-    } else {
-      setSizes([...sizes, sizeLabel]);
-    }
-  };
-
   // Save Submission
   const handleSave = async (e) => {
     e.preventDefault();
@@ -284,8 +271,15 @@ export default function AdminProductModal({
       setActiveTab('basic');
       return;
     }
-    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
-      setErrorMessage('Please enter a valid price.');
+    const needsAed = targetRegion === 'arab' || targetRegion === 'all';
+    const needsInr = targetRegion === 'india' || targetRegion === 'all';
+    if (needsAed && (!price || isNaN(Number(price)) || Number(price) <= 0)) {
+      setErrorMessage('Please enter a valid AED price.');
+      setActiveTab('basic');
+      return;
+    }
+    if (needsInr && (!priceInr || isNaN(Number(priceInr)) || Number(priceInr) <= 0)) {
+      setErrorMessage('Please enter a valid INR price.');
       setActiveTab('basic');
       return;
     }
@@ -308,7 +302,8 @@ export default function AdminProductModal({
       id: slugId,
       name: name.trim(),
       subtitle: subtitle.trim(),
-      price: Number(price),
+      price: needsAed ? Number(price) : 0,
+      priceInr: needsInr ? Number(priceInr) : null,
       originalPrice: originalPrice ? Number(originalPrice) : null,
       category: finalCategory,
       subcategory: subcategory ? subcategory.trim() : null,
@@ -327,9 +322,9 @@ export default function AdminProductModal({
       gallery: gallery.length > 0 ? gallery : [fallbackImage],
       color: color.trim(),
       colors,
-      sizes,
+      sizes: ABAYA_SIZE_LABELS,
       stockCount: Number(stockCount) || 10,
-      description: description.trim(),
+      description: '',
       fabricDetails: fabricDetails.trim(),
       stylingAdvice: stylingAdvice.trim(),
       careInstructions: careInstructions.trim()
@@ -423,9 +418,12 @@ export default function AdminProductModal({
                   <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
                     Subtitle / Tagline
                   </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 100% Pure Mulberry Silk | Hand-Rolled Hems"
+                  <p className="text-[11px] text-stone-400 font-medium">
+                    Tagline or intro for the product page. Pair with Fabric &amp; Styling fields in Editorial tab.
+                  </p>
+                  <textarea
+                    rows={2}
+                    placeholder="e.g. Premium Korean Nidha · Thread & Stone Work"
                     value={subtitle}
                     onChange={(e) => setSubtitle(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-sm"
@@ -445,27 +443,51 @@ export default function AdminProductModal({
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                    Price (AED د.إ) *
-                  </label>
-                  <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
-                    <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
-                      AED
-                    </span>
-                    <input
-                      type="number"
-                      required
-                      min="1"
-                      step="1"
-                      placeholder="650"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
-                    />
+                {(targetRegion === 'arab' || targetRegion === 'all') && (
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      Price (AED د.إ) *
+                    </label>
+                    <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
+                      <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
+                        AED
+                      </span>
+                      <input
+                        type="number"
+                        required
+                        min="1"
+                        step="1"
+                        placeholder="650"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
+                      />
+                    </div>
                   </div>
-                  <span className="text-[10px] text-stone-500">Auto-converts to INR (₹) and AED (د.إ) based on visitor's selected market.</span>
-                </div>
+                )}
+
+                {(targetRegion === 'india' || targetRegion === 'all') && (
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      Price (INR ₹) *
+                    </label>
+                    <div className="flex rounded-xl border border-secondary/30 bg-[#fff9fd] focus-within:bg-white focus-within:ring-2 focus-within:ring-royal-violet/40 overflow-hidden transition-all">
+                      <span className="inline-flex items-center px-3.5 bg-stone-100/80 text-xs font-bold text-stone-600 border-r border-secondary/20 select-none">
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        required
+                        min="1"
+                        step="1"
+                        placeholder="4200"
+                        value={priceInr}
+                        onChange={(e) => setPriceInr(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-transparent focus:outline-none text-sm font-bold text-stone-900"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {/* Target Audience / Market Selection */}
                 <div className="space-y-2 col-span-full">
@@ -781,27 +803,37 @@ export default function AdminProductModal({
           {activeTab === 'variants' && (
             <div className="space-y-6 animate-fade-in">
 
-              {/* Sizes Selector */}
+              {/* Fixed Standard Sizes */}
               <div className="p-5 rounded-2xl bg-white border border-secondary/20 space-y-3">
-                <h3 className="text-sm font-semibold text-primary">Abaya Lengths & Sizes</h3>
+                <h3 className="text-sm font-semibold text-primary">Standard Abaya Sizes (Fixed)</h3>
+                <p className="text-xs text-stone-500">All products use the Noor al dhuha abaya size chart.</p>
+                <div className="overflow-x-auto rounded-xl border border-secondary/20">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-stone-700 font-bold">
+                      <tr>
+                        <th className="p-2.5 border-b border-stone-200">Size &amp; (No)</th>
+                        <th className="p-2.5 border-b border-stone-200">Height</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-200">
+                      {ABAYA_SIZES.filter((size) => size.size !== 'Custom').map((size) => (
+                        <tr key={size.size}>
+                          <td className="p-2.5 font-bold text-primary">{size.name} {size.size}</td>
+                          <td className="p-2.5 text-stone-600">{size.height}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="flex flex-wrap gap-2">
-                  {ABAYA_SIZES.map((size) => {
-                    const isSelected = sizes.includes(size.label);
-                    return (
-                      <button
-                        key={size.size}
-                        type="button"
-                        onClick={() => toggleSize(size.label)}
-                        className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
-                          isSelected
-                            ? 'bg-primary text-white border-primary shadow-sm'
-                            : 'bg-surface-container-low text-stone-600 border-surface-container'
-                        }`}
-                      >
-                        {size.label}
-                      </button>
-                    );
-                  })}
+                  {ABAYA_SIZE_LABELS.map((label) => (
+                    <span
+                      key={label}
+                      className="px-3 py-1.5 rounded-xl bg-primary/10 text-primary border border-primary/20 text-xs font-medium"
+                    >
+                      {label}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -812,26 +844,13 @@ export default function AdminProductModal({
             <div className="space-y-4 animate-fade-in">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
-                  Product Narrative & Description
-                </label>
-                <textarea
-                  rows={3}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="An ode to quiet luxury. Handcrafted from luminous pure mulberry silk with masterfully tailored cuts..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-xs sm:text-sm leading-relaxed"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
                   Fabric Details & Density
                 </label>
                 <textarea
                   rows={2}
                   value={fabricDetails}
                   onChange={(e) => setFabricDetails(e.target.value)}
-                  placeholder="100% Grade 6A Organic Mulberry Silk. 19 Momme density for high opacity..."
+                  placeholder="Premium Korean Nidha"
                   className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-xs sm:text-sm leading-relaxed"
                 />
               </div>
@@ -840,11 +859,14 @@ export default function AdminProductModal({
                 <label className="text-xs font-semibold uppercase tracking-wider text-stone-700">
                   Styling & Atelier Advice
                 </label>
+                <p className="text-[11px] text-stone-400 font-medium">
+                  Design, Fit, Style, Occasion lines for &quot;About This Piece&quot;.
+                </p>
                 <textarea
-                  rows={2}
+                  rows={4}
                   value={stylingAdvice}
                   onChange={(e) => setStylingAdvice(e.target.value)}
-                  placeholder="Pairs impeccably with tailored inner slips, silk wraps, and pearl jewelry..."
+                  placeholder={`Design: Elegant back detailing with delicate embellishments\nFit: Flowing, graceful and modest\nStyle: Sophisticated, luxurious & effortlessly elegant\nOccasion: Perfect for everyday elegance, gatherings & special events`}
                   className="w-full px-4 py-2.5 rounded-xl border border-secondary/30 bg-white focus:outline-none focus:ring-2 focus:ring-royal-violet/30 text-xs sm:text-sm leading-relaxed"
                 />
               </div>

@@ -30,31 +30,124 @@ import {
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import ProductCard from '../components/ProductCard';
-import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES } from '../data/products';
+import { ABAYA_STYLES, ABAYA_WORKS, ABAYA_SIZES, DEFAULT_ABAYA_SIZE } from '../data/products';
 import { formatSingleProductWhatsAppMessage, openWhatsApp } from '../utils/whatsapp';
 
-// Standard Abaya Lengths matching basicabaya.com
-const ABAYA_LENGTHS = [
-  '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60'
-];
+function AbayaSizeChartTable() {
+  const standardSizes = ABAYA_SIZES.filter((s) => s.size !== 'Custom');
+
+  return (
+    <table className="w-full text-left text-xs border border-stone-200">
+      <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-[#1E141B] font-bold">
+        <tr>
+          <th className="p-2.5 border-b border-stone-200">Size &amp; (No)</th>
+          <th className="p-2.5 border-b border-stone-200">Height</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-stone-200">
+        {standardSizes.map((size) => (
+          <tr key={size.size}>
+            <td className="p-2.5 font-bold text-[#7A0648]">
+              {size.name} {size.size}
+            </td>
+            <td className="p-2.5 text-stone-600 font-medium">{size.height}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+const TAGLINE_MAX_LENGTH = 90;
+
+function ProductDetailLine({ label, value }) {
+  if (!value?.trim()) return null;
+  return (
+    <p>
+      <strong>{label}:</strong> {value.trim()}
+    </p>
+  );
+}
+
+function ProductDetailsSummary({ product, excludeSubtitle = false }) {
+  const subtitleText = product.subtitle?.trim() || '';
+  const fabric = (product.fabricDetails || product.fabric)?.trim() || '';
+  const work = product.defaultWork?.trim() || '';
+  const color = product.color?.trim() || '';
+  const styling = product.stylingAdvice?.trim() || '';
+  const care = product.careInstructions?.trim() || '';
+  const wholesale = product.wholesaleType?.trim() || '';
+
+  const primaryText = !excludeSubtitle ? subtitleText : '';
+  const textIncludes = (value) => value && primaryText.toLowerCase().includes(value.toLowerCase());
+
+  const structuredLines = [
+    fabric && !textIncludes(fabric) ? ['Fabric', fabric] : null,
+    work && !textIncludes(work) ? ['Work', work] : null,
+    color && !textIncludes(color) ? ['Color', color] : null,
+    care && !textIncludes(care) ? ['Garment Care', care] : null,
+    wholesale && !textIncludes(wholesale) ? ['Wholesale Lot', wholesale] : null,
+  ].filter(Boolean);
+
+  const showStylingBlock = styling && !textIncludes(styling.slice(0, 24));
+
+  if (primaryText || structuredLines.length > 0 || showStylingBlock) {
+    return (
+      <div className="space-y-3 text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
+        {primaryText && (
+          <p className="whitespace-pre-line text-stone-700 leading-relaxed">{primaryText}</p>
+        )}
+
+        {(structuredLines.length > 0 || showStylingBlock) && (
+          <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
+            {structuredLines.map(([label, value]) => (
+              <ProductDetailLine key={label} label={label} value={value} />
+            ))}
+            {showStylingBlock && (
+              <div className="whitespace-pre-line leading-relaxed">
+                {styling}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
+      Handcrafted bespoke artisan piece from the NOOR AL DHUHA collection.
+    </p>
+  );
+}
 
 export default function ProductDetailPage() {
   const {
     PRODUCTS,
     selectedProductId,
     formatPrice,
+    getProductPrice,
     addToCart,
     navigateTo,
     showToast,
-    currency
+    currency,
+    freeShippingThreshold,
+    deliverySettings,
+    activeRegion
   } = useShop();
 
   const product = PRODUCTS.find((p) => p.id === selectedProductId) || PRODUCTS[0];
 
-  // Options state mirroring basicabaya.com
-  const [selectedLength, setSelectedLength] = useState('54');
-  const [hasButtons, setHasButtons] = useState('No'); // 'No' | 'Yes'
-  const [sizeType, setSizeType] = useState('Free size'); // 'Free size' | 'Custom'
+  useEffect(() => {
+    const isVisible = PRODUCTS.some((p) => p.id === selectedProductId);
+    if (!isVisible && PRODUCTS.length > 0) {
+      showToast('This product is not available in your selected market.');
+      navigateTo('shop');
+    }
+  }, [selectedProductId, PRODUCTS, navigateTo, showToast]);
+
+  // Options state
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_ABAYA_SIZE);
   const [customNotes, setCustomNotes] = useState('');
   const [selectedStyle, setSelectedStyle] = useState(product.defaultStyle || ABAYA_STYLES[0].name);
   const [selectedWork, setSelectedWork] = useState(product.defaultWork || ABAYA_WORKS[0].name);
@@ -71,7 +164,6 @@ export default function ProductDetailPage() {
 
   // Accordion state (Prestige / Basic Abaya layout)
   const [openAccordions, setOpenAccordions] = useState({
-    description: true,
     sizeChart: false,
     deliveryReturn: false,
     garmentCare: false,
@@ -115,9 +207,7 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     const initialQty = product?.category === 'WHOLESALE' ? (product.wholesaleMinQty || 10) : 1;
-    setSelectedLength('54');
-    setHasButtons('No');
-    setSizeType('Free size');
+    setSelectedSize(DEFAULT_ABAYA_SIZE);
     setCustomNotes('');
     setSelectedStyle(product.defaultStyle || ABAYA_STYLES[0].name);
     setSelectedWork(product.defaultWork || ABAYA_WORKS[0].name);
@@ -145,6 +235,10 @@ export default function ProductDetailPage() {
   const currentColor = product.colors?.[0] || (productColor ? { name: productColor, hex: '#1C1C1C' } : null);
   const images = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
+  const regionDeliveryFee = deliverySettings?.[activeRegion]?.deliveryFee ?? 0;
+  const subtitleText = product.subtitle?.trim() || '';
+  const isShortTagline = subtitleText.length > 0 && subtitleText.length <= TAGLINE_MAX_LENGTH;
+  const showTaglineUnderTitle = isShortTagline;
 
   const nextImage = () => {
     setActiveImageIdx((prev) => (prev + 1) % images.length);
@@ -165,9 +259,11 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    const isCustom = sizeType === 'Custom';
-    const chosenSizeFormatted = `${sizeType} - Length ${selectedLength}" - Buttons: ${hasButtons}`;
-    
+    const isCustom = selectedSize === 'Custom';
+    const chosenSizeFormatted = isCustom && customNotes.trim()
+      ? `Custom — ${customNotes.trim()}`
+      : selectedSize;
+
     addToCart(
       product,
       product.color || currentColor.name,
@@ -177,7 +273,7 @@ export default function ProductDetailPage() {
       images[activeImageIdx],
       selectedStyle,
       selectedWork,
-      isCustom ? { customDetails: customNotes, length: selectedLength, buttons: hasButtons } : null
+      isCustom ? { customDetails: customNotes } : null
     );
 
     setIsAddedAnimation(true);
@@ -185,8 +281,10 @@ export default function ProductDetailPage() {
   };
 
   const handleWhatsAppInstantOrder = () => {
-    const isCustom = sizeType === 'Custom';
-    const chosenSizeFormatted = `${sizeType} (Length: ${selectedLength}", Buttons: ${hasButtons})`;
+    const isCustom = selectedSize === 'Custom';
+    const chosenSizeFormatted = isCustom && customNotes.trim()
+      ? `Custom — ${customNotes.trim()}`
+      : selectedSize;
     const msg = formatSingleProductWhatsAppMessage({
       product,
       colorName: product.color || currentColor.name,
@@ -194,8 +292,9 @@ export default function ProductDetailPage() {
       style: selectedStyle,
       work: selectedWork,
       quantity,
-      customMeasurements: isCustom ? { customDetails: customNotes, length: selectedLength, buttons: hasButtons } : null,
-      formatPrice
+      customMeasurements: isCustom ? { customDetails: customNotes } : null,
+      formatPrice,
+      unitPrice: getProductPrice(product)
     });
     showToast(`Opening WhatsApp order for "${product.name}"...`);
     openWhatsApp(msg);
@@ -279,7 +378,7 @@ export default function ProductDetailPage() {
             />
 
             {/* Badges Overlay - Only Sale if on discount */}
-            {product.originalPrice && product.originalPrice > product.price && (
+            {currency === 'AED' && product.originalPrice && product.originalPrice > product.price && (
               <div className="absolute top-3 left-3 z-10 pointer-events-none">
                 <span className="badge-sale text-[10px] tracking-widest uppercase">
                   Sale
@@ -398,24 +497,48 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
-            {/* Product Subtitle / Tagline */}
-            {product.subtitle && (
-              <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed pt-0.5">
-                {product.subtitle}
+            {/* Optional short tagline under title; longer copy shows in About This Piece */}
+            {showTaglineUnderTitle && (
+              <p className="text-xs sm:text-sm text-stone-500 font-medium leading-relaxed pt-0.5">
+                {subtitleText}
               </p>
             )}
 
             {/* Price Row */}
             <div className="flex items-baseline gap-3 pt-1">
               <span className="text-xl sm:text-2xl text-[#7A0648] font-bold tabular-nums tracking-tight">
-                {formatPrice(product.price)}
+                {formatPrice(product)}
               </span>
-              {product.originalPrice && product.originalPrice > product.price && (
+              {currency === 'AED' && product.originalPrice && product.originalPrice > product.price && (
                 <span className="text-sm sm:text-base text-stone-400 line-through tabular-nums">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
             </div>
+
+            {freeShippingThreshold > 0 && (
+              <div className="flex items-start gap-2 pt-2.5 text-xs text-stone-600 font-medium leading-relaxed">
+                <Truck className="w-4 h-4 text-[#7A0648] shrink-0 mt-0.5" strokeWidth={1.75} />
+                <span>
+                  Free delivery on orders above{' '}
+                  <strong className="text-[#1E141B]">{formatPrice(freeShippingThreshold)}</strong>
+                  {regionDeliveryFee > 0 && (
+                    <>
+                      {' '}
+                      · Below that, {formatPrice(regionDeliveryFee)} flat shipping
+                    </>
+                  )}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Product description — visible above size & purchase options */}
+          <div className="space-y-2 border-b border-stone-200 pb-5">
+            <p className="text-xs uppercase tracking-wider font-bold text-[#1E141B]">
+              About This Piece
+            </p>
+            <ProductDetailsSummary product={product} excludeSubtitle={showTaglineUnderTitle} />
           </div>
 
           {/* ========================================================================= */}
@@ -439,70 +562,12 @@ export default function ProductDetailPage() {
           )}
 
           {/* ========================================================================= */}
-          {/* OPTION 1: LENGTH (INCHES) SELECTOR (basicabaya.com Grid)                  */}
+          {/* SIZE SELECTOR + SIZE CHART LINK                                           */}
           {/* ========================================================================= */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs uppercase tracking-wider">
               <span className="text-stone-600 font-medium">
-                Length: <strong className="text-[#1E141B] font-bold">{selectedLength}</strong>
-              </span>
-            </div>
-            <div className="grid grid-cols-6 sm:grid-cols-12 gap-1.5">
-              {ABAYA_LENGTHS.map((len) => {
-                const isSelected = selectedLength === len;
-                return (
-                  <button
-                    key={len}
-                    onClick={() => setSelectedLength(len)}
-                    className={`py-2 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#7A0648] text-white border-2 border-[#7A0648] shadow-xs'
-                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-100'
-                    }`}
-                  >
-                    {len}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* OPTION 2: BUTTONS SELECTOR (No / Yes)                                     */}
-          {/* ========================================================================= */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs uppercase tracking-wider">
-              <span className="text-stone-600 font-medium">
-                Buttons: <strong className="text-[#1E141B] font-bold">{hasButtons}</strong>
-              </span>
-            </div>
-            <div className="flex gap-2">
-              {['No', 'Yes'].map((btnOption) => {
-                const isSelected = hasButtons === btnOption;
-                return (
-                  <button
-                    key={btnOption}
-                    onClick={() => setHasButtons(btnOption)}
-                    className={`flex-1 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#7A0648] text-white border-2 border-[#7A0648] shadow-xs'
-                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-100'
-                    }`}
-                  >
-                    {btnOption}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* OPTION 3: SIZE / FIT SELECTOR + SIZE CHART LINK                           */}
-          {/* ========================================================================= */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs uppercase tracking-wider">
-              <span className="text-stone-600 font-medium">
-                Size: <strong className="text-[#1E141B] font-bold">{sizeType}</strong>
+                Size: <strong className="text-[#1E141B] font-bold">{selectedSize}</strong>
               </span>
               <button
                 onClick={() => setShowSizeGuideModal(true)}
@@ -512,33 +577,32 @@ export default function ProductDetailPage() {
                 <span>Size Chart</span>
               </button>
             </div>
-            
-            <div className="flex gap-2">
-              {['Free size', 'Custom'].map((fit) => {
-                const isSelected = sizeType === fit;
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {ABAYA_SIZES.map((sizeOption) => {
+                const isSelected = selectedSize === sizeOption.label;
                 return (
                   <button
-                    key={fit}
-                    onClick={() => setSizeType(fit)}
-                    className={`flex-1 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    key={sizeOption.label}
+                    onClick={() => setSelectedSize(sizeOption.label)}
+                    className={`py-2.5 px-2 text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-[#7A0648] text-white border-2 border-[#7A0648] shadow-xs'
                         : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-100'
                     }`}
                   >
-                    {fit}
+                    {sizeOption.label}
                   </button>
                 );
               })}
             </div>
 
-            {/* Custom Sizing Input (shown only if Custom is selected) */}
-            {sizeType === 'Custom' && (
+            {selectedSize === 'Custom' && (
               <div className="pt-2 animate-fade-in">
                 <textarea
                   value={customNotes}
                   onChange={(e) => setCustomNotes(e.target.value)}
-                  placeholder="Enter custom measurements (e.g., Bust, Sleeves, Hip, Length in inches)..."
+                  placeholder="Enter custom measurements (e.g., height, bust, sleeve, length in inches)..."
                   rows={2}
                   className="w-full bg-white text-[#1E141B] placeholder-stone-400 text-xs p-2.5 border border-stone-300 focus:outline-none focus:border-[#7A0648] transition-colors resize-none shadow-xs"
                 />
@@ -638,55 +702,7 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           <div className="divide-y divide-stone-200 border-y border-stone-200 pt-2 text-[#1E141B]">
             
-            {/* 1. Description Accordion */}
-            <div className="py-3">
-              <button
-                onClick={() => toggleAccordion('description')}
-                className="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-[#1E141B] py-1 cursor-pointer hover:text-[#7A0648] transition-colors"
-              >
-                <span>Description & Product Details</span>
-                {openAccordions.description ? <ChevronUp className="w-4 h-4 text-[#7A0648]" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
-              </button>
-              {openAccordions.description && (
-                <div className="pt-3 pb-2 space-y-3 text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
-                  {/* Main Description */}
-                  {product.description ? (
-                    <p className="whitespace-pre-line text-stone-700 leading-relaxed">{product.description}</p>
-                  ) : product.subtitle ? (
-                    <p className="text-stone-700 leading-relaxed">{product.subtitle}</p>
-                  ) : (
-                    <p className="text-stone-600">Handcrafted bespoke artisan piece from the NOOR AL DHUHA collection.</p>
-                  )}
-
-                  {/* Specifications Box: Only display customer-facing attributes if saved in database */}
-                  {(Boolean(product.color?.trim()) ||
-                    Boolean((product.fabricDetails || product.fabric)?.trim()) ||
-                    Boolean(product.careInstructions?.trim()) ||
-                    Boolean(product.stylingAdvice?.trim()) ||
-                    Boolean(product.wholesaleType?.trim())) && (
-                    <div className="p-3 bg-stone-50 border border-stone-200 space-y-1.5 text-xs text-[#1E141B]">
-                      {Boolean(product.color?.trim()) && (
-                        <p><strong>Color:</strong> {product.color.trim()}</p>
-                      )}
-                      {Boolean((product.fabricDetails || product.fabric)?.trim()) && (
-                        <p><strong>Fabric / Material:</strong> {(product.fabricDetails || product.fabric).trim()}</p>
-                      )}
-                      {Boolean(product.careInstructions?.trim()) && (
-                        <p><strong>Garment Care:</strong> {product.careInstructions.trim()}</p>
-                      )}
-                      {Boolean(product.stylingAdvice?.trim()) && (
-                        <p><strong>Styling Advice:</strong> {product.stylingAdvice.trim()}</p>
-                      )}
-                      {Boolean(product.wholesaleType?.trim()) && (
-                        <p><strong>Wholesale Lot:</strong> {product.wholesaleType.trim()}</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* 2. Size Guide & Measurements Table Accordion */}
+            {/* 1. Size Guide & Measurements Table Accordion */}
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('sizeChart')}
@@ -698,57 +714,19 @@ export default function ProductDetailPage() {
               {openAccordions.sizeChart && (
                 <div className="pt-3 pb-2 space-y-3 text-xs text-stone-600">
                   <p className="text-[11px] text-stone-500 font-medium">
-                    Standard basic abaya measurement chart (all measurements in inches):
+                    Noor al dhuha abaya size chart — select your size based on height:
                   </p>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border border-stone-200">
-                      <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-[#1E141B] font-bold">
-                        <tr>
-                          <th className="p-2 border-b border-stone-200">Length (inches)</th>
-                          <th className="p-2 border-b border-stone-200">Sleeves from neck</th>
-                          <th className="p-2 border-b border-stone-200">Chest Width</th>
-                          <th className="p-2 border-b border-stone-200">Height Guide</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-stone-200 text-[#1E141B]">
-                        <tr>
-                          <td className="p-2 font-bold text-[#7A0648]">49 - 51"</td>
-                          <td className="p-2">23"</td>
-                          <td className="p-2">26 - 27"</td>
-                          <td className="p-2 font-medium text-stone-600">4'10" – 5'0"</td>
-                        </tr>
-                        <tr>
-                          <td className="p-2 font-bold text-[#7A0648]">52 - 53"</td>
-                          <td className="p-2">25"</td>
-                          <td className="p-2">27"</td>
-                          <td className="p-2 font-medium text-stone-600">5'1" – 5'2"</td>
-                        </tr>
-                        <tr>
-                          <td className="p-2 font-bold text-[#7A0648]">54 - 55"</td>
-                          <td className="p-2">26"</td>
-                          <td className="p-2">27"</td>
-                          <td className="p-2 font-medium text-stone-600">5'3" – 5'4"</td>
-                        </tr>
-                        <tr>
-                          <td className="p-2 font-bold text-[#7A0648]">56 - 57"</td>
-                          <td className="p-2">27"</td>
-                          <td className="p-2">28"</td>
-                          <td className="p-2 font-medium text-stone-600">5'5" – 5'6"</td>
-                        </tr>
-                        <tr>
-                          <td className="p-2 font-bold text-[#7A0648]">58 - 60"</td>
-                          <td className="p-2">28"</td>
-                          <td className="p-2">28"</td>
-                          <td className="p-2 font-medium text-stone-600">5'7" – 5'10"+</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <AbayaSizeChartTable />
                   </div>
+                  <p className="text-[11px] text-stone-500 font-medium">
+                    Need a bespoke fit? Select <strong>Custom</strong> and enter your measurements above.
+                  </p>
                 </div>
               )}
             </div>
 
-            {/* 3. Delivery & Returns Accordion */}
+            {/* 2. Delivery & Returns Accordion */}
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('deliveryReturn')}
@@ -770,13 +748,13 @@ export default function ProductDetailPage() {
                     </div>
                   </div>
                   <p className="text-xs text-stone-500 pt-1">
-                    Free size abayas can be exchanged within 7 days of delivery. Custom-tailored pieces are made to order and non-refundable.
+                    Standard chart sizes can be exchanged within 7 days of delivery. Custom-tailored pieces are made to order and non-refundable.
                   </p>
                 </div>
               )}
             </div>
 
-            {/* 4. Garment Care Accordion */}
+            {/* 3. Garment Care Accordion */}
             <div className="py-3">
               <button
                 onClick={() => toggleAccordion('garmentCare')}
@@ -1008,7 +986,7 @@ export default function ProductDetailPage() {
             />
             <div className="truncate">
               <p className="text-xs font-bold uppercase text-white truncate">{product.name}</p>
-              <p className="text-xs font-bold text-[#FFF0A0] tabular-nums">{formatPrice(product.price)}</p>
+              <p className="text-xs font-bold text-[#FFF0A0] tabular-nums">{formatPrice(product)}</p>
             </div>
           </div>
           <button
@@ -1044,54 +1022,13 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="overflow-x-auto pt-2">
-              <table className="w-full text-left text-xs border border-stone-200">
-                <thead className="bg-stone-100 uppercase tracking-wider text-[10px] text-[#1E141B] font-bold">
-                  <tr>
-                    <th className="p-2.5 border-b border-stone-200">Abaya Length</th>
-                    <th className="p-2.5 border-b border-stone-200">Sleeves from Neck</th>
-                    <th className="p-2.5 border-b border-stone-200">Chest Width</th>
-                    <th className="p-2.5 border-b border-stone-200">Recommended Height</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-200">
-                  <tr>
-                    <td className="p-2.5 font-bold text-[#7A0648]">49 - 51"</td>
-                    <td className="p-2.5">23"</td>
-                    <td className="p-2.5">26 - 27"</td>
-                    <td className="p-2.5 text-stone-600 font-medium">4'10" – 5'0" (148–152 cm)</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2.5 font-bold text-[#7A0648]">52 - 53"</td>
-                    <td className="p-2.5">25"</td>
-                    <td className="p-2.5">27"</td>
-                    <td className="p-2.5 text-stone-600 font-medium">5'1" – 5'2" (153–158 cm)</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2.5 font-bold text-[#7A0648]">54 - 55"</td>
-                    <td className="p-2.5">26"</td>
-                    <td className="p-2.5">27"</td>
-                    <td className="p-2.5 text-stone-600 font-medium">5'3" – 5'4" (159–163 cm)</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2.5 font-bold text-[#7A0648]">56 - 57"</td>
-                    <td className="p-2.5">27"</td>
-                    <td className="p-2.5">28"</td>
-                    <td className="p-2.5 text-stone-600 font-medium">5'5" – 5'6" (164–168 cm)</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2.5 font-bold text-[#7A0648]">58 - 60"</td>
-                    <td className="p-2.5">28"</td>
-                    <td className="p-2.5">28"</td>
-                    <td className="p-2.5 text-stone-600 font-medium">5'7" – 5'10"+ (169–178 cm)</td>
-                  </tr>
-                </tbody>
-              </table>
+              <AbayaSizeChartTable />
             </div>
 
             <div className="p-3 bg-stone-50 border border-stone-200 text-xs space-y-1">
-              <p className="font-bold text-[#1E141B]">💡 Need a custom tailored fit?</p>
+              <p className="font-bold text-[#1E141B]">Need a custom tailored fit?</p>
               <p className="text-stone-600 text-[11px] font-medium">
-                Choose <strong>Size: Custom</strong> and specify your exact bust, sleeve, and shoulder measurements in the order notes.
+                Choose <strong>Custom</strong> and specify your exact bust, sleeve, and shoulder measurements in the order notes.
               </p>
             </div>
 

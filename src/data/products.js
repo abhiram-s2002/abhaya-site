@@ -109,41 +109,49 @@ export const WHOLESALE_TYPES = [
 export const ABAYA_SIZES = [
   {
     size: "52",
-    label: "Size 52 (Length 52\")",
-    height: "5'0\" – 5'2\" (152–158 cm)",
-    bust: "Bust up to 40\""
+    name: "Small",
+    label: "Small (52)",
+    height: "5' & Below"
   },
   {
     size: "54",
-    label: "Size 54 (Length 54\")",
-    height: "5'3\" – 5'4\" (160–164 cm)",
-    bust: "Bust up to 42\""
+    name: "Medium",
+    label: "Medium (54)",
+    height: "5.1' – 5.3'"
   },
   {
     size: "56",
-    label: "Size 56 (Length 56\")",
-    height: "5'5\" – 5'6\" (165–169 cm)",
-    bust: "Bust up to 44\""
+    name: "Large",
+    label: "Large (56)",
+    height: "5.4' – 5.6'"
   },
   {
     size: "58",
-    label: "Size 58 (Length 58\")",
-    height: "5'7\" – 5'8\" (170–174 cm)",
-    bust: "Bust up to 46\""
+    name: "XL",
+    label: "XL (58)",
+    height: "5.7' – 5.8'"
   },
   {
     size: "60",
-    label: "Size 60 (Length 60\")",
-    height: "5'9\"+ (175 cm+)",
-    bust: "Bust up to 48\""
+    name: "2 XL",
+    label: "2 XL (60)",
+    height: "5.9' – 6.0'"
   },
   {
     size: "Custom",
-    label: "Custom Tailored Fit",
-    height: "Bespoke Measurements",
-    bust: "Custom to Order"
+    name: "Custom",
+    label: "Custom",
+    height: "Bespoke measurements"
   }
 ];
+
+export const ABAYA_SIZE_LABELS = ABAYA_SIZES.map((s) => s.label);
+
+export const DEFAULT_ABAYA_SIZE = ABAYA_SIZES.find((s) => s.size === "54")?.label || "Medium (54)";
+
+export function getAbayaSizeByLabel(label) {
+  return ABAYA_SIZES.find((s) => s.label === label) || null;
+}
 
 export const PRODUCTS = [
   // ── 1. ABAYA CATEGORY PRODUCTS ──
@@ -152,6 +160,7 @@ export const PRODUCTS = [
     name: "Midnight Espresso Silk Abaya",
     subtitle: "100% Pure Mulberry Silk | Hand-Rolled Hems",
     price: 185,
+    priceInr: 4209,
     originalPrice: 240,
     category: "Abaya",
     badge: "Signature Bestseller",
@@ -187,6 +196,7 @@ export const PRODUCTS = [
     name: "Royal Violet Mulberry Silk Abaya",
     subtitle: "Limited Ethereal Edition | Regal Luster",
     price: 210,
+    priceInr: 4778,
     originalPrice: 265,
     category: "Abaya",
     badge: "Limited Edition",
@@ -219,6 +229,7 @@ export const PRODUCTS = [
     name: "Ethereal Rose Petal Chiffon Abaya",
     subtitle: "Featherlight Airy Drape | Non-Slip Weave",
     price: 135,
+    priceInr: 3071,
     originalPrice: 170,
     category: "Abaya",
     badge: "Trending",
@@ -251,6 +262,7 @@ export const PRODUCTS = [
     name: "Sage Haven Modal Luxe Abaya",
     subtitle: "Ultra-Soft Cloud Touch | Four-Way Elasticity",
     price: 120,
+    priceInr: 2730,
     originalPrice: 155,
     category: "Abaya",
     badge: "Staff Pick",
@@ -283,6 +295,7 @@ export const PRODUCTS = [
     name: "Ivory Pebble Georgette Atelier Abaya",
     subtitle: "Subtle Pebble Grain | Flawless Architecture",
     price: 195,
+    priceInr: 4436,
     originalPrice: 250,
     category: "Abaya",
     badge: "Artisan Atelier",
@@ -315,6 +328,7 @@ export const PRODUCTS = [
     name: "Lavender Mist Luminous Silk Abaya",
     subtitle: "Ethereal Pastel Sheen | Ultra Lightweight",
     price: 175,
+    priceInr: 3981,
     originalPrice: 220,
     category: "Abaya",
     badge: "Trending",
@@ -347,6 +361,7 @@ export const PRODUCTS = [
     name: "Soft Amethyst Draped Silk Abaya",
     subtitle: "Lustrous Violet Nuance | Editorial Classic",
     price: 190,
+    priceInr: 4323,
     originalPrice: 245,
     category: "Abaya",
     badge: "Violet Edition",
@@ -381,6 +396,7 @@ export const PRODUCTS = [
     name: "Pure Mulberry Silk Shaila Shawl",
     subtitle: "Non-Slip Lightweight Weave | Hand-Finished Edges",
     price: 45,
+    priceInr: 1024,
     originalPrice: 65,
     category: "Shaila/Shawl",
     badge: "Essential Luxury",
@@ -412,6 +428,7 @@ export const PRODUCTS = [
     name: "Chantilly Lace Edge Chiffon Shaila",
     subtitle: "French Floral Lace Trim | Featherlight Flow",
     price: 38,
+    priceInr: 865,
     originalPrice: 50,
     category: "Shaila/Shawl",
     badge: "Atelier Classic",
@@ -445,6 +462,7 @@ export const PRODUCTS = [
     name: "Aura Breathable Half & Full Niqab Set",
     subtitle: "Ultra-Light Breathable Chiffon | Anti-Friction Ear Tie",
     price: 25,
+    priceInr: 569,
     originalPrice: 35,
     category: "Hijab",
     badge: "Bestseller",
@@ -475,6 +493,7 @@ export const PRODUCTS = [
     name: "Satin-Lined Undercap & Modest Touch Gloves Set",
     subtitle: "Hair-Protecting Silk Satin | Touchscreen Modesty Gloves",
     price: 30,
+    priceInr: 683,
     originalPrice: 42,
     category: "Hijab",
     badge: "Hair Care Essential",
@@ -508,6 +527,7 @@ export const PRODUCTS = [
     name: "Silk-Touch Sleeveless Abaya Inner Slip Dress",
     subtitle: "Opaque Foundation Layer | Anti-Static Cooling Finish",
     price: 55,
+    priceInr: 1251,
     originalPrice: 75,
     category: "Inner & Prayer dress",
     badge: "Foundation Staple",
@@ -539,6 +559,7 @@ export const PRODUCTS = [
     name: "Ethereal 2-Piece Travel Prayer Dress Set with Pouch",
     subtitle: "Attached Hijab & Full Skirt | Wrinkle-Resistant Modal",
     price: 68,
+    priceInr: 1547,
     originalPrice: 90,
     category: "Inner & Prayer dress",
     badge: "Travel Favorite",
@@ -572,6 +593,7 @@ export const PRODUCTS = [
     name: "Little Princess Butterfly Farasha Kids Abaya",
     subtitle: "Ages 4–14 | Matching Miniature Hijab Included",
     price: 85,
+    priceInr: 1934,
     originalPrice: 110,
     category: "Kids abaya",
     badge: "Princess Favorite",
@@ -605,6 +627,7 @@ export const PRODUCTS = [
     name: "Wholesale Simple & Basic Abaya Master Carton",
     subtitle: "Factory Bulk Export | Pack of 10 Assorted Sizes",
     price: 490,
+    priceInr: 11148,
     originalPrice: 850,
     category: "Wholesale",
     wholesaleType: "Simple/Basic",
@@ -636,6 +659,7 @@ export const PRODUCTS = [
     name: "Wholesale Embroidery & Handwork Haute Boutique Pack",
     subtitle: "Artisan Beaded & Embroidered Abayas | Pack of 10 Pieces",
     price: 780,
+    priceInr: 17745,
     originalPrice: 1200,
     category: "Wholesale",
     wholesaleType: "Handwork",
@@ -667,6 +691,7 @@ export const PRODUCTS = [
     name: "Wholesale Kids Abaya Boutique Assortment",
     subtitle: "Ages 4 to 14 | Pack of 12 Pieces with Matching Shailas",
     price: 420,
+    priceInr: 9555,
     originalPrice: 650,
     category: "Wholesale",
     wholesaleType: "Kids",
