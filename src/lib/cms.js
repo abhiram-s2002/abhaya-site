@@ -4,8 +4,27 @@ import { supabase, isSupabaseConfigured } from './supabase';
 // DEFAULT CONTENT — used if Supabase/localStorage are empty so site never breaks
 // ─────────────────────────────────────────────────────────────────────────────
 
-const baseUrl = typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL ? import.meta.env.BASE_URL : './';
-const getAssetUrl = (path) => `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${path.replace(/^\//, '')}`;
+export function getAssetUrl(path) {
+  if (!path || typeof path !== 'string') return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:') || path.startsWith('blob:')) {
+    return path;
+  }
+
+  const rawBase = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
+  const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+  const baseTrimmed = base.replace(/^\/+|\/+$/g, '');
+
+  let clean = path.trim();
+
+  // Strip repeated or duplicated base path or repo names (e.g. /abhaya-site/abhaya-site/...)
+  if (baseTrimmed) {
+    const dupRegex = new RegExp(`^(\\/?${baseTrimmed}\\/)+`, 'i');
+    clean = clean.replace(dupRegex, '');
+  }
+
+  clean = clean.replace(/^\/+/, '');
+  return `${base}${clean}`;
+}
 
 export const DEFAULT_CONTENT = {
   announcement: {
@@ -367,7 +386,7 @@ function mergeWithDefaults(fetched) {
             if (!slide.image || slide.image.includes('googleusercontent.com')) {
               return { ...slide, image: defSlide.image };
             }
-            return slide;
+            return { ...slide, image: getAssetUrl(slide.image) };
           });
         } else {
           result[key] = Array.isArray(fetched[key]) && fetched[key].length > 0

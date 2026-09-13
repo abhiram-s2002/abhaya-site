@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field, Input, Textarea, SectionTitle, AddButton, RemoveButton, CardWrap } from './EditorFields';
+import { getAssetUrl } from '../../../lib/cms';
 
 /**
  * HeroSlidesEditor
@@ -56,7 +57,7 @@ export default function HeroSlidesEditor({ value, onChange }) {
             {/* Image preview */}
             {slide.image && (
               <div className="w-full h-28 rounded-lg overflow-hidden bg-stone-200 mb-1">
-                <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+                <img src={getAssetUrl(slide.image)} alt={slide.title} className="w-full h-full object-cover" />
               </div>
             )}
 

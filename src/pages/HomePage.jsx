@@ -3,13 +3,12 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import EditableSection from '../components/cms/EditableSection';
 import ProductCard from '../components/ProductCard';
+import { getAssetUrl } from '../lib/cms';
 
 /* ──────────────────────────────────────────────
    Image maps for Style & Work collection cards
    (re-using existing product / collection images)
    ────────────────────────────────────────────── */
-const baseUrl = import.meta.env.BASE_URL || './';
-const getAssetUrl = (path) => `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${path.replace(/^\//, '')}`;
 
 const STYLE_IMAGES = {
   'Open abaya':              getAssetUrl('collection-images/style_open_abaya.jpg'),
@@ -110,7 +109,7 @@ export default function HomePage() {
                 {/* Full-width image */}
                 <div className="relative w-full h-[75vh] sm:h-[82vh] md:h-[88vh] min-h-[480px] overflow-hidden">
                   <img
-                    src={slide.image?.startsWith('http') || slide.image?.startsWith('data:') || slide.image?.startsWith('blob:') ? slide.image : getAssetUrl(slide.image || '')}
+                    src={getAssetUrl(slide.image)}
                     alt={slide.title}
                     className="w-full h-full object-cover object-top"
                     loading={i === 0 ? 'eager' : 'lazy'}
