@@ -64,6 +64,7 @@ export function ShopProvider({ children }) {
   const [selectedWorkFilter, setSelectedWorkFilterState] = useState(DEFAULT_FILTERS.work);
   const [selectedSubcategoryFilter, setSelectedSubcategoryFilterState] = useState(DEFAULT_FILTERS.subcategory);
   const [selectedWholesaleTypeFilter, setSelectedWholesaleTypeFilterState] = useState(DEFAULT_FILTERS.wholesale);
+  const [selectedBadgeFilter, setSelectedBadgeFilterState] = useState(DEFAULT_FILTERS.badge);
   const [wishlistOnlyFilter, setWishlistOnlyFilterState] = useState(DEFAULT_FILTERS.wishlist);
   const [searchQuery, setSearchQueryState] = useState(DEFAULT_FILTERS.q);
 
@@ -74,6 +75,7 @@ export function ShopProvider({ children }) {
     color: DEFAULT_FILTERS.color,
     subcategory: DEFAULT_FILTERS.subcategory,
     wholesale: DEFAULT_FILTERS.wholesale,
+    badge: DEFAULT_FILTERS.badge,
     tab: DEFAULT_FILTERS.tab,
     wishlist: DEFAULT_FILTERS.wishlist,
     q: DEFAULT_FILTERS.q,
@@ -87,6 +89,7 @@ export function ShopProvider({ children }) {
     if (filters.color !== undefined) setSelectedColorFilterState(filters.color || 'All');
     if (filters.subcategory !== undefined) setSelectedSubcategoryFilterState(filters.subcategory || 'All');
     if (filters.wholesale !== undefined) setSelectedWholesaleTypeFilterState(filters.wholesale || 'All');
+    if (filters.badge !== undefined) setSelectedBadgeFilterState(filters.badge || 'All');
     if (filters.tab !== undefined) setSelectedCollectionsTabState(filters.tab || DEFAULT_FILTERS.tab);
     if (filters.wishlist !== undefined) setWishlistOnlyFilterState(Boolean(filters.wishlist));
     if (filters.q !== undefined) setSearchQueryState(filters.q || '');
@@ -128,6 +131,9 @@ export function ShopProvider({ children }) {
   }, [writeCatalogUrl]);
   const setSelectedWholesaleTypeFilter = useCallback((value) => {
     writeCatalogUrl({ wholesale: value });
+  }, [writeCatalogUrl]);
+  const setSelectedBadgeFilter = useCallback((value) => {
+    writeCatalogUrl({ badge: value });
   }, [writeCatalogUrl]);
   const setSelectedCollectionsTab = useCallback((value) => {
     writeCatalogUrl({ tab: value });
@@ -539,7 +545,7 @@ export function ShopProvider({ children }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView, selectedProductId]);
 
-  const navigateTo = useCallback((view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null) => {
+  const navigateTo = useCallback((view, productId = null, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null, badge = null) => {
     setIsSearchOpen(false);
 
     if (view === 'product-detail' || (productId && view !== 'shop' && view !== 'collections')) {
@@ -550,7 +556,7 @@ export function ShopProvider({ children }) {
     }
 
     if (view === 'shop' || view === 'collections') {
-      const resetSearch = search === null && !category && !style && !work && !color && !subcategory && !wholesaleType;
+      const resetSearch = search === null && !category && !style && !work && !color && !subcategory && !wholesaleType && !badge;
       writeCatalogUrl({
         category: category || 'All',
         style: style || 'All',
@@ -558,6 +564,7 @@ export function ShopProvider({ children }) {
         color: color || 'All',
         subcategory: subcategory || 'All',
         wholesale: wholesaleType || 'All',
+        badge: badge || 'All',
         tab: collectionsTab || filtersRef.current.tab,
         wishlist: Boolean(wishlistOnly),
         q: search !== null ? search : (resetSearch ? '' : filtersRef.current.q),
@@ -571,6 +578,7 @@ export function ShopProvider({ children }) {
     if (work) applyFiltersToState({ work });
     if (subcategory) applyFiltersToState({ subcategory });
     if (wholesaleType) applyFiltersToState({ wholesale: wholesaleType });
+    if (badge) applyFiltersToState({ badge });
     if (collectionsTab) applyFiltersToState({ tab: collectionsTab });
     if (search !== null) applyFiltersToState({ q: search });
     applyFiltersToState({ wishlist: Boolean(wishlistOnly) });
@@ -764,6 +772,8 @@ export function ShopProvider({ children }) {
         setSelectedSubcategoryFilter,
         selectedWholesaleTypeFilter,
         setSelectedWholesaleTypeFilter,
+        selectedBadgeFilter,
+        setSelectedBadgeFilter,
         wishlistOnlyFilter,
         setWishlistOnlyFilter,
         searchQuery,

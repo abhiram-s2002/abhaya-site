@@ -29,6 +29,7 @@ export const DEFAULT_FILTERS = {
   color: 'All',
   subcategory: 'All',
   wholesale: 'All',
+  badge: 'All',
   tab: 'silhouette',
   wishlist: false,
   q: '',
@@ -61,6 +62,7 @@ export function parseFilterParams(search) {
     color: params.get('color') || DEFAULT_FILTERS.color,
     subcategory: params.get('subcategory') || DEFAULT_FILTERS.subcategory,
     wholesale: params.get('wholesale') || DEFAULT_FILTERS.wholesale,
+    badge: params.get('badge') || DEFAULT_FILTERS.badge,
     tab: params.get('tab') || DEFAULT_FILTERS.tab,
     wishlist: params.get('wishlist') === '1' || params.get('wishlist') === 'true',
     q: params.get('q') || DEFAULT_FILTERS.q,
@@ -83,6 +85,7 @@ export function buildFilterSearch(filters = {}) {
   setOrDelete(params, 'color', filters.color, 'All');
   setOrDelete(params, 'subcategory', filters.subcategory, 'All');
   setOrDelete(params, 'wholesale', filters.wholesale, 'All');
+  setOrDelete(params, 'badge', filters.badge, 'All');
   setOrDelete(params, 'tab', filters.tab, DEFAULT_FILTERS.tab);
   if (filters.wishlist) params.set('wishlist', '1');
   setOrDelete(params, 'q', filters.q, '');

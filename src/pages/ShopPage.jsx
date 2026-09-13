@@ -38,6 +38,8 @@ export default function ShopPage() {
     setSelectedSubcategoryFilter: setContextSubcategoryFilter,
     selectedWholesaleTypeFilter: contextWholesaleTypeFilter,
     setSelectedWholesaleTypeFilter: setContextWholesaleTypeFilter,
+    selectedBadgeFilter: contextBadgeFilter,
+    setSelectedBadgeFilter: setContextBadgeFilter,
     formatPrice,
     searchQuery,
     setSearchQuery
@@ -59,6 +61,7 @@ export default function ShopPage() {
   const [selectedWholesaleType, setSelectedWholesaleType] = useState('All');
   const [selectedSubcategory, setSelectedSubcategory] = useState('All');
   const [selectedShade, setSelectedShade] = useState('All');
+  const [selectedBadge, setSelectedBadge] = useState('All');
   const [maxPrice, setMaxPrice] = useState(maxPriceLimit);
   const [sortBy, setSortBy] = useState('featured');
   // UI state
@@ -82,7 +85,8 @@ export default function ShopPage() {
       contextWorkFilter,
       contextColorFilter,
       contextSubcategoryFilter,
-      contextWholesaleTypeFilter
+      contextWholesaleTypeFilter,
+      contextBadgeFilter
     });
 
     if (selectedCategoryFilter) {
@@ -103,13 +107,17 @@ export default function ShopPage() {
     if (contextWholesaleTypeFilter) {
       setSelectedWholesaleType(contextWholesaleTypeFilter);
     }
+    if (contextBadgeFilter) {
+      setSelectedBadge(contextBadgeFilter);
+    }
   }, [
     selectedCategoryFilter,
     contextStyleFilter,
     contextWorkFilter,
     contextColorFilter,
     contextSubcategoryFilter,
-    contextWholesaleTypeFilter
+    contextWholesaleTypeFilter,
+    contextBadgeFilter
   ]);
 
   // Close sort dropdown when clicking outside
@@ -313,6 +321,21 @@ export default function ShopPage() {
         if (!matchesDirectColor && !matchesColorsArray) return false;
       }
 
+      // 9. Badge Filter (e.g. 'Limited Edition')
+      if (selectedBadge !== 'All') {
+        const bLower = selectedBadge.toLowerCase();
+        let matchesBadge = false;
+        if (bLower === 'limited edition' || bLower === 'limited') {
+          matchesBadge = (product.badge && product.badge.toLowerCase().includes('limited')) ||
+            product.isLimitedEdition === true ||
+            (product.name && product.name.toLowerCase().includes('limited edition')) ||
+            (product.subtitle && product.subtitle.toLowerCase().includes('limited edition'));
+        } else {
+          matchesBadge = (product.badge && (product.badge.toLowerCase() === bLower || product.badge.toLowerCase().includes(bLower)));
+        }
+        if (!matchesBadge) return false;
+      }
+
       return true;
     }).sort((a, b) => {
       if (sortBy === 'price-low') return a.price - b.price;
@@ -326,6 +349,7 @@ export default function ShopPage() {
       selectedStyleFilter,
       selectedWorkFilter,
       selectedShade,
+      selectedBadge,
       searchQuery,
       maxPrice
     });
@@ -341,6 +365,7 @@ export default function ShopPage() {
     selectedWholesaleType,
     selectedSubcategory,
     selectedShade,
+    selectedBadge,
     sortBy
   ]);
 
@@ -357,6 +382,8 @@ export default function ShopPage() {
     if (setContextSubcategoryFilter) setContextSubcategoryFilter('All');
     setSelectedShade('All');
     if (setContextColorFilter) setContextColorFilter('All');
+    setSelectedBadge('All');
+    if (setContextBadgeFilter) setContextBadgeFilter('All');
   };
 
   const resetFilters = () => {
@@ -373,6 +400,8 @@ export default function ShopPage() {
     if (setContextSubcategoryFilter) setContextSubcategoryFilter('All');
     setSelectedShade('All');
     if (setContextColorFilter) setContextColorFilter('All');
+    setSelectedBadge('All');
+    if (setContextBadgeFilter) setContextBadgeFilter('All');
     setMaxPrice(maxPriceLimit);
   };
 
@@ -383,6 +412,7 @@ export default function ShopPage() {
     selectedWholesaleType !== 'All' ||
     selectedSubcategory !== 'All' ||
     selectedShade !== 'All' ||
+    selectedBadge !== 'All' ||
     maxPrice < maxPriceLimit ||
     Boolean(searchQuery.trim());
 
@@ -392,6 +422,7 @@ export default function ShopPage() {
     (selectedWholesaleType !== 'All' ? 1 : 0) +
     (selectedSubcategory !== 'All' ? 1 : 0) +
     (selectedShade !== 'All' ? 1 : 0) +
+    (selectedBadge !== 'All' ? 1 : 0) +
     (maxPrice < maxPriceLimit ? 1 : 0);
 
   return (
@@ -405,7 +436,9 @@ export default function ShopPage() {
             <span>NOOR AL DHUHA ATELIER CATALOG</span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#1E141B] font-bold tracking-tight uppercase mt-1">
-            {selectedCategory === 'All' ? 'All Modest Collections' : selectedCategory}
+            {selectedBadge !== 'All' 
+              ? `${selectedBadge} Collection`
+              : (selectedCategory === 'All' ? 'All Modest Collections' : selectedCategory)}
           </h1>
           <p className="text-xs sm:text-sm text-stone-500 mt-1 font-medium">
             Showing {filteredProducts.length} curated luxury pieces with bespoke sizing & global courier.
@@ -733,6 +766,21 @@ export default function ShopPage() {
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-white border border-stone-300 text-[11px] text-[#7A0648] font-bold shadow-xs">
               Shade: {selectedShade}
               <button onClick={() => setSelectedShade('All')} className="hover:text-red-600 p-0.5 cursor-pointer">
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+
+          {selectedBadge !== 'All' && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none bg-[#7A0648] text-white border border-[#7A0648] text-[11px] font-bold shadow-xs">
+              Edition: {selectedBadge}
+              <button 
+                onClick={() => {
+                  setSelectedBadge('All');
+                  if (setContextBadgeFilter) setContextBadgeFilter('All');
+                }} 
+                className="hover:text-amber-200 p-0.5 cursor-pointer"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>

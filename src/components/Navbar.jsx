@@ -35,6 +35,7 @@ export default function Navbar() {
     setIsSearchOpen,
     searchQuery,
     setSearchQuery,
+    selectedBadgeFilter,
     adminEnabled
   } = useShop();
 
@@ -114,9 +115,9 @@ export default function Navbar() {
     }));
   };
 
-  const handleNav = (view, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null) => {
-    console.log('[Navbar] handleNav triggered:', { view, category, collectionsTab, color, style, work, subcategory, wholesaleType });
-    navigateTo(view, null, category, collectionsTab, color, style, work, wishlistOnly, search, subcategory, wholesaleType);
+  const handleNav = (view, category = null, collectionsTab = null, color = null, style = null, work = null, wishlistOnly = false, search = null, subcategory = null, wholesaleType = null, badge = null) => {
+    console.log('[Navbar] handleNav triggered:', { view, category, collectionsTab, color, style, work, subcategory, wholesaleType, badge });
+    navigateTo(view, null, category, collectionsTab, color, style, work, wishlistOnly, search, subcategory, wholesaleType, badge);
     setMobileMenuOpen(false);
     setShopDropdownOpen(false);
   };
@@ -137,7 +138,7 @@ export default function Navbar() {
             </button>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-7 text-[12px] font-medium tracking-[0.08em] uppercase">
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[12px] font-medium tracking-[0.08em] uppercase">
               
               {/* Shop Mega Menu Dropdown */}
               <div 
@@ -149,12 +150,12 @@ export default function Navbar() {
                 <button
                   onClick={() => handleNav('shop')}
                   className={`transition-colors py-1 flex items-center gap-1 cursor-pointer ${
-                    currentView === 'shop' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                    currentView === 'shop' && selectedBadgeFilter !== 'Limited Edition' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
                   }`}
                 >
                   <span>Shop</span>
                   <ChevronDown className={`w-3 h-3 transition-transform ${shopDropdownOpen ? 'rotate-180' : ''}`} />
-                  {currentView === 'shop' && (
+                  {currentView === 'shop' && selectedBadgeFilter !== 'Limited Edition' && (
                     <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-white" />
                   )}
                 </button>
@@ -205,6 +206,12 @@ export default function Navbar() {
                             className="block w-full text-left py-1.5 px-2 bg-white/10 text-[#FFD700] hover:bg-white/20 transition-colors font-bold rounded-xs cursor-pointer"
                           >
                             Wholesale (B2B Bulk Hub) ★
+                          </button>
+                          <button
+                            onClick={() => handleNav('shop', null, null, null, null, null, false, null, null, null, 'Limited Edition')}
+                            className="block w-full text-left py-1 text-white/90 hover:text-[#FFD700] hover:translate-x-1 transition-all cursor-pointer font-bold"
+                          >
+                            Limited Edition
                           </button>
                         </div>
                       </div>
@@ -600,6 +607,16 @@ export default function Navbar() {
                     </button>
                   </div>
                 )}
+              </div>
+
+              {/* LIMITED EDITION */}
+              <div className="pt-4">
+                <button
+                  onClick={() => handleNav('shop', null, null, null, null, null, false, null, null, null, 'Limited Edition')}
+                  className="w-full flex items-center justify-between text-left text-xs uppercase tracking-wider font-semibold text-white py-1 hover:text-white/80 transition-colors cursor-pointer"
+                >
+                  <span>Limited Edition</span>
+                </button>
               </div>
 
               {/* OUR STORY */}

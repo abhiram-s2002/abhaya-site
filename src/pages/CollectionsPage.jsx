@@ -59,6 +59,7 @@ export default function CollectionsPage() {
     selectedColorFilter,
     selectedStyleFilter,
     selectedWorkFilter,
+    selectedBadgeFilter,
     navigateTo,
     formatPrice,
     getProductPrice,
@@ -442,6 +443,21 @@ export default function CollectionsPage() {
       // 9. Price Range
       if (getProductPrice(product) > priceRange) {
         return false;
+      }
+
+      // 10. Badge Filter (e.g. Limited Edition)
+      if (selectedBadgeFilter && selectedBadgeFilter !== 'All') {
+        const bLower = selectedBadgeFilter.toLowerCase();
+        let matchesBadge = false;
+        if (bLower === 'limited edition' || bLower === 'limited') {
+          matchesBadge = (product.badge && product.badge.toLowerCase().includes('limited')) ||
+            product.isLimitedEdition === true ||
+            (product.name && product.name.toLowerCase().includes('limited edition')) ||
+            (product.subtitle && product.subtitle.toLowerCase().includes('limited edition'));
+        } else {
+          matchesBadge = (product.badge && (product.badge.toLowerCase() === bLower || product.badge.toLowerCase().includes(bLower)));
+        }
+        if (!matchesBadge) return false;
       }
 
       return true;
