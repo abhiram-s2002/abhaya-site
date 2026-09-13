@@ -174,10 +174,11 @@ export default function AdminProductEditor({
       setDefaultStyle('Open abaya');
       setWorks(ABAYA_WORKS.map(w => w.name));
       setDefaultWork('Plain/Basic');
-      setDescription('');
       setFabricDetails('');
       setStylingAdvice('');
       setCareInstructions('');
+      setStockCount(12);
+      setReviews([]);
     }
   }, [product]);
 

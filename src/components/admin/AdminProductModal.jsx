@@ -160,10 +160,10 @@ export default function AdminProductModal({
       setDefaultStyle('Open abaya');
       setWorks(['Plain/Basic']);
       setDefaultWork('Plain/Basic');
-      setDescription('');
       setFabricDetails('');
       setStylingAdvice('');
       setCareInstructions('');
+      setPriceInr('');
     }
     setActiveTab('basic');
     setErrorMessage('');
