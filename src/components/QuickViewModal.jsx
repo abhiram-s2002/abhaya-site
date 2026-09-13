@@ -82,10 +82,19 @@ function QuickViewModalContent({ product, onClose }) {
                 alt={product.name}
                 className="w-full h-full object-cover transition-all duration-300"
               />
-              {product.badge && (
-                <span className="badge-custom absolute top-3 left-3 bg-[#7A0648] text-white text-[9px] px-2 py-0.5 uppercase tracking-wider font-bold">
-                  {product.badge}
-                </span>
+              {(product.badge || (product.originalPrice && product.originalPrice > product.price)) && (
+                <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col items-start gap-1">
+                  {product.badge && (
+                    <span className="badge-custom text-[9px] px-2 py-0.5 uppercase tracking-wider font-bold shadow-xs">
+                      {product.badge}
+                    </span>
+                  )}
+                  {product.originalPrice && product.originalPrice > product.price && (
+                    <span className="badge-sale text-[9px] px-2 py-0.5 uppercase tracking-wider font-bold shadow-xs">
+                      Sale
+                    </span>
+                  )}
+                </div>
               )}
             </div>
 

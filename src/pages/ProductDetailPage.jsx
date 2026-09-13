@@ -392,12 +392,19 @@ export default function ProductDetailPage() {
               onClick={() => setShowLightboxModal(true)}
             />
 
-            {/* Badges Overlay - Only Sale if on discount */}
-            {currency === 'AED' && product.originalPrice && product.originalPrice > product.price && (
-              <div className="absolute top-3 left-3 z-10 pointer-events-none">
-                <span className="badge-sale text-[10px] tracking-widest uppercase">
-                  Sale
-                </span>
+            {/* Badges Overlay */}
+            {(product.badge || (currency === 'AED' && product.originalPrice && product.originalPrice > product.price)) && (
+              <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col items-start gap-1.5">
+                {product.badge && (
+                  <span className="badge-custom text-[10px] tracking-widest uppercase shadow-xs">
+                    {product.badge}
+                  </span>
+                )}
+                {currency === 'AED' && product.originalPrice && product.originalPrice > product.price && (
+                  <span className="badge-sale text-[10px] tracking-widest uppercase shadow-xs">
+                    Sale
+                  </span>
+                )}
               </div>
             )}
 

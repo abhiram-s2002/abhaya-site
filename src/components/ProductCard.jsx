@@ -99,12 +99,19 @@ export default function ProductCard({ product }) {
           />
         )}
 
-        {/* Badges (Top Left) - Only Sale if on discount */}
-        {product.originalPrice && product.originalPrice > product.price && (
-          <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-            <span className="bg-[#E32C2B] text-white text-[9px] sm:text-[10px] tracking-[0.14em] uppercase font-bold px-2 py-0.5 shadow-sm">
-              Sale
-            </span>
+        {/* Badges (Top Left) */}
+        {(product.badge || (product.originalPrice && product.originalPrice > product.price)) && (
+          <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none flex flex-col items-start gap-1">
+            {product.badge && (
+              <span className="bg-[#7A0648] text-white text-[8.5px] sm:text-[9.5px] tracking-[0.12em] uppercase font-bold px-2 py-0.5 shadow-sm">
+                {product.badge}
+              </span>
+            )}
+            {product.originalPrice && product.originalPrice > product.price && (
+              <span className="bg-[#E32C2B] text-white text-[8.5px] sm:text-[9.5px] tracking-[0.14em] uppercase font-bold px-2 py-0.5 shadow-sm">
+                Sale
+              </span>
+            )}
           </div>
         )}
       </div>
