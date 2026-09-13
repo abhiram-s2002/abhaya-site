@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.BASE_PATH || (process.env.NODE_ENV === 'production' ? '/abhaya-site/' : '/'),
+  base: process.env.BASE_PATH || '/',
   plugins: [react()],
   server: {
     port: 3000,
